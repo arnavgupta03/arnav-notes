@@ -1,0 +1,372 @@
+#+title: Concurrency: Mutual Exclusion And Synchronization
+#+LATEX: \setlength\parindent{0pt}
+#+STARTUP: latexpreview
+#+author: Arnav Gupta
+
+* Concurrency Basics
+Arises in 3 different contexts:
+1. *multiple applications*: multiprogramming was invented to allow
+   processing time to be dynamically shared among a number of
+   applications
+2. *structured applications*: applications can be programmed as a
+   set of concurrent processes
+3. *operating system structure*: same structuring advantages
+   apply to systems programs as OSs are also a set of processes
+   and threads
+
+Key terms:
+- *atomic operation*: action that appears to be indivisible; no
+  intermediate state or interruption
+- *critical section*: section of code that requires access to shared
+  resources, cannot be executed by 2+ processes at once
+- *deadlock*: situation in which 2+ processes cannot proceed because
+  each is waiting for one of the others
+- *livelock*: situation in which 2+ processes keep changing state
+  without doing any work
+- *mutual exclusion*: requirement that when 1 process is in a critical
+  section, no other process can be in a critical section accessing
+  the same resources
+- *race condition*: situation in which multiple threads or processes
+  read and write a shared data item and the final result
+  depends on their relative timing
+- *starvation*: situation in which a runnable process is overlooked
+  indefinitely by the scheduler, can be chosen but never is
+
+* Mutual Exclusion: Software Approaches
+Software approaches assume mutual exclusion at memory access level:
+simultaneous access is serialized.
+
+** Dekker's Algorithm
+First attempt has a ~turn~ variable that has the pid for the
+process allowed in the critical section.
+- guarantees mutual exclusion but has two drawbacks
+  1. processes must strictly alternate, so pace is dictated by
+     the slower process
+  2. if one process fails, the other is permanently blocked
+- done using coroutines (pass execution control back and
+  forth)
+
+Second attempt has a bool vector ~flag~ with each index
+corresponding to a pid, where ~true~ means the process is in
+the critical section.
+- does not guarantee mutual exclusion
+
+Third attempt sets flag before checking if other process
+in critical section.
+- if one process fails inside the critical section,
+  the other process is blocked
+- if one process fails outside the critical section,
+  the other process is not blocked
+- can cause deadlock if both processes set flag
+  before checking the other's flag
+
+Fourth attempt has each process turn off flag to enter
+critical section after turning it on.
+- can cause livelock if each process repeatedly turns
+  its flags on and off
+
+The correct solution is Dekker's algorithm:
+- uses both bool vector ~flag~ and variable ~turn~
+- process sets flag to ~true~ before checking
+- while checking, if it is not a process's turn,
+  it defers to the other process which will flip
+  its flag
+
+#+BEGIN_SRC c
+boolean flag[2];
+int turn;
+void P0() {
+  while (true) {
+    flag[0] = true;
+    while (flag[1]) {
+      if (turn ==  1) {
+        flag[0] = false;
+        while (turn == 1);
+        flag[0] = true;
+      }
+    }
+    /* critical section */
+    turn = 1;
+    flag[0] = false;
+    /* remainder */
+  }
+}
+void P1() {
+  while (true) {
+    flag[1] = true;
+    while (flag[0]) {
+      if (turn ==  0) {
+        flag[1] = false;
+        while (turn == 0);
+        flag[1] = true;
+      }
+    }
+    /* critical section */
+    turn = 0;
+    flag[1] = false;
+    /* remainder */
+  }
+}
+void main() {
+  flag[0] = false;
+  flag[1] = false;
+  turn = 1;
+  parbegin(P0, P1);
+}
+#+END_SRC
+
+** Peterson's Algorithm
+A simpler algorithm that uses ~turn~ to resolve
+simultaneity conflicts.
+
+#+BEGIN_SRC c
+boolean flag[2];
+int turn;
+void P0() {
+  while (true) {
+    flag[0] = true;
+    turn = 1;
+    while (flag[1] && turn == 1);
+    /* critical section */
+    flag[0] = false;
+    /* remainder */
+  }
+}
+void P1() {
+  while (true) {
+    flag[1] = true;
+    turn = 0;
+    while (flag[0] && turn == 0);
+    /* critical section */
+    turn = 0;
+    flag[1] = false;
+    /* remainder */
+  }
+}
+void main() {
+  flag[0] = false;
+  flag[1] = false;
+  parbegin(P0, P1);
+}
+#+END_SRC
+* Principles of Concurrency
+In a multiprocessor sysmte, it is possible not only
+to interleave the execution of multiple processes
+but also to overlap them.
+
+Difficulties with interleaving and overlapping:
+1. sharing global resources is risky (read/write
+   race conditions)
+2. difficult for OS to optimally manage resource
+   allocation
+3. difficult to locate programming errors (less
+   reproducable)
+
+Sharing main memory permits efficient and close
+interaction among processes, but can lead to problems:
+- if one process updates a global variable and is
+  interrupted, another process may alter the variable
+  before the first process can use its value
+
+Necessary to protect shared global variables by
+controlling the code that accesses the variable.
+
+** Operating System Concerns
+Concerns are:
+1. OS must be able to keep track of processes
+2. OS must allocate and deallocate resources for each
+   active process (processor time, memory, files,
+   IO devices)
+3. OS must protect data and physical resources of each
+   process against unintended interference by other
+   processes
+4. functioning of a process and its output must be
+   independent of the relative speed of execution
+
+** Process Interaction
+ For processes unaware of each other:
+ - OS must be concerned about competition for resources
+ - results of one process independent of the action of others
+ - timing of process may be affected
+ - potential problems are mutual exclusion, deadlock of
+   a renewable resource, starvation
+
+For processes indirectly aware of each other:
+- exhibit cooperation by sharing
+- results of one process may depend on information obtained
+  from others
+- timing of process may be affected
+- potential problems are mutual exclusion, deadlock of
+  a renewable resource, starvation, data coherence
+
+For processes directly aware of each other:
+- exhibit cooperation by communication
+- results of one process may depend on information obtained
+  from others
+- timing of process may be affected
+- potential problems are deadlock of
+  a consumable resource, starvation
+
+If competition exists:
+- each process should leave the state of any resource that
+  it uses unaffected
+- since a process must wait to use a resource, it will be
+  slowed down or may never get access to it
+
+Problems that must be solved for competition are:
+1. *Mutual exclusion*: ensuring only one program using the critical
+   resource in the critical section at a time
+2. *Deadlock*: processes exist a loop waiting on other processes
+3. *Starvation*: process is indefinitely denied access to a
+   resource, even without deadlock
+
+Processes themselves must express the requirement for mutual exclusoin,
+with support from the OS to follow this.
+
+If cooperation by sharing exists:
+- processes must cooperate to ensure shared data is properly managed
+- control mechanisms must ensure the integrity of shared data
+
+If cooperation by communication exists:
+- processes must synchronize various activities through messages
+- deadlock and starvation can occur, through awaiting communication
+  from other processes
+
+** Requirements for Mutual Exclusion
+1. *Enforcement*: only one process at a time allowed in the
+   critical section for a resource
+2. *No Interference*: a process that halts in its noncritical section
+   must do so without interfering with other processes
+3. *No Deadlock or Starvation*
+4. *No Unnecessary Delay*: a process must not be delayed access to a
+   critical section when there is no other process using it
+5. *No Assumptions*: no assumptions made about relative process
+   speeds or number of processors
+6. *Finite Time*: a process remains inside its critical section
+   for a finite time only
+
+Main mechanisms for Mutual Exclusion:
+- software with Dekker's algorithm (slow)
+- special hardware instructions
+- support in the OS or a programming language
+
+* Mutual Exclusion: Hardware Support
+** Interrupt Disabling
+Disabling interrupts guarantees mutual exclusion for a uniprocessor
+system.
+
+Costs of interrupt disabling:
+- efficiency is degraded since there is limited ability to
+  interleave processes.
+- does not work for multiprocessor architecture, since a process
+  on another processor could invalidate mutual exclusion
+
+** Special Machine Instructions
+Special instructions carry out two actions atomically
+during one instruction fetch cycle.
+
+Compare&Swap instruction (carried out atomically)
+- ~testval~ is compared to memory location
+  - if equal then a swap occurs with ~newval~
+- returns either the old value or whether or not the swap occurred
+
+#+BEGIN_SRC c
+const int n = 5;
+int bolt;
+void P(int i) {
+  while (true) {
+    while (compare_and_swap(bolt, 0, 1) == 1);
+    /* critical section */
+    bolt = 0;
+    /* remainder */
+  }
+}
+void main() {
+  bolt = 0;
+  parbegin(P(1), P(2), ..., P(n));
+}
+#+END_SRC
+
+Exchange instruction (carried out atomically)
+- exchanges contents of register with that of memory location
+
+#+BEGIN_SRC c
+const int n = 5;
+int bolt;
+void P(int i) {
+  while (true) {
+    int keyi = 1;
+    do (exchange(&keyi, &bolt))
+         while (keyi != 0);
+    /* critical section */
+    bolt = 0;
+    /* remainder */
+  }
+}
+void main() {
+  bolt = 0;
+  parbegin(P(1), P(2), ..., P(n));
+}
+#+END_SRC
+
+Advantages of machine-instruction approach:
+- applicable to any number of processes for both uniprocessor
+  and multiprocessor
+- simple and easy to verify
+- can be used to support multiple critical sections, each
+  defined by its own variable
+
+Disadvantages of machine-instruction approach:
+- busy waiting: process waiting for access to a critical section
+  consumes processor
+- starvation possible: when a process leaves a critical section
+  and more than one process is waiting, some process could never
+  be chosen
+- deadlock possible: higher priority processes could end up
+  waiting on lower priority processes inside critical sections
+
+* Semaphores
+Common concurrency mechanisms:
+- *semaphore*: integer value used for signaling, with atomic
+  operations of initialize, decrement, and increment where
+  decrement can block a process and increment can unblock a
+  process
+- *binary semaphore*: semaphore that takes on only 0 and 1
+- *mutex*: similar to binary semaphore but the process that
+  locks a mutex must unlock it
+- *condition variable*: data type used to block a process
+  or thread until a condition is true
+- *monitor*: programming language construct to encapsulate
+  variables, critical sections, and initialization code
+  in one data type, where it may only be accessed inside
+  critical sections by one process
+- *event flags*: memory word used as a synchronization
+  mechanism with bits representing events that must be
+  waited on
+- *messages*: means for two processes to exchange info,
+  possibly for synchronization
+- *spinlocks*: mutual exclusion mechanism in which a
+  process
+
+Two or more processes can cooperate by means of simple signals.
+
+For a semaphore ~s~:
+- to transmit a signal, a process executes ~semSignal(s)~
+- to receive a signal, a process executes ~semWait(s)~,
+  which suspends the process until a signal is transmitted
+
+Semaphore is an integer variable with only 3 operations defined:
+1. initialized to nonnegative integer value
+2. ~semWait~ decrements the semaphore value, if it becomes negative
+   the process executing ~semWait~ is blocked, otherwise it
+   continues execution
+3. ~semSignal~ increments the semaphore value, if it is less than
+   or equal to zero, a process blocked by ~semWait~ is
+   unblocked
+
+Consequences of semaphore definition:
+1. no way to know before ~semWait~ whether it will block
+2. after a process increments a semaphore and another
+   process wakes up, both processes run concurrently
+3. when calling ~semSignal~, the number of unblocked
+   processes may be 0 or 1
