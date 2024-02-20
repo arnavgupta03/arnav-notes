@@ -1,6 +1,5 @@
 #+title: Concurrency: Mutual Exclusion And Synchronization
 #+LATEX: \setlength\parindent{0pt}
-#+STARTUP: latexpreview
 #+author: Arnav Gupta
 
 * Concurrency Basics
@@ -370,3 +369,468 @@ Consequences of semaphore definition:
    process wakes up, both processes run concurrently
 3. when calling ~semSignal~, the number of unblocked
    processes may be 0 or 1
+
+Operations on binary semaphore are:
+1. initialized to 0 or 1
+2. ~semWaitB~ checks the semaphore value, if 0 then the
+   process executing ~semWaitB~ is blocked, if 1, then
+   the value is changed to 0 and the process continues
+3. ~semSignalB~ checks if value is 0 (processes blocked),
+   if so then one blocked process is unblocked, if no
+   processes blocked the value is set to 1
+
+Mutex is a programming flag to grab and release an object:
+- mutex locks (set to 0) when non-shareable data acquired or
+  processing started that cannot be performed elsewhere
+- mutex unlocks when the data is no longer needed or the
+  routine is finished
+
+Semaphores use a queue to hold processes waiting on the
+semaphore:
+- strong semaphores use FIFO for release, guarantee
+  freedom from starvation
+- weak semaphores do not specify the order of release,
+  no guarantee of freedom from starvation
+
+** Producer/Consumer Problem
+General statement of problem:
+- one or more producers generating some type of data
+  and placing into buffer
+- single consumer takes items out of buffer one at
+  a time
+- system is to be constrained to prevent the overlap
+  of buffer operations (only one agent accessing the
+  buffer at a time)
+
+Order of semaphore operations can sometimes matter,
+especially for ~semWait~ where there is potential
+for deadlock.
+
+Infinite-buffer producer/consumer problem with binary
+semaphores
+
+#+BEGIN_SRC c
+int n;
+binary_semaphore s = 1, delay = 0;
+void producer() {
+  while (true) {
+    produce();
+    semWaitB(s);
+    append();
+    n++;
+    if (n == 1) semSignalB(delay);
+    semSignalB(s);
+  }
+}
+void consumer() {
+  int m;
+  semWaitB(delay);
+  while (true) {
+    semWaitB(s);
+    take();
+    n--;
+    m = n;
+    semSignalB(s);
+    consume();
+    if (m == 0) semWaitB(delay);
+  }
+}
+void main() {
+  n = 0;
+  parbegin(producer, consumer);
+}
+#+END_SRC
+
+Infinite-buffer producer/consumer problem with semaphores
+#+BEGIN_SRC c
+semaphore n = 0, s = 1;
+void producer() {
+  while (true) {
+    produce();
+    semWait(s);
+    append();
+    semSignal(s);
+    semSignal(n);
+  }
+}
+void consumer() {
+  while (true) {
+    semWait(n);
+    semWait(s);
+    take();
+    semSignal(s);
+    consume();
+  }
+}
+void main() {
+  parbegin(producer, consumer);
+}
+#+END_SRC
+
+For a finite buffer, it can be treated as circular
+with pointer values expressed module the buffer size.
+Block occurs on:
+- insert in full buffer for producer
+- remove from empty buffer for consumer
+Unblock occurs on:
+- item inserted for consumer
+- item removed for producer
+
+Finite-buffer producer/consumer problem with semaphores
+#+BEGIN_SRC c
+const int sizeofbuffer = /* buffer size */;
+semaphore s = 1, n = 0, e = sizeofbuffer;
+void producer() {
+  while (true) {
+    produce();
+    semWait(e);
+    semWait(s);
+    append();
+    semSignal(s);
+    semSignal(n);
+  }
+}
+void consumer() {
+  while (true) {
+    semWait(n);
+    semWait(s);
+    take();
+    semSignal(s);
+    semSignal(e);
+    consume();
+  }
+}
+void main() {
+  parbegin(producer, consumer);
+}
+#+END_SRC
+
+** Implementation of Semaphores
+Semaphores must be implemented as atomic primitives;
+only one process at a time may manipulate a
+semaphore with either ~semWait~ or ~semSignal~.
+
+Can be done with:
+- hardware or firmware
+- software schemes (Dekker's, Peterson's)
+- hardware-supported schemes for mutual exclusion
+  - can be done with ~compare_and_swap~ with a flag or by
+    inhibiting interrupts
+
+* Monitors
+May be difficult to produce a correct program using semaphores.
+** Monitor with Signal
+Monitor: a software module consisting of one or more procedures,
+an initialization sequence, and local data
+
+Chief chracteristics are:
+1. local data variables are only accessible only by the monitor's
+   procedures and not by any external procedure
+2. a process enters the monitor by invoking one of its procedures
+3. only one process may be executing in the monitor at a time,
+   any other processes that have invoked the monitor are blocked,
+   waiting for the monitor to become available
+
+Monitors support synchronization using conditional variables
+contained within the monitor and accessible only within the monitor.
+
+Condvars operated on by two functions:
+- ~cwait(c)~: suspend execution of the calling process on
+  condition ~c~, monitor is now available for use by another process
+- ~csignal(c)~: resume execution of some process blocked after a ~cwait~
+  on the same condition:
+  - if there are multiple such processes, choose one
+  - if none, do nothing
+Different from semaphores as any signals that tasks aren't waiting on
+are lost.
+
+#+BEGIN_SRC c
+monitor boundedbuffer;
+char buffer[N];
+int nextin, nextout;
+int count;
+cond notfull, notempty;
+
+void append(char x) {
+  if (count == N) cwait(notfull);
+  buffer[nextin] = x;
+  nextin = (nextin + 1) % N;
+  count++;
+  csignal(notempty);
+}
+
+void take(char x) {
+  if (count == 0) cwait(notempty);
+  x = buffer[nextout];
+  nextout = (nextout + 1) % N;
+  count--;
+  csignal(notfull);
+}
+
+{
+  nextin = 0; nextout = 0; count = 0;
+}
+void producer() {
+  char x;
+  while (true) {
+    produce();
+    append();
+  }
+}
+void consumer() {
+  char x;
+  while (true) {
+    take();
+    consume();
+  }
+}
+void main() {
+  parbegin(producer, consumer);
+}
+#+END_SRC
+
+** Alternate Models of Monitors with Notify and Broadcast
+Currently, a process issuing the ~csignal~ must either immediately
+exit the monitor or be blocked on the monitor, which has 2
+drawbacks:
+1. if the process issuing the ~csignal~ has not finished with the
+   monitor, two additional process switches are required
+2. process scheduling associated with a signal must be reliable,
+   no other process can interrupt this switching
+
+Bounded-buffer Monitor Code for Mesa Monitor
+#+BEGIN_SRC c
+void append(char x) {
+  while (count == N) cwait(notfull);
+  buffer[nextin] = x;
+  nextin = (nextin + 1) % N;
+  count++;
+  cnotify(notempty);
+}
+
+void take(char x) {
+  while (count == 0) cwait(notempty);
+  x = buffer[nextout];
+  nextout = (nextout + 1) % N;
+  count--;
+  cnotify(notfull);
+}
+#+END_SRC
+~cnotify~ differs in that the condition queue is notified, but
+the signalling process continues to execute.
+~cbroadcast~ can also cause all processes waiting on a condition
+to be placed into a ready state.
+
+Mesa monitor less error prone and more modular than usual
+Hoare monitor.
+
+* Message Passing
+When processes interact, must ensure synchronization and communication.
+Can be done with message passing, which has 2 primitives:
+- ~send(destination, message);~
+- ~receive(source, message);~
+
+Sender and receiver can be blocking or nonblocking, of which there are
+3 common combinations
+1. *blocking send, blocking receive*: both sender and receiver blocked
+   until message is delivered, allows for tight synchronization
+2. *nonblocking send, blocking receive*: sender may continue but
+   receiver is blocked until message arrives
+3. *nonblocking send, nonblocking receive*: neither party must wait
+
+Nonblocking send is most natural since a sender can then send
+multiple different messages.
+Blocking receive is most natural since receivers generally expect
+information before proceeding.
+
+** Addressing
+With direct addressing
+- the ~send~ primitive includes a specific identifier
+of the destination process.
+- the ~receive~ primitive either:
+  - requires that the process explicitly designate a sending process
+  - uses implicit addressing: the source possesses a value returned
+    when the receive has bene performed
+
+With indirect addressing
+- messages are sent to queue that holds messages, called mailbox
+- decoupling sender and receiver allows for more flexibility in
+  use of messages
+- relationship between senders and receivers can be:
+  - one-to-one: private communication between two processes
+  - many-to-one: client-server interaction, creates port
+  - one-to-many: broadcasting to set of processes
+  - many-to-many: multiple server processes to provide
+    concurrent service to multiple clients
+- mailboxes owned by creating process (ex. port)
+
+** Message Format
+Message typically divided into header and body.
+Header contains:
+- message type
+- destination ID
+- source ID
+- message length
+- control information
+
+Body contains message contents.
+
+Messages can be queued based on priority.
+
+** Mutual Exclusion
+Mutual Exclusion using Messages
+#+BEGIN_SRC c
+const int n = /* number of processes */;
+void P(int i) {
+  message msg;
+  while (true) {
+    receive(box, msg);
+    /* critical section */;
+    send(box, msg);
+    /* remainder */;
+  }
+}
+void main() {
+  create_mailbox(box);
+  send(box, null);
+  parbegin(P(1), P(2), ..., P(n));
+}
+#+END_SRC
+
+Bounded-buffer Producer/Consumer using Messages
+#+BEGIN_SRC c
+const int capacity = /* number of processes */;
+int i;
+void producer() {
+  message pmsg;
+  while (true) {
+    receive(mayproduce, pmsg);
+    pmsg = produce();
+    send(mayconsume, pmsg);
+  }
+}
+void consumer() {
+  message cmsg;
+  while (true) {
+    receive(mayconsume, cmsg);
+    consume();
+    send(mayproduce, null);
+  }
+}
+void main() {
+  create_mailbox(mayproduce);
+  create_mailbox(mayconsume);
+  for (int i = 1; i <= capacity; i++) send(mayproduce, null);
+  parbegin(producer, consumer);
+}
+#+END_SRC
+
+* Readers/Writers Problem
+Problem defined as follows: there is a data area shared among processes,
+some of which only read and some of which only write.
+The conditions on these are:
+1. any number of readers may simultaneously read the file
+2. only one writer at a time may write to the file
+3. if a writer is writing to the file, no reader may read it
+
+** Readers Have Priority
+#+BEGIN_SRC c
+int readcount;
+semaphore x = 1, wsem = 1;
+
+void reader() {
+  while (true) {
+    semWait(x);
+    readcount++;
+    if (readcount == 1) {
+      semWait(wsem);
+    }
+    semSignal(x);
+    READUNIT();
+    semWait(x);
+    readcount--;
+    if (readcount == 0) {
+      semSignal(wsem);
+    }
+    semSignal(x);
+  }
+}
+
+void writer() {
+  while (true) {
+    semWait(wsem);
+    WRITEUNIT();
+    semSignal(wsem);
+  }
+}
+
+void main() {
+  readcount = 0;
+  parbegin(reader, writer);
+}
+#+END_SRC
+
+When one writer is writing, no other writer or reader can access
+the shared data.
+
+The first reader waits on ~wsem~ (in case of writing), subsequent
+readers need not wait since first one guarantees no writing.
+
+Last reader finishing up signals ~wsem~ that writing can occur as
+no other readers accessing data.
+
+** Writers Have Priority
+Prevents writer starvation by guaranteeing no new readers once
+at least one writer desires to write.
+
+#+BEGIN_SRC c
+int readcount, writecount;
+semaphore x = 1, y = 1, z = 1, wsem = 1, rsem = 1;
+
+void reader() {
+  while (true) {
+    semWait(z);
+    semWait(rsem);
+    semWait(x);
+    readcount++;
+    if (readcount == 1) {
+      semWait(wsem);
+    }
+    semSignal(x);
+    semSignal(rsem);
+    semSignal(z);
+    READUNIT();
+    semWait(x);
+    readcount--;
+    if (readcount == 0) {
+      semSignal(wsem);
+    }
+    semSignal(x);
+  }
+}
+
+void writer() {
+  while (true) {
+    semWait(y);
+    writecount++;
+    if (writecount == 1) {
+        semWait(rsem);
+    }
+    semSignal(y);
+    semWait(wsem);
+    WRITEUNIT();
+    semSignal(wsem);
+    semWait(y);
+    writecount--;
+    if (writecount == 0) {
+        semSignal(rsem);
+    }
+    semSignal(y);
+  }
+}
+
+void main() {
+  readcount = 0;
+  parbegin(reader, writer);
+}
+#+END_SRC

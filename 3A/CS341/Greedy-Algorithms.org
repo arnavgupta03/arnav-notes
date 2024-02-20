@@ -1,0 +1,121 @@
+#+title: Greedy Algorithms
+#+LATEX: \setlength\parindent{0pt}
+#+author: Arnav Gupta
+
+* Overview
+For trying to solve a combinatorial optimization problem:
+- have a large, but finite domain $\mathcal{D}$
+- want to find an element $E$ in $\mathcal{D}$ that
+  minimizes/maximizes a cost function
+
+** Strategy
+- build $E$ step by step
+- don't think ahead, just try to improve as much as
+  possible at every step
+- simple algorithms, but usually no guarantee to get
+  the optimal
+- hard to prove correctness, easy to prove incorrectness
+
+* Interval Scheduling
+** Problem
+- input: $n$ intervals $[s_{1}, f_{1}], [s_{2}, f_{2}], \dots, [s_{n}, f_{n}]$
+- output: a maximal subset of disjoint intervals
+
+** Algorithm
+1. Let $S$ be the empty set
+2. Sort the intervals such that $f_{1} \le f_{2} \le \cdots \le f_{n}$
+3. For $i$ from $1$ to $n$ do
+        a. if interval $i$, $[s_{i}, f_{i}]$ has no conflicts with
+           intervals in $S$
+           i. add $i$ to $S$
+4. Return $S$
+
+** Correctness
+*** The Greedy Algorithm Stays Ahead
+Assume $O$ is an optimal solution, the goal is to show $|S| = |O|$.
+
+- Suppose $i_{1}, i_{2}, \dots, i_{k}$ are the intervals in $S$ in the
+  order they were added to $S$ by the greedy algorithm
+- Similarly, the intervals in $O$ are denoted by $j_{1}, \dots, j_{m}$
+  - assume that the intervals in $O$ are ordered in the order of the
+    start and finish times
+- Prove that $k = m$
+
+*** Lemma
+First consider the lemma:
+For all indices $r \le k$ we have $f(i_{r}) \le f(j_{r})$.
+
+By induction:
+- for $r = 1$, the statement is true
+- suppose $r > 1$ and the statement is true for $r - 1$
+  - we show that the statement is true for $r$
+- by induction hypothesis, $f(i_{r-1}) \le f(j_{r-1})$
+- by the order on $O$, $f(j_{r-1}) < s(j_{r})$
+- hence $f(i_{r-1}) < s(j_{r})$
+- thus, at the time the greedy algorithm chose $i_{r}$,
+  the interval $j_{r}$ was a possible choice
+- the greedy algorithm chooses an interval with the smallest finish time
+  - so $f(i_{r}) \le f(j_{r})$
+
+*** Proof
+Theorem: The greedy algorithm returns an optimal solution
+
+Prove by contradiction:
+- if the output $S$ is not optimal, then $|S| < |O|$
+- $i_{k}$ is the last interval in $S$ and $O$ must have
+  an interval $j_{k+1}$
+- apply the previous lemma with $r = k$ and we get $f(i_{k}) \le f(j_{k})$
+- we have $f(i_{k}) \le f(j_{k}) < s(j_{k+1})$
+- so $j_{k+1}$ was a possible choice to add to $S$ by the greedy algorithm
+  - this is a contradiction by how the greedy algorithm works
+
+* Interval Colouring
+** Problem
+- input: $n$ intervals $[s_{1}, f_{1}], [s_{2}, f_{2}], \dots, [s_{n}, f_{n}]$
+- output: use the minimum number of colours to colour the intervals
+  so that each interval gets one colour and two overlapping intervals get two
+  different colours
+
+** Algorithm
+1. Sort the intervals by starting time: $s_{1} \le s_{2} \le \cdots \le s_{n}$
+2. For $i$ from 1 to $n$ do
+   a. use the minimum available colour $c_{i}$ to colour the interval $i$
+      (one that doesn't conflict with the colours of intervals already coloured)
+
+** Correctness
+Assume the greedy algorithm uses $k$ colours.
+To prove correctness, the goal is to show that there are no other ways to solve
+the problem using at most $k-1$ colours.
+
+*** Proof
+Suppose interval $\ell$ is the first interval to use the colour $k$:
+- interval $\ell$ overlaps with intervals with colours $1, \dots, k - 1$
+- call these intervals
+  $[s_{i_{1}}, f_{i_{1}}], [s_{i_{2}}, f_{i_{2}}], \dots, [s_{i_{k-1}}, f_{i_{k-1}}]$
+- for $1 \le j \le k-1$, $s_{i_{j}} \le s_{\ell}$
+- all the intervals overlap with $[s_{\ell}, f_{\ell}]$
+- since all these intervals overlap with $[s_{\ell}, f_{\ell}]$,
+  $s_{\ell} \le f_{i_{j}}$ for $1 \le j \le k-1$
+- hence $s_{\ell}$ is a time contained in $k$ intervals
+- so, there is no $k-1$ colouring
+
+* Minimizing Total Completion Time
+** Problem
+- input: $n$ jobs, each requiring processing time $p_{i}$
+- output: an ordering of the jobs such that the total completion time is minimized
+
+** Algorithm
+- order the jobs in non-decreasing processing times
+
+** Correctness
+- let $L = [e_{1}, \dots, e_{n}]$ be an optimal solution (as a permutation of
+  $[1, \dots, n]$)
+- suppose that $L$ is not in non-decreasing order of processing times
+  - so there exists $i$ such that $t(e_{i}) > t(e_{i+1})$
+- sum of the completion times of $L$ is $nt(e_{1}) + (n-1) t(e_{2}) + \cdots + t(e_{n})$
+- contribution of $e_{i}$ and $e_{i+1}$ is
+  $(n-i+1)t(e_{i}) + (n-i)t(e_{i+1})$
+- let $L'$ be the permutation with $e_{i}$ and $e_{i+1}$ switched
+- their contribution becomes $(n-i+1)t(e_{i+1}) + (n-i)t(e_{i})$
+- nothing else changes so $T(L') - T(L) = t(e_{i+1}) - t(e_{i}) < 0$
+  which is a *contradiction*

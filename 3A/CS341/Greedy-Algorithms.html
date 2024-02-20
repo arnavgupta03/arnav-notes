@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-19 Mon 19:19 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Greedy Algorithms</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Greedy Algorithms</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org346215a">1. Overview</a>
+<ul>
+<li><a href="#orge876e74">1.1. Strategy</a></li>
+</ul>
+</li>
+<li><a href="#org7ec50a4">2. Interval Scheduling</a>
+<ul>
+<li><a href="#org28cac88">2.1. Problem</a></li>
+<li><a href="#org428bd34">2.2. Algorithm</a></li>
+<li><a href="#org3a1e9e1">2.3. Correctness</a>
+<ul>
+<li><a href="#orgd24066e">2.3.1. The Greedy Algorithm Stays Ahead</a></li>
+<li><a href="#orgd9a6e3e">2.3.2. Lemma</a></li>
+<li><a href="#org89106bf">2.3.3. Proof</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org41bc516">3. Interval Colouring</a>
+<ul>
+<li><a href="#org93d95a3">3.1. Problem</a></li>
+<li><a href="#org6bd8a5c">3.2. Algorithm</a></li>
+<li><a href="#org4ba721f">3.3. Correctness</a>
+<ul>
+<li><a href="#org7eae94f">3.3.1. Proof</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org15d1dff">4. Minimizing Total Completion Time</a>
+<ul>
+<li><a href="#org3488ad4">4.1. Problem</a></li>
+<li><a href="#orge798bfd">4.2. Algorithm</a></li>
+<li><a href="#org5468001">4.3. Correctness</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org346215a" class="outline-2">
+<h2 id="org346215a"><span class="section-number-2">1.</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+For trying to solve a combinatorial optimization problem:
+</p>
+<ul class="org-ul">
+<li>have a large, but finite domain \(\mathcal{D}\)</li>
+<li>want to find an element \(E\) in \(\mathcal{D}\) that
+minimizes/maximizes a cost function</li>
+</ul>
+</div>
+<div id="outline-container-orge876e74" class="outline-3">
+<h3 id="orge876e74"><span class="section-number-3">1.1.</span> Strategy</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>build \(E\) step by step</li>
+<li>don&rsquo;t think ahead, just try to improve as much as
+possible at every step</li>
+<li>simple algorithms, but usually no guarantee to get
+the optimal</li>
+<li>hard to prove correctness, easy to prove incorrectness</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org7ec50a4" class="outline-2">
+<h2 id="org7ec50a4"><span class="section-number-2">2.</span> Interval Scheduling</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org28cac88" class="outline-3">
+<h3 id="org28cac88"><span class="section-number-3">2.1.</span> Problem</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>input: \(n\) intervals \([s_{1}, f_{1}], [s_{2}, f_{2}], \dots, [s_{n}, f_{n}]\)</li>
+<li>output: a maximal subset of disjoint intervals</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org428bd34" class="outline-3">
+<h3 id="org428bd34"><span class="section-number-3">2.2.</span> Algorithm</h3>
+<div class="outline-text-3" id="text-2-2">
+<ol class="org-ol">
+<li>Let \(S\) be the empty set</li>
+<li>Sort the intervals such that \(f_{1} \le f_{2} \le \cdots \le f_{n}\)</li>
+<li>For \(i\) from \(1\) to \(n\) do
+<ol class="org-ol">
+<li>if interval \(i\), \([s_{i}, f_{i}]\) has no conflicts with
+intervals in \(S\)
+<ol class="org-ol">
+<li>add \(i\) to \(S\)</li>
+</ol></li>
+</ol></li>
+<li>Return \(S\)</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org3a1e9e1" class="outline-3">
+<h3 id="org3a1e9e1"><span class="section-number-3">2.3.</span> Correctness</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="outline-container-orgd24066e" class="outline-4">
+<h4 id="orgd24066e"><span class="section-number-4">2.3.1.</span> The Greedy Algorithm Stays Ahead</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+Assume \(O\) is an optimal solution, the goal is to show \(|S| = |O|\).
+</p>
+
+<ul class="org-ul">
+<li>Suppose \(i_{1}, i_{2}, \dots, i_{k}\) are the intervals in \(S\) in the
+order they were added to \(S\) by the greedy algorithm</li>
+<li>Similarly, the intervals in \(O\) are denoted by \(j_{1}, \dots, j_{m}\)
+<ul class="org-ul">
+<li>assume that the intervals in \(O\) are ordered in the order of the
+start and finish times</li>
+</ul></li>
+<li>Prove that \(k = m\)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd9a6e3e" class="outline-4">
+<h4 id="orgd9a6e3e"><span class="section-number-4">2.3.2.</span> Lemma</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+First consider the lemma:
+For all indices \(r \le k\) we have \(f(i_{r}) \le f(j_{r})\).
+</p>
+
+<p>
+By induction:
+</p>
+<ul class="org-ul">
+<li>for \(r = 1\), the statement is true</li>
+<li>suppose \(r > 1\) and the statement is true for \(r - 1\)
+<ul class="org-ul">
+<li>we show that the statement is true for \(r\)</li>
+</ul></li>
+<li>by induction hypothesis, \(f(i_{r-1}) \le f(j_{r-1})\)</li>
+<li>by the order on \(O\), \(f(j_{r-1}) < s(j_{r})\)</li>
+<li>hence \(f(i_{r-1}) < s(j_{r})\)</li>
+<li>thus, at the time the greedy algorithm chose \(i_{r}\),
+the interval \(j_{r}\) was a possible choice</li>
+<li>the greedy algorithm chooses an interval with the smallest finish time
+<ul class="org-ul">
+<li>so \(f(i_{r}) \le f(j_{r})\)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org89106bf" class="outline-4">
+<h4 id="org89106bf"><span class="section-number-4">2.3.3.</span> Proof</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+Theorem: The greedy algorithm returns an optimal solution
+</p>
+
+<p>
+Prove by contradiction:
+</p>
+<ul class="org-ul">
+<li>if the output \(S\) is not optimal, then \(|S| < |O|\)</li>
+<li>\(i_{k}\) is the last interval in \(S\) and \(O\) must have
+an interval \(j_{k+1}\)</li>
+<li>apply the previous lemma with \(r = k\) and we get \(f(i_{k}) \le f(j_{k})\)</li>
+<li>we have \(f(i_{k}) \le f(j_{k}) < s(j_{k+1})\)</li>
+<li>so \(j_{k+1}\) was a possible choice to add to \(S\) by the greedy algorithm
+<ul class="org-ul">
+<li>this is a contradiction by how the greedy algorithm works</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org41bc516" class="outline-2">
+<h2 id="org41bc516"><span class="section-number-2">3.</span> Interval Colouring</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org93d95a3" class="outline-3">
+<h3 id="org93d95a3"><span class="section-number-3">3.1.</span> Problem</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>input: \(n\) intervals \([s_{1}, f_{1}], [s_{2}, f_{2}], \dots, [s_{n}, f_{n}]\)</li>
+<li>output: use the minimum number of colours to colour the intervals
+so that each interval gets one colour and two overlapping intervals get two
+different colours</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6bd8a5c" class="outline-3">
+<h3 id="org6bd8a5c"><span class="section-number-3">3.2.</span> Algorithm</h3>
+<div class="outline-text-3" id="text-3-2">
+<ol class="org-ol">
+<li>Sort the intervals by starting time: \(s_{1} \le s_{2} \le \cdots \le s_{n}\)</li>
+<li>For \(i\) from 1 to \(n\) do
+<ol class="org-ol">
+<li>use the minimum available colour \(c_{i}\) to colour the interval \(i\)
+(one that doesn&rsquo;t conflict with the colours of intervals already coloured)</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org4ba721f" class="outline-3">
+<h3 id="org4ba721f"><span class="section-number-3">3.3.</span> Correctness</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Assume the greedy algorithm uses \(k\) colours.
+To prove correctness, the goal is to show that there are no other ways to solve
+the problem using at most \(k-1\) colours.
+</p>
+</div>
+<div id="outline-container-org7eae94f" class="outline-4">
+<h4 id="org7eae94f"><span class="section-number-4">3.3.1.</span> Proof</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+Suppose interval \(\ell\) is the first interval to use the colour \(k\):
+</p>
+<ul class="org-ul">
+<li>interval \(\ell\) overlaps with intervals with colours \(1, \dots, k - 1\)</li>
+<li>call these intervals
+\([s_{i_{1}}, f_{i_{1}}], [s_{i_{2}}, f_{i_{2}}], \dots, [s_{i_{k-1}}, f_{i_{k-1}}]\)</li>
+<li>for \(1 \le j \le k-1\), \(s_{i_{j}} \le s_{\ell}\)</li>
+<li>all the intervals overlap with \([s_{\ell}, f_{\ell}]\)</li>
+<li>since all these intervals overlap with \([s_{\ell}, f_{\ell}]\),
+\(s_{\ell} \le f_{i_{j}}\) for \(1 \le j \le k-1\)</li>
+<li>hence \(s_{\ell}\) is a time contained in \(k\) intervals</li>
+<li>so, there is no \(k-1\) colouring</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org15d1dff" class="outline-2">
+<h2 id="org15d1dff"><span class="section-number-2">4.</span> Minimizing Total Completion Time</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org3488ad4" class="outline-3">
+<h3 id="org3488ad4"><span class="section-number-3">4.1.</span> Problem</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>input: \(n\) jobs, each requiring processing time \(p_{i}\)</li>
+<li>output: an ordering of the jobs such that the total completion time is minimized</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge798bfd" class="outline-3">
+<h3 id="orge798bfd"><span class="section-number-3">4.2.</span> Algorithm</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>order the jobs in non-decreasing processing times</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5468001" class="outline-3">
+<h3 id="org5468001"><span class="section-number-3">4.3.</span> Correctness</h3>
+<div class="outline-text-3" id="text-4-3">
+<ul class="org-ul">
+<li>let \(L = [e_{1}, \dots, e_{n}]\) be an optimal solution (as a permutation of
+\([1, \dots, n]\))</li>
+<li>suppose that \(L\) is not in non-decreasing order of processing times
+<ul class="org-ul">
+<li>so there exists \(i\) such that \(t(e_{i}) > t(e_{i+1})\)</li>
+</ul></li>
+<li>sum of the completion times of \(L\) is \(nt(e_{1}) + (n-1) t(e_{2}) + \cdots + t(e_{n})\)</li>
+<li>contribution of \(e_{i}\) and \(e_{i+1}\) is
+\((n-i+1)t(e_{i}) + (n-i)t(e_{i+1})\)</li>
+<li>let \(L'\) be the permutation with \(e_{i}\) and \(e_{i+1}\) switched</li>
+<li>their contribution becomes \((n-i+1)t(e_{i+1}) + (n-i)t(e_{i})\)</li>
+<li>nothing else changes so \(T(L') - T(L) = t(e_{i+1}) - t(e_{i}) < 0\)
+which is a <b>contradiction</b></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-02-19 Mon 19:19</p>
+</div>
+</body>
+</html>

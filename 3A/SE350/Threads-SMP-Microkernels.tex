@@ -1,0 +1,123 @@
+% Created 2024-02-13 Tue 00:03
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{DESKTOP-H800RKQ}
+\date{\today}
+\title{Threads SMP Microkernels}
+\hypersetup{
+ pdfauthor={DESKTOP-H800RKQ},
+ pdftitle={Threads SMP Microkernels},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.2 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\setlength\parindent{0pt}
+\section{Processes and Threads}
+\label{sec:org8b6a5e0}
+Main characteristics of a process are:
+\begin{itemize}
+\item resource ownership
+\begin{itemize}
+\item space to hold process info
+\item control over resources
+\end{itemize}
+\item scheduling/execution
+\begin{itemize}
+\item process follows trace through program
+\item has state and priority
+\end{itemize}
+\end{itemize}
+\subsection{Multithreading}
+\label{sec:org333c881}
+
+Multithreading: ability of the OS to support multiple,
+concurrent paths of execution within a single process
+
+In a multithreaded environment, a process has:
+\begin{itemize}
+\item virtual address space for process image (resource allocation)
+\item protected access to resources (protection)
+\end{itemize}
+
+Threads each have:
+\begin{itemize}
+\item state (running, ready, etc)
+\item saved thread context when not running
+\item execution stack
+\item static storage for local variables
+\item access to the memory and resources of process (shared with other threads)
+\end{itemize}
+
+When one thread alters memory, other threads see the
+results if and when they access that item.
+One thread's access permissions cascade to other threads
+in the same process.
+
+Key benefits of threads:
+\begin{enumerate}
+\item faster to create thread in a process than a new process
+\item faster to terminate a thread than a process
+\item less time to switch between threads within a process
+than between processes
+\item communication between threads more efficient
+\end{enumerate}
+
+Threads are useful for:
+\begin{enumerate}
+\item splitting foreground/background work
+\item asynchronous processing
+\item speed of execution
+\item modular program structure
+\end{enumerate}
+
+Scheduling and dispatching is done on threads, not processes.
+\subsection{Thread Functionality}
+\label{sec:orgd21a7cf}
+
+Key states for a thread are running, ready, and blocked (no suspend).
+
+Four basic thread operations associated with a change
+in thread state:
+\begin{enumerate}
+\item \textbf{spawn}: caused by process spawn or another thread,
+then placed on ready queue (register context and stack space)
+\item \textbf{block}: when waiting for an event
+\item \textbf{unblock}: when event occurs, moved to ready queue
+\item \textbf{finish}: thread completes and is deallocated
+\end{enumerate}
+
+With multiple threads, blocked threads can wait simultaneously,
+for threads within the same process and in different processes.
+
+Must synchronize the activity of various threads so that
+they do not interfere with each other.
+\section{Types of Threads}
+\label{sec:org74348e2}
+\subsection{User-Level and Kernel-Level Threads}
+\label{sec:org1b5d58c}
+For pure user-level:
+\begin{itemize}
+\item all thread management is done by the
+\end{itemize}
+application and the kernel is not aware of them
+\begin{itemize}
+\item done using threads libraries that manage
+thread control and state
+\end{itemize}
+\end{document}

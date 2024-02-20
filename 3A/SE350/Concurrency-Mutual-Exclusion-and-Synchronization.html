@@ -1,0 +1,1427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-19 Mon 19:20 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Concurrency: Mutual Exclusion And Synchronization</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Concurrency: Mutual Exclusion And Synchronization</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc700e7d">1. Concurrency Basics</a></li>
+<li><a href="#org28bfd6f">2. Mutual Exclusion: Software Approaches</a>
+<ul>
+<li><a href="#orga18e6ad">2.1. Dekker&rsquo;s Algorithm</a></li>
+<li><a href="#orgfd5cc72">2.2. Peterson&rsquo;s Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#org44c5f70">3. Principles of Concurrency</a>
+<ul>
+<li><a href="#org0e64c18">3.1. Operating System Concerns</a></li>
+<li><a href="#org26d78e9">3.2. Process Interaction</a></li>
+<li><a href="#org17a80d1">3.3. Requirements for Mutual Exclusion</a></li>
+</ul>
+</li>
+<li><a href="#org63ba9b8">4. Mutual Exclusion: Hardware Support</a>
+<ul>
+<li><a href="#org547dbbf">4.1. Interrupt Disabling</a></li>
+<li><a href="#org355b3ed">4.2. Special Machine Instructions</a></li>
+</ul>
+</li>
+<li><a href="#org1ccc2a7">5. Semaphores</a>
+<ul>
+<li><a href="#org7ff7864">5.1. Producer/Consumer Problem</a></li>
+<li><a href="#org0444fe9">5.2. Implementation of Semaphores</a></li>
+</ul>
+</li>
+<li><a href="#orgb21f791">6. Monitors</a>
+<ul>
+<li><a href="#orgc597d1f">6.1. Monitor with Signal</a></li>
+<li><a href="#orgc7aba1b">6.2. Alternate Models of Monitors with Notify and Broadcast</a></li>
+</ul>
+</li>
+<li><a href="#org4f400aa">7. Message Passing</a>
+<ul>
+<li><a href="#orge1edfdb">7.1. Addressing</a></li>
+<li><a href="#org863a390">7.2. Message Format</a></li>
+<li><a href="#org071e246">7.3. Mutual Exclusion</a></li>
+</ul>
+</li>
+<li><a href="#orgfcc4871">8. Readers/Writers Problem</a>
+<ul>
+<li><a href="#orgba12703">8.1. Readers Have Priority</a></li>
+<li><a href="#orgf9d0f37">8.2. Writers Have Priority</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc700e7d" class="outline-2">
+<h2 id="orgc700e7d"><span class="section-number-2">1.</span> Concurrency Basics</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Arises in 3 different contexts:
+</p>
+<ol class="org-ol">
+<li><b>multiple applications</b>: multiprogramming was invented to allow
+processing time to be dynamically shared among a number of
+applications</li>
+<li><b>structured applications</b>: applications can be programmed as a
+set of concurrent processes</li>
+<li><b>operating system structure</b>: same structuring advantages
+apply to systems programs as OSs are also a set of processes
+and threads</li>
+</ol>
+
+<p>
+Key terms:
+</p>
+<ul class="org-ul">
+<li><b>atomic operation</b>: action that appears to be indivisible; no
+intermediate state or interruption</li>
+<li><b>critical section</b>: section of code that requires access to shared
+resources, cannot be executed by 2+ processes at once</li>
+<li><b>deadlock</b>: situation in which 2+ processes cannot proceed because
+each is waiting for one of the others</li>
+<li><b>livelock</b>: situation in which 2+ processes keep changing state
+without doing any work</li>
+<li><b>mutual exclusion</b>: requirement that when 1 process is in a critical
+section, no other process can be in a critical section accessing
+the same resources</li>
+<li><b>race condition</b>: situation in which multiple threads or processes
+read and write a shared data item and the final result
+depends on their relative timing</li>
+<li><b>starvation</b>: situation in which a runnable process is overlooked
+indefinitely by the scheduler, can be chosen but never is</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org28bfd6f" class="outline-2">
+<h2 id="org28bfd6f"><span class="section-number-2">2.</span> Mutual Exclusion: Software Approaches</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Software approaches assume mutual exclusion at memory access level:
+simultaneous access is serialized.
+</p>
+</div>
+<div id="outline-container-orga18e6ad" class="outline-3">
+<h3 id="orga18e6ad"><span class="section-number-3">2.1.</span> Dekker&rsquo;s Algorithm</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+First attempt has a <code>turn</code> variable that has the pid for the
+process allowed in the critical section.
+</p>
+<ul class="org-ul">
+<li>guarantees mutual exclusion but has two drawbacks
+<ol class="org-ol">
+<li>processes must strictly alternate, so pace is dictated by
+the slower process</li>
+<li>if one process fails, the other is permanently blocked</li>
+</ol></li>
+<li>done using coroutines (pass execution control back and
+forth)</li>
+</ul>
+
+<p>
+Second attempt has a bool vector <code>flag</code> with each index
+corresponding to a pid, where <code>true</code> means the process is in
+the critical section.
+</p>
+<ul class="org-ul">
+<li>does not guarantee mutual exclusion</li>
+</ul>
+
+<p>
+Third attempt sets flag before checking if other process
+in critical section.
+</p>
+<ul class="org-ul">
+<li>if one process fails inside the critical section,
+the other process is blocked</li>
+<li>if one process fails outside the critical section,
+the other process is not blocked</li>
+<li>can cause deadlock if both processes set flag
+before checking the other&rsquo;s flag</li>
+</ul>
+
+<p>
+Fourth attempt has each process turn off flag to enter
+critical section after turning it on.
+</p>
+<ul class="org-ul">
+<li>can cause livelock if each process repeatedly turns
+its flags on and off</li>
+</ul>
+
+<p>
+The correct solution is Dekker&rsquo;s algorithm:
+</p>
+<ul class="org-ul">
+<li>uses both bool vector <code>flag</code> and variable <code>turn</code></li>
+<li>process sets flag to <code>true</code> before checking</li>
+<li>while checking, if it is not a process&rsquo;s turn,
+it defers to the other process which will flip
+its flag</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">boolean</span> <span style="color: #dcaeea;">flag</span><span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">2</span><span style="color: #51afef;">]</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">turn</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P0</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">true</span>;
+    <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span>flag<span style="color: #a9a1e1;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #a9a1e1;">]</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+      <span style="color: #51afef;">if</span> <span style="color: #a9a1e1;">(</span>turn ==  <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+        flag<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #51afef;">]</span> = <span style="color: #a9a1e1;">false</span>;
+        <span style="color: #51afef;">while</span> <span style="color: #51afef;">(</span>turn == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">)</span>;
+        flag<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #51afef;">]</span> = <span style="color: #a9a1e1;">true</span>;
+      <span style="color: #a9a1e1;">}</span>
+    <span style="color: #98be65;">}</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>
+    turn = <span style="color: #da8548; font-weight: bold;">1</span>;
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P1</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">true</span>;
+    <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span>flag<span style="color: #a9a1e1;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #a9a1e1;">]</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+      <span style="color: #51afef;">if</span> <span style="color: #a9a1e1;">(</span>turn ==  <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+        flag<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">]</span> = <span style="color: #a9a1e1;">false</span>;
+        <span style="color: #51afef;">while</span> <span style="color: #51afef;">(</span>turn == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #51afef;">)</span>;
+        flag<span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #51afef;">]</span> = <span style="color: #a9a1e1;">true</span>;
+      <span style="color: #a9a1e1;">}</span>
+    <span style="color: #98be65;">}</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>
+    turn = <span style="color: #da8548; font-weight: bold;">0</span>;
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  flag<span style="color: #c678dd;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #c678dd;">]</span> = <span style="color: #a9a1e1;">false</span>;
+  flag<span style="color: #c678dd;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">]</span> = <span style="color: #a9a1e1;">false</span>;
+  turn = <span style="color: #da8548; font-weight: bold;">1</span>;
+  parbegin<span style="color: #c678dd;">(</span>P0, P1<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfd5cc72" class="outline-3">
+<h3 id="orgfd5cc72"><span class="section-number-3">2.2.</span> Peterson&rsquo;s Algorithm</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+A simpler algorithm that uses <code>turn</code> to resolve
+simultaneity conflicts.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">boolean</span> <span style="color: #dcaeea;">flag</span><span style="color: #51afef;">[</span><span style="color: #da8548; font-weight: bold;">2</span><span style="color: #51afef;">]</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">turn</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P0</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">true</span>;
+    turn = <span style="color: #da8548; font-weight: bold;">1</span>;
+    <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span>flag<span style="color: #a9a1e1;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #a9a1e1;">]</span> &amp;&amp; turn == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P1</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">true</span>;
+    turn = <span style="color: #da8548; font-weight: bold;">0</span>;
+    <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span>flag<span style="color: #a9a1e1;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #a9a1e1;">]</span> &amp;&amp; turn == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">)</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>
+    turn = <span style="color: #da8548; font-weight: bold;">0</span>;
+    flag<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">]</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  flag<span style="color: #c678dd;">[</span><span style="color: #da8548; font-weight: bold;">0</span><span style="color: #c678dd;">]</span> = <span style="color: #a9a1e1;">false</span>;
+  flag<span style="color: #c678dd;">[</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">]</span> = <span style="color: #a9a1e1;">false</span>;
+  parbegin<span style="color: #c678dd;">(</span>P0, P1<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org44c5f70" class="outline-2">
+<h2 id="org44c5f70"><span class="section-number-2">3.</span> Principles of Concurrency</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+In a multiprocessor sysmte, it is possible not only
+to interleave the execution of multiple processes
+but also to overlap them.
+</p>
+
+<p>
+Difficulties with interleaving and overlapping:
+</p>
+<ol class="org-ol">
+<li>sharing global resources is risky (read/write
+race conditions)</li>
+<li>difficult for OS to optimally manage resource
+allocation</li>
+<li>difficult to locate programming errors (less
+reproducable)</li>
+</ol>
+
+<p>
+Sharing main memory permits efficient and close
+interaction among processes, but can lead to problems:
+</p>
+<ul class="org-ul">
+<li>if one process updates a global variable and is
+interrupted, another process may alter the variable
+before the first process can use its value</li>
+</ul>
+
+<p>
+Necessary to protect shared global variables by
+controlling the code that accesses the variable.
+</p>
+</div>
+<div id="outline-container-org0e64c18" class="outline-3">
+<h3 id="org0e64c18"><span class="section-number-3">3.1.</span> Operating System Concerns</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Concerns are:
+</p>
+<ol class="org-ol">
+<li>OS must be able to keep track of processes</li>
+<li>OS must allocate and deallocate resources for each
+active process (processor time, memory, files,
+IO devices)</li>
+<li>OS must protect data and physical resources of each
+process against unintended interference by other
+processes</li>
+<li>functioning of a process and its output must be
+independent of the relative speed of execution</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org26d78e9" class="outline-3">
+<h3 id="org26d78e9"><span class="section-number-3">3.2.</span> Process Interaction</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+For processes unaware of each other:
+</p>
+<ul class="org-ul">
+<li>OS must be concerned about competition for resources</li>
+<li>results of one process independent of the action of others</li>
+<li>timing of process may be affected</li>
+<li>potential problems are mutual exclusion, deadlock of
+a renewable resource, starvation</li>
+</ul>
+
+<p>
+For processes indirectly aware of each other:
+</p>
+<ul class="org-ul">
+<li>exhibit cooperation by sharing</li>
+<li>results of one process may depend on information obtained
+from others</li>
+<li>timing of process may be affected</li>
+<li>potential problems are mutual exclusion, deadlock of
+a renewable resource, starvation, data coherence</li>
+</ul>
+
+<p>
+For processes directly aware of each other:
+</p>
+<ul class="org-ul">
+<li>exhibit cooperation by communication</li>
+<li>results of one process may depend on information obtained
+from others</li>
+<li>timing of process may be affected</li>
+<li>potential problems are deadlock of
+a consumable resource, starvation</li>
+</ul>
+
+<p>
+If competition exists:
+</p>
+<ul class="org-ul">
+<li>each process should leave the state of any resource that
+it uses unaffected</li>
+<li>since a process must wait to use a resource, it will be
+slowed down or may never get access to it</li>
+</ul>
+
+<p>
+Problems that must be solved for competition are:
+</p>
+<ol class="org-ol">
+<li><b>Mutual exclusion</b>: ensuring only one program using the critical
+resource in the critical section at a time</li>
+<li><b>Deadlock</b>: processes exist a loop waiting on other processes</li>
+<li><b>Starvation</b>: process is indefinitely denied access to a
+resource, even without deadlock</li>
+</ol>
+
+<p>
+Processes themselves must express the requirement for mutual exclusoin,
+with support from the OS to follow this.
+</p>
+
+<p>
+If cooperation by sharing exists:
+</p>
+<ul class="org-ul">
+<li>processes must cooperate to ensure shared data is properly managed</li>
+<li>control mechanisms must ensure the integrity of shared data</li>
+</ul>
+
+<p>
+If cooperation by communication exists:
+</p>
+<ul class="org-ul">
+<li>processes must synchronize various activities through messages</li>
+<li>deadlock and starvation can occur, through awaiting communication
+from other processes</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org17a80d1" class="outline-3">
+<h3 id="org17a80d1"><span class="section-number-3">3.3.</span> Requirements for Mutual Exclusion</h3>
+<div class="outline-text-3" id="text-3-3">
+<ol class="org-ol">
+<li><b>Enforcement</b>: only one process at a time allowed in the
+critical section for a resource</li>
+<li><b>No Interference</b>: a process that halts in its noncritical section
+must do so without interfering with other processes</li>
+<li><b>No Deadlock or Starvation</b></li>
+<li><b>No Unnecessary Delay</b>: a process must not be delayed access to a
+critical section when there is no other process using it</li>
+<li><b>No Assumptions</b>: no assumptions made about relative process
+speeds or number of processors</li>
+<li><b>Finite Time</b>: a process remains inside its critical section
+for a finite time only</li>
+</ol>
+
+<p>
+Main mechanisms for Mutual Exclusion:
+</p>
+<ul class="org-ul">
+<li>software with Dekker&rsquo;s algorithm (slow)</li>
+<li>special hardware instructions</li>
+<li>support in the OS or a programming language</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org63ba9b8" class="outline-2">
+<h2 id="org63ba9b8"><span class="section-number-2">4.</span> Mutual Exclusion: Hardware Support</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org547dbbf" class="outline-3">
+<h3 id="org547dbbf"><span class="section-number-3">4.1.</span> Interrupt Disabling</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Disabling interrupts guarantees mutual exclusion for a uniprocessor
+system.
+</p>
+
+<p>
+Costs of interrupt disabling:
+</p>
+<ul class="org-ul">
+<li>efficiency is degraded since there is limited ability to
+interleave processes.</li>
+<li>does not work for multiprocessor architecture, since a process
+on another processor could invalidate mutual exclusion</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org355b3ed" class="outline-3">
+<h3 id="org355b3ed"><span class="section-number-3">4.2.</span> Special Machine Instructions</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Special instructions carry out two actions atomically
+during one instruction fetch cycle.
+</p>
+
+<p>
+Compare&amp;Swap instruction (carried out atomically)
+</p>
+<ul class="org-ul">
+<li><code>testval</code> is compared to memory location
+<ul class="org-ul">
+<li>if equal then a swap occurs with <code>newval</code></li>
+</ul></li>
+<li>returns either the old value or whether or not the swap occurred</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span> = <span style="color: #da8548; font-weight: bold;">5</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">bolt</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span>compare_and_swap<span style="color: #a9a1e1;">(</span>bolt, <span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #a9a1e1;">)</span> == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>
+    bolt = <span style="color: #da8548; font-weight: bold;">0</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  bolt = <span style="color: #da8548; font-weight: bold;">0</span>;
+  parbegin<span style="color: #c678dd;">(</span>P<span style="color: #98be65;">(</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span>, P<span style="color: #98be65;">(</span><span style="color: #da8548; font-weight: bold;">2</span><span style="color: #98be65;">)</span>, ..., P<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Exchange instruction (carried out atomically)
+</p>
+<ul class="org-ul">
+<li>exchanges contents of register with that of memory location</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span> = <span style="color: #da8548; font-weight: bold;">5</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">bolt</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">keyi</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
+    <span style="color: #51afef;">do</span> <span style="color: #98be65;">(</span>exchange<span style="color: #a9a1e1;">(</span>&amp;keyi, &amp;bolt<span style="color: #a9a1e1;">)</span><span style="color: #98be65;">)</span>
+         <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span>keyi != <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">)</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>
+    bolt = <span style="color: #da8548; font-weight: bold;">0</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  bolt = <span style="color: #da8548; font-weight: bold;">0</span>;
+  parbegin<span style="color: #c678dd;">(</span>P<span style="color: #98be65;">(</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span>, P<span style="color: #98be65;">(</span><span style="color: #da8548; font-weight: bold;">2</span><span style="color: #98be65;">)</span>, ..., P<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Advantages of machine-instruction approach:
+</p>
+<ul class="org-ul">
+<li>applicable to any number of processes for both uniprocessor
+and multiprocessor</li>
+<li>simple and easy to verify</li>
+<li>can be used to support multiple critical sections, each
+defined by its own variable</li>
+</ul>
+
+<p>
+Disadvantages of machine-instruction approach:
+</p>
+<ul class="org-ul">
+<li>busy waiting: process waiting for access to a critical section
+consumes processor</li>
+<li>starvation possible: when a process leaves a critical section
+and more than one process is waiting, some process could never
+be chosen</li>
+<li>deadlock possible: higher priority processes could end up
+waiting on lower priority processes inside critical sections</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org1ccc2a7" class="outline-2">
+<h2 id="org1ccc2a7"><span class="section-number-2">5.</span> Semaphores</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Common concurrency mechanisms:
+</p>
+<ul class="org-ul">
+<li><b>semaphore</b>: integer value used for signaling, with atomic
+operations of initialize, decrement, and increment where
+decrement can block a process and increment can unblock a
+process</li>
+<li><b>binary semaphore</b>: semaphore that takes on only 0 and 1</li>
+<li><b>mutex</b>: similar to binary semaphore but the process that
+locks a mutex must unlock it</li>
+<li><b>condition variable</b>: data type used to block a process
+or thread until a condition is true</li>
+<li><b>monitor</b>: programming language construct to encapsulate
+variables, critical sections, and initialization code
+in one data type, where it may only be accessed inside
+critical sections by one process</li>
+<li><b>event flags</b>: memory word used as a synchronization
+mechanism with bits representing events that must be
+waited on</li>
+<li><b>messages</b>: means for two processes to exchange info,
+possibly for synchronization</li>
+<li><b>spinlocks</b>: mutual exclusion mechanism in which a
+process</li>
+</ul>
+
+<p>
+Two or more processes can cooperate by means of simple signals.
+</p>
+
+<p>
+For a semaphore <code>s</code>:
+</p>
+<ul class="org-ul">
+<li>to transmit a signal, a process executes <code>semSignal(s)</code></li>
+<li>to receive a signal, a process executes <code>semWait(s)</code>,
+which suspends the process until a signal is transmitted</li>
+</ul>
+
+<p>
+Semaphore is an integer variable with only 3 operations defined:
+</p>
+<ol class="org-ol">
+<li>initialized to nonnegative integer value</li>
+<li><code>semWait</code> decrements the semaphore value, if it becomes negative
+the process executing <code>semWait</code> is blocked, otherwise it
+continues execution</li>
+<li><code>semSignal</code> increments the semaphore value, if it is less than
+or equal to zero, a process blocked by <code>semWait</code> is
+unblocked</li>
+</ol>
+
+<p>
+Consequences of semaphore definition:
+</p>
+<ol class="org-ol">
+<li>no way to know before <code>semWait</code> whether it will block</li>
+<li>after a process increments a semaphore and another
+process wakes up, both processes run concurrently</li>
+<li>when calling <code>semSignal</code>, the number of unblocked
+processes may be 0 or 1</li>
+</ol>
+
+<p>
+Operations on binary semaphore are:
+</p>
+<ol class="org-ol">
+<li>initialized to 0 or 1</li>
+<li><code>semWaitB</code> checks the semaphore value, if 0 then the
+process executing <code>semWaitB</code> is blocked, if 1, then
+the value is changed to 0 and the process continues</li>
+<li><code>semSignalB</code> checks if value is 0 (processes blocked),
+if so then one blocked process is unblocked, if no
+processes blocked the value is set to 1</li>
+</ol>
+
+<p>
+Mutex is a programming flag to grab and release an object:
+</p>
+<ul class="org-ul">
+<li>mutex locks (set to 0) when non-shareable data acquired or
+processing started that cannot be performed elsewhere</li>
+<li>mutex unlocks when the data is no longer needed or the
+routine is finished</li>
+</ul>
+
+<p>
+Semaphores use a queue to hold processes waiting on the
+semaphore:
+</p>
+<ul class="org-ul">
+<li>strong semaphores use FIFO for release, guarantee
+freedom from starvation</li>
+<li>weak semaphores do not specify the order of release,
+no guarantee of freedom from starvation</li>
+</ul>
+</div>
+<div id="outline-container-org7ff7864" class="outline-3">
+<h3 id="org7ff7864"><span class="section-number-3">5.1.</span> Producer/Consumer Problem</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+General statement of problem:
+</p>
+<ul class="org-ul">
+<li>one or more producers generating some type of data
+and placing into buffer</li>
+<li>single consumer takes items out of buffer one at
+a time</li>
+<li>system is to be constrained to prevent the overlap
+of buffer operations (only one agent accessing the
+buffer at a time)</li>
+</ul>
+
+<p>
+Order of semaphore operations can sometimes matter,
+especially for <code>semWait</code> where there is potential
+for deadlock.
+</p>
+
+<p>
+Infinite-buffer producer/consumer problem with binary
+semaphores
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span>;
+<span style="color: #ECBE7B;">binary_semaphore</span> <span style="color: #dcaeea;">s</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">delay</span> = <span style="color: #da8548; font-weight: bold;">0</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">producer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    produce<span style="color: #98be65;">()</span>;
+    semWaitB<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    append<span style="color: #98be65;">()</span>;
+    n++;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>n == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span> semSignalB<span style="color: #98be65;">(</span>delay<span style="color: #98be65;">)</span>;
+    semSignalB<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">consumer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">m</span>;
+  semWaitB<span style="color: #c678dd;">(</span>delay<span style="color: #c678dd;">)</span>;
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWaitB<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    take<span style="color: #98be65;">()</span>;
+    n--;
+    m = n;
+    semSignalB<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    consume<span style="color: #98be65;">()</span>;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>m == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">)</span> semWaitB<span style="color: #98be65;">(</span>delay<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  n = <span style="color: #da8548; font-weight: bold;">0</span>;
+  parbegin<span style="color: #c678dd;">(</span>producer, consumer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Infinite-buffer producer/consumer problem with semaphores
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">semaphore</span> <span style="color: #dcaeea;">n</span> = <span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #dcaeea;">s</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">producer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    produce<span style="color: #98be65;">()</span>;
+    semWait<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    append<span style="color: #98be65;">()</span>;
+    semSignal<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    semSignal<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">consumer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWait<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    take<span style="color: #98be65;">()</span>;
+    semSignal<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    consume<span style="color: #98be65;">()</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  parbegin<span style="color: #c678dd;">(</span>producer, consumer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+For a finite buffer, it can be treated as circular
+with pointer values expressed module the buffer size.
+Block occurs on:
+</p>
+<ul class="org-ul">
+<li>insert in full buffer for producer</li>
+<li>remove from empty buffer for consumer</li>
+</ul>
+<p>
+Unblock occurs on:
+</p>
+<ul class="org-ul">
+<li>item inserted for consumer</li>
+<li>item removed for producer</li>
+</ul>
+
+<p>
+Finite-buffer producer/consumer problem with semaphores
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">sizeofbuffer</span> = <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">buffer size</span><span style="color: #5B6268;"> */</span>;
+<span style="color: #ECBE7B;">semaphore</span> <span style="color: #dcaeea;">s</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">n</span> = <span style="color: #da8548; font-weight: bold;">0</span>, <span style="color: #dcaeea;">e</span> = sizeofbuffer;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">producer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    produce<span style="color: #98be65;">()</span>;
+    semWait<span style="color: #98be65;">(</span>e<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    append<span style="color: #98be65;">()</span>;
+    semSignal<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    semSignal<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">consumer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWait<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    take<span style="color: #98be65;">()</span>;
+    semSignal<span style="color: #98be65;">(</span>s<span style="color: #98be65;">)</span>;
+    semSignal<span style="color: #98be65;">(</span>e<span style="color: #98be65;">)</span>;
+    consume<span style="color: #98be65;">()</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  parbegin<span style="color: #c678dd;">(</span>producer, consumer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org0444fe9" class="outline-3">
+<h3 id="org0444fe9"><span class="section-number-3">5.2.</span> Implementation of Semaphores</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Semaphores must be implemented as atomic primitives;
+only one process at a time may manipulate a
+semaphore with either <code>semWait</code> or <code>semSignal</code>.
+</p>
+
+<p>
+Can be done with:
+</p>
+<ul class="org-ul">
+<li>hardware or firmware</li>
+<li>software schemes (Dekker&rsquo;s, Peterson&rsquo;s)</li>
+<li>hardware-supported schemes for mutual exclusion
+<ul class="org-ul">
+<li>can be done with <code>compare_and_swap</code> with a flag or by
+inhibiting interrupts</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb21f791" class="outline-2">
+<h2 id="orgb21f791"><span class="section-number-2">6.</span> Monitors</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+May be difficult to produce a correct program using semaphores.
+</p>
+</div>
+<div id="outline-container-orgc597d1f" class="outline-3">
+<h3 id="orgc597d1f"><span class="section-number-3">6.1.</span> Monitor with Signal</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Monitor: a software module consisting of one or more procedures,
+an initialization sequence, and local data
+</p>
+
+<p>
+Chief chracteristics are:
+</p>
+<ol class="org-ol">
+<li>local data variables are only accessible only by the monitor&rsquo;s
+procedures and not by any external procedure</li>
+<li>a process enters the monitor by invoking one of its procedures</li>
+<li>only one process may be executing in the monitor at a time,
+any other processes that have invoked the monitor are blocked,
+waiting for the monitor to become available</li>
+</ol>
+
+<p>
+Monitors support synchronization using conditional variables
+contained within the monitor and accessible only within the monitor.
+</p>
+
+<p>
+Condvars operated on by two functions:
+</p>
+<ul class="org-ul">
+<li><code>cwait(c)</code>: suspend execution of the calling process on
+condition <code>c</code>, monitor is now available for use by another process</li>
+<li><code>csignal(c)</code>: resume execution of some process blocked after a <code>cwait</code>
+on the same condition:
+<ul class="org-ul">
+<li>if there are multiple such processes, choose one</li>
+<li>if none, do nothing</li>
+</ul></li>
+</ul>
+<p>
+Different from semaphores as any signals that tasks aren&rsquo;t waiting on
+are lost.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">monitor</span> <span style="color: #dcaeea;">boundedbuffer</span>;
+<span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">buffer</span><span style="color: #51afef;">[</span>N<span style="color: #51afef;">]</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">nextin</span>, <span style="color: #dcaeea;">nextout</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">count</span>;
+<span style="color: #ECBE7B;">cond</span> <span style="color: #dcaeea;">notfull</span>, <span style="color: #dcaeea;">notempty</span>;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">append</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">x</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">if</span> <span style="color: #c678dd;">(</span>count == N<span style="color: #c678dd;">)</span> cwait<span style="color: #c678dd;">(</span>notfull<span style="color: #c678dd;">)</span>;
+  buffer<span style="color: #c678dd;">[</span>nextin<span style="color: #c678dd;">]</span> = x;
+  nextin = <span style="color: #c678dd;">(</span>nextin + <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span> % N;
+  count++;
+  csignal<span style="color: #c678dd;">(</span>notempty<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">take</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">x</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">if</span> <span style="color: #c678dd;">(</span>count == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #c678dd;">)</span> cwait<span style="color: #c678dd;">(</span>notempty<span style="color: #c678dd;">)</span>;
+  x = buffer<span style="color: #c678dd;">[</span>nextout<span style="color: #c678dd;">]</span>;
+  nextout = <span style="color: #c678dd;">(</span>nextout + <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span> % N;
+  count--;
+  csignal<span style="color: #c678dd;">(</span>notfull<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+
+<span style="color: #51afef;">{</span>
+  nextin = <span style="color: #da8548; font-weight: bold;">0</span>; nextout = <span style="color: #da8548; font-weight: bold;">0</span>; count = <span style="color: #da8548; font-weight: bold;">0</span>;
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">producer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">x</span>;
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    produce<span style="color: #98be65;">()</span>;
+    append<span style="color: #98be65;">()</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">consumer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">x</span>;
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    take<span style="color: #98be65;">()</span>;
+    consume<span style="color: #98be65;">()</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  parbegin<span style="color: #c678dd;">(</span>producer, consumer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc7aba1b" class="outline-3">
+<h3 id="orgc7aba1b"><span class="section-number-3">6.2.</span> Alternate Models of Monitors with Notify and Broadcast</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+Currently, a process issuing the <code>csignal</code> must either immediately
+exit the monitor or be blocked on the monitor, which has 2
+drawbacks:
+</p>
+<ol class="org-ol">
+<li>if the process issuing the <code>csignal</code> has not finished with the
+monitor, two additional process switches are required</li>
+<li>process scheduling associated with a signal must be reliable,
+no other process can interrupt this switching</li>
+</ol>
+
+<p>
+Bounded-buffer Monitor Code for Mesa Monitor
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">append</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">x</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span>count == N<span style="color: #c678dd;">)</span> cwait<span style="color: #c678dd;">(</span>notfull<span style="color: #c678dd;">)</span>;
+  buffer<span style="color: #c678dd;">[</span>nextin<span style="color: #c678dd;">]</span> = x;
+  nextin = <span style="color: #c678dd;">(</span>nextin + <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span> % N;
+  count++;
+  cnotify<span style="color: #c678dd;">(</span>notempty<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">take</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">x</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span>count == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #c678dd;">)</span> cwait<span style="color: #c678dd;">(</span>notempty<span style="color: #c678dd;">)</span>;
+  x = buffer<span style="color: #c678dd;">[</span>nextout<span style="color: #c678dd;">]</span>;
+  nextout = <span style="color: #c678dd;">(</span>nextout + <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">)</span> % N;
+  count--;
+  cnotify<span style="color: #c678dd;">(</span>notfull<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+<p>
+<code>cnotify</code> differs in that the condition queue is notified, but
+the signalling process continues to execute.
+<code>cbroadcast</code> can also cause all processes waiting on a condition
+to be placed into a ready state.
+</p>
+
+<p>
+Mesa monitor less error prone and more modular than usual
+Hoare monitor.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org4f400aa" class="outline-2">
+<h2 id="org4f400aa"><span class="section-number-2">7.</span> Message Passing</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+When processes interact, must ensure synchronization and communication.
+Can be done with message passing, which has 2 primitives:
+</p>
+<ul class="org-ul">
+<li><code>send(destination, message);</code></li>
+<li><code>receive(source, message);</code></li>
+</ul>
+
+<p>
+Sender and receiver can be blocking or nonblocking, of which there are
+3 common combinations
+</p>
+<ol class="org-ol">
+<li><b>blocking send, blocking receive</b>: both sender and receiver blocked
+until message is delivered, allows for tight synchronization</li>
+<li><b>nonblocking send, blocking receive</b>: sender may continue but
+receiver is blocked until message arrives</li>
+<li><b>nonblocking send, nonblocking receive</b>: neither party must wait</li>
+</ol>
+
+<p>
+Nonblocking send is most natural since a sender can then send
+multiple different messages.
+Blocking receive is most natural since receivers generally expect
+information before proceeding.
+</p>
+</div>
+<div id="outline-container-orge1edfdb" class="outline-3">
+<h3 id="orge1edfdb"><span class="section-number-3">7.1.</span> Addressing</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+With direct addressing
+</p>
+<ul class="org-ul">
+<li>the <code>send</code> primitive includes a specific identifier</li>
+</ul>
+<p>
+of the destination process.
+</p>
+<ul class="org-ul">
+<li>the <code>receive</code> primitive either:
+<ul class="org-ul">
+<li>requires that the process explicitly designate a sending process</li>
+<li>uses implicit addressing: the source possesses a value returned
+when the receive has bene performed</li>
+</ul></li>
+</ul>
+
+<p>
+With indirect addressing
+</p>
+<ul class="org-ul">
+<li>messages are sent to queue that holds messages, called mailbox</li>
+<li>decoupling sender and receiver allows for more flexibility in
+use of messages</li>
+<li>relationship between senders and receivers can be:
+<ul class="org-ul">
+<li>one-to-one: private communication between two processes</li>
+<li>many-to-one: client-server interaction, creates port</li>
+<li>one-to-many: broadcasting to set of processes</li>
+<li>many-to-many: multiple server processes to provide
+concurrent service to multiple clients</li>
+</ul></li>
+<li>mailboxes owned by creating process (ex. port)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org863a390" class="outline-3">
+<h3 id="org863a390"><span class="section-number-3">7.2.</span> Message Format</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+Message typically divided into header and body.
+Header contains:
+</p>
+<ul class="org-ul">
+<li>message type</li>
+<li>destination ID</li>
+<li>source ID</li>
+<li>message length</li>
+<li>control information</li>
+</ul>
+
+<p>
+Body contains message contents.
+</p>
+
+<p>
+Messages can be queued based on priority.
+</p>
+</div>
+</div>
+<div id="outline-container-org071e246" class="outline-3">
+<h3 id="org071e246"><span class="section-number-3">7.3.</span> Mutual Exclusion</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+Mutual Exclusion using Messages
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span> = <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">number of processes</span><span style="color: #5B6268;"> */</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span><span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+  <span style="color: #ECBE7B;">message</span> <span style="color: #dcaeea;">msg</span>;
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    receive<span style="color: #98be65;">(</span>box, msg<span style="color: #98be65;">)</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">critical section</span><span style="color: #5B6268;"> */</span>;
+    send<span style="color: #98be65;">(</span>box, msg<span style="color: #98be65;">)</span>;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">remainder</span><span style="color: #5B6268;"> */</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  create_mailbox<span style="color: #c678dd;">(</span>box<span style="color: #c678dd;">)</span>;
+  send<span style="color: #c678dd;">(</span>box, null<span style="color: #c678dd;">)</span>;
+  parbegin<span style="color: #c678dd;">(</span>P<span style="color: #98be65;">(</span><span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span>, P<span style="color: #98be65;">(</span><span style="color: #da8548; font-weight: bold;">2</span><span style="color: #98be65;">)</span>, ..., P<span style="color: #98be65;">(</span>n<span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Bounded-buffer Producer/Consumer using Messages
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">capacity</span> = <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">number of processes</span><span style="color: #5B6268;"> */</span>;
+<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span>;
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">producer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #ECBE7B;">message</span> <span style="color: #dcaeea;">pmsg</span>;
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    receive<span style="color: #98be65;">(</span>mayproduce, pmsg<span style="color: #98be65;">)</span>;
+    pmsg = produce<span style="color: #98be65;">()</span>;
+    send<span style="color: #98be65;">(</span>mayconsume, pmsg<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">consumer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #ECBE7B;">message</span> <span style="color: #dcaeea;">cmsg</span>;
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    receive<span style="color: #98be65;">(</span>mayconsume, cmsg<span style="color: #98be65;">)</span>;
+    consume<span style="color: #98be65;">()</span>;
+    send<span style="color: #98be65;">(</span>mayproduce, null<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  create_mailbox<span style="color: #c678dd;">(</span>mayproduce<span style="color: #c678dd;">)</span>;
+  create_mailbox<span style="color: #c678dd;">(</span>mayconsume<span style="color: #c678dd;">)</span>;
+  <span style="color: #51afef;">for</span> <span style="color: #c678dd;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>; i &lt;= capacity; i++<span style="color: #c678dd;">)</span> send<span style="color: #c678dd;">(</span>mayproduce, null<span style="color: #c678dd;">)</span>;
+  parbegin<span style="color: #c678dd;">(</span>producer, consumer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfcc4871" class="outline-2">
+<h2 id="orgfcc4871"><span class="section-number-2">8.</span> Readers/Writers Problem</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Problem defined as follows: there is a data area shared among processes,
+some of which only read and some of which only write.
+The conditions on these are:
+</p>
+<ol class="org-ol">
+<li>any number of readers may simultaneously read the file</li>
+<li>only one writer at a time may write to the file</li>
+<li>if a writer is writing to the file, no reader may read it</li>
+</ol>
+</div>
+<div id="outline-container-orgba12703" class="outline-3">
+<h3 id="orgba12703"><span class="section-number-3">8.1.</span> Readers Have Priority</h3>
+<div class="outline-text-3" id="text-8-1">
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">readcount</span>;
+<span style="color: #ECBE7B;">semaphore</span> <span style="color: #dcaeea;">x</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">wsem</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">reader</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWait<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+    readcount++;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>readcount == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+      semWait<span style="color: #a9a1e1;">(</span>wsem<span style="color: #a9a1e1;">)</span>;
+    <span style="color: #98be65;">}</span>
+    semSignal<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+    <span style="color: #a9a1e1;">READUNIT</span><span style="color: #98be65;">()</span>;
+    semWait<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+    readcount--;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>readcount == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+      semSignal<span style="color: #a9a1e1;">(</span>wsem<span style="color: #a9a1e1;">)</span>;
+    <span style="color: #98be65;">}</span>
+    semSignal<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">writer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWait<span style="color: #98be65;">(</span>wsem<span style="color: #98be65;">)</span>;
+    <span style="color: #a9a1e1;">WRITEUNIT</span><span style="color: #98be65;">()</span>;
+    semSignal<span style="color: #98be65;">(</span>wsem<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  readcount = <span style="color: #da8548; font-weight: bold;">0</span>;
+  parbegin<span style="color: #c678dd;">(</span>reader, writer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+When one writer is writing, no other writer or reader can access
+the shared data.
+</p>
+
+<p>
+The first reader waits on <code>wsem</code> (in case of writing), subsequent
+readers need not wait since first one guarantees no writing.
+</p>
+
+<p>
+Last reader finishing up signals <code>wsem</code> that writing can occur as
+no other readers accessing data.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf9d0f37" class="outline-3">
+<h3 id="orgf9d0f37"><span class="section-number-3">8.2.</span> Writers Have Priority</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+Prevents writer starvation by guaranteeing no new readers once
+at least one writer desires to write.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">readcount</span>, <span style="color: #dcaeea;">writecount</span>;
+<span style="color: #ECBE7B;">semaphore</span> <span style="color: #dcaeea;">x</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">y</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">z</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">wsem</span> = <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #dcaeea;">rsem</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">reader</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWait<span style="color: #98be65;">(</span>z<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>rsem<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+    readcount++;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>readcount == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+      semWait<span style="color: #a9a1e1;">(</span>wsem<span style="color: #a9a1e1;">)</span>;
+    <span style="color: #98be65;">}</span>
+    semSignal<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+    semSignal<span style="color: #98be65;">(</span>rsem<span style="color: #98be65;">)</span>;
+    semSignal<span style="color: #98be65;">(</span>z<span style="color: #98be65;">)</span>;
+    <span style="color: #a9a1e1;">READUNIT</span><span style="color: #98be65;">()</span>;
+    semWait<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+    readcount--;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>readcount == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+      semSignal<span style="color: #a9a1e1;">(</span>wsem<span style="color: #a9a1e1;">)</span>;
+    <span style="color: #98be65;">}</span>
+    semSignal<span style="color: #98be65;">(</span>x<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">writer</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span><span style="color: #a9a1e1;">true</span><span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+    semWait<span style="color: #98be65;">(</span>y<span style="color: #98be65;">)</span>;
+    writecount++;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>writecount == <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+        semWait<span style="color: #a9a1e1;">(</span>rsem<span style="color: #a9a1e1;">)</span>;
+    <span style="color: #98be65;">}</span>
+    semSignal<span style="color: #98be65;">(</span>y<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>wsem<span style="color: #98be65;">)</span>;
+    <span style="color: #a9a1e1;">WRITEUNIT</span><span style="color: #98be65;">()</span>;
+    semSignal<span style="color: #98be65;">(</span>wsem<span style="color: #98be65;">)</span>;
+    semWait<span style="color: #98be65;">(</span>y<span style="color: #98be65;">)</span>;
+    writecount--;
+    <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span>writecount == <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+        semSignal<span style="color: #a9a1e1;">(</span>rsem<span style="color: #a9a1e1;">)</span>;
+    <span style="color: #98be65;">}</span>
+    semSignal<span style="color: #98be65;">(</span>y<span style="color: #98be65;">)</span>;
+  <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+  readcount = <span style="color: #da8548; font-weight: bold;">0</span>;
+  parbegin<span style="color: #c678dd;">(</span>reader, writer<span style="color: #c678dd;">)</span>;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-02-19 Mon 19:20</p>
+</div>
+</body>
+</html>

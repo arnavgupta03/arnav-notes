@@ -1,0 +1,53 @@
+#+title: Dijkstras Algorithms
+#+LATEX: \setlength\parindent{0pt}
+#+author: Arnav Gupta
+
+* Preliminaries
+A graph $G = (V, E)$ is a directed graph with a weight function: $w: E \to \mathbb{R}$
+- weight of the path $P = \left< v_{0}, \dots, v_{k} \right>$ is $w(P) = \sum_{i=1}^{k} w(v_{i-1}, v_{i})$
+
+Shortest path does not exist for directed weighted graphs with negative-weight cycles.
+
+Under the assumption that $G$ has no negative-weight cycles,
+the shortest path weight from $u$ to $v$:
+$$
+        \delta(u, v) = \begin{cases}
+                \min\{ w(P): u \to v \} & \text{if there exists a path from $u$ to $v$} \\
+                \infty & \text{otherwise}
+        \end{cases}
+$$
+
+** Single-Source Shortest Path Problem
+- input: $G = (V,E)$, $w: E \to \mathbb{R}$ and a source $s \in v$
+- output: a shortest path from $s$ to each $v \in V$
+
+Consider the following:
+if $\left< v_{0}, v_{1}, \dots, v_{k} \right>$ is a shortest path from $v_{0}$ to $v_{k}$,
+then $\left< v_{0}, v_{1}, \dots, v_{k} \right>$ is a shortest path from $v_{0}$ to $v_{i}$,
+for any $0 \le i \le k$
+
+* Dijkstra's Algorithm
+A greedy algorithm that takes a weighted directed graph with non-negative edge weights.
+
+Important quantities:
+- $d[v]$: a shortest path estimate from $s$ to $v$
+- $\pi[v]$: predecessor in the path (a vertex or NIL)
+
+** Explanation
+- iniitialize $C = \emptyset$, repeat the following untit $C = V$
+  1. add $u \in V - C$ with smallest $d$ value to $C$
+  2. update $d$ values of vertices $v$ with $(u, v) \in E$:
+     $$
+        d[v] \gets \min \{ d[v], d[u] + w(u, v) \}
+     $$
+  3. update $\pi[v]$ if $d[v]$ is changed
+
+- Priority Queue is ADT that should be used for vertices
+  - implemented as binary min-heap with costs
+    - insert: $O(\log(n))$
+    - extract-min: $O(\log(n))$
+    - update-key: $O(\log(n))$
+
+** Complexity Analysis
+- array implementation has time complexity $O(|V|^{2})$
+- heap implementation has time complexity $O((|V| + |E|)\log(|V|))$
