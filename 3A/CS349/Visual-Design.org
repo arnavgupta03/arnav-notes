@@ -1,0 +1,137 @@
+#+title: Visual Design
+#+author: Arnav Gupta
+
+* Colour
+*Hue* uses colour wheel. *Saturation* is how strong that colour is.
+
+*Tint* is related to whiteness, *tone* is related to greyness, *shade* is related to
+darkness.
+
+Some harmonious palettes include monochromatic, complementary, split-complementary,
+analogous, and triadic.
+
+** Colour Hierarchy and Semantics
+Colour design system defines how colours are used, specifically:
+- *primary colours*
+  - used in designs to create the experience
+  - includes tints, shades, and tones of primary branch colours
+  - used for branding, interaction elements, layouts, text
+- *secondary colours*
+  - used occasionally in designs or interactive elements
+  - used for functions such as success, error, warning, selected, etc
+  - accents based on primary brand colours
+
+* Typography
+Art of arranging letters and text in a way that makes the copy legible, clear,
+and visually appealing.
+
+*Cap height*: difference between top of uppercase and top of lowercase
+
+*X-height*: height of lowercase letters
+
+*Serif*: extensions of letters around ends
+
+*Letter spacing*: between letters in a word
+
+*Stroke*: thickness of letter strokes
+
+*Baseline*: line upon which letters are drawn
+
+*Leading*: difference between baselines from one line to the next
+
+*Kerning*: overlap between letters
+
+** Typefaces
+What is commonly referred to as font.
+
+Main styles are serif, sans serif, display, and script.
+
+When choosing:
+- prefer standard and simple typefaces (like sans serif and sometimes serif)
+- use typefaces from reputable sources
+- in general avoid display and script typefaces
+
+*Font Anatomy*: consists of weight, emphasis, and point (1/72").
+
+** Typographic Systems
+Define hierarchical names and use size, weight, and emphasis to create this
+hierarchy.
+
+Use all caps sparingly for headings.
+
+Increase leading to emphasize lines in paragraphs.
+Add space between paragraphs rather than indenting first line.
+
+Use left align for text in paragraphs, and left/center for text in headings.
+Center alignment for buttons and similar controls.
+
+Never use fully justified text (maybe hyphenated).
+
+** Rules of Thumb
+Avoid display typefaces, using 2+ typefaces, 3+ weights.
+
+Avoid underlining unless for a hyperlink.
+
+* Layout
+The structure that organizes visual elements in an interface.
+
+Creates visual paths, connections, and gaps to group, rank, and make sense of info and
+interactive elements.
+
+Implicitly supports the branch message and value proposition by being reliable, organized,
+professional, edgy, fast, calm, different, etc.
+
+Layout function is invisible to the user but relevant to user experience.
+
+** Grid
+Underlying regularized structure to organize elements in a layout.
+
+Most basic form is vertical columns (often 12) and gaps (gutters).
+
+Often includes a baseline grid to place text.
+
+*** 8-Point Pixel Grid
+Uses multiples of 8 to define dimensions, padding, and margins.
+
+Columns, gaps, element sizes, spacing are all multiples of 8.
+
+Type can be multiples of 8, though often multiples of 4.
+
+** Negative Space
+Space between content (whitesapce).
+
+Groups and divides content to let user's eyes rest.
+
+Can be any colour, gradient, background image, texture, etc.
+
+** Alignment
+When dominant visual parts of multiple elements form an implied line.
+
+Must be done on visual parts of an element, which may not be the same as the
+underlying file or bounding box. Slight misalignment can also jump out.
+
+Grid forced good alignment.
+
+** Aspect Ratio
+Changing this can change the balance and perception.
+
+Do not change aspect ratio of an element to fit a layout.
+
+** Rules of Thumb
+Use an underlying grid to guide design (can be with flexbox).
+
+Don't use fully grid and can break the grid for added emphasis.
+
+Use Gestalt principles: closure, common fate, continuation,
+similarity, figure ground, proximity, and symmetry.
+
+* Design Systems
+A systematic approach to product development, complete with guidelines,
+principles, philosophies, and code.
+
+Includes design language, design kit, component library, sandbox, and documentation.
+
+*Component library*: set of implemented components in code that are version controlled
+and ready to use
+
+Some examples are Bootstrap and Material Design.

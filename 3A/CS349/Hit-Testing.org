@@ -1,0 +1,75 @@
+#+title: Hit Testing
+#+author: Arnav Gupta
+
+* Shape Models
+** Implementing a GUI
+Graphical elements are manipulated using a pointing device (touch screen, mouse, etc.).
+Key requirement is to detect what is being pointed at, which is a shape:
+- shape could be filled, outlined, or text
+- need to consider tolerances for usability, such as near misses as hits for narrow
+  shapes
+
+** Shape Models
+*Model*: mathematical representation of the rendered shape, including geometry, visual
+style properties, transformations, and operation
+
+*Rendering*: process to translate model into an image
+
+*Image*: rendered shape based on underlying model
+
+A model is rendered to an image.
+
+Different shapes have different geometric representations:
+- polygon is a list of points
+- circle is a centre point and radius
+- rectangle is a top-left corner point, width, and height
+- shape models can also be combinations of shapes
+
+Shape models encapsulate related info and functions so they can be manipulated
+dynamically:
+- transform position, size, orientation
+- change shape properties like fill, stroke, colour
+
+* Hit-tests
+** Paradigms
+Inside Hit-Test
+- is mouse cursor inside shape?
+- for closed shapes like circle, rectangle, polygon, etc.
+- usually when rendered with fill
+
+Edge Hit-Test
+- is mouse cursor on shape stroke?
+- for open, unfilled shapes like line and polyline
+
+** Implementation
+A hit-test is tailored to the shape type and properties, if edge then also stroke
+thickness.
+
+** Optimization
+Hit-testing can be computationally intensive, because of number of shapes or
+complexity of shapes.
+
+Approaches to reduce hit-testing computation:
+- avoid square root in distance calculation (use squared values)
+- use simpler less precise hit-test for an early reject
+- split scene into cells and track which one each shape is in
+
+** Raster Hit Testing
+An alternative method that uses an offscreen buffer to draw a shape (at lower
+resolution):
+- transform mouse coordinates to match buffer
+- examine pixel at mouse position in buffer (~true~ if not ~#000000~)
+  - can also use pixel alpha (transparent)
+  - can also use different colours to hit-test regions
+
+** DOM Canvas API Hit-Testing
+Test if point is inside area contained by shape path, which handles stroke
+thickness and any unfilled shapes.
+
+** Other Hit-Test Selection Paradigms
+Text selection: insertion point, drag to select
+
+Crossing intersection: select by drawing stroke through shapes
+
+Shape intersection: marquee selection (bounding box) or lasso selection (freeform
+path)

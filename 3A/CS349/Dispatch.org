@@ -1,0 +1,118 @@
+#+title: Dispatch
+#+author: Arnav Gupta
+
+* Dispatch
+** View Hierarchy
+UI toolkits typically organize widgets into a tree with only one root element,
+that need container widgets for non-leaf nodes.
+
+The child order dictates draw order.
+
+** Event Dispatch
+To route an event to the appropriate widget or code
+
+*** Steps
+1. Target selection: the frontmost widget under the mouse
+2. Route construction: path from root to target node
+3. Propagation
+   a. capture down from root to target
+   b. bubble up from target to root
+
+Route construction and propagation only apply to positional dispatch.
+
+** Target Selection
+Determined by the type of event:
+- *mouse event*: target is the node at the location of the cursor
+  (mousedown target used), called *positional dispatch*
+- *key event*: target is the node that has focus, which is typically assigned
+  with mouse click, called *focus dispatch*
+- *touch events*: target selection may be more complex, such as a continuous
+  gesture (like pinch to zoom) or a swipe (like swipe right)
+
+*** Positional Dispatch
+Target is last widget drawn under mouse.
+
+Route is from root to target.
+
+* Binding
+How events are associated with code.
+
+Design goals of event handling mechanisms:
+- easy to understand (clear connection between event and code)
+- easy to implement (binding paradigm or API)
+- easy to debug (how an event got somewhere)
+- good performance
+
+Common implementations are:
+- ~switch~ statement binding in run loop or global event
+callback
+  - disadvantages are difficulty to maintain, events not delegated to an object,
+    and widgets should handle events themselves
+
+** Inheritance Binding
+Event dispatched from a generic OO widget that extends from a base class with
+event handling methods that chooses specificity.
+
+*** Problems
+Multiple event types are processed through each event method, which is a ~switch~
+statement in the widget.
+
+No filtering of events might introduce performance issues (ex. all mouse moves
+delivered).
+
+If using specific event method, doesn't scale well since the base class must be
+modified to add new event types.
+
+** Listener Model Binding
+Define interfaces for specific event types and create an object that implements
+the interface to handle.
+
+When event is dispatched, the relevant listener method is called.
+
+* Propagation
+Most UI toolkits support *capture* (top-down) and *bubbling* (bottom-up).
+
+Any widget in the path can use the event during either pass, and a handler can stop
+all following propagation.
+
+Capture phase walks down the tree from the root through each widget until it reaches
+the target widget.
+Bubble phase walks up the tree from the target widget through each ancestor until it
+reaches the root.
+
+With capture phase, events higher up in the widget tree can filter events (stop
+propagation with handled flag).
+
+** Positional Dispatch Limitations
+Pure positional dispatch can lead to odd behaviour, since it does not consider
+which widget is in focus.
+
+** Focus Dispatch
+Events dispatched to widget regardless of mouse cursor position, which is needed
+for all keyboard and some mouse events.
+
+Can have at most one keyboard focus and one mouse focus.
+
+Must be able to gain and lose focus at appropriate times.
+
+Focus dispatch needs positional dispatch to set focus to widgets.
+UI toolkits have dedicated focus managers as part of the dispatch method.
+Other ways to request focus are tab key or an app requesting focus itself.
+
+** Mouse Enter and Exit Events
+UI toolkits generate events when mouse enters and exits a widget, which is used
+for hover effects.
+
+*** Approach
+1. Get the element at the very end of the target route.
+2. If that element was not the last element entered, send mouse exit event to
+   last element entered and mouse enter event to element at end of the route.
+
+If a widget refuses an enter event, the toolkit checks the penultimate
+element in the root.
+
+** Global Event Queue Hooks
+In some situations, applications can access system events:
+- monitor fundamental events across all applications
+- inject fundamental events into another application (can be useful and a
+  security issue)

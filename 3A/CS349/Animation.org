@@ -1,0 +1,104 @@
+#+title: Animation
+#+author: Arnav Gupta
+
+* Frames and Frame Rate
+*Animation*: simulation of movement usind a series of images
+
+*Frame*: each image or state of an animation sequence
+
+*Frame rate*: number of frames to display per time period
+
+*Tweening*: interpolation of key frames into frames
+
+*Easing*: a function that controls how tweening is calculated
+
+*Key Frame*: defines the beginning and ending of a tween
+
+In UI programming, we animate numerical params that change how graphics are drawn over time:
+- params are related to tranformations (x, y, etc)
+- params can be anything numeric like fill or stroke weight
+- animating non-numeric values is possible but requires custom tweening
+
+Frame rate is measured in FPS:
+- hand-drawn: 12-24
+- GIfs: 15-24
+- film: 24 or 60
+- legacy broadcast television: 30 for NTSC, 25 for PAL though each frame sent in 2 scanlines
+- computer displays and games: 60+
+- VR displays: 90, 120, or more
+
+** Critical Flicker Frequency
+When perception of intermittent light source changes from flickering to continuous light,
+typically around 60-90 Hz.
+
+* Simulation
+Animation can be created through real-time simulation using functions, conditionals, etc.
+This typically has no start and end, just loops or continues.
+
+* Timer
+Timer is a simple kind of animation, which needs a duration, a start time, an update
+function to check if timer is finished, a method to check if timer is running, and usually
+a callback function to call when timer is finished.
+
+* Tweening
+Interpolation between keyframes to create individual frames, where keyframes are considered
+to be numeric values.
+
+Tweening params:
+- ~startValue~: the starting value for the tween
+- ~endValue~: the ending value for the tween
+- ~duration~: the duration for the tween
+- ~startTime~: when the tween begins
+
+Tweening calculation:
+1. calculate proportion of time completed so far:
+   ~t = (time - startTime) / duration~
+2. interpolate start and end value to get current tweened value:
+   ~value = startValue + (endValue - startValue) * t~
+
+** lerp Function
+*Linear interpolation*: smoothly interpolate changes from one value to another, a
+fundamental part of animation tweening
+
+* Easing
+Controls how tweening is calculated.
+
+Lerp generates a linear change in value over time $t$.
+
+An easing function can change how value changes over time $t$.
+
+Some easing functions include flip ($1-t$), ease out, ease in, and ease in-out.
+
+* Keyframes
+** Animation Manager
+Some toolkits provide an animation manager that:
+- keep a list of active animations
+- update each animation every frame
+- remove animations when they finish
+
+The programmer can set animation and not manage it themselves.
+
+** Keyframing
+A tween is 2 keyframes, one at start time, start value and one at end time, end value.
+
+This can be generalized to a sequence of keyframes that enables animations over time:
+- find two consecutive keyframes for current time and tween between them
+
+* System Timers and UI Threading
+** Built-in Timers
+Timer triggers an event after some time period:
+1. set time period to time interval for desired frame rate
+2. in the timer's finished event handler, update params to animate and optionally
+   redraw an updated image for the frame
+3. restart timer for the next interval
+
+** Timers and UI Threading
+Most UI frameworks are single-threaded, because of simplicity and lack of need.
+A single-threaded dispatch queue avoids deadlocks and race condtions due to
+unpredictable user-generated events.
+
+Most UI frameworks are not thread-safe to reduce execution burden and reduce
+complexity.
+
+Most modifications to UI must be on the UI execution thread, otherwise unexpected
+behaviour.

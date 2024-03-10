@@ -1,0 +1,60 @@
+#+title: MVC
+#+author: Arnav Gupta
+
+* Benefits of MVC
+Became a standard design pattern for GUIs.
+
+Used for overall app design and individual components.
+
+Variants include model-view-presenter, model-view-adapter, and model-view-viewmodel.
+
+** Benefits
+1. Separate data, state, and business logic from UI: ideally, view and controller
+   implementations can change without changing model implementation
+2. Supports multiple views of same data
+3. Separation of concerns in code for code reuse and unit testing.
+
+** Multiple View Synchronization
+When one view changes, others should as well.
+
+Done by defining a single model that provides info to multiple views.
+
+* Implementation
+*Model*: manages application data and its modification
+
+*View*: manages interface to present data
+
+*Controller*: manages interaction to modify data
+
+Observer pattern for model (subject) and views (observer).
+
+In theory, view and controller and separate and loosely coupled, but in practice
+they are tightly coupled.
+
+** Adaptations to Pure MVC
+1. view and controller are combined so that users view data and provide input in
+   the same places and since some data manipulations should not be done in the
+   model (input validation)
+2. multiple models that have data specific to a view
+
+** Optimizing View Updates
+On each view update, everything in every view is refreshed from the model.
+
+There could be a param to view update that indicates what changed though
+simpler is better so avoid early optimization.
+
+* MVC Variants
+** Model-View-Presenter
+*Presenter*: middle-man between model and view that determines how data should
+be handled
+
+Presenter is often used a broker with multiple views to determine which view
+should respond to data.
+
+Presenter effectively acts as a supervising controller.
+
+** Model-View-ViewModel
+*ViewModel*: mediates between model and view to manage view's display logic so
+that only display-independent logic is related to model
+
+Useful in scenarios where state is view-dependent.

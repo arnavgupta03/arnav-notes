@@ -1,0 +1,112 @@
+#+title: HTML and CSS
+#+author: Arnav Gupta
+
+* HTML and DOM
+Hypertext Markup Language, defines meaning and structure of the interface using a declarative
+syntax.
+
+*Tag*: syntax that defines an element and its attributes
+
+*Attribute*: extra info to define elements
+
+*Element*: what the tag and attributes create
+
+** Document Object Model (DOM)
+Cross-platform and language independent interface that treats an HTML document as a tree
+struture of node objects representing a part of the document.
+
+Every element in the DOM is a node.
+
+Events are also part of the DOM.
+
+~div~ is a block-level element, ~span~ is an inline element.
+
+* CSS Selectors
+Cascading Style Sheets, defines visual style, layout, and animation using a declarative
+syntax.
+
+*CSS Rule*: has a selector, declaration block, and 1+ properties with values
+
+CSS rules can be specified in an HTML tag, inline in ~style~ tags, or as a link
+to a CSS file.
+
+** CSS Selector
+A pattern to select or find elements in the DOM.
+
+Basic selectors are tag type, class name (with dot), element id attribute (with #),
+and elements matching attribute value (with a matcher inside []).
+
+Hierarchical selectors select child elements by parent-child relationship (using >)
+or descendant relationship (by listing tags separated by spaces).
+
+Pseudo class selectors use colon on known names such as ~first-child~ or ~hover~.
+
+All selectors above can be combined.
+
+** CSS Cascade
+Defines the precedence of CSS rules when multiple declarations apply to the same
+element.
+
+Precedences are:
+- who specified the rule, such as agent, author, or user
+- where it was specified: file or style tag vs inline style attribute
+- when it was specified, which is the order of the rules
+- importance using ~!important~
+- specificity of rule
+
+*Specificity*: a standard method to determine which CSS rule declaration is most
+relevant to an element
+
+* Flexbox Layout
+*Main axis* is row or column, *cross axis* is perpendicular to main axis.
+
+Includes a flex container and flex items within.
+
+To make a parent a flex container, set its CSS display property to flex and its children
+become flex items.
+
+Flexbox items can group to fill space, shrink to fit into space, or have a custom basis
+set.
+
+Flexbox container can align its items (stretch, start, end, or center), align itself
+along the same axes, justify its content along the main axis (start, end, center,
+between, around, evenly), or set a gap between its items.
+
+* DOM Manipulation with TypeScript
+** General Development Steps
+1. *mock up HTML as static page*: think about how to identify each part using id, name,
+   structure, etc
+2. *add CSS*: to create visual style, layout, etc
+3. *divide HTML for manipulation approach*: could be separate strings, HTML templates,
+   etc
+4. *create views for main parts of interface*: divide CSS into views, build view from
+   code or strings, create controllers using event listeners, attach everything to a
+   root element for the view, implement observer update method
+
+Can get HTML elements using id or CSS selector syntax, should specify expected element
+type and need to handle case if reference is not found.
+
+*** DOM Events
+Dispatch using capture and bubble phases with adding event listeners.
+
+Has mouse event and keyboard events derived from event base class with time info.
+
+** Imperative Code
+Build HTML by creating elements and appending children, step-by-step in code.
+
+App has a root and all views have a root element to enable this.
+
+Separate CSS files with selectors that apply only to specfic views, can be imported
+in code.
+
+*Problem*: adding elements (or one by one) is too slow
+
+** String Templates
+A tag tranforms a template literal before creating a string.
+
+A tag here is a function called with arguments from the template literal.
+The first argument is an array of $N+1$ strings. Other arguments are $N$
+strings created from template values.
+
+Best practice is to pass HTML templates through an ~html~ tag, to escape embedded
+HTML and sanitize HTML.

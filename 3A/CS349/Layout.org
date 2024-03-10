@@ -1,0 +1,68 @@
+#+title: Layout
+#+author: Arnav Gupta
+
+* Box Model
+*Layout*: the visual arrangement of widgets in a UI
+
+UI elements typically use a hierarchy of dimensions for size.
+
+The box model has 4 dimensions:
+- *margin*: outside space away from other elements
+- *border*: thickness of stroke outlining element
+- *padding*: insider space between border and content
+- *content*: actual content of the element
+
+Standard CSS Box Model
+- width and height defined by the content size
+- actual rendered size is content size plus padding and border
+
+Alternative CSS Box Model
+- width and height defined the rendered element size
+- content size is actual rendered size minus padding and border
+
+** Basis Size and Layout Size
+An element may be rendered larger/smaller than its width and height.
+Width and height do not even have to be defined.
+
+*Basis Size*: element's normal size inside margins (considering padding and content)
+
+*Layout Size*: element's size after layout including margin, how much space the
+element occupies in the layout
+
+* Layout Strategies
+** Strategy Design Pattern for Layouts
+Factor out layout algorithm into a separate function, allow an element to choose the
+algorithm.
+
+Factory pattern for making layout functions enables optional properties for
+layout algorithm.
+
+Layout algorithms include fixed, center, wrap (row), fill, and more.
+
+** Responsive Layout
+Dynamically reposition, resize, hide content in response to changes in screen
+resolution or resizing application window.
+
+** Widget Basis Sizes
+Widgets need to be flexible in size and position, so they store these but layouts
+can change widget width/height and other properties.
+Some UI toolkits support multiple basis size hints.
+
+** Variable Intrinsic Layout
+Layout attempts to use the widget preferred basis sizes but queries all widgets
+first and allocates space to them as a group, so layout is determined in 2 passes:
+1. get all child widgets' preferred sizes (basis + margin)
+2. decide on a layout that satisfies everyone's preferences and iterate through
+   each child, and set its layout size and position
+
+** Layout Invalidation
+Every time widget size or layout-related property changes, at least some of the UI
+must be laid out again. Could even be multiple changes each frame of the run loop.
+
+The best practice is to run layout at most once per run-loop frame.
+
+If widget size or layout property changes, calling the invalidate layout method
+ensures layout is done just before drawing next run-loop frame.
+
+** Best Pratices
+Break UI into regions, layout each one, and nest if necessary.

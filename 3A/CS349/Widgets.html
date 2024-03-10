@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-24 Sat 02:13 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Widgets</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Widgets</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd23e0a3">1. Logical Input Devics</a>
+<ul>
+<li><a href="#orgf5a7c5e">1.1. Widget Functions</a></li>
+<li><a href="#org1d7d553">1.2. Logical Input Device</a>
+<ul>
+<li><a href="#orgee0190e">1.2.1. Logical Button Device</a></li>
+<li><a href="#org49ce555">1.2.2. Logical Number Device</a></li>
+<li><a href="#org5a80cda">1.2.3. Logical Boolean Device</a></li>
+<li><a href="#org98669ec">1.2.4. Logical Text Device</a></li>
+<li><a href="#org1cfcf35">1.2.5. Logical Choice Device</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7f549c3">2. Widgets Types</a>
+<ul>
+<li><a href="#orgb5a98c5">2.1. Container Widgets</a></li>
+<li><a href="#orgf39a932">2.2. Specialized Widgets</a></li>
+</ul>
+</li>
+<li><a href="#org374955e">3. Widget Implementation</a>
+<ul>
+<li><a href="#org18f73d8">3.1. Widget Toolkit Design Goals</a>
+<ul>
+<li><a href="#orgca2bbd7">3.1.1. Completeness</a></li>
+<li><a href="#orgfc141e0">3.1.2. Widget Choice</a></li>
+<li><a href="#orgc4be9e8">3.1.3. Customization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd23e0a3" class="outline-2">
+<h2 id="orgd23e0a3"><span class="section-number-2">1.</span> Logical Input Devics</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Widget</b>: part of an interface that has its own behaviour
+</p>
+
+<p>
+Characteristics of widgets are what essential functions they enable (logical input device),
+simple vs container widgets, their behaviour (events they generate and how state changes
+them), and what they look like (rendering).
+</p>
+</div>
+<div id="outline-container-orgf5a7c5e" class="outline-3">
+<h3 id="orgf5a7c5e"><span class="section-number-3">1.1.</span> Widget Functions</h3>
+<div class="outline-text-3" id="text-1-1">
+<ol class="org-ol">
+<li><b>display user feedback</b>: convey current state and when action is triggered</li>
+<li><b>handle user input</b>: capture user input and generate events</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org1d7d553" class="outline-3">
+<h3 id="org1d7d553"><span class="section-number-3">1.2.</span> Logical Input Device</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Describes a widget based on function (not appearance):
+</p>
+<ul class="org-ul">
+<li>a category of widgets based on a common functioanlity</li>
+<li>a widget is a <i>specific instance</i> of a logical input device</li>
+</ul>
+</div>
+<div id="outline-container-orgee0190e" class="outline-4">
+<h4 id="orgee0190e"><span class="section-number-4">1.2.1.</span> Logical Button Device</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Input a single action and send an &ldquo;action happened&rdquo; event.
+</p>
+
+<p>
+Could be a button or menu item.
+</p>
+</div>
+</div>
+<div id="outline-container-org49ce555" class="outline-4">
+<h4 id="org49ce555"><span class="section-number-4">1.2.2.</span> Logical Number Device</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Input and display a numeric value in a certain range, that may have validation
+and sends a &ldquo;value changed&rdquo; event.
+</p>
+
+<p>
+Could be slider, spinner, or progress bar.
+</p>
+</div>
+</div>
+<div id="outline-container-org5a80cda" class="outline-4">
+<h4 id="org5a80cda"><span class="section-number-4">1.2.3.</span> Logical Boolean Device</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+Input and display a boolean device that sends a &ldquo;value changed&rdquo; event.
+</p>
+
+<p>
+Could be a checkbox, toggle, or radio button.
+</p>
+</div>
+</div>
+<div id="outline-container-org98669ec" class="outline-4">
+<h4 id="org98669ec"><span class="section-number-4">1.2.4.</span> Logical Text Device</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+Displays a text valuea and can allow editing which sends a &ldquo;value changed&rdquo; event.
+</p>
+
+<p>
+Could be a label or text field.
+</p>
+</div>
+</div>
+<div id="outline-container-org1cfcf35" class="outline-4">
+<h4 id="org1cfcf35"><span class="section-number-4">1.2.5.</span> Logical Choice Device</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<p>
+Input and display one choice among a list which sends a &ldquo;selection changed&rdquo; event.
+</p>
+
+<p>
+Could be a dropdown or combo box.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7f549c3" class="outline-2">
+<h2 id="org7f549c3"><span class="section-number-2">2.</span> Widgets Types</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgb5a98c5" class="outline-3">
+<h3 id="orgb5a98c5"><span class="section-number-3">2.1.</span> Container Widgets</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Holds child widgets that are drawn relative to container position, which creates
+a widget tree.
+</p>
+
+<p>
+<b>Panel</b>: set of widgets in a layout
+</p>
+
+<p>
+<b>Tabs</b>: choice between set of widgets
+</p>
+</div>
+</div>
+<div id="outline-container-orgf39a932" class="outline-3">
+<h3 id="orgf39a932"><span class="section-number-3">2.2.</span> Specialized Widgets</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<b>Menu</b>: hierarchical list of buttons
+</p>
+
+<p>
+<b>Pasword Textfield</b>: uses dots for each character entered
+</p>
+
+<p>
+<b>Special Value Widgets</b>: date, colour, file, etc. pickers
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org374955e" class="outline-2">
+<h2 id="org374955e"><span class="section-number-2">3.</span> Widget Implementation</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org18f73d8" class="outline-3">
+<h3 id="org18f73d8"><span class="section-number-3">3.1.</span> Widget Toolkit Design Goals</h3>
+<div class="outline-text-3" id="text-3-1">
+<ol class="org-ol">
+<li><b>Completeness</b>: GUI designers have everything they needed</li>
+<li><b>Consistency</b>: behaviour is consistent across components</li>
+<li><b>Customizability</b>: developer can reasonably extend functionality to meet
+particular needs of applicatoin</li>
+</ol>
+
+<p>
+Meeting these requirements encourages reuse.
+</p>
+</div>
+<div id="outline-container-orgca2bbd7" class="outline-4">
+<h4 id="orgca2bbd7"><span class="section-number-4">3.1.1.</span> Completeness</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+For completeness, a button, slider, pulldown menu, checkbox, radio buttons,
+text fields, and spinner are all that is needed.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfc141e0" class="outline-4">
+<h4 id="orgfc141e0"><span class="section-number-4">3.1.2.</span> Widget Choice</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+Should use a common look and feel and be used appropriately.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc4be9e8" class="outline-4">
+<h4 id="orgc4be9e8"><span class="section-number-4">3.1.3.</span> Customization</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+Support changing some widget behaviour and appearance by exposing key appearance
+or behaviour properties.
+</p>
+
+<p>
+Expose class hierarchy that promotes customization, such as using a base class
+that implements a logical button device.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-02-24 Sat 02:13</p>
+</div>
+</body>
+</html>

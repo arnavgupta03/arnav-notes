@@ -1,0 +1,83 @@
+#+title: Widgets
+#+author: Arnav Gupta
+
+* Logical Input Devics
+*Widget*: part of an interface that has its own behaviour
+
+Characteristics of widgets are what essential functions they enable (logical input device),
+simple vs container widgets, their behaviour (events they generate and how state changes
+them), and what they look like (rendering).
+
+** Widget Functions
+1. *display user feedback*: convey current state and when action is triggered
+2. *handle user input*: capture user input and generate events
+
+** Logical Input Device
+Describes a widget based on function (not appearance):
+- a category of widgets based on a common functioanlity
+- a widget is a /specific instance/ of a logical input device
+
+*** Logical Button Device
+Input a single action and send an "action happened" event.
+
+Could be a button or menu item.
+
+*** Logical Number Device
+Input and display a numeric value in a certain range, that may have validation
+and sends a "value changed" event.
+
+Could be slider, spinner, or progress bar.
+
+*** Logical Boolean Device
+Input and display a boolean device that sends a "value changed" event.
+
+Could be a checkbox, toggle, or radio button.
+
+*** Logical Text Device
+Displays a text valuea and can allow editing which sends a "value changed" event.
+
+Could be a label or text field.
+
+*** Logical Choice Device
+Input and display one choice among a list which sends a "selection changed" event.
+
+Could be a dropdown or combo box.
+
+* Widgets Types
+** Container Widgets
+Holds child widgets that are drawn relative to container position, which creates
+a widget tree.
+
+*Panel*: set of widgets in a layout
+
+*Tabs*: choice between set of widgets
+
+** Specialized Widgets
+*Menu*: hierarchical list of buttons
+
+*Pasword Textfield*: uses dots for each character entered
+
+*Special Value Widgets*: date, colour, file, etc. pickers
+
+* Widget Implementation
+** Widget Toolkit Design Goals
+1. *Completeness*: GUI designers have everything they needed
+2. *Consistency*: behaviour is consistent across components
+3. *Customizability*: developer can reasonably extend functionality to meet
+   particular needs of applicatoin
+
+Meeting these requirements encourages reuse.
+
+*** Completeness
+For completeness, a button, slider, pulldown menu, checkbox, radio buttons,
+text fields, and spinner are all that is needed.
+
+*** Widget Choice
+Should use a common look and feel and be used appropriately.
+
+*** Customization
+Support changing some widget behaviour and appearance by exposing key appearance
+or behaviour properties.
+
+Expose class hierarchy that promotes customization, such as using a base class
+that implements a logical button device.

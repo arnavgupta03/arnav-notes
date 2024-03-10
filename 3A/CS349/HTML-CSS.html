@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-25 Sun 12:31 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HTML and CSS</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">HTML and CSS</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgbee04de">1. HTML and DOM</a>
+<ul>
+<li><a href="#orgd5538df">1.1. Document Object Model (DOM)</a></li>
+</ul>
+</li>
+<li><a href="#org46b9489">2. CSS Selectors</a>
+<ul>
+<li><a href="#org5ec41f4">2.1. CSS Selector</a></li>
+<li><a href="#org3789009">2.2. CSS Cascade</a></li>
+</ul>
+</li>
+<li><a href="#org44cafe1">3. Flexbox Layout</a></li>
+<li><a href="#org30b95be">4. DOM Manipulation with TypeScript</a>
+<ul>
+<li><a href="#org64eacb6">4.1. General Development Steps</a>
+<ul>
+<li><a href="#orgb516fc4">4.1.1. DOM Events</a></li>
+</ul>
+</li>
+<li><a href="#org3b3d27c">4.2. Imperative Code</a></li>
+<li><a href="#org2d7ee08">4.3. String Templates</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgbee04de" class="outline-2">
+<h2 id="orgbee04de"><span class="section-number-2">1.</span> HTML and DOM</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Hypertext Markup Language, defines meaning and structure of the interface using a declarative
+syntax.
+</p>
+
+<p>
+<b>Tag</b>: syntax that defines an element and its attributes
+</p>
+
+<p>
+<b>Attribute</b>: extra info to define elements
+</p>
+
+<p>
+<b>Element</b>: what the tag and attributes create
+</p>
+</div>
+<div id="outline-container-orgd5538df" class="outline-3">
+<h3 id="orgd5538df"><span class="section-number-3">1.1.</span> Document Object Model (DOM)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Cross-platform and language independent interface that treats an HTML document as a tree
+struture of node objects representing a part of the document.
+</p>
+
+<p>
+Every element in the DOM is a node.
+</p>
+
+<p>
+Events are also part of the DOM.
+</p>
+
+<p>
+<code>div</code> is a block-level element, <code>span</code> is an inline element.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org46b9489" class="outline-2">
+<h2 id="org46b9489"><span class="section-number-2">2.</span> CSS Selectors</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Cascading Style Sheets, defines visual style, layout, and animation using a declarative
+syntax.
+</p>
+
+<p>
+<b>CSS Rule</b>: has a selector, declaration block, and 1+ properties with values
+</p>
+
+<p>
+CSS rules can be specified in an HTML tag, inline in <code>style</code> tags, or as a link
+to a CSS file.
+</p>
+</div>
+<div id="outline-container-org5ec41f4" class="outline-3">
+<h3 id="org5ec41f4"><span class="section-number-3">2.1.</span> CSS Selector</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+A pattern to select or find elements in the DOM.
+</p>
+
+<p>
+Basic selectors are tag type, class name (with dot), element id attribute (with #),
+and elements matching attribute value (with a matcher inside []).
+</p>
+
+<p>
+Hierarchical selectors select child elements by parent-child relationship (using &gt;)
+or descendant relationship (by listing tags separated by spaces).
+</p>
+
+<p>
+Pseudo class selectors use colon on known names such as <code>first-child</code> or <code>hover</code>.
+</p>
+
+<p>
+All selectors above can be combined.
+</p>
+</div>
+</div>
+<div id="outline-container-org3789009" class="outline-3">
+<h3 id="org3789009"><span class="section-number-3">2.2.</span> CSS Cascade</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Defines the precedence of CSS rules when multiple declarations apply to the same
+element.
+</p>
+
+<p>
+Precedences are:
+</p>
+<ul class="org-ul">
+<li>who specified the rule, such as agent, author, or user</li>
+<li>where it was specified: file or style tag vs inline style attribute</li>
+<li>when it was specified, which is the order of the rules</li>
+<li>importance using <code>!important</code></li>
+<li>specificity of rule</li>
+</ul>
+
+<p>
+<b>Specificity</b>: a standard method to determine which CSS rule declaration is most
+relevant to an element
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org44cafe1" class="outline-2">
+<h2 id="org44cafe1"><span class="section-number-2">3.</span> Flexbox Layout</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Main axis</b> is row or column, <b>cross axis</b> is perpendicular to main axis.
+</p>
+
+<p>
+Includes a flex container and flex items within.
+</p>
+
+<p>
+To make a parent a flex container, set its CSS display property to flex and its children
+become flex items.
+</p>
+
+<p>
+Flexbox items can group to fill space, shrink to fit into space, or have a custom basis
+set.
+</p>
+
+<p>
+Flexbox container can align its items (stretch, start, end, or center), align itself
+along the same axes, justify its content along the main axis (start, end, center,
+between, around, evenly), or set a gap between its items.
+</p>
+</div>
+</div>
+<div id="outline-container-org30b95be" class="outline-2">
+<h2 id="org30b95be"><span class="section-number-2">4.</span> DOM Manipulation with TypeScript</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org64eacb6" class="outline-3">
+<h3 id="org64eacb6"><span class="section-number-3">4.1.</span> General Development Steps</h3>
+<div class="outline-text-3" id="text-4-1">
+<ol class="org-ol">
+<li><b>mock up HTML as static page</b>: think about how to identify each part using id, name,
+structure, etc</li>
+<li><b>add CSS</b>: to create visual style, layout, etc</li>
+<li><b>divide HTML for manipulation approach</b>: could be separate strings, HTML templates,
+etc</li>
+<li><b>create views for main parts of interface</b>: divide CSS into views, build view from
+code or strings, create controllers using event listeners, attach everything to a
+root element for the view, implement observer update method</li>
+</ol>
+
+<p>
+Can get HTML elements using id or CSS selector syntax, should specify expected element
+type and need to handle case if reference is not found.
+</p>
+</div>
+<div id="outline-container-orgb516fc4" class="outline-4">
+<h4 id="orgb516fc4"><span class="section-number-4">4.1.1.</span> DOM Events</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+Dispatch using capture and bubble phases with adding event listeners.
+</p>
+
+<p>
+Has mouse event and keyboard events derived from event base class with time info.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3b3d27c" class="outline-3">
+<h3 id="org3b3d27c"><span class="section-number-3">4.2.</span> Imperative Code</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Build HTML by creating elements and appending children, step-by-step in code.
+</p>
+
+<p>
+App has a root and all views have a root element to enable this.
+</p>
+
+<p>
+Separate CSS files with selectors that apply only to specfic views, can be imported
+in code.
+</p>
+
+<p>
+<b>Problem</b>: adding elements (or one by one) is too slow
+</p>
+</div>
+</div>
+<div id="outline-container-org2d7ee08" class="outline-3">
+<h3 id="org2d7ee08"><span class="section-number-3">4.3.</span> String Templates</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+A tag tranforms a template literal before creating a string.
+</p>
+
+<p>
+A tag here is a function called with arguments from the template literal.
+The first argument is an array of \(N+1\) strings. Other arguments are \(N\)
+strings created from template values.
+</p>
+
+<p>
+Best practice is to pass HTML templates through an <code>html</code> tag, to escape embedded
+HTML and sanitize HTML.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-02-25 Sun 12:31</p>
+</div>
+</body>
+</html>
