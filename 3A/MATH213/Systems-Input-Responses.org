@@ -1,0 +1,50 @@
+#+title: Systems Input and Responses
+#+author: Arnav Gupta
+
+* Impulse Response of an LTI
+For a linear DE with constant coefficients, the ZSR is $Y(s) = H(s) F(s)$,
+where $H(s)$ is the transfer function of the DE and $F(s)$ is the Laplace transform of the
+forcing term.
+
+The impulse response of the DE is
+$$
+        h(t) = \mathscr{L}^{-1} \{ H(t) \}
+$$
+which comes from setting $f(t) = \delta (t)$ so the forcing term is an impulse.
+This is the ZSR to a unit impulse.
+
+By convolution theorem, this gives the zero-state solution $y(t) = (h * f)(t)$.
+
+This all holds for linear DEs with constant coefficients.
+
+The response of an LTI system is the convolution of the input with the system's impulse
+response.
+In other words, given the LTI with input $f(t)$ and output $y(t)$,
+$y(t) = (h * f)(t), where $h(t)$ is the impulse response of the system.
+
+** Kronecker Delta
+The Kronecker delta function $\delta [t]$ is defined as the function from $\mathbb{Z}$ to
+$\{0, 1\}$ given by
+$$
+\delta [t] = \begin{cases}
+1 & t = 0 \\
+0 & \text{else}
+\end{cases}
+$$
+
+For all functions $f : \mathbb{Z} \to \mathbb{C}$,
+$$
+        f[t] = \sum_{\tau = -\infty}^{\infty} f [\tau] \delta[t - \tau]
+$$
+This shows how to decompose every function $f$ into a linear combination of impulse functions.
+
+* Response of an LTI to Exponential Inputs
+If $S: f \to y$ is an LTI, then for any $s \in \mathbb{C}$
+$$
+        e^{st} \to H(s) e^{st}
+$$
+where $H(s)$ is the LT of the system's impulse response and is called the system's transfer
+function.
+
+This means that complex exponentials are eigenfunctions of LTIs and the transfer function tells
+you the eigenvalues of the system.

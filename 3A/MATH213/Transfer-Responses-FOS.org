@@ -1,0 +1,54 @@
+#+title: Transfer Functions, Responses, and the Standard First-Order System
+#+author: Arnav Gupta
+
+* Transfer Functions
+If a system is able to be modelled by a linear DE with constant coefficients, then the
+transfer function can be obtained from the differential equations.
+
+In general, $Y(s) = H(s) F_{ap}(s)$ so $y(t) = \mathscr{L}^{-1} \{ H(s) F_{ap}(s) \}$.
+
+In general, $F_{ap}(s)$ can have poles of its own and thus the system response will
+reflect the poles of both the transfer function $H(s)$ and the Laplace Transform of
+the forcing term $F_{ap}(s)$.
+
+The effects of the transfer function are present for any input so it is particularly
+important to understand the effects of the poles (and zeros) of $H(s)$.
+
+* Responses
+The response to the unit impulse is $Y(s) = H(s)$.
+
+The response to the unit step impulse is $Y(s) = \frac{1}{s} H(s)$.
+
+The step response is the integral of the impulse response.
+
+In the real world, often easier to physically generate a unit step function than a
+unity impulse.
+
+All polynomials with real valued coefficients can be factored into a product of
+linear and quadratic terms, so to understand the system response of any system,
+it is sufficient to understand how 1st and 2nd order linear systems respond.
+
+* Standard 1st Order System
+The standard 1st order system has transfer function
+$$
+        H(s) = \frac{\kappa}{s \tau + 1}
+$$
+where $\kappa, \tau > 0$, $\kappa$ is called the *DC gain* and $\tau$ is called
+the *time constant*.
+
+Since $H(s)$ has a pole at $s = -\frac{1}{\tau}$, the impulse response of the
+standard 1st order system is:
+$$
+        h(t) = \frac{\kappa}{\tau} e^{-t / \tau} u(t)
+$$
+
+The standard 1st order system is causal.
+
+Changing $\tau$ changes the value of $h(0)$ inversely and changes the growth rate.
+
+The step response of the standard 1st order system is
+$$
+        Y(s) = H(s) \frac{1}{s} = \kappa/(s(s\tau + 1)), y(t) = \kappa [ 1 - e^{-t / \tau}] u(t)
+$$
+
+Changing $\kappa$ increases the steady state value of $y(t)$ and $H(0) = \kappa$.
