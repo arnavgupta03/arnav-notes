@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-21 Wed 14:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blackbox Testing</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Blackbox Testing</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0d3a17d">1. Blackbox Testing</a>
+<ul>
+<li><a href="#org6223c83">1.1. Error Guessing</a></li>
+<li><a href="#orgfb04b99">1.2. Test Case Derivation from Functional Requirements</a></li>
+<li><a href="#orgc63ec30">1.3. Test Case Derivation from Use Cases</a></li>
+</ul>
+</li>
+<li><a href="#org6b2bc7c">2. Equivalence Partitioning</a>
+<ul>
+<li><a href="#orgc4a32ef">2.1. Heuristics for Identifying EC</a></li>
+<li><a href="#org7dd27d8">2.2. Test Selection Approach</a></li>
+</ul>
+</li>
+<li><a href="#orgef6a25a">3. Boundary Value Analysis</a>
+<ul>
+<li><a href="#org7aed0d6">3.1. Guidelines</a></li>
+<li><a href="#org09b6cdf">3.2. Limitations</a></li>
+<li><a href="#org1525107">3.3. Worst Case Testing</a></li>
+</ul>
+</li>
+<li><a href="#org77082f3">4. Category Partitioning</a>
+<ul>
+<li><a href="#org23d4373">4.1. Criteria for Using Chocies</a></li>
+</ul>
+</li>
+<li><a href="#orgc866068">5. Decision Tables</a>
+<ul>
+<li><a href="#org9e10219">5.1. Terminology</a>
+<ul>
+<li><a href="#org8d28b26">5.1.1. Don&rsquo;t Care</a></li>
+</ul>
+</li>
+<li><a href="#org44dad83">5.2. Software Testing</a></li>
+<li><a href="#org8d2ae2d">5.3. Applicability</a></li>
+<li><a href="#org37cabc0">5.4. Issues</a></li>
+<li><a href="#org7f35124">5.5. Guidelines and Observations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0d3a17d" class="outline-2">
+<h2 id="org0d3a17d"><span class="section-number-2">1.</span> Blackbox Testing</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Testing without having insight into code, based on a system&rsquo;s specification rather
+than structure. Can have notion of coverage applied.
+</p>
+
+<p>
+Rigorous specifications help functional testing, test case generation, and test
+oracles.
+</p>
+
+<p>
+Advantages:
+</p>
+<ul class="org-ul">
+<li>no need for source code</li>
+<li>wide applicability</li>
+</ul>
+
+<p>
+Disadvantages:
+</p>
+<ul class="org-ul">
+<li>does not test hidden functions</li>
+</ul>
+</div>
+<div id="outline-container-org6223c83" class="outline-3">
+<h3 id="org6223c83"><span class="section-number-3">1.1.</span> Error Guessing</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Ad-hoc approach based on experience, developing and maintaning own error models.
+</p>
+
+<p>
+Approach:
+</p>
+<ol class="org-ol">
+<li>Make list of possible errors or error-prone situations</li>
+<li>Yields an error model</li>
+<li>Design test cases to cover error model</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgfb04b99" class="outline-3">
+<h3 id="orgfb04b99"><span class="section-number-3">1.2.</span> Test Case Derivation from Functional Requirements</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Involves clarification and restatement of the requirements such that requirements
+are testable. Requires point form formulation that enumerates single requirements
+and groups related requirements.
+</p>
+
+<p>
+For each requirement, provide
+</p>
+<ul class="org-ul">
+<li>one test case showing requirement functioning</li>
+<li>one test case trying to falsify something</li>
+<li>test boundaries and constraints when possible</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc63ec30" class="outline-3">
+<h3 id="orgc63ec30"><span class="section-number-3">1.3.</span> Test Case Derivation from Use Cases</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+For each use case:
+</p>
+<ol class="org-ol">
+<li>develop a scenario graph</li>
+<li>determine all possible scenarios</li>
+<li>analyze and rank scenarios</li>
+<li>generate test cases from scenarios to meet coverage goal</li>
+<li>execute test cases</li>
+</ol>
+
+<p>
+Scenario graphs are generated from a use case:
+</p>
+<ul class="org-ul">
+<li>a node corresponds to a point where we wait for the next event to occur</li>
+<li>one starting node, end of use case is finish node</li>
+<li>edge corresponds to event occurrence</li>
+<li>full scenario is a path from start to finish</li>
+</ul>
+
+<p>
+If too many scenarios, rank based on criticality and frequency, always
+including main scenario, then generate test cases.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org6b2bc7c" class="outline-2">
+<h2 id="org6b2bc7c"><span class="section-number-2">2.</span> Equivalence Partitioning</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Motivation: want a sense of complete functional testing and hope to avoid
+redundancy
+</p>
+
+<p>
+<b>Equivalence classes (ECs)</b>: a partition of the input set according to
+specification
+</p>
+<ul class="org-ul">
+<li>entire set is covered: completeness</li>
+<li>disjoint classes: avoid redundancy</li>
+</ul>
+
+<p>
+ECs must be chosen wisely using heuristics.
+</p>
+
+<p>
+<b>Weak equivalence class testing (WECT)</b>:
+choose one variable value from each equivalence class
+</p>
+
+<p>
+<b>Strong equivalence class testing (SECT)</b>:
+based on Cartesian product of partition subsets
+</p>
+
+<p>
+If error conditions are a high priority, should extend SECT to include
+both valid and invalid inputs.
+Equivalence partitioning is appropriate when input data is defined in
+terms of range and sets of discrete values.
+SECT makes the assumption that the variables are independent.
+Heuristics are required in the case of too many test cases.
+</p>
+
+<p>
+Advantages of Equivalence Partitioning:
+</p>
+<ul class="org-ul">
+<li>small number of test cases needed</li>
+<li>probability of uncovering defects with the selected test cases higher than that
+with a randomly chosen test suite of the same size</li>
+</ul>
+
+<p>
+Limitations of Equivalence Partitioning:
+</p>
+<ul class="org-ul">
+<li>strongly typed languages eliminate need for consideration of some invalid inputs</li>
+<li>specification does not always define expected output for invalid test cases</li>
+<li>test selection approach does not work well when input variables are not
+independent</li>
+<li>brute force definition of test case for every combo of input ECs is impractical</li>
+</ul>
+</div>
+<div id="outline-container-orgc4a32ef" class="outline-3">
+<h3 id="orgc4a32ef"><span class="section-number-3">2.1.</span> Heuristics for Identifying EC</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+For each external input:
+</p>
+<ol class="org-ol">
+<li>if input is a range of valid values, define:
+<ul class="org-ul">
+<li>one valid EC (within the range)</li>
+<li>two invalid EC (one outside each end of the range)</li>
+</ul></li>
+<li>if input is a number \(N\) of valid values, define
+<ul class="org-ul">
+<li>one valid EC</li>
+<li>two invalid EC (none and more than \(N\))</li>
+</ul></li>
+<li>if input is an element from a set of valid values, define:
+<ul class="org-ul">
+<li>one valid EC (within set)</li>
+<li>one invalid EC (outside set)</li>
+</ul></li>
+<li>if input is a must be situation (condition), define:
+<ul class="org-ul">
+<li>one valid EC (satisfies condition)</li>
+<li>one invalid EC (does not satisfy condition)</li>
+</ul></li>
+<li>if there is a reason to believe that elements in an EC are not
+handled in an identical manner by the program:
+<ul class="org-ul">
+<li>subdivide EC into smaller ECs</li>
+</ul></li>
+<li>consider creating equivalence partitions that handle the
+default, empty, blank, null, zero, or none conditions</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org7dd27d8" class="outline-3">
+<h3 id="org7dd27d8"><span class="section-number-3">2.2.</span> Test Selection Approach</h3>
+<div class="outline-text-3" id="text-2-2">
+<ol class="org-ol">
+<li>until all valid ECs have been covered by test cases,
+write a new test case that covers as many of the uncovered
+valid ECs as possible</li>
+<li>until all invalid ECs have been covered by test cases,
+write a test case that covers only one of the uncovered invalid ECs
+(allows tester to observer response to single invalid input)</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-orgef6a25a" class="outline-2">
+<h2 id="orgef6a25a"><span class="section-number-2">3.</span> Boundary Value Analysis</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Some typical programming errors tend to occur near extreme values,
+focus of boundary value testing.
+Simpler but complementary to previous techniques.
+</p>
+
+<p>
+<b>Data types with boundary conditions</b>: numeric, character, position,
+quantity, speed, location, size, etc.
+</p>
+</div>
+<div id="outline-container-org7aed0d6" class="outline-3">
+<h3 id="org7aed0d6"><span class="section-number-3">3.1.</span> Guidelines</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Use input variable values (within a class) at min, just above min,
+a nominal value, just below max, and at max.
+</p>
+
+<p>
+Hold all other values at nominal values and include each boundary condition
+in at least one valid test case.
+</p>
+</div>
+</div>
+<div id="outline-container-org09b6cdf" class="outline-3">
+<h3 id="org09b6cdf"><span class="section-number-3">3.2.</span> Limitations</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Test cases are 4 times the number of variables.
+This works well with variables that represent bounded physical quantities, since
+there is no consideration of the nature of the function and the meaning
+of the variables.
+</p>
+
+<p>
+For more robust testing, include value just beyond boundary in at least
+one invalid test case.
+</p>
+</div>
+</div>
+<div id="outline-container-org1525107" class="outline-3">
+<h3 id="org1525107"><span class="section-number-3">3.3.</span> Worst Case Testing</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+For programs with more than one variable with an extreme value,
+take the Cartesian product of the min, min+, nom, max-, and max.
+</p>
+
+<p>
+Much more effort: \(5^{n}\) test cases
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org77082f3" class="outline-2">
+<h2 id="org77082f3"><span class="section-number-2">4.</span> Category Partitioning</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Systematic, spec-based methodology that uses an informal functional spec to
+produce a formal test spec.
+</p>
+
+<p>
+Integrated EC testing and boundary value analysis and adds refinements.
+</p>
+
+<p>
+Consists of:
+</p>
+<ul class="org-ul">
+<li>identification of categories</li>
+<li>partitioning each category into choices</li>
+<li>creating test frames as selection of choices</li>
+<li>creating test cases</li>
+</ul>
+
+<p>
+Steps
+</p>
+<ol class="org-ol">
+<li>decompose the fucntional spec into functional units that can be independently
+tested</li>
+<li>examine each functional unit
+<ol class="org-ol">
+<li>identify params</li>
+<li>identify environmental conditions</li>
+</ol></li>
+<li>find categories for each param and environmental condition (major property or
+characteristic)</li>
+<li>subdivide categories further into choices in the same way as equivalence partitioning
+is applied</li>
+<li>determine constraints among choices: how they interact and affect each other</li>
+<li>create test frames</li>
+<li>create test cases</li>
+</ol>
+</div>
+<div id="outline-container-org23d4373" class="outline-3">
+<h3 id="org23d4373"><span class="section-number-3">4.1.</span> Criteria for Using Chocies</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<b>All Combinations (AC)</b>: typically done when using category partitioning, one value
+for every choice of every param must be used with one value of every possible
+choice of every other category
+</p>
+
+<p>
+Number of test cases for AC is sum of number of choices in all categories.
+</p>
+
+<p>
+<b>Each Choice (EC)</b>: weaker criterion, one value from each choice for each category
+must be used at least in one test case
+</p>
+
+<p>
+Number of test cases for EC is maximum number of choices in a category.
+</p>
+
+<p>
+<b>Base Choice (BC)</b>: a compromise
+</p>
+<ul class="org-ul">
+<li>a base choice is chosen for each category and a first base test is formed by using
+the base choice for each category</li>
+<li>subsequent tests chosen by holding all but one base choice constant and forming
+choice combos by covering all non-base choices of the selected category</li>
+<li>this procedure is repeatd for all categories</li>
+</ul>
+
+<p>
+Number of test cases for BC is sum of the number of choices in all categories minus
+the number of categories.
+</p>
+
+<p>
+BC can be the simplest, smallest, first in some ordering, or the most likely to be used.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc866068" class="outline-2">
+<h2 id="orgc866068"><span class="section-number-2">5.</span> Decision Tables</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Precise and compact way to model complex logic, by associating conditions with actions
+to perform.
+</p>
+</div>
+<div id="outline-container-org9e10219" class="outline-3">
+<h3 id="org9e10219"><span class="section-number-3">5.1.</span> Terminology</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+<b>Limited entry table</b>: condition entries restricted to binary values
+</p>
+
+<p>
+<b>Extended entry table</b>: condition entries have more than 2 values
+</p>
+</div>
+<div id="outline-container-org8d28b26" class="outline-4">
+<h4 id="org8d28b26"><span class="section-number-4">5.1.1.</span> Don&rsquo;t Care</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<p>
+Reduces number of variants, not the same as unknown.
+</p>
+
+<p>
+Corresponds to the cases where:
+</p>
+<ul class="org-ul">
+<li>inputs are necessary but have no effect</li>
+<li>inputs may be omitted</li>
+<li>mutually exclusive cases</li>
+</ul>
+
+<p>
+When conditions are equivalent classes, inputs are mutually exclusive.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org44dad83" class="outline-3">
+<h3 id="org44dad83"><span class="section-number-3">5.2.</span> Software Testing</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Condition entries in a decision table are interpreted by a computer program as
+input and equivalence class of inputs.
+</p>
+
+<p>
+Action entries in a decision table are interpreted as output and major functional
+processing portions.
+</p>
+
+<p>
+Rules then become test cases.
+</p>
+
+<p>
+Limited entry tables have exponential growth from conditions to rules, though this
+can be reduced with don&rsquo;t cares.
+</p>
+
+<p>
+Less rules than combination rule count indicates missing rules, and more rules
+than combination count indicates either redundant rules or inconsistent table.
+</p>
+</div>
+</div>
+<div id="outline-container-org8d2ae2d" class="outline-3">
+<h3 id="org8d2ae2d"><span class="section-number-3">5.3.</span> Applicability</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Given spec can be converted to a decision table:
+</p>
+<ul class="org-ul">
+<li>the order in which predicates or rules are evaluated does not affect rule
+interpretation or resulting actions</li>
+<li>once a rule is satisfied and the action is selected, no other rule needs to be
+exaned</li>
+<li>the order of executing actions in a satisfied rule does not matter</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org37cabc0" class="outline-3">
+<h3 id="org37cabc0"><span class="section-number-3">5.4.</span> Issues</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+Before deriving test cases, ensure:
+</p>
+<ul class="org-ul">
+<li>rules are complete, that every combo of predicate truth values is
+explicit in the decision table</li>
+<li>rules are consistent, that every combo of predicate truth values is only one
+action or set of actions</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7f35124" class="outline-3">
+<h3 id="org7f35124"><span class="section-number-3">5.5.</span> Guidelines and Observations</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+Decision table is best for programs with:
+</p>
+<ul class="org-ul">
+<li>lots of decision making</li>
+<li>important logical relationships among input variables</li>
+<li>calculations involving subsets of input variables</li>
+<li>cause and effect between input and output</li>
+<li>complex computational logic</li>
+</ul>
+
+<p>
+Decision tables do not scale well and must be iteratively refined.
+</p>
+
+<p>
+Important to look for redundant, inconsistent, and missing rules.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-02-21 Wed 14:37</p>
+</div>
+</body>
+</html>
