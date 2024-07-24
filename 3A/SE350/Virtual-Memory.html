@@ -1,0 +1,1335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-03-06 Wed 02:32 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Virtual Memory</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Virtual Memory</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org00f3789">1. Hardware and Control Structures</a>
+<ul>
+<li><a href="#org849b728">1.1. Virtual Memory</a></li>
+<li><a href="#orgfb971aa">1.2. Locality and Virtual Memory</a></li>
+<li><a href="#orgeccdcd1">1.3. Paging</a>
+<ul>
+<li><a href="#org7ac53ea">1.3.1. Page Table Structure</a></li>
+<li><a href="#org34ce2c8">1.3.2. Inverted Page Table</a></li>
+<li><a href="#org3ab1554">1.3.3. Translation Lookaside Buffer</a></li>
+<li><a href="#org22e4d4a">1.3.4. Page Size</a></li>
+</ul>
+</li>
+<li><a href="#org36d8ffa">1.4. Segmentation</a>
+<ul>
+<li><a href="#orgd6177de">1.4.1. Virtual Memory Implications</a></li>
+<li><a href="#orgf204d52">1.4.2. Organization</a></li>
+</ul>
+</li>
+<li><a href="#org84e403c">1.5. Combined Paging and Segmentation</a></li>
+<li><a href="#orgaaa16e5">1.6. Protection and Sharing</a></li>
+</ul>
+</li>
+<li><a href="#orgcd906e4">2. Operating System Software</a>
+<ul>
+<li><a href="#orgfaade7a">2.1. OS Policies for Virtual Memory</a></li>
+<li><a href="#org0b3c9cd">2.2. Fetch Policy</a></li>
+<li><a href="#orge501755">2.3. Placement Policy</a></li>
+<li><a href="#org0f0aaa7">2.4. Replacement Policy</a>
+<ul>
+<li><a href="#orgdada822">2.4.1. Frame Locking</a></li>
+<li><a href="#org4ae5a5b">2.4.2. Basic Algorithms</a></li>
+<li><a href="#org4934c14">2.4.3. Page Buffering</a></li>
+<li><a href="#org8ff1b7c">2.4.4. Replacement Policy and Cache Size</a></li>
+</ul>
+</li>
+<li><a href="#org09f3dd9">2.5. Resident Set Management</a>
+<ul>
+<li><a href="#org2b2256d">2.5.1. Resident Set Size</a></li>
+<li><a href="#org70d5593">2.5.2. Replacement Scope</a></li>
+</ul>
+</li>
+<li><a href="#org234def6">2.6. Cleaning Policy</a></li>
+<li><a href="#org96accc2">2.7. Load Control</a>
+<ul>
+<li><a href="#org5c420d3">2.7.1. Multiprogramming Level</a></li>
+<li><a href="#orgdc20261">2.7.2. Process Suspension</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org00f3789" class="outline-2">
+<h2 id="org00f3789"><span class="section-number-2">1.</span> Hardware and Control Structures</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Key characteristics of paging and segmentation are:
+</p>
+<ol class="org-ol">
+<li>All memory references within a process are logical addresses that are dynamically
+translated into physical adddresses at runtime, allowing a process to be swapped
+in and out of main memory (can occupy different regions of main memory at
+different times)</li>
+<li>A process can be broken into pieces (pages or segments) that need not be contiguous
+in main memory during execution</li>
+</ol>
+
+<p>
+This ultimately means that not all pages or segments of a process need to be in main
+memory during execution, only the next instruction to be fetched and next data location
+to be accessed must be in main memory.
+</p>
+
+<p>
+As a process executes, the procesor can determine if a memory reference is in the
+resident set using the page/segment table, if not it can generate an interrupt
+for a memory access fault.
+This blocks the process so that the OS can bring that piece of the process into
+main memory using a disk IO read request.
+</p>
+</div>
+<div id="outline-container-org849b728" class="outline-3">
+<h3 id="org849b728"><span class="section-number-3">1.1.</span> Virtual Memory</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<b>Virtual memory</b>: a storage allocation scheme in which secondary memory can be addressed
+as though it were part of main memory, where addresses a program uses are different from
+addresses the memory system uses to identify storage sites through translation
+</p>
+
+<p>
+Amount of virtual storage is limited by the addressing scheme of the computer and the
+amount of secondary memory available, not main memory.
+</p>
+
+<p>
+<b>Virtual address</b>: address assigned to a location in virtual memory to allow that location
+to be accessed as if it were in main memory
+</p>
+
+<p>
+<b>Virtual address space</b>: virtual storage assigned to a process
+</p>
+
+<p>
+<b>Address space</b> range of memory addresses available to a process
+</p>
+
+<p>
+<b>Real address</b>: address of a storage location in main memory
+</p>
+
+<p>
+<b>Resident set</b>: portion of a process that is in main memory
+</p>
+
+<p>
+Implications of virtual memory:
+</p>
+<ol class="org-ol">
+<li>More processes maintainted in main memory since only portions of each process are in
+main memory, which more efficiently uses the processor especially with context
+switching.</li>
+<li>Processes can be larger than main memory so programmers do not need to worry about
+the size of their program as the OS manages virtual memory based on paging or
+segmentation.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgfb971aa" class="outline-3">
+<h3 id="orgfb971aa"><span class="section-number-3">1.2.</span> Locality and Virtual Memory</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Over a short period of time, execution could be confined to a small section of a program
+and so loading the full program in would be wasteful in case it is suspended.
+Saves time as unused pieces are not swapped in and out of memory.
+</p>
+
+<p>
+<b>Thrashing</b>: when the system spends most of its time swapping pieces rather than executing
+instructions because pieces are thrown out just before they are used
+</p>
+
+<p>
+<b>Locality</b>: program and data references within a process tend to cluster, used to avoid
+thrashing
+</p>
+
+<p>
+Locality suggests virtual memory may be effective, but this requires:
+</p>
+<ul class="org-ul">
+<li>hardware support for paging and/or segmentation</li>
+<li>OS includes software for manageing movement of pages and/or segments between secondary
+and main memory</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgeccdcd1" class="outline-3">
+<h3 id="orgeccdcd1"><span class="section-number-3">1.3.</span> Paging</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+With virtual memory paging, there are equal size pages of the same length as frames but
+not all pages need to be loaded into main memory frames for execution.
+</p>
+
+<p>
+Virtual memory paging maintains a page table for each process, but page table entries
+must have:
+</p>
+<ul class="org-ul">
+<li>a present (P) bit to indicate whether or not they are in main memory (if so
+the frame number is correct)</li>
+<li>a modify (M) bit to indicate whether the contents of the corresponding page have been
+altered since the page was last loaded into main memory (if so, write the page out
+on replacement)</li>
+<li>other control bits for protection, sharing, etc.</li>
+</ul>
+</div>
+<div id="outline-container-org7ac53ea" class="outline-4">
+<h4 id="org7ac53ea"><span class="section-number-4">1.3.1.</span> Page Table Structure</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Reading a word from memory involves the translation of a logical (virtual) address
+consisting of page number and offset into a physical address with frame number
+and offset using the page table.
+</p>
+
+<p>
+Page table must be in main memory to be accessed.
+When a process is running, a register holds the starting address of the page table
+for that process.
+Page number of a virtual address is used to index the table and find the frame
+number which is combined with the offset of the virtual address to find the real address.
+</p>
+
+<p>
+Number of pages in a process can exceed the number of frames in main memory.
+</p>
+
+<p>
+If processes are allowed to have large amounts of virtual memory, memory devoted to
+page tables alone could be unacceptably high.
+Most virtual memory schemes store page tables in virtual memory, so page tables
+are subject to paging.
+</p>
+
+<p>
+When a process is running, at least the page table entry of the currently executing
+page must be in memory (can be more).
+</p>
+
+<p>
+Some processors use a 2-level scheme to organize large page tables:
+</p>
+<ul class="org-ul">
+<li>there is a page directory where each entry points to a page table</li>
+<li>the number of pages allowed for a process is the product of the number of entries
+in the page directory and the max number of entries in a page table</li>
+<li>max length of a page table is typically at most one page</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org34ce2c8" class="outline-4">
+<h4 id="org34ce2c8"><span class="section-number-4">1.3.2.</span> Inverted Page Table</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Page tables so far have size proportional to virtual address space.
+</p>
+
+<p>
+Inverted page tables can be used where:
+</p>
+<ul class="org-ul">
+<li>page number of a virtual address is mapped to a hash value</li>
+<li>hash value is a pointer to the inverted page table which contains page table entries</li>
+<li>one entry in the inverted page table for each real memory page frame rather than
+one per virtual page, so page table has fixed size</li>
+<li>chaining may be needed because of hash</li>
+</ul>
+
+<p>
+Each entry in the page table includes:
+</p>
+<ul class="org-ul">
+<li><b>page number</b>: page number portion of virtual address</li>
+<li><b>process identifier</b>: process that owns the page, where this and page number
+identifies a page within the virtual address space of a process</li>
+<li><b>control bits</b>: includes flags like valid, referenced, modified, and protection and
+locking info</li>
+<li><b>chain pointer</b>: null field if no chained entries, otherwise field contains index
+value of next entry in chain</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3ab1554" class="outline-4">
+<h4 id="org3ab1554"><span class="section-number-4">1.3.3.</span> Translation Lookaside Buffer</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+Every virtual memory reference is 2 physical memory accesses, one for the page table
+entry and one for the desired data.
+Regular virtual memory scheme would then double memory access time.
+</p>
+
+<p>
+To overcome this, a special high-speed cache for page table entries called a
+<b>translation lookaside buffer</b> (TLB) is used.
+Contains the most recently used page table entries.
+</p>
+
+<p>
+The procedure with a TLB is:
+</p>
+<ul class="org-ul">
+<li>processor first checks TLB for desired page table entry
+<ul class="org-ul">
+<li>if hit, frame number is retrieved and real address is formed</li>
+<li>if miss, then processor uses page number to index process in page table and
+examine the corresponding page table entry</li>
+</ul></li>
+<li>if the P bit is set then the page is in main memory and the processor can
+get the frame number from the page table entry to form the real address
+<ul class="org-ul">
+<li>this also updates the TLB to include the page table entry</li>
+</ul></li>
+<li>if the P bit is not set, a page fault occurs and the OS is invoked to load the
+page and update the page table</li>
+</ul>
+
+<p>
+Since the TLB only contains some entries in a full page table, each entry in the TLB
+must include the page number and the complete page table entry.
+Hardware allows a number of TLB entries to be checked simultaneously to check if there
+is a page number match, called <b>associative mapping</b>.
+</p>
+
+<p>
+TLB design relies on hardware cache design and this must consider the way in which
+entries are organized and replacement policy.
+</p>
+
+<p>
+Virtual memory must interact with main memory cache.
+Once the real address is generated, it is in the form of a tag and the remainder,
+which the cache uses to check if the block containing that word is present.
+If so, it is returned, and if not, the word is retrieved from main memory.
+</p>
+</div>
+</div>
+<div id="outline-container-org22e4d4a" class="outline-4">
+<h4 id="org22e4d4a"><span class="section-number-4">1.3.4.</span> Page Size</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+Factors to consider:
+</p>
+<ul class="org-ul">
+<li><b>internal fragmentation</b>: smaller the pages, less internal fragmentation</li>
+<li><b>pages per process</b>: smaller the pages, more pages per process and larger page
+tables
+<ul class="org-ul">
+<li>can result in double page fault to bring portion of page table, and then process page</li>
+</ul></li>
+<li><b>physical characteristics</b>: most secondary-memory are rotational and favour a larger
+page size for more efficient block transfer of data</li>
+</ul>
+
+<p>
+If page size is very small, many pages will be in memory near recent references keeping
+page fault rate low.
+As page size increases, each individual page contains locations further from recent
+references, so less locality and page fault rate rises.
+As the page size approaches the size of the process, page fault rate falls.
+</p>
+
+<p>
+Page fault rate is also determined by the number of frames allocated to a process,
+and this falls as the number of pages in main memory grows.
+</p>
+
+<p>
+As main memory grows, address space used by programs does as well.
+Programming techniques can avoid locality, such as:
+</p>
+<ul class="org-ul">
+<li>OOP which encourages using many small programs data modules scattered over
+many objects</li>
+<li>multithreaded applications which can have abrupt changes in instructions and
+scattered memory references</li>
+</ul>
+
+<p>
+For given TLB size, as memory size of processes grows and locality decreases,
+hit ratio of TLB accesses decreases, so TLB can be a bottleneck.
+Larger TLB can help or larger page sizes so that each page table entry refers
+to a larger block of memory.
+</p>
+
+<p>
+Multiple page sizes can be used which provides flexibility in using a TLB effectively.
+Most OSs only support one page size.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org36d8ffa" class="outline-3">
+<h3 id="org36d8ffa"><span class="section-number-3">1.4.</span> Segmentation</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="outline-container-orgd6177de" class="outline-4">
+<h4 id="orgd6177de"><span class="section-number-4">1.4.1.</span> Virtual Memory Implications</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Segmentation allows memory to be viewed as consisting of agments of unequal, dynamic size.
+Memory references consist of a segment number and offset.
+</p>
+
+<p>
+Advantages to the programmer:
+</p>
+<ol class="org-ol">
+<li>simplifies handling growing data structures as they can be assigned a segment whose
+size changes dynamically and can be swapped out of main memory if required</li>
+<li>allows programs to be altered and recompiled independently without requiring all
+to be relinked and reloaded using multiple segments</li>
+<li>allows sharing among processes as a utility or useful data can be placed in a segment
+that can be referenced by other processes</li>
+<li>allows protection as segments can be constructed to contain a well-defined set of
+programs or data that the program or admin can assign privileges</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgf204d52" class="outline-4">
+<h4 id="orgf204d52"><span class="section-number-4">1.4.2.</span> Organization</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+A unique segment table is associated with each process.
+</p>
+
+<p>
+Segment table entries include:
+</p>
+<ul class="org-ul">
+<li>a bit to indicate if the segment is in memory (if so,
+starting address and length are valid)</li>
+<li>a modify bit to indicate whether the contents have been altered since the segment was
+loaded into main memory (if so, weite the segment out to disk)</li>
+<li>other control bits for protection and sharing</li>
+</ul>
+
+<p>
+Segment table must be in main memory to be accessed.
+A register holds the starting address of the segment table for the running process.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org84e403c" class="outline-3">
+<h3 id="org84e403c"><span class="section-number-3">1.5.</span> Combined Paging and Segmentation</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Paging is transparent to the programmer, eliminates external framentation (efficient
+memory use), can develop sophisticated memory management algorithms to exploit the
+behaviour of programs because of equal size.
+</p>
+
+<p>
+Segmentation is visible to the programmer, handles growing data structures, modularity,
+and support for sharing and prtection.
+</p>
+
+<p>
+Some processors and OS use both for both benefits.
+</p>
+
+<p>
+In combined paging/segmentation, address space is broken into segments (by the
+programmer) that are broken into fixed-size pages.
+If a segment is smaller than a page, it occupies one page.
+</p>
+
+<p>
+Logical address (for system) contains a segment number, page number, and offset.
+Each process has a segment table and many page tables (one for each process segment).
+</p>
+
+<p>
+Procedure:
+</p>
+<ul class="org-ul">
+<li>with the virtual address, the processor uses the segment number to index into the
+process segment table and find the page table</li>
+<li>then the page number portion is used to index the page table and look up the
+corresponding frame number</li>
+<li>this is combined with offset to give a real address</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgaaa16e5" class="outline-3">
+<h3 id="orgaaa16e5"><span class="section-number-3">1.6.</span> Protection and Sharing</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Segmentation allows for protection and sharing policies.
+</p>
+
+<p>
+Since each segment table entry includes length and base address, a program cannot
+access a main memory location beyond the segment limits.
+</p>
+
+<p>
+For sharing, a segment can be referenced in the segment tables of multiple processes.
+</p>
+
+<p>
+Same mechanisms available for paging, but specification is difficult since pages not
+visible to programmer.
+</p>
+
+<p>
+A ring-protection structure can be used where inner rings enjoy greater privilege.
+A program can only access data on the same or outer rings.
+A program can call services on the same or inner rings.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcd906e4" class="outline-2">
+<h2 id="orgcd906e4"><span class="section-number-2">2.</span> Operating System Software</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+OS memory management design depends on:
+</p>
+<ol class="org-ol">
+<li>whether or not to use virtual memory</li>
+<li>use of paging, segmentation, or both</li>
+<li>algorithms used for various aspects of memory management</li>
+</ol>
+
+<p>
+Virtual memory and paging/segmentation depend on available hardware.
+Outside of older PC OSs, all provide virtual memory and pure segmentation is rate.
+</p>
+
+<p>
+Key issue is performance by minimizing page fault rate to reduce overhead.
+</p>
+
+<p>
+While process switching during page fetch, would like to arrange so that when
+process is executing, probability of finding a missing page is minimized.
+</p>
+</div>
+<div id="outline-container-orgfaade7a" class="outline-3">
+<h3 id="orgfaade7a"><span class="section-number-3">2.1.</span> OS Policies for Virtual Memory</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li><b>Fetch policy</b>: demand paging or prepaging</li>
+<li><b>Placement policy</b></li>
+<li><b>Replacement policy</b>: basic are optimal, LRU, FIFO, clock, and non-basic is page
+buffering</li>
+<li><b>Resident Set Management</b>: resident set size is either fixed or variable, replacement
+scope is either global or locality</li>
+<li><b>Cleaning Policy</b>: demand or precleaning</li>
+<li><b>Load Control</b>: degree of multiprogramming</li>
+</ul>
+
+<p>
+Performance of any set of policies depends on:
+</p>
+<ul class="org-ul">
+<li>main memory size</li>
+<li>relative speed of main and secondary emmory</li>
+<li>size and number of processes competing for resources</li>
+<li>execution behaviour of individual programs, depends on nature of applications,
+programming languages, compiler, style of programmer, and user behaviour</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0b3c9cd" class="outline-3">
+<h3 id="org0b3c9cd"><span class="section-number-3">2.2.</span> Fetch Policy</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Determines when a page should be brought into main memory.
+</p>
+
+<p>
+<b>Demand paging</b>: a page is brought into main memory only when a reference is made to a
+locations on that page
+</p>
+
+<p>
+This causes:
+</p>
+<ul class="org-ul">
+<li>many page faults on process start</li>
+<li>as more pages on main memory, page faults drop to a very low level</li>
+</ul>
+
+<p>
+<b>Prepaging</b>: pages other than the one demanded by a page fault are brought in, such as
+contiguous pages
+</p>
+
+<p>
+This is ineffective is most extra pages are not referenced.
+Can be employed when a process started (programmer defines desired pages) or when a page
+fault occurs (invisible to programmer).
+</p>
+</div>
+</div>
+<div id="outline-container-orge501755" class="outline-3">
+<h3 id="orge501755"><span class="section-number-3">2.3.</span> Placement Policy</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Determines where in real memory a process piece is to reside.
+</p>
+
+<p>
+Already discussed for pure segmentation, but for pure paging or paging/segmentation,
+placement is usually irrelevant since address translation hardware and main memory
+access hardware can perform functions for any page-frame combo with equal efficiency.
+</p>
+
+<p>
+Important for NUMA (nonuniform memory access) multiprocessor as memory can be
+referenced by any processor on the machine but acess time for a physical location
+varies with distance between processor and memory.
+For NUMA, automatic placement strategy is desirable to assign pages to memory that
+provide the best performance.
+</p>
+</div>
+</div>
+<div id="outline-container-org0f0aaa7" class="outline-3">
+<h3 id="org0f0aaa7"><span class="section-number-3">2.4.</span> Replacement Policy</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Deals with the selection of a page in main memory to be replaced when a new page is
+brought in.
+</p>
+
+<p>
+Related to:
+</p>
+<ul class="org-ul">
+<li>number of page frames allocated per active process</li>
+<li>if set of pages for replacement should be limited to the process that caused the
+page fault or encompass all page frames in main memory</li>
+<li>among set of pages considered, which page should be selected for replacement</li>
+</ul>
+
+<p>
+First 2 are resident set management, 3rd is replacement policy.
+</p>
+
+<p>
+The more elaborate and sophisticated the replacement policy, the greater the
+hardware and software overhead to implement it.
+</p>
+</div>
+<div id="outline-container-orgdada822" class="outline-4">
+<h4 id="orgdada822"><span class="section-number-4">2.4.1.</span> Frame Locking</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Some frames can be locked, where the page stored in that frame cannot be replaced.
+</p>
+
+<p>
+Examples include the kernel, key control structures, IO buffers, and time critical
+areas that are locked into main memory frames.
+</p>
+
+<p>
+Achieved by associating a lock bit with each frame that is in the frame table
+or in the current page table.
+</p>
+</div>
+</div>
+<div id="outline-container-org4ae5a5b" class="outline-4">
+<h4 id="org4ae5a5b"><span class="section-number-4">2.4.2.</span> Basic Algorithms</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+<b>Optimal</b> selects for replacing the page for which the time to the next
+reference is the longest, though impossible to implement and just a judge
+against real algorithms
+</p>
+
+<p>
+<b>Least Recently Used (LRU)</b> replaces the page in memory that has not been
+referenced by the longest time.
+</p>
+<ul class="org-ul">
+<li>works by locality since that page is least likely to be used again in the near
+future</li>
+<li>does nearly as well as optimaly, but difficult to implement
+<ul class="org-ul">
+<li>could tag each page with time of last reference but too much overhead</li>
+<li>could maintain a stack of page references, but expensive</li>
+</ul></li>
+</ul>
+
+<p>
+<b>First-In-First-Out (FIFO)</b> treats page frames as a circular buffer and pages
+are removed for a process in round-robin style
+</p>
+<ul class="org-ul">
+<li>only requires a pointer that circles through page frames of a process</li>
+<li>simple to implement</li>
+<li>does not work well if regions of program are heavily used throughout life
+of a program</li>
+</ul>
+
+<p>
+<b>Clock policy</b> requires association of an additional bit with each frame (use
+bit)
+</p>
+<ul class="org-ul">
+<li>when a page is loaded into a frame in memory and on each reference,
+use bit is set to 1</li>
+<li>for page replacement, the set of frames that are candidates for replacement is a
+circular buffer with an associated pointer
+<ul class="org-ul">
+<li>when a page is replaced, pointer indicates next frame in the buffer after
+the last one updated</li>
+<li>when replacing a page, OS scans a buffer to find a frame with use bit 0</li>
+<li>when a frame with use bit 1 is found, it is reset to 0</li>
+</ul></li>
+<li>similar to FIFO except that any frame with use bit 1 is passed over</li>
+<li>can be made more powerful by increasing the number of bits it employs such
+as a modify bit associated with each page in main memory
+<ul class="org-ul">
+<li>works by ensuring a page is not replaced until it has been written back
+into secondary memory</li>
+</ul></li>
+<li>with the <span class="underline">use</span> and <span class="underline">modify</span> bits, each frame falls into:
+<ul class="org-ul">
+<li>not accessed recently, not modified</li>
+<li>accessed recently, not modified</li>
+<li>not accessed recently, modified</li>
+<li>accessed recently, modified</li>
+</ul></li>
+<li>then the clock algorithm works as:
+<ul class="org-ul">
+<li>begin at the current position of the pointer, scan the frame buffer and do
+not change the use bit, first frame with use and modify both 0 is selected
+for replacement</li>
+<li>if this is not possible, look for a frame with use bit 0 and modify bit 1,
+but on this scan set the use bit to 0 on each frame bypassed</li>
+<li>if this is not possible, the pointer returns to the original position and all
+frames in the set have use bit 0, so go back to 1st step</li>
+</ul></li>
+<li>this new algorithm is better since is avoids writing back if not needed
+and by locality, finds a page that will likely not be needed again soon</li>
+</ul>
+
+<p>
+Other than optimal, order of least page fault rate is LRU, clock, FIFO.
+Small factor differences can have a noticeable effect on main memory requirements
+(to avoid degrading OS performance) or OS performance (to avoid enlarging main
+memory).
+</p>
+</div>
+</div>
+<div id="outline-container-org4934c14" class="outline-4">
+<h4 id="org4934c14"><span class="section-number-4">2.4.3.</span> Page Buffering</h4>
+<div class="outline-text-4" id="text-2-4-3">
+<p>
+Cost of replacing a page that has been modified is greater
+than for one that has not, due to write back.
+</p>
+
+<p>
+<b>Page buffering</b>: uses FIFO for replacement but to improve performance the replaced
+page is assigned to the free page list if it has not been modified or the modified
+page list if so
+</p>
+<ul class="org-ul">
+<li>page not physically moved in main memory but entry in page table is placed in
+the corresponding list on replace</li>
+</ul>
+
+<p>
+<b>Free page list</b>: for page frames available for reading in pages, where a small
+number of frames are free at all times
+</p>
+<ul class="org-ul">
+<li>when a page is read in, the page frame at the head of the free page list is
+used, and this destroys the page there</li>
+<li>the unmodified page remains in memory and its page frame is added to the tail
+of the free page list</li>
+</ul>
+
+<p>
+When a modified page is to be written out and replaced, its page frame is added
+to the tail of the modified page list.
+</p>
+
+<p>
+The page to be replaced remains in memory, so if the page is referenced again
+it can be returned to the resident set at low cost.
+</p>
+
+<p>
+Since modified pages are written out in clusters, this significantly reduces the
+number of IO operations and the amount of disk access time.
+</p>
+</div>
+</div>
+<div id="outline-container-org8ff1b7c" class="outline-4">
+<h4 id="org8ff1b7c"><span class="section-number-4">2.4.4.</span> Replacement Policy and Cache Size</h4>
+<div class="outline-text-4" id="text-2-4-4">
+<p>
+With larger caches, the replacement of virtual memory pages can have a
+performance impact as cache blocks for pages are lost on replacement as well.
+</p>
+
+<p>
+With page buffering, it is possible to improve cache performance by using a page
+placement policy in the page buffer (rather than page replacement).
+</p>
+
+<p>
+Essence of these strategies is to bring consecutive pages into main memory in a way
+to minimize the number of page frames mapped into the same cache slots.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org09f3dd9" class="outline-3">
+<h3 id="org09f3dd9"><span class="section-number-3">2.5.</span> Resident Set Management</h3>
+<div class="outline-text-3" id="text-2-5">
+</div>
+<div id="outline-container-org2b2256d" class="outline-4">
+<h4 id="org2b2256d"><span class="section-number-4">2.5.1.</span> Resident Set Size</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<p>
+With paged virtual memory, not all pages of a process need to be in main memory.
+OS must decide how many pages to bring in.
+</p>
+
+<p>
+Factors to decide this:
+</p>
+<ul class="org-ul">
+<li>less memory per process means more processes in main memory, so higher probability
+that OS will find at least one ready process so less time lost to swapping</li>
+<li>if a small number of pages of a process are in main memory, more page fualts</li>
+<li>beyond a certain size, more main memory allocation for a process has no
+noticeable effect on page fault rate for that process</li>
+</ul>
+
+<p>
+<b>Fixed-allocation Policy</b>: gives a process a fixed number of frames in main memory
+within which to execute
+</p>
+<ul class="org-ul">
+<li>number decided at process creation and depends on type of process or programmer</li>
+<li>when a page fault occurs, one page of that process must be replaced by the needed
+page</li>
+</ul>
+
+<p>
+<b>Variable-allocation Policy</b>: number of page frames allocated to a process is
+varied over process lifetime
+</p>
+<ul class="org-ul">
+<li>if many page faults, then more page frames and vice versa</li>
+<li>relates to the concept of replacement scope</li>
+<li>requires more software overhead</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org70d5593" class="outline-4">
+<h4 id="org70d5593"><span class="section-number-4">2.5.2.</span> Replacement Scope</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+Both policies activated by a page fault when there are no free page frames.
+</p>
+
+<p>
+<b>Local replacement policy</b>: chooses only among resident pages of a process that
+generated the page fault in selecting a page to replace
+</p>
+
+<p>
+<b>Global replacement policy</b>: considers all unlocked pages in main memory as
+candidates for replacement, regardless of ownership
+</p>
+
+<p>
+No difference in performance, but local easier to analyze and global easier to
+implement.
+</p>
+
+<p>
+Fixed-resident set implies local replacement, otherwise not fixed size.
+</p>
+
+<p>
+Variable-allocation can be either local or global.
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="orgb532da6"></a>Fixed Allocation, Local Scope<br />
+<div class="outline-text-5" id="text-2-5-2-1">
+<p>
+A process running in main memory has a fixed number of frames and on a page
+fault the page to be replaced is from the currently resident pages for the
+process.
+</p>
+
+<p>
+Amount of allocation given to process is decided based on type of application
+and amount requested by the program.
+</p>
+
+<p>
+If too little allocated, high page fault rate, if too much allocated, too few
+programs in main memory so too much swapping.
+</p>
+</div>
+</li>
+<li><a id="orgb9db376"></a>Variable Allocation, Global Scope<br />
+<div class="outline-text-5" id="text-2-5-2-2">
+<p>
+Easiest to implement.
+</p>
+
+<p>
+OS maintains a list of free frames, and when a page fault occurs, a free frame is
+added to the resident set of a process and the page is brought in.
+</p>
+
+<p>
+A process experiencing page faults grows in size which reduces page faults.
+</p>
+
+<p>
+Replacement selection is made from all frames in memory, so the process that
+suffers the reduction is resident set size may not be optimum.
+</p>
+
+<p>
+To counter potential performance problems, use page buffering so that the choice
+of which page to replace is less significant as the page can be reclaimed if
+referenced before the next block of pages are overwritten.
+</p>
+</div>
+</li>
+<li><a id="org03bc15b"></a>Variable Allocation, Local Scope<br />
+<div class="outline-text-5" id="text-2-5-2-3">
+<p>
+Overcomes problems of global-scope.
+</p>
+
+<p>
+Strategy is:
+</p>
+<ol class="org-ol">
+<li>when a new process is loaded into main memory, allocate to it a certain
+number of page frames as its resident set based on application type, program
+request or other criteria, with prepaging or demand paging to fill the
+allocation</li>
+<li>when a page fault occurs, select the page to replace from among the resident
+set of the process that suffers the fault</li>
+<li>from time to time, reevaluate the allocation provided to the process and
+increase/decrease it to improve overall performance</li>
+</ol>
+
+<p>
+With this, changes to resident set size are deliberate and based on the likely
+future demands of active processes.
+</p>
+
+<p>
+More complex but better performance.
+Key elements are criteria used to determine resident set size and timing of
+changes.
+</p>
+
+<p>
+<b>Working set strategy</b>: set of pages of a process that have been referenced
+in the last \(t\) logical time units
+</p>
+
+<p>
+For many programs, periods of stable working set sizes alternate with periods of
+rapid change.
+Processes begin transient, then go back and forth between stability and transition.
+</p>
+
+<p>
+Strategy for resident set size:
+</p>
+<ol class="org-ol">
+<li>monitor the working set of each process</li>
+<li>periodically remove from the resident set of a process pages that are not in
+its working set, basically LRU</li>
+<li>a process may execute only if its working set is in main memory</li>
+</ol>
+
+<p>
+This exploits locality to minimize page faults.
+</p>
+
+<p>
+Problems with working set strategy:
+</p>
+<ol class="org-ol">
+<li>past does not always predict future, so size and membership of working set will
+change over time</li>
+<li>true measurement of working set for each process is impractical, as this would
+require timestamps and time-ordered queue of pages</li>
+<li>optimal value of \(t\) is unknown and would vary</li>
+</ol>
+
+<p>
+Real implementations monitor page fault rate rather than working set directly.
+Page fault rate low means smaller resident set, and vice versa.
+</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org234def6" class="outline-3">
+<h3 id="org234def6"><span class="section-number-3">2.6.</span> Cleaning Policy</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Concerned with determining when a modified page should be written out to secondary memory.
+</p>
+
+<p>
+<b>Demand cleaning</b>: a page is written to secondary memory only when selected for replacement.
+</p>
+<ul class="org-ul">
+<li>writing a dirty page is coupled with reading a new one</li>
+<li>minimized page writes but a process with a page fault must wait for 2 page transfers
+before becoming unblocked</li>
+</ul>
+
+<p>
+<b>Precleaning</b>: writes modified pages before their page frames are needed so pages can be
+written out in batched
+</p>
+<ul class="org-ul">
+<li>allows the writing of pages in batches, but this only makes sense when many pages have
+been modified before they are replaced</li>
+<li>otherwise wastes transfer capacity of secondary memory</li>
+</ul>
+
+<p>
+Better approach uses page buffering by cleaning only pages that are replaceable, but
+cleaning and replacement are decoupled.
+Replaced pages can be placed on modified and unmodified lists, where modified list can
+periodically be written out in batches and moved to unmodified list.
+A page on the unmodified list is either reclaimed if referenced or lost when frame
+assigned to another page.
+</p>
+</div>
+</div>
+<div id="outline-container-org96accc2" class="outline-3">
+<h3 id="org96accc2"><span class="section-number-3">2.7.</span> Load Control</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Concerned with determining the number of processes resident in main memory.
+</p>
+
+<p>
+Too few processes resident means all blocked is more frequent, too many processes
+resident means many page faults, so thrashing.
+</p>
+</div>
+<div id="outline-container-org5c420d3" class="outline-4">
+<h4 id="org5c420d3"><span class="section-number-4">2.7.1.</span> Multiprogramming Level</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<p>
+Number of processes resident in main memory.
+</p>
+
+<p>
+Working set or page-fault frequency monitoring implicitly incorporate load control.
+</p>
+
+<p>
+\(L = S\) criterion adjusts the multiprogramming level so the mean time between faults
+is the mean time required to process a page fault, which yields maximum processor
+utilization.
+</p>
+
+<p>
+50% criterion attempts to keep utilization of the paging device at approx. 50%,
+which also yields maximum processor utilization.
+</p>
+
+<p>
+Could also adapt clock page replacement algorithm by monitoring the rate at which
+the pointer scans the circular buffer of frames.
+If the rate is below a threshold, either few page faults are occurring or for each
+request, average number of frames scanned is small so many resident pages are not
+referenced.
+In both cases, multiprogramming level can be increased.
+High pointer scan rate implies opposite.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdc20261" class="outline-4">
+<h4 id="orgdc20261"><span class="section-number-4">2.7.2.</span> Process Suspension</h4>
+<div class="outline-text-4" id="text-2-7-2">
+<p>
+If the degree of multiprogramming is reduced, resident processes must be suspended.
+</p>
+
+<p>
+Possibilities for this are:
+</p>
+<ul class="org-ul">
+<li><b>lowest-priority process</b>: implements scheduling policy decision and unrelated
+to performance issues</li>
+<li><b>faulting process</b>: greater probability that faulting task does not have its
+working set resident so performance would suffer least by suspending it and
+blocks a process that will be blocked anyways</li>
+<li><b>last process activated</b>: process least likely to have its working set resident</li>
+<li><b>process with smallest resident set</b>: least future effort to reload, but
+penalizes programs with strong locality</li>
+<li><b>largest process</b>: most free frames</li>
+<li><b>process with largest remaining execution window</b>: approximates a
+shortest-processing-time-first scheduling discipline</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-03-06 Wed 02:32</p>
+</div>
+</body>
+</html>

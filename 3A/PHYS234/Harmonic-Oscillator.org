@@ -1,0 +1,99 @@
+#+title: Harmonic Oscillator
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode,braket}
+#+LATEX_HEADER: \enabledarkmode
+
+* Quantum Mechanical Harmonic Oscillator
+The Hamiltonian for the harmonic oscillator is
+$$
+H = \frac{\hat{p}^{2}}{2m} + \frac{1}{2}m\omega^{2}\hat{x}^{2}
+$$
+Using the Hamiltonian, an energy eigenvalue differential equation can be formed.
+
+Harmonic oscillator has a special potential energy well shape that gives rise to energy levels
+that scale linearly with $n$ and are evenly spaced.
+
+The energy eigenvalues of the harmonic oscillator are
+$$
+E_{n} = \hslash \omega \left( n + \frac{1}{2} \right), \quad n \in \mathbb{Z}^{+}
+$$
+Here the ground state is $n=0$.
+
+The *raising operator* $a^{\dagger}$ and *lowering operator* $a$ simplify calculations for the harmonic
+oscillator problem.
+They are defined as
+$$
+a = \sqrt{\frac{m\omega}{2\hslash}} \left( \hat{x} + i\frac{\hat{p}}{m\omega} \right)
+$$
+$$
+a^{\dagger} = \sqrt{\frac{m\omega}{2\hslash}} \left( \hat{x} - i\frac{\hat{p}}{m\omega} \right)
+$$
+Multiplying these and comparing to the Hamiltonian gives
+$$
+H = \hslash \omega \left(a^{\dagger}a + \frac{1}{2}\right)
+$$
+Further
+$$
+[a,a^{\dagger}] = 1
+$$
+
+The commutator of the raising and lowering operators gives
+$$
+[H,a] = -\hslash \omega a, \quad [H, a^{\dagger}] = +\hslash \omega a^{\dagger}
+$$
+
+The state $a\ket{E}$ may not be normalized so it is not equal to $\ket{E - \hslash \omega}$,
+they are simply proportional.
+
+The *ladder termination condition* is
+$$
+a \ket{E_{lowest}} = 0
+$$
+
+The quantum mechanical ground state has a *zero-point energy* of $\hslash \omega /2$.
+The energy spectrum is
+$$
+E_{n} = \hslash \omega \left( n + \frac{1}{2} \right)
+$$
+
+$a^{\dagger}a$ is the *number operator* $N$ where $N \ket{n} = n \ket{n}$ and
+$$
+H = \hslash \omega \left( N + \frac{1}{2} \right)
+$$
+where $N$ is Hermetian.
+
+In relation to photons, the raising and lowering operators are referred to as
+*creation* and *annihilation* operators.
+
+* Wave Functions
+Using the ladder operators and number operator gives
+$$
+a\ket{n} = \sqrt{n} \ket{n-1} \quad a^{\dagger}\ket{n} = \sqrt{n+1} \ket{n+1}
+$$
+
+Using the termination condition gives
+$$
+\varphi_{0}(x) = \left( \frac{m\omega}{\pi\hslash} \right)^{1/4} e^{-m\omega x^{2}/2\hslash}
+$$
+and using the above, for a general state
+$$
+\varphi_{n}(x) = \frac{1}{\sqrt{n!}} \left[ \sqrt{\frac{m\omega}{2\hslash}}
+\left( x - \frac{\hslash}{m\omega} \frac{d}{dx} \right)\right]^{n} \varphi_{0}(x)
+$$
+
+When applying the raising operator to the Gaussian function in $\varphi_{0}(x)$ $n$ times,
+the resultant polynomials of order $n$ are *Hermite polynomials*.
+
+* Momentum Space Wave Function
+Similar to the position space wave function, using the Hermite polynomials $H$:
+$$
+\phi_{n}(p) = \left( \frac{1}{\pi m \omega \hslash} \right)^{1/4} \frac{1}{\sqrt{2^{n}} n!}
+H_{n} \left( \frac{p}{\sqrt{m\omega\hslash}} \right)
+e^{-p^{2}/2m\omega \hslash}
+$$
+
+* Uncertainty Principle
+Using the spatial probability density distribution gives
+$$
+\braket{x} = 0 \quad \Delta x = \sqrt{\frac{\hslash}{2m\omega}}
+$$

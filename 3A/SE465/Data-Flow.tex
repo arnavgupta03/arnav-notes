@@ -1,0 +1,177 @@
+% Created 2024-04-05 Fri 11:42
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Data Flow}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Data Flow},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Data Flow Analysis}
+\label{sec:orgfcfa461}
+For CFG paths that are significant for data flow in the program:
+\begin{itemize}
+\item focuses on the assignment of values to variables and their use
+\item done by analyzing occurrences of variables
+\begin{itemize}
+\item definition occurence: value bound to variable
+\item use occurrence: value of variable is referred
+\begin{itemize}
+\item predicate use: variable used to decide whether predicate is true
+\item computational use: compute a value for defining other variables or output value
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\section{Definition and Uses}
+\label{sec:org84873ff}
+Program contain variables: defined by assigning values and using in expressions
+
+With pointers, both the pointer variable and the data it points to
+must be considered.
+
+With arrays, index variables must be considered, though only the part of the array
+used neds to be considered (same for fields in a class).
+\subsection{Uses}
+\label{sec:org183a7f9}
+\subsubsection{c-use}
+\label{sec:orgc91a5ed}
+Refers to uses of a variable that occur within an expression as part
+of an assignment statement, in an output statement, as a parameter
+within a function call, and in subscript expressions. (computational)
+\subsubsection{p-use}
+\label{sec:org5af8e97}
+Refers to the occurrence of a variable in an expression used as a condition
+in a branch statement such as \texttt{if} or \texttt{while}. (predicate)
+\subsection{Formalization}
+\label{sec:orgfba7810}
+Variable definition \(d(v, n)\): value is assigned to \(v\) at node \(n\)
+(LHS of assignment, input statement)
+
+Variable use
+\begin{itemize}
+\item c-use\((v, n)\): variable \(v\) used in a computation at node \(n\)
+(RHS of assignment, argument of procedure call, output statement)
+\item p-use\((v, m, n)\): variable \(v\) used in predicate from node \(m\) to \(n\)
+(as part of an expression used for a decision)
+\end{itemize}
+
+Variable kill \(k(v, n)\): variable \(v\) deallocated at node \(n\)
+\section{Data Flow Action}
+\label{sec:org71c4f89}
+\subsection{Checklist}
+\label{sec:org900ccad}
+For each successive pair of actions:
+\begin{itemize}
+\item suspicious: dd
+\item likely defect: dk, kk
+\item defect: ku
+\item okay: du, kd, ud, uk, uu
+\end{itemize}
+
+First occurrence of action on a variable:
+\begin{itemize}
+\item suspicious: k, u (unless global)
+\item okay: d
+\end{itemize}
+
+Last occurrence of action on a variable:
+\begin{itemize}
+\item suspicious: d (defined but never used after)
+\item okay: k, u (but maybe deallocation forgotten)
+\end{itemize}
+\subsection{Data Flow Graph}
+\label{sec:orgbcc2151}
+Captures the flow of definitions and uses across basic blocks
+in a program.
+Similar to a CFG in that nodes, edges, and paths in the CFG
+are preserved in the DFG.
+\begin{itemize}
+\item annotate nodes with def and c-use as needed, and each edge
+with p-use as needed
+\item label each edge with the condition which when true causes
+the edge to be taken
+\end{itemize}
+\subsubsection{Paths and Pairs}
+\label{sec:org8977cf0}
+Complete path: initial node is start node, final node
+is exit node
+
+Simple path: all nodes except possibly first and last
+are distinct
+
+Loop free path: all nodes are distinct
+
+def-clear path with respect to \(v\): any path starting from
+a node at which variable \(v\) is defined and ending at a node
+at which \(v\) is used, without redefining \(v\) anywhere else
+along the path
+
+du-pair with respect to \(v\): (d, u) such that
+\begin{itemize}
+\item d is the node where \(v\) is defined
+\item u is the node ehrtr \(v\) is used
+\item def-clear path with respect to \(v\) from \(d\) to \(u\)
+\item also referred to as reach: def of \(v\) at d reaches the
+use at u
+\end{itemize}
+
+du-path with respect to \(v\):
+a path \(P = \left< n_{1}, n_{2}, \dots, n_{j}, n_{k} \right>\)
+such that \(d(v, n_{1})\) and either one of the following two cases:
+\begin{itemize}
+\item c-use of \(v\) at node \(n_{k}\) and \(P\) is a def-clear simple path
+with respect to \(v\)
+\item p-use of \(v\) on edge \(n_{j}\) to \(n_{k}\) and
+\(\left< n_{1}, n_{2}, \dots, n_{j} \right>\) is a def-clear
+loop-free path
+\end{itemize}
+\section{Data Flow Coverage}
+\label{sec:org6aa04d5}
+\subsection{All-Definitions}
+\label{sec:org8dc1ec6}
+At least one def-clear path from every defining node of \(v\)
+to at least one use of \(v\), be that a c-use or p-use
+\subsection{All-Uses}
+\label{sec:orge543e87}
+At least on def-clear path form every defining node of \(v\)
+to every (reachable) use of \(v\)
+\subsection{All-P-Uses/Some-C-Uses}
+\label{sec:org98a16d0}
+At least one def-clear path from every defining node of \(v\)
+to every reachable p-use of \(v\)
+\begin{itemize}
+\item if none, then to a c-use
+\end{itemize}
+\subsection{All-C-Uses/Some-P-Uses}
+\label{sec:orgf10a37e}
+At least one def-clear path from every defining node of \(v\)
+to every reachable c-use of \(v\)
+\begin{itemize}
+\item if none, then to a p-use
+\end{itemize}
+\subsection{All-DU-Paths}
+\label{sec:org5469d08}
+All du paths covered
+\end{document}

@@ -1,0 +1,141 @@
+% Created 2024-04-05 Fri 11:56
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Basic Control Theory}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Basic Control Theory},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Basics of Closed Control Loops}
+\label{sec:org1e6d12c}
+Input can be split up into terms that can be controlled and terms that can't be controlled.
+$$
+f(t) = u(t) + d(t)
+$$
+where \(u(t)\) is the control input and \(d(t)\) is the disturbance input.
+
+The goal here is find \(u(t)\) such that the output follows some given reference, and this
+can be done with a controller.
+\subsection{Open Loop Controller}
+\label{sec:org26c82c4}
+The cruise control velocity system can be controlled with an open loop controller,
+where:
+\begin{itemize}
+\item \(U(s)\) is the Laplace transform of the control input
+\item \(D(s)\) is the Laplace transform of the disturbance input
+\item \(F(s)\) is the Laplace transform of the total forcing term
+\item \(V(s)\) is the Laplace transform of the resulting velocity
+\end{itemize}
+and \(F(s)\) and \(V(s)\) are related by the transfer function.
+
+These controllers only work well if we know the disturbance the system undergoes, if the
+system always needs a constant known output, or if the user can make adjustments as
+needed.
+\subsection{Closed Loop Controller}
+\label{sec:org11a4224}
+Output is fed back into controller and error is calculated from this based on difference
+from the reference.
+A controller is also added to dynamically adjust \(U(s)\) based on feedback.
+
+The new goal is to find a transfer function \(C(s)\) such that the error goes to 0.
+\section{Proportional and Integral Control Systems}
+\label{sec:orgab38086}
+\subsection{Proportional Control}
+\label{sec:org54bd376}
+\subsubsection{Idea}
+\label{sec:org6b57088}
+Let \(u(t) = k_{p} e(t)\) for \(k_{p} \in \mathbb{R}_{>0}\), then
+\begin{itemize}
+\item if \(e(t) > 0\), increase \(u(t)\)
+\item if \(e(t) < 0\), decrease \(u(t)\),
+\item if \(e(t) = 0\) do nothing
+\end{itemize}
+
+For this controller, \(k_{p}\) is the transfer function \(C(s)\).
+
+For the cruise control velocity controller (with no disturbance),
+the transfer function for the controlled system becomes
+$$
+H_{RV}(s) = \frac{k_{p}/(b + k_{p})}{[m/(b+k_{p})]s + 1}
+$$
+which is the transfer function for a first order system with a DC gain of
+$$
+\kappa = \frac{k_{p}}{b + k_{p}}
+$$
+and a time constant of
+$$
+\tau = \frac{m}{b + k_{p}}
+$$
+This is the same as the uncontrolled transfer function, but the DC gain and time
+constant can be adjusted through \(k_{p}\).
+
+For a system with disturbance, transfer function is \(H_{DV}(s)\) with the
+same system.
+This gives the net response to be
+$$
+V(s) = H_{RV}(s) R(s) + H_{DV}(s) D(s)
+$$
+
+For larger values of \(k_{p}\), \(\tau\) becomes smaller which leads to faster decay to
+the final value of ths system.
+
+By changing \(k_{p}\), can make \(\kappa\) obtain any value between 0 and 1.
+\subsubsection{Limitations}
+\label{sec:org1ca87a3}
+If \(e(t)\) is ever 0, then \(u(t) = k_{p}r(t) = 0\).
+Thus, in the absence of any disturbance to the system, the input into the system
+\(f(t)\) also vanishes, and so no system input means \(v(t)\) will drop since \(b > 0\).
+
+This means \(p\) controllers can never achieve perfect asymptotic velocity.
+\subsection{Integral Controllers}
+\label{sec:org505bbf7}
+Let the error term be proportional to the integral of the error
+$$
+c(t) = k_{i} \int_{0}^{t} e(\tau) d\tau
+$$
+which goes to 0 exactly when average error is 0, and so it can bring the asymptotic
+error to exactly 0.
+
+The transfer function for the integral term is \(C(s) = \frac{k_{i}}{s}\) and so
+$$
+V(s) = \frac{P(s)C(s)}{1 + P(s) C(s)}R(s)
+$$
+and so the new system has a transfer function of
+$$
+H(s) = \frac{k_{i}/m}{s^{2} + \frac{b}{m}s + \frac{k_{i}}{m}}
+$$
+which is the transfer function for a second order system.
+
+The DC gain is \(H(0) = 1\).
+\subsubsection{Limitations}
+\label{sec:org2d55147}
+Since we adjust based on the integral in the error, integral controllers do
+strongly quickly adjust to changes.
+
+Leads to potential overshoot of the goal, which is in part because solutions
+generally come in conjugate pairs and so the solution will have sinusoidal
+terms that will decay to 0.
+\end{document}

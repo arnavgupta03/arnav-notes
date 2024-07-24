@@ -1,0 +1,80 @@
+% Created 2024-04-05 Fri 11:56
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Bode Plots}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Bode Plots},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Frequency Response}
+\label{sec:org1af78a1}
+If \(S:f \to y\) is an LTI with transfer function \(H(s)\), then for any \(s \in \mathbb{C}\),
+$$
+e^{st} \xrightarrow{S} H(s) e^{st}
+$$
+
+If \(s = j\omega\), then \(H(j\omega)\) can be written in polar form.
+\(H(j \omega)\) is then the frequency response.
+
+If \(S\) is an LT with transfer function \(H(s)\), then
+$$
+\sin(\omega t) \xrightarrow{S} |H(j\omega)| \sin(\omega t + \angle_{H(j\omega)})
+$$
+
+This means that the system reponse of an LTI to a sin wave of frequency \(\omega\):
+\begin{itemize}
+\item has an amplitude scaled by \(H(j\omega)\)
+\item has the same frequency
+\item has a phase shifted by \(\angle_{H(j\omega)}\)
+\end{itemize}
+
+If \(S\) is an LT with transfer function \(H(s)\), then as \(t \to \infty\)
+$$
+\sin(\omega t)u(t) \xrightarrow{S} |H(j\omega)| \sin(\omega t + \angle_{H(j\omega)})
+$$
+
+Fourier series/transforms allow decomposing functions as a sum/integral of sin
+and cos waves.
+\section{Bode Plots}
+\label{sec:orgbb0e82f}
+\textbf{Bode plots}: a graphical representation of the frequency response
+
+One plot for magnitude and one for phase.
+\subsection{Decibels}
+\label{sec:org5b5a24b}
+\(|H(j\omega)|\) in decibels is \(20 \log_{10}(|H(j\omega)|)\)
+
+This means magnitude curves for multiplied frequency responses can be found
+by adding magnitude curves for each factor.
+\subsection{Finding}
+\label{sec:orga75cb35}
+If given a transfer function \(H(s) = H_{1}(s) \cdot H_{2}(s) \cdots H_{k}(s)\), then
+the Bode plot for \(H(j \omega)\) is found by
+\begin{itemize}
+\item finding the magnitude and phase curves for each \(H_{i}(j\omega)\)
+\item adding the magnitude and phase curves
+\end{itemize}
+\end{document}

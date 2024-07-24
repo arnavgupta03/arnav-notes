@@ -1,0 +1,93 @@
+% Created 2024-04-19 Fri 15:42
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Test Driven Development}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Test Driven Development},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{TDD}
+\label{sec:org945d63a}
+Algorithm is
+\begin{enumerate}
+\item write a failing test case
+\item get it to compile
+\item make it pass
+\item remove duplication (refactor)
+\item repeat
+\end{enumerate}
+\section{Reflection}
+\label{sec:org90d1d55}
+Look at requirements first.
+Full control over the pace of writing production code.
+Get quick feedback, testable code, and fedback about design.
+
+TDD gives you rhythm to follow and a reminder to review code often.
+Forces using code developed from the beginning.
+
+When writing tests after code, challenge is making sure time between writing code and testing is
+small enough to provide developers with timely feedback.
+
+TDD is good for:
+\begin{itemize}
+\item when no clear idea of how to design, architect, or implement a specific requirement
+\item when dealing with a complex problem or a problem with lack of expertise to solve
+\end{itemize}
+
+TDD is not good for when the problem and solution are fully known.
+\section{Problems}
+\label{sec:orgf897432}
+Distracts from writing code (must think negatively first).
+
+Takes a lot of disclipline.
+
+Must write and maintain many simple, useless tests.
+
+Architecture is designed around making it easier to test.
+
+Need many mock objects to decouple from DB and UI.
+
+Maintenance tests are not the same as development tests, so sometimes better to consolidate
+unit tests and remove low value tests.
+
+Can compromise by ensuring every commit has a test associated, so no need to write test first.
+If test not added at commit, it is unlikely to ever be added.
+\section{Legacy Code}
+\label{sec:org47b2a2d}
+Algorithm:
+\begin{enumerate}
+\item get the class to change under test
+\item write a failling test case
+\item get it to compile
+\item make it pass (try not to change existing code)
+\item remove duplication (refactor)
+\item repeat
+\end{enumerate}
+
+TDD allows concentration on either writing code or refactoring, never both at once.
+This is valuable in legacy code since new code is written independent of old code.
+After writing new code, can refactor to remove any duplication between it and old code.
+\end{document}

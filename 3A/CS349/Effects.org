@@ -1,0 +1,60 @@
+#+title: Effects
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Controlled/Uncontrolled Components
+Component data flow is how HTML form element values are associated with application state.
+
+*Uncontrolled components* have HTML form elements manage their own data values.
+*Controlled components* have application state manage HTML form element data values.
+
+*Controlled conditional components* are a more advanced method of handling text input with
+validation.
+Input text changes state only when valid, and when not focused for editing, input text
+matches state.
+
+Key ideas of controlled conditional components:
+- local state to display input value
+- ~useEffect~ to update local state when app state changes
+- only updates application state when valid input
+- leave text input value with valid value when executing
+- only render error message when invalid
+
+Side effects are changes outside the VDOM render where code is run as a result of VDOM
+change and reaches out of the VDOM tree to mutate state or invoke imperative code (ex.
+DOM APIs).
+
+Preact side effect methods are ~useRef~, ~useEffect~, and ~useLayoutEffect~ hooks.
+
+* Canvas Components
+ResizeObserver is an HTML DOM feature, like window-resize for elements.
+
+* CSS Style for Components
+Approaches:
+- separate CSS file for each components
+- inline CSS attributes in component render
+- import component specific CSS module file
+- utility classes (ex. Tailwind)
+
+For inline CSS, the style attribute accepts a JS object for CSS properties, with
+camelCase instead of kebab-case.
+Convention is to crate const object and assign in render.
+No flexibility in rules, selectors, etc.
+
+With CSS modules, class names are locally scoped to components, so unique class names
+are generated. Assign classes in render.
+
+Tailwind is a utility-first CSS framework, with class names as style properties (called
+utility classes). No media queries, but size prefix instead.
+Same strategy for hover, focus, etc.
+Bundler removes all unused CSS for production.
+Approach works best with declarative UI programming.
+
+Tailwind philosophy is to have no predesigned components, but does CSS reset (preflight) and
+developer must add basic styling for everything.
+
+Tailwind is mobile-first responsive, so provides a screen prefix to use instead of media queries.
+Screen prefix identifies when to use utility class, with mobile as default.
+
+Tailwind plugins allow registering new styles for Tailwind to inject inot user stylesheet.

@@ -1,0 +1,186 @@
+% Created 2024-04-09 Tue 17:55
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Dynamic Programming Part 4}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Dynamic Programming Part 4},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Bellman-Ford Algorithm}
+\label{sec:org3da980e}
+\subsection{Outlook}
+\label{sec:org6217f2f}
+Source is fixed.
+
+If no negative cycle, compute all distances \(\delta(s, v)\).
+
+Can detect negative cycles.
+
+Very simple pseudo-code, but slower than Dijkstra's.
+\subsection{Algorithm}
+\label{sec:orgf24d29d}
+\subsubsection{Definition}
+\label{sec:orga492952}
+For \(i\) from 0 to \(n-1\) set
+\(\delta_{i}(s, v)\) to be the length of the shortest path from \(s\) to \(v\) with at most
+\(i\) edges.
+
+If no such path exists \(\delta_{i}(s, v) = \infty\).
+\subsubsection{Observations}
+\label{sec:org75c3122}
+This gives \(\delta_{0}(s, s) = 0\) and \(\delta_{0}(s, v) = \infty\) for any other \(v\).
+
+If there is no negative cycle, \(\delta_{n-1}(s, v) = \delta(s, v)\) (shortest paths
+are simple).
+
+In any case, \(\delta(s, v) \le \delta_{i}(s, v)\) for all \(i\) and for all \(v\).
+\subsubsection{Recurrence}
+\label{sec:org9f95e23}
+$$
+\delta_{i}(s, v) = \min(\delta_{i-1}(s,v), \min_{(u, v) \in E} \delta_{i-1} (s, u) + w(u, v))
+$$
+\subsection{Pseudocode 1}
+\label{sec:orge66aab4}
+\begin{verbatim}
+d0 = [0, inf, ..., inf]
+parent = [s, 0, ..., 0]
+for i in range(1, n-1):
+    for all v in V:
+        di[v] = d(i-1)[v]
+        for all (u,v) in E:
+            if d(i-1)[u] + w(u,v) < di[v]:
+                di[v] = d(i-1)[u] + w(u,v)
+                parent[v] = v
+\end{verbatim}
+\subsubsection{Correctness}
+\label{sec:orgac50b84}
+\(d_{i}[v] = \delta_{i}(s,v)\) so \(d_{n-1}[v] = \delta(s,v)\) if no negative cycles
+\subsection{Pseudocode 2}
+\label{sec:org412cbe2}
+\textbf{Idea}: use a single array \(d\)
+
+\begin{verbatim}
+d = [0, inf, ..., inf]
+parent = [s, 0, ..., 0]
+for i in range(1, n-1):
+    for all (u,v) in E:
+        if d[u] + w(u,v) < d[v]:
+            d[v] = d[u] + w(u,v)
+            parent[v] = u
+\end{verbatim}
+
+\textbf{Runtime}: \(O(mn)\)
+\subsubsection{Correctness}
+\label{sec:orgc0416d4}
+\textbf{Claim 1}: For all \(i\), after iteration \(i\), \(d[v] \le d_{i}[v]\) for all \(v\)
+
+\textbf{Proof}: by induction:
+\begin{itemize}
+\item true for \(i=0\) so suppose true at index \(i-1\) and prove true at \(i\)
+\item at the beginning of the loop, for all \(v\), \(d[v] \le d_{i-1}[v]\)
+\item \(d[v]\) can only decrease, so this stays true throughout the loop
+\item \(d[v]\) is replaced by \(\min(d[v], \min_{(u,v) \in E}(x + w(u,v)))\) where
+\(x \le d_{i-1}[u]\)
+\item so at the end of iteration \(i\), \(d[v] \le d_{i}[v]\)
+\end{itemize}
+
+\textbf{Relaxation}: the operation \(d[v] = \min(d[v], d[u] + w(u,v))\)
+
+\textbf{Claim 2}: \(d[v]\) can only decrease through a relaxation, and if \(\delta(s,u) \le d[u]\)
+and \(\delta(s,v) \le d[v]\) before a relaxation, then \(\delta(s,v) \le d[v]\) post-relaxation
+
+\textbf{Proof}:
+\begin{itemize}
+\item obvious that \(d[v]\) can only decrease through a relaxation
+\item second item: \(\delta(s,v) \le \delta(s,u) + w(u,v)\) by the triangle equality, so
+\(\delta(s,v) \le d[u] + w(u.v)\), but also \(\delta(s,v) \le d[v]\)
+\end{itemize}
+
+\textbf{Consequence}: if all \(d[v]\) satisfy \(\delta(s,v) \le d[v]\) and any number of relaxations
+are applied, all inequalities stay true
+
+\textbf{Claim 3}: for \(i = 0, \dots, n-1\), after iteration \(i\),
+\(\delta(s,v) \le d[v] \le \delta_{i}(s,v)\) for all \(v\)
+\subsection{Summary}
+\label{sec:org91a2133}
+\subsubsection{No Negative Cycle}
+\label{sec:org5263bf0}
+At the end \(d[v] = \delta(s,v)\) for all \(v\).
+In particular, for any edge \((u,v)\), \(d[v] \le d[u] + w(u,v)\) by the triangle inequality
+\subsubsection{Negative Cycle}
+\label{sec:org9984bf4}
+Let this negative cycle be \(v_{1}, \dots, v_{k}\) where \(v_{k} = v_{1}\)
+
+\textbf{Claim}: There must be an edge \((v_{i}, v_{i+1})\) with
+\(d[v_{i+1}] > d[v_{i}] + w(v_{i}, v_{i+1})\), otherwise \(d[v_{i+1}] \le d[v_{i}] + w(v_{i}, v_{i+1})\)
+for all \(i\). Then, sum and derive a contradiction.
+
+For an extra \(O(m)\), can check the presence of a negative cycle.
+\section{Floyd-Warshall Algorithm}
+\label{sec:orgdb7e6a4}
+\textbf{No fixed source}: computes all distances \(\delta(u,v)\)
+
+Negative weights are fine, but no negative cycle.
+
+Simple pseudo-code, but slower than other algorithms.
+
+Doing Bellman-Ford from all \(u\) takes \(O(mn^{2})\).
+\subsection{Subproblems for DP}
+\label{sec:org1ca095a}
+Bellman-Ford uses paths with fixed numbers of steps.
+
+Floyd-Warshall restricts which vertices can be used.
+\subsection{Definition}
+\label{sec:org60d5d27}
+For \(i\) from 0 to \(n\), set \(D_{i}(v_{j}, v_{k})\) to the length of the shortest path from
+\(v_{j}\) to \(v_{k}\) with all intermediate vertices in \(v_{1}, \dots, v_{i}\).
+
+For \(i = 0\):
+\begin{itemize}
+\item \(D_{0}(v_{j}, v_{j}) = 0\)
+\item \(D_{0}(v_{j}, v_{k}) = w(v_{j}, v_{k})\) if there is an edge \((v_{j}, v_{k})\)
+\item \(D_{0}(v_{j}, v_{k}) = \infty\) otherwise
+\end{itemize}
+
+\(D_{n}(v_{j}, v_{k}) = \delta(v_{j}, v_{k})\)
+\subsection{Correctness}
+\label{sec:orge49d229}
+\(D_{i}(v_{j}, v_{k}) = \min(D_{i-1}(v_{j}, v_{k}), D_{i-1}(v_{j}, v_{i}) + D_{i-1}(v_{i}, v_{k}))\)
+
+\textbf{Proof}: either the shortest path does not go through \(v_{i}\) or it does (if so, only once)
+\subsection{Pseudocode}
+\label{sec:orgc582ee7}
+\begin{verbatim}
+FloydWarshall(G):
+    setup D0 above
+        for i in range(1, n):
+            for j in range(1, n):
+                for k in range(1, n):
+                    Di[vj, vk] = min(D(i-1)[vj, vk], D(i-1)[vj, vi] + D(i-1)[vi, vk])
+\end{verbatim}
+
+\textbf{Runtime and memory}: \(\Theta(n^{3})\)
+\end{document}

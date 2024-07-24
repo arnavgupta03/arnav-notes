@@ -1,0 +1,66 @@
+#+title: Fourier Series, Parseval and Dirichlet Theorems, Fourier Transform
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Integrating and Differentiating Fourier Series
+Integrals and derivatives for Fourier series do not follow from linearity.
+
+The Fourier series of a PWC1 $\tau$ periodic $L^{2}$ function $f(t)$ can be term-by-term integrated to give a convergent
+series that *uniformly converges* over any finite interval.
+If $f_{p}$ is in $L^{2}$ and
+$$
+f_{p}(t) = \sum_{n = -\infty}^{\infty} c_{n} e^{\frac{2\pi n j t}{\tau}}
+$$
+then
+$$
+\int_{a}^{t} f_{p}(t) \, dt = \sum_{n = -\infty}^{\infty} c_{n} \int_{a}^{t} e^{\frac{2\pi n j t}{\tau}} \, dt
+$$
+and the convergence is at least pointwise.
+Here the RHS might not be a Fourier series.
+
+Let $f$ be a PWC1 $\tau$ periodic function, that is continuous, and satisfies $f(-\tau/2) = f(\tau/2)$.
+The series for $f$ can be term-by-term differentiated to give a pointwise convergent series that
+*pointwise converges* to $f_{p}'(t)$ for all $t$ such that $f_{p}''(t)$ exists.
+Explicitly, if $f$ satisfies the above and
+$$
+f_{p}(t) = \sum_{n = -\infty}^{\infty} c_{n} e^{\frac{2\pi n j t}{\tau}}
+$$
+then
+$$
+f_{p}'(t) = \sum_{n = -\infty}^{\infty} c_{n} \frac{d}{dt} e^{\frac{2 \pi n j t}{\tau}}
+$$
+and the convergence is pointwise for all points where $f_{p}''(t)$ exists.
+
+* Parseval and Dirichlet Theorems
+*Dirichlet's Theorem*: if $f$ is PWC1 and $\tau$ periodic, then the Fourier series of $f(t)$ converges pointwise to
+$f_{p}(t)$
+
+Dirichlet's Theorem gives that the average error for truncated Fourier series goes to zero in the limit.
+
+*Parseval's Theorem*: if $f$ is $L^{2}[-\tau/2, \tau/2]$ and $\tau$ periodic, then
+$$
+\frac{1}{\tau} \int_{-\tau/2}^{\tau/2} |f(t)|^{2} dt = \sum_{n = -\infty}^{\infty} |c_{n}|^{2}
+$$
+
+*Real-Valued Parseval's Theorem*: if $f$ is a real valued PWC1 and $\tau$ periodic, then
+$$
+\frac{1}{\tau} \int_{-\tau/2}^{\tau/2} |f(t)|^{2} dt = c_{0}^{2} +
+\frac{1}{2} \sum_{n = 1}^{\infty} \left(c_{n}^{2} + s_{n}^{2}\right)^{2}
+$$
+where $c_{n}$ and $s_{n}$ are the Fourier cosine and sine coefficients.
+
+* Fourier Transform
+Fourier series require $\tau$ periodic functions.
+
+If $f \in L^{1}$, then the Fourier transform of $f$ is
+$$
+F(\omega) = \mathcal{F}\{ f(t) \} = \int_{-\infty}^{\infty} f(t) e^{-\omega t j} \, dt
+$$
+and the inverse Fourier transform of $F(\omega)$ is
+$$
+f(t) = \mathcal{F}\{ F(\omega) \} = \frac{1}{2\pi} \int_{-\infty}^{\infty} F(\omega) e^{\omega t j}
+\, d\omega
+$$
+
+Fourier transform is the two-sided Laplace transform where $s = \omega j$.

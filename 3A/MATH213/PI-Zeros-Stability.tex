@@ -1,0 +1,98 @@
+% Created 2024-04-05 Fri 11:57
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{PI Controllers, Zeros, Extra Poles, and Stability}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={PI Controllers, Zeros, Extra Poles, and Stability},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{PI Controller Analysis}
+\label{sec:org9cdaeef}
+The transfer function of the response of a PI controller can be simplified to the form:
+$$
+H_{z}(s) = \frac{\omega^{2} \left( \frac{s}{\alpha \xi \omega} + 1 \right)}
+{s^{2} + 2 \xi \omega s + \omega^{2}}
+$$
+
+By analyzing the response of a PI controller to the step function, this can be decomposed
+into a standard 2nd order impulse response and a standard 2nd order step response.
+
+Specifically, if \(\alpha \to \infty\), then it goes to the step response, and if
+\(\alpha \to 0\), then it goes to \(\infty \cdot\) the impulse response.
+
+Combining these effects can lead to using \(k_{i}\) to adjust the speed of the response
+and using \(k_{p}\) to control the dampening of the oscillations.
+\section{Adding a Pole}
+\label{sec:org10fb33a}
+By adding a pole at \(s = -\alpha \xi \omega\) to the transfer function of a system,
+it can be decomposed into the linear combination of 1st and 2nd order systems.
+
+For this, if \(\alpha \to 0\), then the impulse response looks like a standard 1st
+order system.
+If \(\alpha \to \infty\), then the impulse response looks like a standard 2nd order
+system.
+
+When a real pole or a complex-conjugate pair of poles are an order of magnitude
+closer to the imaginary axis than all other poles, then they are dominant.
+\section{Stability}
+\label{sec:org360b7c7}
+The impulse response of \textbf{all} linear time invariant systems is a linear combination
+of the types of functions analyzed.
+Further, since \(\{\delta(t - \tau) | \tau \in \mathbb{R}\}\) is a basis for the
+set of all functions, the response of any LTI to any function \(f(t)\) can be written
+as a convolution of \(f(t)\) with a linear combination of the types of functions
+analyzed.
+
+An LTI \(S\) is stable if \(S(\delta(t))\) decays to 0.
+
+An LTI \(S\) is unstable if \(S(\delta(t))\) is unbounded.
+
+An LTI \(S\) is marginally stable if \(S(\delta(t))\) is bounded but does not decay
+to 0.
+
+A transfer function is stable if the system it is a transfer function for is stable.
+
+A transfer function is unstable if the system it is a transfer function for is
+unstable.
+
+A transfer function is marginally stable if the system it is a transfer function for
+is marginally stable.
+
+A transfer function is stable if all poles have a negative real part.
+
+A transfer function is unstable if there is a pole with a positive real part or
+there is a 2nd order pole that has real part 0.
+
+A transfer function is marginally stable if there are no poles with postive real parts
+or 2nd order poles with real part 0 and in addition at least order 1 pole with real
+part 0.
+
+An LTI \(S\) is bounded-input, bounded-output (BIBO) stable if \(S(f)\) is bounded for
+all bounded functions \(f\).
+
+An LTI system with a rational transfer function is BIBO stable if and only if its
+transfer function is both stable and proper.
+\end{document}

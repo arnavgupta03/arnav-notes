@@ -1,0 +1,57 @@
+#+title: More Bode Plots
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Drawing Bode Plots
+The starting value of the magnitude curve is $|H(0)|_{dB}$ and the starting value of the phase curve
+is $\angle H(0)$.
+This does not exist if the curve is unbounded, which is if there is a pole with a real value of 0.
+
+If the transfer function has an order 1 stable pole at a point, then the magnitude curve will
+experience an extra decrease of -20dB/decade and the phase curve will experience a drop of $-90^{\circ}$.
+These phase adjustment will be rather slow taking an order of magnitude before and after the pole
+to adjust.
+
+If the transfer function has complex conjugate poles that are stable, then the magnitude curve
+will experience an extra decrease of -40db/decade and the phase curve will experience a drop of
+$-180^{\circ}$.
+The location of this adjustment is given by $\omega$ where $\omega$ is the term in the second order
+system.
+The speed of adjustment is related to $\xi$:
+- $\xi \approx 0$ causes fast adjustments and overshooting in the amplitude plot for nearby $\omega$
+- $\xi \approx 1$ causes slow adjustments and undershooting in the amplitude plot for nearby $\omega$
+
+If there are zeros of order 1 or order 2 at some point, then the magnitude and phase curves
+experience the opposite effects as listed above.
+
+Does not make sense to have a Bode plot if there is a unstable pole.
+
+If there is a decrease in the slope of asymptotic amplitude curve and an increase in the phase,
+the system is unstable (a Bode plot should never have been made).
+Cannot conclude anything about stability of the system modelled by the transfer function used to
+generate the plot though.
+
+* Stability
+Consider a closed loop system  where the output is produced by $P(s)$ and this is controlled by a
+controller with transfer function $C(s)$.
+The transfer function for this system is
+$$
+\frac{P(s)C(s)}{1 + P(s)C(s)}
+$$
+
+Hence the closed system will be stable when both $C(s)$ and $P(s)$ are stable which is when
+$$
+1 + P(s)C(s) \ne 0
+$$
+
+If $C(s)$ and $P(s)$ are both stable, the closed loop control system is unstable when
+$$
+P(s)C(s) = -1 = 1 \cdot e^{i\pi}
+$$
+This happens when the amplitude curve is $|1|_{dB} \approx 0$ while the phase is either
+$\pm 180^{\circ}$ or some other equivalent angle.
+
+To talk about stability, rather than looking for these exact conditions, look at the points
+where either the amplitude or phase is critical and look at how far it is from stability.
+Generally require some threshold to be far enough from being unstable.

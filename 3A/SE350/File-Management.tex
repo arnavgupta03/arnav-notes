@@ -1,0 +1,701 @@
+% Created 2024-04-09 Tue 17:31
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{File Management}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={File Management},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Overview}
+\label{sec:org62f74dc}
+\subsection{Files and File Systems}
+\label{sec:org0e98c1a}
+File system allows user to create files with desirable properties:
+\begin{itemize}
+\item \textbf{long-term existence}: files stored on disk or secondary storage and do not disappear when
+a user logs off
+\item \textbf{shareable between processes}: files have names and access permissions for sharing
+\item \textbf{structure}: files have internal structure convenient for particular applications, can be
+organized hierarchically or have other relations
+\end{itemize}
+
+Functions can be performed on files:
+\begin{itemize}
+\item \textbf{create}: new file defined within structure of files
+\item \textbf{delete}: file removed from structure and destroyed
+\item \textbf{open}: existing file declared opened, allowing process to perform functions on the file
+\item \textbf{close}: file is closed for a process, so the process cannot perform further operations
+on it
+\item \textbf{read}: process reads data in a file
+\item \textbf{write}: process updates a file, either adding new data or changing existing data
+\end{itemize}
+\subsection{File Structure}
+\label{sec:orgbf82356}
+A \textbf{field} is the basic element of data:
+\begin{itemize}
+\item contains a single value
+\item has a length and data type
+\item may be fixed or variable length
+\item could have subfields of value, name, and length
+\end{itemize}
+
+A \textbf{record} is a collection of related fields:
+\begin{itemize}
+\item fixed or variable length depending on if fields are variable length or number of fields
+varies
+\item each field has a field name
+\item has a length field
+\end{itemize}
+
+A \textbf{file} is a collection of similar records:
+\begin{itemize}
+\item a single entity referenced by name
+\item may be created or deleted
+\item has access control restrictions
+\item can also be a collection of fields
+\end{itemize}
+
+A \textbf{database} is a collection of related data:
+\begin{itemize}
+\item relationships that exist among elements of data are explicit
+\item consists of 1+ types of files
+\item DBMS is independent of OS
+\end{itemize}
+
+Operations to use files are:
+\begin{itemize}
+\item \texttt{Retrieve\_All}: retrieve all file records, required for applications that process all
+file info at once, similar to \emph{sequential processing}, since records are accessed in
+sequence
+\item \texttt{Retrieve\_One}: requires retrieval of a single record
+\item \texttt{Retrieve\_Next}: requires retrieval of the next record in some logical sequence, next to
+most recently retrieved record
+\item \texttt{Retrieve\_Previous}: retrieve previous record to currently accessed record
+\item \texttt{Insert\_One}: insert a record into the file, can be at a particular position
+\item \texttt{Delete\_One}: delete an existing record, could require updating data structures to preserve
+sequencing
+\item \texttt{Update\_One}: retrieve a record, update 1+ fields, and rewrite updated record to file,
+preserving sequencing
+\item \texttt{Retrieve\_Few}: retrieve a number of records
+\end{itemize}
+\subsection{File Management Systems}
+\label{sec:org483c808}
+A set of system software that provides services to users and applications in the use of files.
+
+Only way user or application may access files, so system has consistent, well-defined control
+over files.
+
+Objectives for an FMS:
+\begin{itemize}
+\item meet data management needs and user requirements, including data storage and ability to
+perform operations
+\item guarantee that file data are valid
+\item optimize performance for the system (throughput) and user (response time)
+\item provide IO support for a variety of storage device types
+\item minimize or eliminate potential for lost or destroyed data
+\item provide a standardized set of IO interface routines to user processes
+\item provide IO support for multiple users
+\end{itemize}
+
+For user requirements (assuming authorized):
+\begin{enumerate}
+\item each user should be able to create, delete, read, write, and modify files
+\item each user may have controlled access to other users' files
+\item each user may control what types of accesses are allowed to the user's files
+\item each user should be able to move data between files
+\item each user should be able to backup and recover files in case of damage
+\item each user should be able to access files by name rather than numeric ID
+\end{enumerate}
+\subsubsection{File System Architecture}
+\label{sec:org56d6e2a}
+At the lowest level, \textbf{device drivers}
+\begin{itemize}
+\item communicate with peripheral devices or their controllers or channels
+\item are responsible for starting IO operations on a device and processing completion of an
+IO request
+\end{itemize}
+
+\textbf{Basic file system} is also called physical IO:
+\begin{itemize}
+\item primary interface with the environment outside computer
+\item deals with blocks of data exchanged with disk or tape
+\item concerned with placement of blocks on secondary storage and buffering of blocks in
+main memory
+\item does not understand content of data or file structure
+\end{itemize}
+
+\textbf{Basic IO supervisor}
+\begin{itemize}
+\item responsible for file IO initiation and termination
+\item maintains control structures that deal with device IO, scheduling, and file status
+\item selects device on which file IO is to be performed
+\item schedules disk and tape access to optimize performance
+\item IO buffers are assigned and secondary memory allocated
+\end{itemize}
+
+\textbf{Logical IO}
+\begin{itemize}
+\item allows users and applications to access records
+\item deals with file records
+\item provides general-purpose record IO capability and maintains basic file data
+\end{itemize}
+
+\textbf{Access Method}
+\begin{itemize}
+\item closest to user, provides a standard interface between applications and file system and
+devices that hold data
+\item reflect different file structures and different ways to access and process data
+\item can optimize access depending on application needs:
+\begin{itemize}
+\item sequential access (one after another)
+\item direct access (direct address)
+\item indexed access (use an ID)
+\end{itemize}
+\end{itemize}
+\subsubsection{File Management Functions}
+\label{sec:org0ecff1c}
+Users and application programs send commands for file operations.
+
+File system must identify and locate selected file.
+Uses a directory to describe location of all files and their attributes.
+
+Shared systems must enforce user access control.
+
+Basic operations are at the record level.
+To translate user commands to specific file manipulation commands, appropriate
+access method for file structure must be employed.
+
+Records or fields of a file must be organized as a sequence of blocks for output
+and unblocked after input.
+
+Secondary storage must be managed, allocating files to free blocks and managing free
+storage so available blocks are known for new files and growth in file size.
+
+Optimization (scheduling) depends on file structure and access patterns.
+\section{File Organization and Access}
+\label{sec:orgfe47808}
+File organization is logical structuring of records.
+
+Important criteria for choosing file organization are:
+\begin{itemize}
+\item short access time, needed when accessing a single record
+\item ease of update, some files won't be updated
+\item economy of storage, should have minimum redundancy, but this can be used to increase
+data access speed
+\item simple maintenance
+\item reliability
+\end{itemize}
+\subsection{The Pile}
+\label{sec:org944a444}
+Variable-length records, variable set of fields, chronological order.
+
+Data collected in order of arrival.
+Each record consists of a burst of data.
+
+Purpose is to accumulate the mass of data and save it.
+
+Records may have different or similar fields (in different orders).
+Each field should be self-describing with name and value, with length
+implicit with delimiter.
+
+Record access is by exhaustive search, must examine each record.
+
+Useful when data is collected and stored before processing or when data is not easy
+to organize.
+Uses space well when data varies in size and structure, is adequate for exhaustive search,
+and is easy to update.
+\subsection{The Sequential File}
+\label{sec:orgc1d8746}
+Most common form of file structure.
+Fixed format used for records, so all records of the same length, having the same number
+of fixed-length fields in a particular order.
+
+Only field values are stored:
+\begin{itemize}
+\item first field is \textbf{key field} with IDs the record, with records stored in key sequence
+\end{itemize}
+
+Useful for applications that process all records, can be easily stored on tape and disk.
+
+Single file access requires sequential search, unless entire file can be brought into main memory
+at once.
+
+Physical organization of the file matches the logical organization so updates are difficult.
+A separate pile file is used (log/transaction file) and periodically, a batch update merges log file
+with master file to produce file in correct key sequence.
+
+Alternative is to organize sequential file as linked list, so each block contains a pointer to the next.
+Insertion of new records involves pointer manipulation but new records need not occupy a particular
+physical block.
+\subsection{The Indexed Sequential File}
+\label{sec:org2870829}
+Records organized in sequence based on key field.
+
+New features are:
+\begin{itemize}
+\item index to support random access, provides lookup capability
+\item overflow file, similar to log file but integrated so a record in the overflow file is
+located by following a pointer from its predecessor
+\end{itemize}
+
+Index is a simple sequential file, where each record has a key field and a pointer to the main file.
+To find a specific field, index is searched to find highest key value that is equal to or precedes the
+desired key value. Search continues in the main file at the location indicated by the pointer.
+
+Each record in the main file contains a pointer to the overflow file.
+New records are added to the overflow file with the record in the main file that immediately precedes
+the new record in logical sequence being updated to contain a pointer to the new record in the
+overflow file (if it is in the overflow file, that record is updated).
+
+Main file occasionally merged with the overflow file in batch mode.
+
+Greatly reduces single-record access time.
+Processing entire file sequentially requires processing main file in sequence until a pointer to overflow
+file is found, then that is followed until a null pointer is encountered.
+
+Multiple levels of indexes for the same key field can increase efficiency.
+Lowest level treated as sequential file and higher-level index file created for that file.
+\subsection{The Indexed File}
+\label{sec:orge0d4ea0}
+Indexed sequential file inadequate for search based on anything other than key field.
+
+Sequentiality and a single key are abandoned, so records are only accessed through their indexes.
+
+Records can be placed anywhere as long as a pointer in at least 1 index refers to that record.
+Can also have variable-length records.
+
+\textbf{Exhaustive index} contains 1 entry for every record in the main file, where the index is a sequential file for ease of searching.
+
+\textbf{Partial index} contains entries to records where field of interest exists.
+
+Some records do not contain all fields.
+When a new record is added to the main file, all index files must be updated.
+
+Mostly used where timelines are important and data is not processed exhaustively.
+\subsection{The Direct or Hashed File}
+\label{sec:org87a9224}
+Directly access any block of a known address, so key field required in each record.
+
+No concept of sequential ordering.
+Done by hashing on the key value.
+
+Used where rapid access is required, where fixed-length records are used and records are accessed
+one at a time.
+\section{B-Trees}
+\label{sec:org1ccd1ce}
+For efficient index files, two-level organization is used, where the original file is broken into sections
+and the upper level consists of a sequenced set of pointers to the lower-level sections.
+This can be extended to 3+ levels, resulting in a tree.
+This should be balanced (with good index) to give best performance.
+
+B-tree provides efficient searching, adding, and deleting.
+
+A B-tree is a tree structure (no closed loops) such that:
+\begin{enumerate}
+\item the tree consists of a number of nodes and leaves
+\item each node contains 1+ keys that uniquely identify a file record, and more than 1 pointer to child
+nodes or leaves
+\begin{enumerate}
+\item variable number of keys and pointers per node
+\end{enumerate}
+\item each node is limited to the same number of maximum keys
+\item keys in a node are stored in nondecreasing order
+\begin{enumerate}
+\item each key has an associated child that is the root of a subtree containing all nodes with keys
+\(\le\) the key but \(\ge\) the preceding key
+\item a node has a rightmost child that is the root for a subtree containing all keys greater than
+any keys in the node, so each node has 1 more pointer than keys
+\end{enumerate}
+\end{enumerate}
+
+A B-tree has minimum degree \(d\) and satisfies the following:
+\begin{enumerate}
+\item every node has at most \(2d-1\) keys and \(2d\) children (or \(2d\) pointers)
+\item every node except the root has at least \(d-1\) keys and \(d\) pointers
+\begin{enumerate}
+\item every internal node is at least half full and has at least \(d\) children
+\end{enumerate}
+\item root has at least 1 key and 2 children
+\item all leaves appear on the same level and contain no info, they are simply logical to terminate the tree
+\item a non leaf node with \(k\) pointers contains \(k-1\) keys
+\end{enumerate}
+
+A B-tree has a large branching factor (many children) and so tree has low height.
+Means searching terminates quickly.
+
+To search for a key, start at the root node, if it's not there, go down 1 level and one case will occur:
+\begin{enumerate}
+\item desired key is < smallest key in this node, so take leftmost pointer to the next level
+\item desired key is > largest key in this node, so take rightmost pointer to the next level
+\item desired key is between two adjacent keys in this node, so take the pointer between these keys
+down to the next level
+\end{enumerate}
+
+Insertion must maintain a balanced tree:
+\begin{enumerate}
+\item search tree for the key, if it is not in the tree, then a node at the lowest level is reached
+\item if this node has \(< 2d-1\) keys, insert the key into this node in the proper sequence
+\item if the node is full, split the node around its median key into 2 new nodes with \(d-1\) keys each
+and promote the median key to the next higher level
+\begin{enumerate}
+\item insert the new key into the appropriate new node
+\item original node has now been split into 2 nodes with \(d-1\) and \(d\) keys
+\end{enumerate}
+\item promoted node is inserted into the parent node following the rules of step 3 (could be split)
+\item if promotion reaches the root and root is already full, a new root is created and height increases
+\end{enumerate}
+\section{File Directories}
+\label{sec:org6d1d06e}
+\subsection{Contents}
+\label{sec:orga3e750a}
+File directory contains info about files, including attributes, location, and ownership.
+Info is managed by OS, with the directory being a file accessible by file management routines.
+
+Directory maps file names to files with file entries.
+File location and size is also important, as well as access controls and usage info.
+\subsubsection{Basic Info}
+\label{sec:org7b189e9}
+\textbf{File name}: name chosen by creator (user or program), must be unique in a directory
+
+\textbf{File type}: text, binary, load module, etc.
+
+\textbf{File organization}: for systems that support different organizations
+\subsubsection{Address Info}
+\label{sec:orgbd2139e}
+\textbf{Volume}: indicates device on which file is stored
+
+\textbf{Starting address}: starting physical address on secondary storage
+
+\textbf{Size used}: current size of file in bytes, words, or blocks
+
+\textbf{Size allocated}: maximum size of the file
+\subsubsection{Access Control Info}
+\label{sec:orge1cfefc}
+\textbf{Owner}: user assigned control of the file, the owner can grant/deny access to other users and to
+change these privileges
+
+\textbf{Access info}: could have user's name and password for each authorized user
+
+\textbf{Permitted actions}: controls reading, writing, executing, and transmitting over a network
+\subsubsection{Usage Info}
+\label{sec:orga4d166d}
+\textbf{Date created}: when file was placed in directory
+
+\textbf{Identity of creator}: usually owner, but not always
+
+\textbf{Date last read access}: date of last time a record was read
+
+\textbf{ID of last reader}: user who did last reading
+
+\textbf{Date last modified}: date of last update, insertion, or deletion
+
+\textbf{ID of last modifier}: user who did the modifying
+
+\textbf{Date of last backup}: date of last time file was backed up on another storage medium
+
+\textbf{Current usage}: info about current activity on file, such as process or processes that have the
+file open, whether locked by a process, and whether file has been updated in main memory but not disk
+\subsection{Structure}
+\label{sec:orgc5c18b7}
+Some info stored in header record associated with file (less storage needed for directory).
+
+Simplest directory structure is a list of entries, 1 for each file, which can be done with a
+sequential file with filename as key.
+Provides no help in organizing files and forces user to be careful not to use the same name for 2
+different types of files.
+Inadequate for multiuser system or single user with multiple files.
+Difficult to conceal portions of directory from users when there is no directory structure.
+
+Operations on directory:
+\begin{itemize}
+\item \textbf{search}: when file referenced, directory must be searched to find the corresponding file entry
+\item \textbf{create file}: when new file created, an entry must be added to the directory
+\item \textbf{delete file}: when file deleted, an entry must be removed from the directory
+\item \textbf{list directory}: all or part of the directory may be requested, request results in a listing of
+all files owned by a user, plus some attributes
+\item \textbf{update directory}: change in file attributes requires change in corresponding directory entry
+\end{itemize}
+
+Two-level scheme has 1 directory per user and a master directory.
+Master directory has an entry for each user directory, providing address and access control info.
+Each user directory is a simple list of user files.
+Names must only be unique within the files of a single user, and access restriction can be easily
+enforced.
+No help in structuring collections of files.
+
+Hierarchical/tree-structure has a master directory that has user directories.
+This is recursive (subdirectories have subdirectories and files).
+Can store directories as sequential files or hashed structure.
+\subsection{Naming}
+\label{sec:orgff28754}
+Each file must have a unique symbolic name.
+This can be achieved in a tree-structured directory by following a path from the master directory
+down the branches to a file, giving a pathname for a file.
+Files must only have unique pathname, not unique file name.
+
+User or process has a current \textbf{working directory} associated, where files are referenced relative
+to the working directory.
+\section{File Sharing}
+\label{sec:org6c35b6a}
+\subsection{Access Rights}
+\label{sec:orgb9399d7}
+File system should allow file sharing options to change access controls.
+
+Access rights that a user can be assigned for a file are:
+\begin{itemize}
+\item \textbf{none}: user may not know file exists and cannot access it, to enforce, the user would not be
+allowed to read the directory that includes the file
+\item \textbf{knowledge}: user can determine file exists and its owner to ask owner for access rights
+\item \textbf{execution}: user can load and execute a program but not copy, used for proprietary programs
+\item \textbf{reading}: user can read file for any purpose (including copying and execution), copy could
+potentially be disallowed
+\item \textbf{appending}: user can add data to a file at the end, but not modify or delete any contents, useful
+for collecting data
+\item \textbf{updating}: user can modify, delete, and add to file data, which includes writing the file initially,
+rewriting it, and removing all/part of the data
+\item \textbf{changing protection}: user can change access rights granted to other users, usually only given
+to owners, owner can also specify which rights can be changed
+\item \textbf{deletion}: user can delete file from system
+\end{itemize}
+
+Rights can be considered a hierarchy.
+Owner has all access rights and may grant rights to others.
+Access can be provided to different user classes:
+\begin{itemize}
+\item \textbf{specific user}: designated by user ID
+\item \textbf{user groups}: set of users not individually defined, system keeps track of membership
+\item \textbf{all}: all users who have access to this system (public files)
+\end{itemize}
+\subsection{Simultaneous Access}
+\label{sec:orgeebf919}
+User may lock an entire file when it must be updated or lock individual records during update.
+
+Issues of mutual exclusion and deadlock must be addressed in designing shared access.
+\section{Record Blocking}
+\label{sec:org3a91b6e}
+For IO, records must be organized as blocks.
+
+On most systems, blocks have fixed-length (simplifies IO, buffer allocation, and block organization).
+
+The larger the block, the more records that are passed in 1 IO operation.
+Good for files being processed or searched sequentially, bad for records being accessed randomly (no
+locality).
+
+IO transfer time is reduced by using larger blocks, but this requires larger IO buffers.
+
+Given the size of a block, 3 methods of blocking are:
+\begin{enumerate}
+\item \textbf{fixed blocking}: fixed-length records used and an integral number of records stored in a block,
+potential for internal fragmentation in each block
+\begin{enumerate}
+\item common for sequential files with fixed-length records
+\end{enumerate}
+\item \textbf{variable-length spanned blocking}: variable-length records used and are packed into blocks with
+no unused space, so some records span two blocks with a continuation pointer
+\begin{enumerate}
+\item storage efficient and does not limit record size
+\item difficult to implement; records that span 2 blocks require 2 IO operations and difficult to update
+\end{enumerate}
+\item \textbf{variable-length unspanned blocking}: variable-length records used, but no spanning, so wasted
+space in most blocks
+\begin{enumerate}
+\item limits record size to the size of a block
+\end{enumerate}
+\end{enumerate}
+
+Record blocking interacts with virtual memory if employed.
+A page cannot be treated as a block.
+\section{Secondary Storage Management}
+\label{sec:org65924f2}
+Space on secondary storage must be allocated to blocks.
+Must keep track of space available for allocation.
+\subsection{File Allocation}
+\label{sec:org3e9ea21}
+A \textbf{portion} is a contiguous set of allocated blocks, whose size and range from a single block to
+an entire file.
+
+A \textbf{file allocation table (FAT)} keeps track of the portions assigned to a file.
+\subsubsection{Preallocation vs Dynamic Allocation}
+\label{sec:org4a395fe}
+Preallocation requires the max file size be declared at the time of file creation, which can be
+difficult to reliably estimate.
+Overestimating is wasteful of space.
+
+Dynamic allocation allocates space to a file in portions as needed.
+\subsubsection{Portion Size}
+\label{sec:orgb5e63d0}
+In choosing portion size, there is a trade-off between efficiency from the POV of a single file
+vs overall system efficiency. 4 items to consider are:
+\begin{enumerate}
+\item contiguity of space increases performance (especially for \texttt{Retrieve\_Next} and for a
+transaction-oriented OS)
+\item having many small portions increases table size to manage allocation info
+\item having fixed-size portions (blocks) simplifies the reallocation of space
+\item having variable-size or small fixed-size portions minimizes waste of unused storage due to
+overallocation
+\end{enumerate}
+
+Two major alternatives:
+\begin{enumerate}
+\item \textbf{variable, large contiguous portions}: better performance since variable size avoids waste
+and has small allocation tables, but reuse is difficult
+\begin{enumerate}
+\item file is preallocated one contiguous group of blocks, so no table needed, only pointer to
+first block and number of blocks allocated
+\item must be concerned about fragmentation of free space, could be done using:
+\begin{enumerate}
+\item \textbf{first fit}: choose first unused contiguous group of blocks of sufficient size from a
+free block list
+\item \textbf{best fit}: choose smallest unused group of sufficient size
+\item \textbf{nearest fit}: choose unused group of sufficient size closest to previous allocation for
+file to increase locality
+\end{enumerate}
+\end{enumerate}
+\item \textbf{blocks}: small, fixed portions provide flexibility, but require large tables or complex structures,
+less contiguity as blocks are allocated as needed
+\begin{enumerate}
+\item all required portions allocated at once, so file allocation table is of fixed size since
+number of blocks allocated is fixed
+\end{enumerate}
+\end{enumerate}
+
+Both are compatible with preallocation or dynamic allocation.
+\subsubsection{File Allocation Methods}
+\label{sec:orgc18eb24}
+With \textbf{contiguous allocation}, a single continuous set of blocks is allocated to a file at the time
+of file creation.
+File allocation table needs a single entry for each file with starting block and length.
+Best from POV of a sequential file.
+Multiple blocks can be read in at a time for sequential processing and easy to retrieve single
+block.
+Causes external fragmentation, so need to perform compaction. Further, need to declare size of
+file at creation time.
+
+\textbf{Chained allocation} is done on an individual block basis.
+Each block contains a pointer to the next block on the chain.
+File allocation table need a single entry for each file, with starting block and file length.
+Preallocation possible but more common to allocate blocks as needed, any free block added to the
+chain.
+No external fragmentation.
+Best suited for sequential files to be processed sequentially.
+Does not accommodate for locality, so even sequential processing accesses different parts of
+disk.
+
+\textbf{Indexed allocation} has the file allocation table contain a separate 1-level index for each file.
+The index has 1 entry for each portion allocated to the file.
+File indexes not physically stored on file allocation table but in separate block, and entry for a
+file in the file allocation table points to that block.
+Allocation can be fixed blocks or variable size portions.
+Blocks eliminates external fragmentation, but portions improves locality.
+Supports sequential and direct file access.
+\subsection{Free Space Management}
+\label{sec:orgeb0928c}
+Need a \textbf{disk allocation table} to know which blocks on disk are available.
+\subsubsection{Bit Tables}
+\label{sec:org77c7c25}
+Use a vector containing 1 bit for each block on the disk, where 0 is free and 1 means in use.
+
+Easy to find contiguous group of free blocks, and small as possible.
+
+Can be sizable, so having disk table in memory or disk is tricky.
+
+When only few free blocks left, exhaustive search of table slow performance, so other
+data structures are needed.
+\subsubsection{Chained Free Portions}
+\label{sec:org47a4871}
+Free portions may be chained with a pointer and length value in each free portion. Less space
+overhead and works with all file allocation methods.
+
+With block allocation, choose the free block at the head of the chain and adjust first pointer and
+length.
+
+With portion allocation, first-fit may be used to find next suitable free portion in chain, with
+pointer and length values adjusted.
+
+Disk becomes fragmented after some use and when allocating a block, must read block to find
+pointer to head, slowing file creation.
+\subsubsection{Indexing}
+\label{sec:org154990d}
+Treats free space as a file and uses an index table.
+Index should be on the basis of portions rather than blocks, so every table entry is a free portion
+of the disk.
+\subsubsection{Free Block List}
+\label{sec:org1b6a3c7}
+All blocks assigned numbers and list of numbers of free blocks is maintained in a reserved portion
+of the disk.
+
+Larger than bit table, so much be stored on disk rather than main memory.
+
+To store part of list in main memory:
+\begin{enumerate}
+\item list can be treated as a push-down stack, with first few thousand elements kept in main memory
+\begin{enumerate}
+\item when a new block is allocated, it is popped from the top of the stack (in main memory), and
+pushed onto stack for dealloc
+\item only need to transfer between disk and main memory when in-memory portion of stack is full
+or empty
+\end{enumerate}
+\item list can be treated as a FIFO queue, with entries from head and tail in main memory
+\begin{enumerate}
+\item when new block is allocated, first entry from head is taken, and end of tail is taken for
+delete from queue
+\item only need to transfer between disk and main memory when in-memory portion of head or tail of
+queue is full or empty
+\end{enumerate}
+\end{enumerate}
+\subsection{Volumes}
+\label{sec:orgec42c05}
+A collection of addressable sectors in secondary memory that an OS or application can use for data
+storage. Sectors in a volume need not be consecutive on a physical storage device, but must appear
+that way to OS or application.
+Can come from assembling and merging smaller volumes.
+
+Disk can be partitioned, where each is a separate volume.
+\subsection{Reliability}
+\label{sec:org587aa9e}
+To prevent error, the following steps can be performed when a file allocation is requested:
+\begin{enumerate}
+\item lock disk allocation table on disk, so no other user can alter table until this allocation
+is complete
+\item search disk allocation table for available space, assuming a copy is always in main memory (if not,
+read in)
+\item allocate space, update disk allocation table, and update disk, which involved writing disk
+allocation table back to disk
+\begin{enumerate}
+\item for chained disk allocation, involves updating pointers on disk
+\end{enumerate}
+\item update file allocation table and update disk
+\item unlock disk allocation table
+\end{enumerate}
+
+When small portions allocated frequently, performance impact is substantial.
+Batch storage allocation scheme can avoid this, by obtaining a batch of free positions on disk for
+allocation that are marked ``in use''.
+Allocations using this batch may proceed in main memory.
+When the batch is exhausted, disk allocation table updated on disk and new batch may be acquired.
+If a system crash occurs, portions on the disk marked ``in use'' must be cleaned up before they can be
+reallocated, which depends on file system characteristics.
+\end{document}

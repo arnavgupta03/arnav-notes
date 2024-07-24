@@ -1,0 +1,88 @@
+% Created 2024-04-19 Fri 14:57
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Computer Vision}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Computer Vision},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Creative Coding}
+\label{sec:orgebd34a3}
+p5.js is a JS library for creative coding, ultimately a simplified and enhanced HTML Canvas API.
+
+To use p5.js, install types, include CDN file in HTML, include 1+ p5 sketch JS files,
+and use with JS.
+Also, use BrowserSync to run code.
+
+Runs in either global or instance mode:
+\begin{itemize}
+\item \textbf{global}: all properties and methods are attached to the window
+\item \textbf{instance}: all properties and methods are bound to a p5 object
+\end{itemize}
+
+Implied callback functions are:
+\begin{itemize}
+\item \texttt{setup()} which runs once when program starts
+\item \texttt{draw()} which is executed 60 times per second (by default)
+\end{itemize}
+
+Implied event functions like \texttt{keyPressed()}.
+
+Global variables like \texttt{mouseX}, \texttt{mouseY}, and \texttt{key} (last key pressed).
+
+\textbf{Computer vision}: broad class of algorithms that alow computers to make intelligent
+assertions about digital images and video
+
+Computer vision for human computer interaction is when a computer is controlled using a
+video camera.
+\section{Colour-Based}
+\label{sec:org5688349}
+A simple computer vision algorithm identifies a special pixel based on some criteria and
+uses that pixel's location to control that computer, for each video frame.
+
+This special pixel can be found by looking through all pixels for the most special one.
+
+Can also count special pixels based on some criteria
+\section{Optical Flow}
+\label{sec:orgbdbd7ef}
+A more complex computer vision algorithm subtracts this frame from the last one, and uses
+the differences to estimate how far each pixel moved.
+Then uses the total pixel movement to control the computer.
+
+An optical flow vector is calculated in each flow zone, which calculates the overall
+flow vector.
+
+Can also subtract out background pixels, find blobs of connected pixels, and use blob
+position and/or shape to control the computer.
+\section{AI models}
+\label{sec:orga96c769}
+An even more advanced computer vision algorithm would send the frame to a deep learning
+model to recognize features, and use features to control the computer.
+
+Configure model options, initialize the model.
+Have a callback for when predictions are made.
+Draw keypoint landmarks (ex. mouth top-middle and bottom-middle).
+\end{document}

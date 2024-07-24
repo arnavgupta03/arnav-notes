@@ -1,0 +1,146 @@
+% Created 2024-04-19 Fri 12:46
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Direct Manipulation}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Direct Manipulation},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Instrumental Interaction}
+\label{sec:org12d4cce}
+\textbf{Direct manipulation} is when a virtual representation of an object is manipulated in a similar
+way to a real world object.
+Goal is to make the interaction feel like manipulating a real object instead of working through
+and intermediary.
+
+Requires a representation of task objects (something the user can manipulate).
+Can be the object of interest or an interface widget.
+
+Characteristics of Direct Manipulation:
+\begin{enumerate}
+\item continuous representation of task objects and actions
+\item task objects manipulated by physical actions, not complex syntax
+\item fast, incremental, and reversible actions with effects on task objects immediately
+apparent
+\item layered, self-revealing approach to learning
+\end{enumerate}
+
+Benefit of direct manipulation is the feel as if interacting wih the task object rather than
+the interface, so focus is on the task, not the technology.
+
+Feeling of direct involvement with world of task objects rather than communication with an
+intermediary.
+
+An \textbf{interaction model} is a set of principles, rules, and properties that guide the design of
+an interface. Describes how to combine interaction techniques in a meaningful and consistent
+way and defines the look and feel of the interaction from the user's perspective.
+Properties of the interaction model can be used to evaluate specific interaction designs.
+
+\textbf{Instrumental interaction} is a model of interaction based on natural use of tools/instruments
+to manipulate objects in the physical world.
+
+Interfaces have:
+\begin{itemize}
+\item \textbf{interaction instruments}: necessary mediators between user and domain objects
+\item \textbf{domain objects}: things of interest, data, and associated attributes, which are
+manipulated using an interaction instrument
+\end{itemize}
+
+\textbf{Instrument activation} is how an instrument is triggered for use.
+GUI instruments activated spatially (movement cost) and temporally (time cost).
+UI layout and design is concerned with the tradeoff of these costs.
+
+\textbf{Reification}: turning concepts into something concrete
+
+An instrument is the reificiation of a command.
+
+\textbf{Meta-instrument}: an instrument that acts on another instrument, which becomes an object
+of interest
+
+Object reficiation involves turning attributes of a primary object into other objects of
+interest.
+
+3 properties of instruments:
+\begin{itemize}
+\item degree of \textbf{indirection}: spatial/temporal offset between instrument and action on object
+\item degree of \textbf{integration}: match between input device to instrument degrees of freedom
+\item degree of \textbf{compatibility}: similarity of action on device/instrument to action on object
+\end{itemize}
+
+Degree of indirection is the 2D measure of distance from instrument to object:
+\begin{itemize}
+\item spatial dimension can be near (drag to translate, handle to resize), medium
+(scrollbar near page), or far (dialog box)
+\item temporal dimension can be short (direct drag response), medium (activate tool in toolbar,
+start direct manipulation), or long (using dialog, full drag-and-drop operation)
+\end{itemize}
+
+Degree of integration is the ratio of the degrees of freedom (DOF) of the instrument over
+the DOF captured by the input device, which captures the suitability of the device.
+
+Degree of compatibility is the similarity of physical actions on instrument and response
+of the object (more similar is better since it's more natural or intuitive).
+
+A direct manipulation interface allows a user to directly act on a set of objects in the
+interface. (low indirection, high integration, high compatibility)
+
+Ideal level of direct manipulation is when instruments are visually indistinguishable from
+object they control:
+\begin{itemize}
+\item actions on instrument/object entities are analogous to actions on similar object in the
+real world
+\item action on instrument/object entities preserve the conceptual linkage between instrument
+and object
+\end{itemize}
+\section{Dragging}
+\label{sec:org13a59c6}
+Mousedown on shape starts drag (find offset from position to the shape frame-of-reference),
+mousemove to drag, and mouseup to end drag.
+\section{Drag-and-Drop}
+\label{sec:orgd6f0363}
+Most UI tooklits have built-in support for drag-and-drop.
+
+A drag-and-drop interaction is:
+\begin{enumerate}
+\item press button (mousedown) with cursor on source object/data
+\item drag source object onto target object
+\item release button (mouseup) to drop object/data on target
+\end{enumerate}
+
+HTML drag-and-drop API enables drag-and-drop interactions in browser applications:
+\begin{itemize}
+\item make element draggable with \texttt{draggable} attribute
+\item manage a drag operation by handling drag-and-drop events: dragstart, drag, dragenter,
+dragleave, dragover, drop, dragend
+\item define what info is manipulated
+\end{itemize}
+
+Direct manipulation feedback is important:
+\begin{itemize}
+\item visual indication of elements that can be dragged
+\item feedback showing possible drop targets
+\end{itemize}
+\end{document}

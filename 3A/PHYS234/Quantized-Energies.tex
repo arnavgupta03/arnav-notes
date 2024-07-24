@@ -1,0 +1,211 @@
+% Created 2024-04-17 Wed 17:46
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode,braket}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Quantized Energies}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Quantized Energies},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Spectroscopy}
+\label{sec:org1e92841}
+Quantized energy levels arise from particle interactions that lead to bound systems (nuclei, atoms, etc).
+
+Lowest energy state at \(n=1\) is called the \textbf{ground state}, and levels above are the \textbf{excited states}.
+
+For energy eigenvalues \(E_{i}\) and energy eigenstates \(\ket{E_{i}}\), the probability of a particular
+energy measurement is
+$$
+\mathcal{P}_{E_{i}} = \left| \braket{E_{i}| \psi} \right|^{2}
+$$
+and the energy eigenvalue equation is
+$$
+\hat{H} \ket{E_{i}} = E_{i} \ket{E_{i}}
+$$
+\section{Energy Eigenvalue Equation}
+\label{sec:orgb168b27}
+The quantum mechanical Hamiltonian operator for a particle moving in 1 dimension (from classical energy of
+such a particle) is
+$$
+\hat{H} = \frac{\hat{p}_{x}^{2}}{2m} + V(\hat{x})
+$$
+
+The wave function is a representation of the abstract quantum state so in position representation:
+$$
+\ket{\psi} \doteq \psi(x)
+$$
+For the energy eigenstates in position representation:
+$$
+\ket{E_{i}} \doteq \varphi_{E_{i}}(x)
+$$
+
+Similarly, the operators in position representation are:
+$$
+\hat{x} \doteq x, \hat{p} = -i\hslash \frac{d}{dx}
+$$
+
+The energy eigenvalue equation in position representation becomes:
+$$
+\left( -\frac{\hslash^{2}}{2m} \frac{d^{2}}{dx^{2}} + V(x) \right) \varphi_{E}(x) = E\varphi_{E}(x)
+$$
+
+Operator equations turn into differential equations.
+\section{The Wave Function}
+\label{sec:orgdc1ef92}
+The wave function is a representation of a quantum state using the eigenstates of the position
+operator \(\hat{x}\) as the basis states, where position is not quantized (continuous).
+
+State in position basis cannot be represented as a column vector since it is continuous, so instead
+must use quantum mechanical wave function.
+
+Wave function is equivalent to probability amplitude (in Dirac notation) so
+$$
+\psi(x) = \braket{x | \psi}
+$$
+which gives the probablity distribution function:
+$$
+\mathcal{P}(x) = \left| \psi(x) \right|^{2}
+$$
+and so \(\mathcal{P}(x) \, dx\) is the infinitesimal probability of detecting a particle at \(x\) within an
+infinitesimal region of width \(dx\).
+\(\mathcal{P}(x)\) has dimensions of inverse length.
+
+Measuring \(\mathcal{P}(x)\) does not give \(\psi(x)\), similar to the discrete case.
+
+To find the probability that a particle is in a finite interval \(a < x < b\):
+$$
+\mathcal{P}_{a < x < b} = \int_{a}^{b} \left| \psi(x) \right|^{2}
+$$
+and so the normalization condition is also an integral over all \(x\).
+
+Rules for translating braket formulas to wave function formulas:
+\begin{enumerate}
+\item Replace ket with wave function.
+\item Replace bra with wave function conjugate.
+\item Replace braket with integral over all space.
+\item Replace operator with position representation.
+\end{enumerate}
+
+The probability that the state \(\psi(x)\) is measured to have the physical observable for which
+\(\phi(x)\) is the eigenstate is
+$$
+\mathcal{P}_{\psi \to \varphi} = \left| \braket{\varphi | \psi} \right|^{2}
+= \left| \int_{-\infty}^{\infty} \varphi^{*}(x) \psi_{x}(x) \, dx \right|^{2}
+$$
+For energy this becomes:
+$$
+\mathcal{P}_{E_{n}} = \left| \braket{E_{n} | \psi} \right|^{2}
+= \left| \int_{-\infty}^{\infty} \varphi_{n}^{*}(x) \psi_{x}(x) \, dx \right|^{2}
+$$
+where \(\varphi_{n}(x)\) is the energy eigenstate with energy \(E_{n}\).
+
+The expectation value of position in wave function notation is
+$$
+\braket{\hat{x}} = \int_{-\infty}^{\infty} x \left| \psi(x) \right|^{2} \, dx
+$$
+
+The expectation value of momentum in wave function notation is
+$$
+\braket{\hat{p}} = \int_{-\infty}^{\infty} \psi^{*}(x) \left(-i\hslash\frac{d}{dx}\right) \psi(x)\, dx
+$$
+\section{Infinite Square Well}
+\label{sec:orgbefb710}
+Potential energy functions that have a minimum are called \textbf{potential wells}.
+Particle energy is conserved, so kinetic energy is \(T(x) = E - V(x)\).
+
+Particles that have their motion constrained by the potential well are in \textbf{bound states}.
+Particles with energies beyond potential well do not have motion constrained, so they are in
+\textbf{unbound states}.
+
+The \textbf{particle in a box} exists in a well with
+$$
+V(x) = \begin{cases}
+        \infty & x < 0 \\
+        0 & 0 < x < L \\
+        \infty & x > L
+\end{cases}
+$$
+
+\textbf{Infinite square well} illustrates most important features of a particle bound to a limited region of space.
+
+Solving the infinite square well gives a \textbf{quantization condition} with \textbf{quantum number} \(n\), which is
+used to label quantized states and energies.
+Using these gives the energy quantization for the system:
+$$
+E_{n} = \frac{n^{2}\pi^{2}\hslash^{2}}{2mL^{2}}
+$$
+which are the allowed energies with \(n=1\) as the ground state.
+Further, the energy eigenstates are:
+$$
+\varphi_{n}(x) = \sqrt{\frac{2}{L}} \sin \frac{n\pi x}{L}
+$$
+
+Here, the energy and the wavelength are related, as opposed to classical where energy and amplitude are.
+
+A system exhibits properties similar to classical particles and classical waves, so there is
+\textbf{wave-particle duality}.
+
+The probability density is
+$$
+\mathcal{P}_{n}(x) = \frac{2}{L} \sin^{2} \frac{n\pi x}{L}
+$$
+Probability of finding the particle outside the well is 0, but also 0 at some places inside the well.
+\section{Finite Square Well}
+\label{sec:org620bd43}
+The potential energy of a finite square well is
+$$
+V(x) = \begin{cases}
+       V_{0} & x < -a \\
+       0 & -a x < a \\
+       V_{0} & x > a
+\end{cases}
+$$
+
+In the regions outside the well, the wave function must be a decaying exponential.
+Boundary conditions to solve this are:
+\begin{enumerate}
+\item \(\varphi_{E}(x)\) is continuous
+\item \(\frac{d\varphi_{E}(x)}{dx}\) is continuous unless \(V = \infty\)
+\end{enumerate}
+
+Symmetry condition can also be used to solve, giving even and odd solutions.
+
+Using these conditions gives transcendental equations that must be solved graphically or numerically
+for each different well.
+
+Finite well eigenstates extend into the classically forbidden region (unlike infinite well),
+referred to as \textbf{barrier penetration}.
+\section{Observations}
+\label{sec:org6e667e5}
+For higher energy states, the wave function penetrates further into the classically forbidden region,
+evident in finite well states.
+
+A given finite well energy eigenvalue lies below the corresponding infinite well energy eigenvalue.
+\section{Superposition States and Time Dependence}
+\label{sec:orgfa3fb86}
+The Schrödinger equation in energy eigenstate basis can be used to find the time evolution.
+
+Probability and expectation value of energy are time-independent.
+\end{document}

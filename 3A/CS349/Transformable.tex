@@ -1,0 +1,74 @@
+% Created 2024-04-19 Fri 13:23
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Transformable}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Transformable},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Transformable Shapes}
+\label{sec:orgd15a6f3}
+Direct manipulation widgets to transform an object:
+\begin{itemize}
+\item scale by dragging corner and side handles
+\item rotate by dragging rotation handle
+\item translate by dragging shape
+\end{itemize}
+
+For translation:
+\begin{itemize}
+\item if mousedown inside rectangle, save mouse position
+\item on mousemove, calculate a drag delta, which is used for a shape position delta
+\item use shape position delta to draw shape
+\item on mouseup, commit shape delta to shape position, then clear shape delta
+\end{itemize}
+
+For scale:
+\begin{itemize}
+\item if mousedown inside circle, save mouse position
+\item on mousemove, use drag delta for a shape size delta
+\item use shape size delta to draw shape
+\item on mouseup, commit shape delta to shape size, then clear shape delta
+\end{itemize}
+
+For rotate:
+\begin{itemize}
+\item if mousedown inside circle, save mouse position
+\item on mousemove, use mouse position to calculate a shape angle delta
+\item use delta to draw shape
+\begin{itemize}
+\item draw shape centered at 0,0
+\item subtract shape x,y from mx,my
+\item rotate mx,my by -angle
+\end{itemize}
+\item simplify hit tests using transformed mouse position
+\item simplify angle delta calculation
+\item update translate to use rotated delta drag to align coordinate frames of shape
+and mouse
+\item update scale to translate shape so opposite corner remains fixed
+\item on mouseup, commit shape delta, then clear shape delta
+\end{itemize}
+\end{document}

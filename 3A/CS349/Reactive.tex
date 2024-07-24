@@ -1,0 +1,111 @@
+% Created 2024-04-19 Fri 02:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Reactive}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Reactive},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Virtual DOM Reconciliation}
+\label{sec:orgd87e085}
+\textbf{Reactivity} is the automatic update of the UI due to a change in the application's state.
+
+As a developer, focus on the state of the application and let the framework reflect that
+state in the UI.
+
+The VDOM is a lightweight representation of the UI in memory.
+It is synchronized with the real DOM as follows:
+\begin{enumerate}
+\item save current VDOM
+\item components and/or application state updates the VDOM
+\item a re-render is triggered by the framework
+\item compare VDOM before update with VDOM after update
+\item reconcile the difference, identifying a set of DOM patches
+\item perform patch operations on real DOM
+\item back to step 1
+\end{enumerate}
+
+Reconciliation operations:
+\begin{itemize}
+\item if node type changes, the whole subtree is rebuilt
+\item if node type is the same, attributes are compared and updated
+\item if a node is inserted into the list of same node type siblings, all children would be updated
+(if no more info provided)
+\begin{itemize}
+\item key prop should be used when updating children of the same node type, where each key must be
+stable and unique, and the key should be assigned when data is created, not rendered
+\end{itemize}
+\end{itemize}
+\section{State with Hooks, Context, Signals}
+\label{sec:org966cb39}
+Approaches to managing state:
+\begin{enumerate}
+\item \texttt{useState} hook for local component state, and pass state to children
+\item \texttt{useContext} hook to access state, without passing as props
+\item Signals
+\end{enumerate}
+
+Hook functions are stored in slots associated with each component, and have a slot number
+associated.
+A function is used to get/create a hook in a slot.
+
+Hooks in Preact are functional methods to compose state and side effects.
+\begin{itemize}
+\item \texttt{useState} used to get and set state.
+\item \texttt{useContext} used to access state context without prop drilling
+\item \texttt{useRef} used to get a reference to a DOM node inside a functional component
+\item \texttt{useEffect} used to trigger side-effects on state change
+\item \texttt{useReducer} used for complex state logic similar to Redux
+\end{itemize}
+
+Can also define custom hooks with funtions that return values and callbacks.
+
+With Context, pass state and other values to children without prop drilling:
+\begin{enumerate}
+\item define context object type
+\item create shared context object
+\item make context Provider node ancestor of components using context
+\item use context in child components
+\end{enumerate}
+
+Signals are a state management module introduced by Preact:
+\begin{itemize}
+\item state acts as a model, and signals and mutations can be exported as well
+\end{itemize}
+
+For state with signals:
+\begin{itemize}
+\item keep state minimal and well-organized, so each signal is focused only on a certain part of
+the state
+\item use signals only where needed, otherwise performance issues
+\begin{itemize}
+\item use signals to share state between parts of the application
+\item for local app state, use \texttt{useState}
+\end{itemize}
+\item keep components small and focused, so break UI down into small focused components that each
+manage a specific piece of state
+\end{itemize}
+\end{document}

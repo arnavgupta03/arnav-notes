@@ -1,0 +1,421 @@
+% Created 2024-03-26 Tue 20:34
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Concurrency: Deadlock and Starvation}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Concurrency: Deadlock and Starvation},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Principles of Deadlock}
+\label{sec:orgee056ca}
+Deadlock: permanent blocking of a set of processes that either compete
+for system resources or communicate with each other.
+
+No efficient solution exists in the general case.
+
+Deadlock can be illustrated with a joint process diagram, which
+illustrates the progress of two processes competing for two resources.
+\begin{itemize}
+\item if an execution path on a joint process diagram enters the fatal region,
+deadlock is inevitable
+\end{itemize}
+\subsection{Consumable Resources}
+\label{sec:org8b92b24}
+Consumable resource: one that can be created and destroyed (ex. interrupts,
+signals, messages, IO buffer info)
+
+When such a resource is acquired by a consuming process, the resource
+ceases to exist.
+
+Can lead to deadlock, such as conflicting order of messages.
+
+Common approaches to deal with deadlocks:
+\begin{itemize}
+\item \textbf{deadlock prevention}: disallow one of the three necessary conditions
+for deadlock occurrence (or prevent circular wait condition from
+happening)
+\item \textbf{deadlock avoidance}: do not grant a resource request if the allocation might lead to deadlock
+\item \textbf{deadlock detection}: grant resource requests when possible, but check
+for presence of deadlock and take action to recover
+\end{itemize}
+\subsection{Resource Allocation Grpahs}
+\label{sec:org0ba15c3}
+Resource allocation graph: directed graph that depicts a state of the system
+of resources and processes, with each process and each resource represented
+by a node, edges indicating requests for resources not yet granted
+\begin{itemize}
+\item each dot indicates one instance
+\item graph edge directed from a consumable resource node dot to a process
+indicates the process is the producer of the resource
+\end{itemize}
+\subsection{Conditions for Deadlock}
+\label{sec:orgf9d7cf9}
+Conditions of policy (1-3) must be present for a deadlock to be possible:
+\begin{enumerate}
+\item \textbf{mutual exclusion}: only one process may use a resource at a time, no process
+may access a resource unit that has been allocated by another process
+\item \textbf{hold and wait}: process may hold allocated resources while awaiting assignment
+of other resources
+\item \textbf{no preemption}: no resource can be forcibly removed from a process holding it
+\item \textbf{circular wait}: closed chain of processes exists, such that each process
+holds at least one resource needed by the next process in the chain
+\end{enumerate}
+
+Fatal region in joint progress diagram only exists if all of the first 3 conditions
+above are met, otherwise no fatal region or deadlock occur.
+
+Conditions 1-3 represent possibility of deadlock,
+conditions 1-4 represent existence of deadlock.
+\section{Deadlock Prevention}
+\label{sec:org50665ff}
+Strategy is to design a system such that the possibility of deadlock is excluded.
+
+Two classes of deadlock prevention methods:
+\begin{itemize}
+\item \textbf{indirect method}: prevent the occurrence of 1 of the 3 necessary conditions
+\item \textbf{direct method}: prevent the occurence of a circular wait
+\end{itemize}
+\subsection{Mutual Exclusion}
+\label{sec:org46cc635}
+Mutual exclusion cannot be disallowed, since some resources require it.
+\subsection{Hold and Wait}
+\label{sec:orgd9f0300}
+Can be prevented by requiring a process to request all required resources at once,
+which is quite inefficient:
+\begin{itemize}
+\item a process may be held up with these resource requests even though it does not
+need them all
+\item allocating resources to this process denies them to other processes
+\item a process may not know in advance all resources it requires
+\end{itemize}
+\subsection{No Preemption}
+\label{sec:org3871cc9}
+Can be prevented by:
+\begin{itemize}
+\item if a process holding certain resources is denied more, that process must release
+its original resources and request all necessary resources (including those it was
+denied) again
+\item if a process requests a resource held by another process, the OS may preempt the
+other process and require it to release its resources
+\end{itemize}
+
+Only practical to prevent when applied to resources whose state can be easily
+saved and restored (like the processor).
+\subsection{Circular Wait}
+\label{sec:orgd964a3d}
+Can be prevented by defining a linear ordering of resource types, where resources
+can only be requested in the order specified.
+
+Preventing this may be inefficient, slow processes and deny resource access.
+\section{Deadlock Avoidance}
+\label{sec:orgdd7012a}
+Avoidance allows the 3 necessary conditions for deadlock, but makes choices
+to assure that deadlock is never reached.
+\begin{itemize}
+\item allows more concurrency than prevention
+\item requires knowledge of future process resource requests
+\end{itemize}
+\subsection{Process Initiation Denial}
+\label{sec:org1ff6b29}
+Consider a system of \(n\) processes and \(m\) types of resources.
+
+Let \(R = (R_{1}, R_{2}, \dots, R_{m})\) be the total amount of
+each resource in the system.
+Let \(V = (V_{1}, V_{2}, \dots, V_{m})\) be the total amount of
+each resource not allocated to any process.
+
+Let the claim \(C\) be
+$$C = \begin{pmatrix}
+       C_{11} & C_{12} & \cdots & C_{1m} \\
+       C_{21} & C_{22} & \cdots & C_{2m} \\
+       \vdots & \vdots & \vdots & \vdots \\
+       C_{n1} & C_{n2} & \cdots & C_{nm}
+\end{pmatrix}$$
+where \(C_{ij}\) is the requirement of process \(i\) for resource \(j\).
+
+Let the allocation \(A\) be
+$$A = \begin{pmatrix}
+        A_{11} & A_{12} & \cdots & A_{1m} \\
+        A_{21} & A_{22} & \cdots & A_{2m} \\
+        \vdots & \vdots & \vdots & \vdots \\
+        A_{n1} & A_{n2} & \cdots & A_{nm}
+\end{pmatrix}$$
+where \(A_{ij}\) is the current allocation to process \(i\) of resource \(j\).
+
+The following relationships hold:
+\begin{enumerate}
+\item All resources are either available or allocated.
+$$R_{j} = V_{j} + \sum_{i = 1}^{n} A_{ij}, \forall j$$
+\item No process can claim more than the total amount of resources
+in the system.
+$$C_{ij} \le R_{j}, \forall i, j$$
+\item No process is allocated more resources of any type than the process
+originally claimed to need.
+$$A_{ij} \le C_{j}, \forall i, j$$
+\end{enumerate}
+
+Using these, a deadlock avoidance policy can be defined that refuses to start
+a new process if resource requirements might lead to deadlock.
+The policy is to only start a new process \(P_{n+1}\) if
+$$R_{j} \ge C_{(n+1)j} + \sum_{i = 1}^{n} C_{ij}, \forall j$$
+which means to only start a process if the maximum claim of all
+current processes plus the new process can be met.
+\subsection{Resource Allocation Denial}
+\label{sec:org2f8af32}
+Strategy of resource allocation denial is called banker's algorithm.
+
+Consider a system with a fixed number of processes and a fixed number of resources.
+The state of the system reflects the current allocation of resources to processes,
+consisting of vectors \(R\) and \(V\) and matrices \(C\) and \(A\).
+Safe state is when there is some sequence of resource allocations to processes
+that does not result in deadlock.
+
+To find if a state is safe, check if any process can be run to completion with
+the resources available. For some process \(i\), this requires
+$$C_{ij} - A_{ij} \le V_{j}, \forall j$$
+Once such a process is found, assume it runs to completion and make its resources
+available. Begin again.
+
+The deadlock avoidance strategy is to ensure that the system is always in a
+safe state. If some resource request will put the system in an unsafe state,
+block the process until it is safe to grant the request, otherwise grant it.
+
+Deadlock avoidance strategy does not predict deadlock with certainty,
+it just anticipates the possibility and assures this possibility never occurs.
+
+Deadlock avoidance has the advantage that it is not necessary to preempt and
+rollback processes and is less restrictive than deadlock prevention.
+Restrictions on its use are:
+\begin{itemize}
+\item maximum resource requirement for each process must be stated in advance
+\item processes under consideration must be independent (order of execution
+must be unconstrained by synchronization requirements)
+\item must be a fixed number of resources to allocate
+\item no process may exit while holding resources
+\end{itemize}
+\section{Deadlock Detection}
+\label{sec:org15b8594}
+Prevention is conservative, detection finds the circular wait condition.
+\subsection{Deadlock Detection Algorithm}
+\label{sec:org376429b}
+Check for deadlocks can be done on each resource request or less frequently.
+Checking at each resource request leads to early detection and simple
+algorithm, but uses more processor time.
+
+The Allocation matrix and Available vector are used along with a request
+matrix \(Q\) where \(Q_{ij}\) represents the amount of resources of type \(j\)
+requested by process \(i\).
+
+Initially all processes are unmarked. The following steps are performed to
+mark processes that are not part of a deadlocked set:
+\begin{enumerate}
+\item Mark each process that has a row in the Allocation matrix of all zeros,
+as a process that has no allocated resources cannot participate in a
+deadlock.
+\item Initialize a temporary vector \(W\) to equal the Available vector.
+\item Find an index \(i\) such that process \(i\) is currently unmarked and the
+\$i\$th row of \(Q\) is at most \(W\).
+That is \(Q_{ik} \le W_{k}\) for \(1 \le k \le m\).
+If no such row is found, terminate the algorithm.
+\item If such a row is found, mark process \(i\) and add the corresponding row
+of the allocation matrix to \(W\).
+That is, set \(W_{k} = W_{k} + A_{ik}\) for \(1 \le k \le m\).
+Return to step 3.
+\end{enumerate}
+
+Deadlock exists if and only if there are unmarked processes at the end
+of the algorithm, as these are all deadlocked processes.
+\subsection{Recovery}
+\label{sec:org17f976a}
+Once deadlock is detected, must recover and the following are possible
+approaches, in increasing sophistication:
+\begin{enumerate}
+\item Abort all deadlocked processes.
+\item Back up each deadlocked process to some previously defined checkpoint
+and restart all processes.
+\begin{enumerate}
+\item requires rollback and restart mechanisms
+\item original deadlock could occur again
+\end{enumerate}
+\item Successively abort deadlocked process until deadlock no longer exists.
+\begin{enumerate}
+\item order is on the basis of some criterion of minimum cost
+\item detection must be run after each abortion
+\end{enumerate}
+\item Successively preempt resources until deadlock no longer exists.
+\begin{enumerate}
+\item order is on the basis of some criterion of minimum cost
+\item detection must be run after each abortion
+\item process that has resource preempted must be rolled back to a point
+prior to resource acquisition
+\end{enumerate}
+\end{enumerate}
+
+Minimum cost could be:
+\begin{itemize}
+\item least amount of processor time consumed
+\item least amount of output produced
+\item most estimated time remaining
+\item least total resources allocated so far
+\item lowest priority
+\end{itemize}
+\section{Integrated Deadlock Strategy}
+\label{sec:org52606c9}
+More efficient to use different deadlock strategies in different situations.
+One such approach:
+\begin{itemize}
+\item group resources into a number of different resource classes
+\item use the linear ordering strategy defined previously for the prevention of
+circular wait to prevent deadlocks between resource classes
+\item within a resource class, use the algorithm that is most appropriate for
+that class
+\end{itemize}
+
+Some classes could include swappable space (secondary memory), process
+resources (devices, tapes, files, etc), main memory, and internal
+resources (IO channels).
+This order is reasonable due to the sequence of steps that a process may
+follow in its lifetime.
+
+Within each class, the following strategies could be used:
+\begin{itemize}
+\item \textbf{swappable space}: prevention of deadlocks by requiring that all required
+resources that may be used be allocated at one time (like hold-and-wait),
+which is reasonable if max storage requirements are known; deadlock
+avoidance also possible
+\item \textbf{process resources}: avoidance often effective because can expect processes
+to declare ahead of time the resources they require in this class; prevention
+also possible
+\item \textbf{main memory}: prevention by preemption most appropriate where preemption
+means a process is swapped
+\item \textbf{internal resources}: prevention by resource ordering used
+\end{itemize}
+\section{Dining Philosophers Problem}
+\label{sec:orgb84df01}
+Round table with spaghetti, 5 plates, 5 forks, and 5 philosophers that each
+require 2 forks to eat.
+
+Problem illustrates basic problems in deadlock and starvation, difficulty in
+concurrent programming, and coordination of shared resources.
+\subsection{Solution Using Semaphores}
+\label{sec:org2238ff5}
+Each philosopher first picks up the fork on the left, then the fork on the
+right. After eating, the forks are replaced on the table. This leads to
+deadlock.
+
+Instead have an attendant that only allows 4 philosophers into the room,
+then at least 1 philosopher has 2 forks.
+
+\begin{verbatim}
+semaphore fork[5] = {1};
+semaphore room = {4};
+int i;
+void philosopher (int i)
+{
+    while (true) {
+        think();
+        wait(room);
+        wait(fork[i]);
+        wait(fork[(i+1) % 5]);
+        eat();
+        signal(fork[(i+1) % 5]);
+        signal(fork[i]);
+        signal(room);
+    }
+}
+void main()
+{
+    parbegin (
+       philosopher(0),
+       philosopher(1),
+       philosopher(2),
+       philosopher(3),
+       philosopher(4),
+        );
+}
+\end{verbatim}
+\subsection{Solution Using a Monitor}
+\label{sec:orga71fd57}
+Vector of 5 condition variables defined, 1 per fork. Used to enable a philosopher
+to wait for the availability of a fork.
+Further, there is a Boolean vector that records availability status of each fork.
+
+Monitor consists of 2 procedures.
+
+\texttt{get\_forks} used to seize left and right forks, if either unavailable, philosopher
+process queued on the appropriate condition variable so more philosophers
+can enter the monitor.
+
+\texttt{release\_forks} used to make 2 forks available.
+
+No deadlocks because only one process at a time may be in the monitor.
+
+\begin{verbatim}
+monitor dining_controller;
+cond ForkReady[5];
+boolean fork[5] = {true};
+
+void get_forks(int pid)
+{
+    int left = pid;
+    int right = (++pid) % 5;
+
+    if (!fork[left])
+        cwait(ForkReady[left]);
+    fork[left] = false;
+
+    if (!fork[right])
+        cwait(ForkReady[right]);
+    fork[right] = false;
+}
+void release_forks(int pid)
+{
+    int left = pid;
+    int right = (++pid) % 5;
+
+    if (empty(ForkReady[left])) // no one waiting for this fork
+        fork[left] = true;
+    else // awaken a process waiting on this fork
+        csignal(ForkReady[left]);
+
+    if (empty(ForkReady[right])) // no one waiting for this fork
+        fork[right] = true;
+    else // awaken a process waiting on this fork
+        csignal(ForkReady[right]);
+}
+
+void philosopher(int k)
+{
+    while (true)
+    {
+        <think>;
+        get_forks(k);
+        <eat spaghetti>;
+        release_forks(k);
+    }
+}
+\end{verbatim}
+\end{document}

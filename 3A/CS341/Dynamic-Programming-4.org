@@ -1,0 +1,149 @@
+#+title: Dynamic Programming Part 4
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Bellman-Ford Algorithm
+** Outlook
+Source is fixed.
+
+If no negative cycle, compute all distances $\delta(s, v)$.
+
+Can detect negative cycles.
+
+Very simple pseudo-code, but slower than Dijkstra's.
+
+** Algorithm
+*** Definition
+For $i$ from 0 to $n-1$ set
+$\delta_{i}(s, v)$ to be the length of the shortest path from $s$ to $v$ with at most
+$i$ edges.
+
+If no such path exists $\delta_{i}(s, v) = \infty$.
+
+*** Observations
+This gives $\delta_{0}(s, s) = 0$ and $\delta_{0}(s, v) = \infty$ for any other $v$.
+
+If there is no negative cycle, $\delta_{n-1}(s, v) = \delta(s, v)$ (shortest paths
+are simple).
+
+In any case, $\delta(s, v) \le \delta_{i}(s, v)$ for all $i$ and for all $v$.
+
+*** Recurrence
+$$
+\delta_{i}(s, v) = \min(\delta_{i-1}(s,v), \min_{(u, v) \in E} \delta_{i-1} (s, u) + w(u, v))
+$$
+
+** Pseudocode 1
+#+BEGIN_SRC python
+d0 = [0, inf, ..., inf]
+parent = [s, 0, ..., 0]
+for i in range(1, n-1):
+    for all v in V:
+        di[v] = d(i-1)[v]
+        for all (u,v) in E:
+            if d(i-1)[u] + w(u,v) < di[v]:
+                di[v] = d(i-1)[u] + w(u,v)
+                parent[v] = v
+#+END_SRC
+
+*** Correctness
+$d_{i}[v] = \delta_{i}(s,v)$ so $d_{n-1}[v] = \delta(s,v)$ if no negative cycles
+
+** Pseudocode 2
+*Idea*: use a single array $d$
+
+#+BEGIN_SRC python
+d = [0, inf, ..., inf]
+parent = [s, 0, ..., 0]
+for i in range(1, n-1):
+    for all (u,v) in E:
+        if d[u] + w(u,v) < d[v]:
+            d[v] = d[u] + w(u,v)
+            parent[v] = u
+#+END_SRC
+
+*Runtime*: $O(mn)$
+
+*** Correctness
+*Claim 1*: For all $i$, after iteration $i$, $d[v] \le d_{i}[v]$ for all $v$
+
+*Proof*: by induction:
+- true for $i=0$ so suppose true at index $i-1$ and prove true at $i$
+- at the beginning of the loop, for all $v$, $d[v] \le d_{i-1}[v]$
+- $d[v]$ can only decrease, so this stays true throughout the loop
+- $d[v]$ is replaced by $\min(d[v], \min_{(u,v) \in E}(x + w(u,v)))$ where
+  $x \le d_{i-1}[u]$
+- so at the end of iteration $i$, $d[v] \le d_{i}[v]$
+
+*Relaxation*: the operation $d[v] = \min(d[v], d[u] + w(u,v))$
+
+*Claim 2*: $d[v]$ can only decrease through a relaxation, and if $\delta(s,u) \le d[u]$
+and $\delta(s,v) \le d[v]$ before a relaxation, then $\delta(s,v) \le d[v]$ post-relaxation
+
+*Proof*:
+- obvious that $d[v]$ can only decrease through a relaxation
+- second item: $\delta(s,v) \le \delta(s,u) + w(u,v)$ by the triangle equality, so
+  $\delta(s,v) \le d[u] + w(u.v)$, but also $\delta(s,v) \le d[v]$
+
+*Consequence*: if all $d[v]$ satisfy $\delta(s,v) \le d[v]$ and any number of relaxations
+are applied, all inequalities stay true
+
+*Claim 3*: for $i = 0, \dots, n-1$, after iteration $i$,
+$\delta(s,v) \le d[v] \le \delta_{i}(s,v)$ for all $v$
+
+** Summary
+*** No Negative Cycle
+At the end $d[v] = \delta(s,v)$ for all $v$.
+In particular, for any edge $(u,v)$, $d[v] \le d[u] + w(u,v)$ by the triangle inequality
+
+*** Negative Cycle
+Let this negative cycle be $v_{1}, \dots, v_{k}$ where $v_{k} = v_{1}$
+
+*Claim*: There must be an edge $(v_{i}, v_{i+1})$ with
+$d[v_{i+1}] > d[v_{i}] + w(v_{i}, v_{i+1})$, otherwise $d[v_{i+1}] \le d[v_{i}] + w(v_{i}, v_{i+1})$
+for all $i$. Then, sum and derive a contradiction.
+
+For an extra $O(m)$, can check the presence of a negative cycle.
+
+* Floyd-Warshall Algorithm
+*No fixed source*: computes all distances $\delta(u,v)$
+
+Negative weights are fine, but no negative cycle.
+
+Simple pseudo-code, but slower than other algorithms.
+
+Doing Bellman-Ford from all $u$ takes $O(mn^{2})$.
+
+** Subproblems for DP
+Bellman-Ford uses paths with fixed numbers of steps.
+
+Floyd-Warshall restricts which vertices can be used.
+
+** Definition
+For $i$ from 0 to $n$, set $D_{i}(v_{j}, v_{k})$ to the length of the shortest path from
+$v_{j}$ to $v_{k}$ with all intermediate vertices in $v_{1}, \dots, v_{i}$.
+
+For $i = 0$:
+- $D_{0}(v_{j}, v_{j}) = 0$
+- $D_{0}(v_{j}, v_{k}) = w(v_{j}, v_{k})$ if there is an edge $(v_{j}, v_{k})$
+- $D_{0}(v_{j}, v_{k}) = \infty$ otherwise
+
+$D_{n}(v_{j}, v_{k}) = \delta(v_{j}, v_{k})$
+
+** Correctness
+$D_{i}(v_{j}, v_{k}) = \min(D_{i-1}(v_{j}, v_{k}), D_{i-1}(v_{j}, v_{i}) + D_{i-1}(v_{i}, v_{k}))$
+
+*Proof*: either the shortest path does not go through $v_{i}$ or it does (if so, only once)
+
+** Pseudocode
+#+BEGIN_SRC python
+FloydWarshall(G):
+    setup D0 above
+        for i in range(1, n):
+            for j in range(1, n):
+                for k in range(1, n):
+                    Di[vj, vk] = min(D(i-1)[vj, vk], D(i-1)[vj, vi] + D(i-1)[vi, vk])
+#+END_SRC
+
+*Runtime and memory*: $\Theta(n^{3})$

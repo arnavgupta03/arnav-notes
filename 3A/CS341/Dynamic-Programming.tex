@@ -1,0 +1,156 @@
+% Created 2024-04-09 Tue 17:53
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Dynamic Programming}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Dynamic Programming},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Dynamic Programming}
+\label{sec:orgea90bc9}
+\subsection{Recipe}
+\label{sec:orgaaa312a}
+\subsubsection{Identify the Subproblem}
+\label{sec:orgce1ada6}
+Typically the computation of solutions of the subproblems will make it natural to retain the
+solutions in an array:
+\begin{itemize}
+\item must know dimensions of the array
+\item specify the precise meaning of the value in any cell of the array
+\item specify where the answer will be found in the array
+\end{itemize}
+\subsubsection{Establish DP-recurrence}
+\label{sec:org3462501}
+Specify how a subproblem contributes to the solution of a larger subproblem.
+
+How the value in a cell of the array depends on the values of other cells in the array.
+\subsubsection{Set Values for the Base Case}
+\label{sec:org470c63e}
+Define the base values for the DP-recurrence.
+\subsubsection{Specify the Order of Computation}
+\label{sec:org846115c}
+The algorithm must state the order of computation for the cells.
+\subsubsection{Recovery of the Solution}
+\label{sec:org70d5907}
+Keep track of the subproblems that provided the best solutions.
+Use a traceback strategy to determine the full solution.
+\subsection{Key Features}
+\label{sec:orgbaed5d4}
+\begin{itemize}
+\item solve problems through recursion
+\item use a small (polynomial) number of nested subproblems
+\item may have to store results for all subproblems
+\item can often be turned into 1+ loops
+\end{itemize}
+\subsection{DP vs Divide-and-Conquer}
+\label{sec:org560efae}
+\begin{itemize}
+\item dynamic programming usually deals with all input sizes from 1 to \(n\)
+\item divide-and-conquer may not solve subproblems
+\item divide-and-conquer algorithms not easy to rewrite iteratively
+\end{itemize}
+\section{Interval Scheduling}
+\label{sec:org79253aa}
+\textbf{Input}: \(n\) intervals of form \(I_{i} = [s_{i}, f_{i}]\), each interval has weight \(w_{i}\)
+
+\textbf{Output}: a choice \(T\) of intervals that do not overlap and maximizes total weight
+
+Greedy algorithm works in the case where all weights are 1.
+\subsection{Sketch of the Algorithm}
+\label{sec:orgb3f9f8d}
+\textbf{Basic Idea}: choose \(I_{n}\) or not, then choose the max of
+\begin{itemize}
+\item \(w_{n} + O(I_{m1}, \dots, I_{ms})\) if we choose \(I_{n}\) where
+\(I_{m1}, \dots, I_{ms}\) are the intervals that do not overlap with \(I_{n}\)
+\item \(O(I_{1}, \dots, I_{n-1})\) if we don't choose \(I_{n}\)
+\end{itemize}
+
+\textbf{Goal}:
+\begin{itemize}
+\item find a way to ensure that \(I_{m1}, \dots, I_{ms}\) are of the form \(I_{1}, \dots, I_{s}\) for some
+\(s < n\)
+\item it then suffices to optimize over all \(I_{1}, \dots, I_{j}\) where \(1 \le j \le n\)
+\end{itemize}
+
+Assume \(I_{1}, \dots, I_{n}\) sorted by increasing end time: \(f_{i} \le f_{i + 1}\).
+
+\textbf{Claim}: for all \(j\), the set of \(I_{k} \le I_{j}\) that do not overlap \(I_{j}\) is of the form
+\(I_{1}, \dots, I_{p_{j}}\) for some \(0 \le p_{j} \le j\) where \(p_{j} = 0\) if no such interval exists
+
+The algorithm needs all \(p_{i}\), and this can be found by comparing with finish times.
+\subsection{Finding pj's}
+\label{sec:org4e59da7}
+Let \(A\) be a permutation of \([1, ..., n]\) such that
+\(s_{A[1]} \le s_{A[2]} \le \cdots \le s_{A[n]}\).
+\begin{verbatim}
+FindPj(A, s1, ..., sn, f1, ..., fn):
+  f0 = -infinity
+  i = 1
+  for k in range(0, n):
+      while i <= n and fk <= s[A[i]] < f[k+1]:
+          pi = k
+          i++
+\end{verbatim}
+\textbf{Runtime}: \(O(n\log(n))\) for sorting and \(O(n)\) for loops
+\subsection{Main Procedure}
+\label{sec:orgfd04204}
+\textbf{Definition}: M[i] is the maximal weight to get with \(I_{1}, \dots, I_{i}\)
+
+\textbf{Recurrence}: M[0] = 0 and for \(i \ge 1\), \(M[i] = \text{max}(M[i-1], M[pi] + wi)\)
+
+\textbf{Runtime}: \(O(n\log(n))\) for sorting twice and \(O(n)\) for finding all \(M[i]\)
+\section{0/1 Knapsack Problem}
+\label{sec:org3c5454d}
+\textbf{Input}: items from 1 to \(n\) with weights \(w_{i}\) and values \(v_{i}\), along with a capacity \(W\)
+
+\textbf{Output}: a subset of the items \(S\) that has total weight less than \(W\) and maximizes total value
+
+\textbf{Basic idea}: either choose item \(n\) or not, then the optimum is the max of:
+\begin{itemize}
+\item \(v_{n} + O[W - w_{n}, n - 1]\) if we choose \(n\)
+\item \(O[W, n-1]\) if we don't choose \(n\)
+\end{itemize}
+
+\textbf{Initial conditions}: \(O[0, i] = 0\) for any \(i\) and \(O[w, 0] = 0\) for any \(w\)
+
+\begin{verbatim}
+01KnapSack(v1, ..., vn, w1, ..., wn, W):
+  initialize an array O[0..n, 0..W] with O(0, j) = 0 and O(w, 0) = 0
+  for i in range(1, n):
+      for w in range(1, W):
+          if wi > w:
+              O[w, i] = O[w, i-1]
+          else:
+              O[w, i] = max(vi + O[w - wi, i-1], O[w, i - 1])
+\end{verbatim}
+\textbf{Runtime}: \(\Theta(nW)\) which is pseudo-polynomial
+\subsection{Pseudo-Polynomial Algorithms}
+\label{sec:org7b0f5a1}
+In our word RAM model, we assume all \(v_{i}\) and \(w_{i}\) fit in a word,
+so the input size is \(\Theta(n)\) words, but the runtime also depends on the values of the inputs.
+
+01-knapsack is NP-complete.
+\end{document}

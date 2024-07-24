@@ -1,0 +1,179 @@
+% Created 2024-04-05 Fri 11:43
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Data Slice Testing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Data Slice Testing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Data Slices}
+\label{sec:orgd21991d}
+\subsection{Motivation}
+\label{sec:orgffdb37e}
+Argued that testing a class aims at finding the sequence of operations
+for which a class will be in a state or has produced output that is
+contradictory to its expected results.
+
+Testing classes for all possible sequences is not usually possible,
+so necessary to reduce the number of sequences and still provide
+sufficient confidence.
+
+Can have state-dependent faults: executing some operations is not
+possible in certain states where they are legal
+\subsection{Principles}
+\label{sec:org13426cd}
+Goal: reduce the number of method sequences to test
+
+The concrete state of an object at a single instant of time is
+equivalent to the aggregated state of each of its data members at that
+instant.
+
+Correctness of a class depends on:
+\begin{itemize}
+\item whether the data members are correctly representing the intended
+state of an object
+\item whether the member function are correctly manipulating the
+representation of the object
+\end{itemize}
+\subsection{Approach}
+\label{sec:org2618d27}
+Data slice: portion of a class with only a single data member and
+a set of member functions such that each member function can
+manipulate the values associated with this data member.
+
+Test one slice at a time, and for each slice, test possible sequences
+of the methods belonging to that slice.
+
+Code-based approach so potential problems if code is faulty
+or with identifying legal sequences of methods.
+\subsection{Generate MaDUM}
+\label{sec:orgcc06cb6}
+Minimal Data Member Usage Matrix: \(n \times m\) matrix where \(n\) is
+the number of member methods, reports on the usage of data
+members by methods
+
+Different usage categories are constructors, reporters (read only),
+transformers, others.
+
+Can create call graph from matrix and identify redundancy where all
+branches of data member usage.
+
+Matrix accounts for indirect use, through called methods.
+\subsection{Test Procedure}
+\label{sec:orgda9ab09}
+Classification of methods is used to decide the test steps to
+be taken:
+\begin{enumerate}
+\item test reporters
+\item test constructors
+\item test transformers
+\item test others
+\end{enumerate}
+\subsubsection{Test Reporters}
+\label{sec:orge64fc62}
+Test by:
+\begin{enumerate}
+\item Make sure the reporter method does not alter the state of the
+data member that it reports on
+\item Create a random sequence of operations except for reporters
+of the data slice under test and append it with the
+reporter method
+\end{enumerate}
+\subsubsection{Test Constructors}
+\label{sec:org603293c}
+Test that
+\begin{itemize}
+\item All data members are correctly initialized
+\item All data members are initialized in correct order
+\end{itemize}
+
+Test by:
+\begin{enumerate}
+\item Run the constructor and append the reporter methods for
+each data member
+\item Verify if in correct initial state (state invariant)
+\end{enumerate}
+\subsubsection{Test Transformers}
+\label{sec:org9385b65}
+Test interactions between methods.
+
+For each data slice:
+\begin{enumerate}
+\item Instantiate object under test with constructor (already tested)
+\item Create sequences
+\item Append the reporter methods (already tested)
+\end{enumerate}
+
+For each member function, execute all control flow paths where
+data slice is manipulated.
+\subsubsection{Test Others}
+\label{sec:org51e886a}
+Do not change the state, do not report any data member,
+so should be tested as any other functions.
+\subsection{Discussion}
+\label{sec:orga58745a}
+Slicing may not be helpful for some classes.
+Too many sequences or impossible sequences are potential problems.
+\section{Testing Derived Classes}
+\label{sec:org0def790}
+Derived classes may add facilities or modify the ones provided by the
+base class.
+
+Two extreme options for testing a derived class:
+\begin{itemize}
+\item flatten the derived class and retest all slices of the base class
+in the new context
+\item only test the new/redefined slices of derived class
+\end{itemize}
+\subsection{Bashir and Goel's Strategy}
+\label{sec:orge452332}
+Extend the MaDUM of the base class to generate MaDUM for the derived
+class:
+\begin{itemize}
+\item take the MaDUM of the base class
+\item add a row for each newly defined or re-defined data member of the
+derived class
+\item add a column for each newly defined of re-defined member
+function of the derived class
+\end{itemize}
+\subsection{Procedure}
+\label{sec:org57821a6}
+\textbf{Local attributes}: similar to base class testing
+
+\textbf{Retest inherited attributes}:
+\begin{itemize}
+\item if they are directly or indirectly accessed by a new or
+re-defined method of the derived class
+\item check the upper right quadrant of the derived MaDUM
+\item check which interited attributes mandate retesting
+\item once these inherited attributes are identified, the test procedure is
+similar to slice testing in the base class but uses inherited and
+redefined methods
+\end{itemize}
+
+An inherited data member needs to be retested if the number of entries
+in its MaDUM row has increased between the base and derived MaDUMs.
+\end{document}

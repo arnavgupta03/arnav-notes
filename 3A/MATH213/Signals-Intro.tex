@@ -1,0 +1,72 @@
+% Created 2024-03-30 Sat 02:54
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Signals Intro}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Signals Intro},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Bode Plots}
+\label{sec:orge6d95e7}
+Bode plots show how a system responds to input signals of the form \(\sin(\omega t)\).
+Can be used to quickly tell what type of filtering/amplifying the LTI does to the sine
+wave.
+
+A low pass filter is an LTI that removes the high frequency waves, by reducing the
+amplitude of all waves with a frequency larger than some cutoff \(\omega\).
+All stable systems with a single pole and no zeroes are low pass filters.
+
+For a high pass filter, the amplitude curve must go to 0dB at some cutoff point.
+The standard high pass filter transfer function is
+$$
+T(s) = \frac{as}{s + \omega_{0}}
+$$
+for \(a, \omega_{0} > 0\).
+
+For a medium band filter, add another pole later
+$$
+T(s) = \frac{as}{(s+\omega_{0})(s+\omega_{1})}
+$$
+for \(a, \omega_{0}, \omega_{1} > 0\).
+\section{Fourier Series}
+\label{sec:org7454600}
+Fourier series are useful for working with systems and signals.
+
+\textbf{Taylor's Theorem}: let \(k \ge 1\) be an integer and let \(f\) be a real valued function
+that is differentiable at least \(k\) times at some point \(a \in \mathbb{R}\), there then
+exists a real valued function \(h_{k}\) such that
+$$
+f(x) = \left( \sum_{i=0}^{k} \frac{f^{(i)}(a)}{i!} (x-a)^{i} \right) + h_{k}(x) (x-a)^{k+1}
+$$
+and \(\lim_{x \to a} h_{k}(x) = 0\).
+
+For infinitely differential functions \(f\), this becomes
+$$
+f(x) = \sum_{i=0}^{\infty} \frac{f^{(i)}(a)}{i!} (x-a)^{i}
+$$
+
+Similar to how the polynomials are used here, sinusoidals can be used as a basis instead.
+\end{document}

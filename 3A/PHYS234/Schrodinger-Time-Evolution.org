@@ -1,0 +1,85 @@
+#+title: Schrödinger Time Evolution
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Schrödinger Equation
+*Postulate 6*: the time evolution of a quantum system is determined by the Hamiltonian or total energy
+operator $H(t)$ through the Schrödinger equation
+$$
+i\hslash \frac{d}{dt} \ket{\psi(t)} = H(t) \ket{\psi(t)}
+$$
+
+The Hamiltonian is an observable so it is a Hermetian operator.
+The energy eigenvalue equation is
+$$
+H \ket{E_{n}} = E_{n} \ket{E_{n}}
+$$
+
+The basis of eigenvectors of the Hamiltonian is the *energy basis*.
+
+If the initial state of the system at time 0 is
+$$
+\ket{\psi(0)} = \sum_{n} c_{n} \ket{E_{n}}
+$$
+then the time evolution of this state under the action of the time-independent Hamiltonian $H$
+is
+$$
+\ket{\psi(t)} = \sum_{n} c_{n} e^{-iE_{n} t/\hslash} \ket{E_{n}}
+$$
+
+For an observable $A$ whose eigenstates consist of superpositions of energy eigenstates,
+where $\ket{a_{1}} = \alpha_{1} \ket{E_{1}} + \alpha_{2} \ket{E_{2}}$.
+Then for $\ket{psi(0)} = c_{1}\ket{E_{1}} + c_{2} \ket{E_{2}}$,
+$$
+P_{a_{1}} = |\alpha_{1}|^{2} |c_{1}|^{2} + |\alpha_{2}|^{2} |c_{2}|^{2}
++ 2\text{Re}\left( \alpha_{1} c_{1}^{\*} \alpha_{2}^{\*} c_{2} e^{-i(E_{2} - E_{1})t/\hslash} \right)
+$$
+and so the probabilities are time dependent, which is determined by the difference of the energies
+of the 2 states involved in the superposition.
+The corresponding angular frequency of the time evolution
+$$
+\omega_{21} = \frac{E_{2} - E_{1}}{\hslash}
+$$
+is the *Bohr frequency*.
+
+** Recipe for Solving Time-Dependent Quantum Mechanics
+Given a Hamiltonian $H$ and an initial state $\ket{\psi(0)}$, find the probability that
+the eigenvalue $a_{j}$ of the observable $A$ is measured at time $t$.
+1. Diagonalize $H$ to find the eigenvalues and eigenvectors for the energies.
+2. Write $\ket{\psi(0)}$ in terms of the energy eigenstates $\ket{E_{n}}$.
+3. Multiply each eigenstate coefficient by $e^{-iE_{n}t/\hslash}$ to get $\ket{\psi(t)}$.
+4. Calculate the probability $P_{a_{j}} = \left| \braket{a_{j} \mid \psi(t)} \right|^{2}$.
+
+* Spin Precession
+For the magnetic dipole
+$$
+\mu = g \frac{q}{2m_{e}} S
+$$
+the Hamiltonian is
+$$
+H = -g \frac{q}{2m_{e}} S \cdot B
+$$
+
+** Magnetic Field in the z-Direction
+If $B = B_{0} \hat{z}$, then $H = \omega_{0} S_{z}$
+for $\omega_{0} = -g\frac{q}{2m_{e}} B_{0}$.
+
+*Spin precession*: where probabilities change for certain spins since the Hamiltonian
+is defined for other spins
+
+*Larmor precession*: the precession of the spin vector
+
+*Larmor frequency*: the frequency of precession
+
+*Ehrenfest's Theorem*: quantum mechanical expectation values obey classical laws
+
+** Magnetic Field in a General Direction
+*Spin flip*: where a state flips to the orthogonal state
+
+The probability of a spin flip is
+$$
+P_{+ \to -} = \frac{\omega_{1}^{2}}{\omega_{0}^{2} + \omega_{1}^{2}}
+\sin^{2} \left( \frac{\sqrt{\omega_{0}^{2} + \omega_{1}^{2}}}{2} t \right)
+$$
+which is Rabi's formula.

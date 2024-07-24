@@ -1,0 +1,196 @@
+% Created 2024-04-09 Tue 17:48
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Greedy Algorithms}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Greedy Algorithms},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Overview}
+\label{sec:org16d4f40}
+For trying to solve a combinatorial optimization problem:
+\begin{itemize}
+\item have a large, but finite domain \(\mathcal{D}\)
+\item want to find an element \(E\) in \(\mathcal{D}\) that
+minimizes/maximizes a cost function
+\end{itemize}
+\subsection{Strategy}
+\label{sec:orgb0f3a75}
+\begin{itemize}
+\item build \(E\) step by step
+\item don't think ahead, just try to improve as much as
+possible at every step
+\item simple algorithms, but usually no guarantee to get
+the optimal
+\item hard to prove correctness, easy to prove incorrectness
+\end{itemize}
+\section{Interval Scheduling}
+\label{sec:orga0a2650}
+\subsection{Problem}
+\label{sec:orga98461a}
+\begin{itemize}
+\item input: \(n\) intervals \([s_{1}, f_{1}], [s_{2}, f_{2}], \dots, [s_{n}, f_{n}]\)
+\item output: a maximal subset of disjoint intervals
+\end{itemize}
+\subsection{Algorithm}
+\label{sec:org28a5c04}
+\begin{enumerate}
+\item Let \(S\) be the empty set
+\item Sort the intervals such that \(f_{1} \le f_{2} \le \cdots \le f_{n}\)
+\item For \(i\) from \(1\) to \(n\) do
+\begin{enumerate}
+\item if interval \(i\), \([s_{i}, f_{i}]\) has no conflicts with
+intervals in \(S\)
+\begin{enumerate}
+\item add \(i\) to \(S\)
+\end{enumerate}
+\end{enumerate}
+\item Return \(S\)
+\end{enumerate}
+\subsection{Correctness}
+\label{sec:orge3c4610}
+\subsubsection{The Greedy Algorithm Stays Ahead}
+\label{sec:orgef4100f}
+Assume \(O\) is an optimal solution, the goal is to show \(|S| = |O|\).
+
+\begin{itemize}
+\item Suppose \(i_{1}, i_{2}, \dots, i_{k}\) are the intervals in \(S\) in the
+order they were added to \(S\) by the greedy algorithm
+\item Similarly, the intervals in \(O\) are denoted by \(j_{1}, \dots, j_{m}\)
+\begin{itemize}
+\item assume that the intervals in \(O\) are ordered in the order of the
+start and finish times
+\end{itemize}
+\item Prove that \(k = m\)
+\end{itemize}
+\subsubsection{Lemma}
+\label{sec:org58c001b}
+First consider the lemma:
+For all indices \(r \le k\) we have \(f(i_{r}) \le f(j_{r})\).
+
+By induction:
+\begin{itemize}
+\item for \(r = 1\), the statement is true
+\item suppose \(r > 1\) and the statement is true for \(r - 1\)
+\begin{itemize}
+\item we show that the statement is true for \(r\)
+\end{itemize}
+\item by induction hypothesis, \(f(i_{r-1}) \le f(j_{r-1})\)
+\item by the order on \(O\), \(f(j_{r-1}) < s(j_{r})\)
+\item hence \(f(i_{r-1}) < s(j_{r})\)
+\item thus, at the time the greedy algorithm chose \(i_{r}\),
+the interval \(j_{r}\) was a possible choice
+\item the greedy algorithm chooses an interval with the smallest finish time
+\begin{itemize}
+\item so \(f(i_{r}) \le f(j_{r})\)
+\end{itemize}
+\end{itemize}
+\subsubsection{Proof}
+\label{sec:org691bd48}
+Theorem: The greedy algorithm returns an optimal solution
+
+Prove by contradiction:
+\begin{itemize}
+\item if the output \(S\) is not optimal, then \(|S| < |O|\)
+\item \(i_{k}\) is the last interval in \(S\) and \(O\) must have
+an interval \(j_{k+1}\)
+\item apply the previous lemma with \(r = k\) and we get \(f(i_{k}) \le f(j_{k})\)
+\item we have \(f(i_{k}) \le f(j_{k}) < s(j_{k+1})\)
+\item so \(j_{k+1}\) was a possible choice to add to \(S\) by the greedy algorithm
+\begin{itemize}
+\item this is a contradiction by how the greedy algorithm works
+\end{itemize}
+\end{itemize}
+\section{Interval Colouring}
+\label{sec:orge28b06d}
+\subsection{Problem}
+\label{sec:org44f9dcb}
+\begin{itemize}
+\item input: \(n\) intervals \([s_{1}, f_{1}], [s_{2}, f_{2}], \dots, [s_{n}, f_{n}]\)
+\item output: use the minimum number of colours to colour the intervals
+so that each interval gets one colour and two overlapping intervals get two
+different colours
+\end{itemize}
+\subsection{Algorithm}
+\label{sec:org0755402}
+\begin{enumerate}
+\item Sort the intervals by starting time: \(s_{1} \le s_{2} \le \cdots \le s_{n}\)
+\item For \(i\) from 1 to \(n\) do
+\begin{enumerate}
+\item use the minimum available colour \(c_{i}\) to colour the interval \(i\)
+(one that doesn't conflict with the colours of intervals already coloured)
+\end{enumerate}
+\end{enumerate}
+\subsection{Correctness}
+\label{sec:org7290112}
+Assume the greedy algorithm uses \(k\) colours.
+To prove correctness, the goal is to show that there are no other ways to solve
+the problem using at most \(k-1\) colours.
+\subsubsection{Proof}
+\label{sec:orgb4ddd45}
+Suppose interval \(\ell\) is the first interval to use the colour \(k\):
+\begin{itemize}
+\item interval \(\ell\) overlaps with intervals with colours \(1, \dots, k - 1\)
+\item call these intervals
+\([s_{i_{1}}, f_{i_{1}}], [s_{i_{2}}, f_{i_{2}}], \dots, [s_{i_{k-1}}, f_{i_{k-1}}]\)
+\item for \(1 \le j \le k-1\), \(s_{i_{j}} \le s_{\ell}\)
+\item all the intervals overlap with \([s_{\ell}, f_{\ell}]\)
+\item since all these intervals overlap with \([s_{\ell}, f_{\ell}]\),
+\(s_{\ell} \le f_{i_{j}}\) for \(1 \le j \le k-1\)
+\item hence \(s_{\ell}\) is a time contained in \(k\) intervals
+\item so, there is no \(k-1\) colouring
+\end{itemize}
+\section{Minimizing Total Completion Time}
+\label{sec:orgbadfc34}
+\subsection{Problem}
+\label{sec:org5819e10}
+\begin{itemize}
+\item input: \(n\) jobs, each requiring processing time \(p_{i}\)
+\item output: an ordering of the jobs such that the total completion time is minimized
+\end{itemize}
+\subsection{Algorithm}
+\label{sec:orgbba33aa}
+\begin{itemize}
+\item order the jobs in non-decreasing processing times
+\end{itemize}
+\subsection{Correctness}
+\label{sec:orge0ad702}
+\begin{itemize}
+\item let \(L = [e_{1}, \dots, e_{n}]\) be an optimal solution (as a permutation of
+\([1, \dots, n]\))
+\item suppose that \(L\) is not in non-decreasing order of processing times
+\begin{itemize}
+\item so there exists \(i\) such that \(t(e_{i}) > t(e_{i+1})\)
+\end{itemize}
+\item sum of the completion times of \(L\) is \(nt(e_{1}) + (n-1) t(e_{2}) + \cdots + t(e_{n})\)
+\item contribution of \(e_{i}\) and \(e_{i+1}\) is
+\((n-i+1)t(e_{i}) + (n-i)t(e_{i+1})\)
+\item let \(L'\) be the permutation with \(e_{i}\) and \(e_{i+1}\) switched
+\item their contribution becomes \((n-i+1)t(e_{i+1}) + (n-i)t(e_{i})\)
+\item nothing else changes so \(T(L') - T(L) = t(e_{i+1}) - t(e_{i}) < 0\)
+which is a \textbf{contradiction}
+\end{itemize}
+\end{document}

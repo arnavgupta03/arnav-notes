@@ -1,0 +1,114 @@
+#+title: Dynamic Programming
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Dynamic Programming
+** Recipe
+*** Identify the Subproblem
+Typically the computation of solutions of the subproblems will make it natural to retain the
+solutions in an array:
+- must know dimensions of the array
+- specify the precise meaning of the value in any cell of the array
+- specify where the answer will be found in the array
+
+*** Establish DP-recurrence
+Specify how a subproblem contributes to the solution of a larger subproblem.
+
+How the value in a cell of the array depends on the values of other cells in the array.
+
+*** Set Values for the Base Case
+Define the base values for the DP-recurrence.
+
+*** Specify the Order of Computation
+The algorithm must state the order of computation for the cells.
+
+*** Recovery of the Solution
+Keep track of the subproblems that provided the best solutions.
+Use a traceback strategy to determine the full solution.
+
+** Key Features
+- solve problems through recursion
+- use a small (polynomial) number of nested subproblems
+- may have to store results for all subproblems
+- can often be turned into 1+ loops
+
+** DP vs Divide-and-Conquer
+- dynamic programming usually deals with all input sizes from 1 to $n$
+- divide-and-conquer may not solve subproblems
+- divide-and-conquer algorithms not easy to rewrite iteratively
+
+* Interval Scheduling
+*Input*: $n$ intervals of form $I_{i} = [s_{i}, f_{i}]$, each interval has weight $w_{i}$
+
+*Output*: a choice $T$ of intervals that do not overlap and maximizes total weight
+
+Greedy algorithm works in the case where all weights are 1.
+
+** Sketch of the Algorithm
+*Basic Idea*: choose $I_{n}$ or not, then choose the max of
+- $w_{n} + O(I_{m1}, \dots, I_{ms})$ if we choose $I_{n}$ where
+  $I_{m1}, \dots, I_{ms}$ are the intervals that do not overlap with $I_{n}$
+- $O(I_{1}, \dots, I_{n-1})$ if we don't choose $I_{n}$
+
+*Goal*:
+- find a way to ensure that $I_{m1}, \dots, I_{ms}$ are of the form $I_{1}, \dots, I_{s}$ for some
+  $s < n$
+- it then suffices to optimize over all $I_{1}, \dots, I_{j}$ where $1 \le j \le n$
+
+Assume $I_{1}, \dots, I_{n}$ sorted by increasing end time: $f_{i} \le f_{i + 1}$.
+
+*Claim*: for all $j$, the set of $I_{k} \le I_{j}$ that do not overlap $I_{j}$ is of the form
+$I_{1}, \dots, I_{p_{j}}$ for some $0 \le p_{j} \le j$ where $p_{j} = 0$ if no such interval exists
+
+The algorithm needs all $p_{i}$, and this can be found by comparing with finish times.
+
+** Finding pj's
+Let $A$ be a permutation of $[1, ..., n]$ such that
+$s_{A[1]} \le s_{A[2]} \le \cdots \le s_{A[n]}$.
+#+begin_src python
+FindPj(A, s1, ..., sn, f1, ..., fn):
+  f0 = -infinity
+  i = 1
+  for k in range(0, n):
+      while i <= n and fk <= s[A[i]] < f[k+1]:
+          pi = k
+          i++
+#+end_src
+*Runtime*: $O(n\log(n))$ for sorting and $O(n)$ for loops
+
+** Main Procedure
+*Definition*: M[i] is the maximal weight to get with $I_{1}, \dots, I_{i}$
+
+*Recurrence*: M[0] = 0 and for $i \ge 1$, $M[i] = \text{max}(M[i-1], M[pi] + wi)$
+
+*Runtime*: $O(n\log(n))$ for sorting twice and $O(n)$ for finding all $M[i]$
+
+* 0/1 Knapsack Problem
+*Input*: items from 1 to $n$ with weights $w_{i}$ and values $v_{i}$, along with a capacity $W$
+
+*Output*: a subset of the items $S$ that has total weight less than $W$ and maximizes total value
+
+*Basic idea*: either choose item $n$ or not, then the optimum is the max of:
+- $v_{n} + O[W - w_{n}, n - 1]$ if we choose $n$
+- $O[W, n-1]$ if we don't choose $n$
+
+*Initial conditions*: $O[0, i] = 0$ for any $i$ and $O[w, 0] = 0$ for any $w$
+
+#+begin_src python
+01KnapSack(v1, ..., vn, w1, ..., wn, W):
+  initialize an array O[0..n, 0..W] with O(0, j) = 0 and O(w, 0) = 0
+  for i in range(1, n):
+      for w in range(1, W):
+          if wi > w:
+              O[w, i] = O[w, i-1]
+          else:
+              O[w, i] = max(vi + O[w - wi, i-1], O[w, i - 1])
+#+end_src
+*Runtime*: $\Theta(nW)$ which is pseudo-polynomial
+
+** Pseudo-Polynomial Algorithms
+In our word RAM model, we assume all $v_{i}$ and $w_{i}$ fit in a word,
+so the input size is $\Theta(n)$ words, but the runtime also depends on the values of the inputs.
+
+01-knapsack is NP-complete.

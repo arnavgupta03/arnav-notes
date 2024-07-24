@@ -1,0 +1,167 @@
+% Created 2024-04-18 Thu 12:32
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Text}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Text},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Character Sets}
+\label{sec:org83d2e72}
+Text means a series of \emph{characters} (alpha, digit, whitespace, special).
+Sets of characters form a \emph{writing system}, which need standardized encodings in binary.
+\subsection{ASCII}
+\label{sec:orgaf6e437}
+American Standard Code for Information Interchange
+was originally created as 7-bit encoding that was later expanded to 8-bits for total 256 characters.
+
+Has 52 Latin characters, 10 digits, common symbols, and control characters.
+
+American standard from 1968 onwards.
+
+Extended 128 characters had no agreed upon encoding, so there are 15 ISO standard \emph{code pages}
+for different encodings. This assumes using the correct code page to exchange international text.
+\subsection{Unicode}
+\label{sec:org7fbffb3}
+A superset of ASCII that can hold up to 1,114,112 characters, but only encodes 110,000 characters
+so far.
+Allows every character in every language to have a unique encoding, so it has replaced ASCII in
+common usage.
+
+Structure is:
+\begin{itemize}
+\item 0 to 127 have same meaning as ASCII
+\item 128 to 256 are common signs and accented characters
+\item after 256, more accented characters
+\item after 800, Greek alphabet, then Cyrillic and more
+\end{itemize}
+
+Character codes are written as U+ and then a 4-digit hexadecimal,
+so Unicode encoding needs more than 1 byte (implementation not defined).
+\subsection{UTF-8}
+\label{sec:orgadddb29}
+Universal Character Set Transformation Format 8 bit uses a multi-byte variable width encoding.
+
+Internally, browsers use 4 byte wide characters, but in sending/receiving/storing text, this bloats
+storage and does not work with software that sends or receives in 1-byte units.
+
+First byte contains info on how many bytes to expect, where 0 means only this one, 110 means 2 total,
+1110 means 3 total, 11110 means 4 total.
+Other bytes in a character start with 10 which identifies a continuation byte.
+\section{Internationalization (i18n)}
+\label{sec:org56d6c4a}
+Designing and developing software so it can be adapted to different cultures and languages:
+\begin{itemize}
+\item use i18n features like Unicode chars and bidirectional text
+\item support locale formats for numbers, currency, date, time, etc.
+\item plan for regional differences in storing info
+\item separate localization elements from source code and cotent
+\end{itemize}
+
+\textbf{Localization} (l10n) is the act of implementing i18n.
+\textbf{Locale} means the region and language (ex. en\textsubscript{CA} or fr\textsubscript{CA}).
+
+For localization:
+\begin{enumerate}
+\item use HTML data attribute to identify i18n text elements with
+\texttt{<label data-i18n="label-name"...}
+\item create JSON translation data structures
+\item use preferred browser locale: \texttt{navigator.language}
+\item add a locale switcher (recommended)
+\end{enumerate}
+\section{Validation}
+\label{sec:org810e57e}
+Interfaces often need to validate text input typed by the user (required fields, format, ranges,
+uniqueness).
+
+Form validation reasons:
+\begin{enumerate}
+\item system need correct data in the right format since the model expects certain data types or logic
+doesn't work
+\item guides users (ex. secure passwords)
+\item protects the system from attacks through unprotected text submission (ex. SQL injection)
+\end{enumerate}
+
+Guidelines:
+\begin{itemize}
+\item place error messages near fields
+\item use colour to differentiate errors from normal field states
+\item when possible, accept data formatted in different ways
+\item when possible, filter invalid characters from being entered
+\item when possible, validate a field before input is complete
+\end{itemize}
+
+HTML form uses:
+\begin{itemize}
+\item \texttt{<form>} to group different input widgets together
+\item \texttt{<label>} with for attribute and \texttt{<input>} with corresponding id attribute
+\item use placeholder attribute to display an example value (or as a compact label)
+\end{itemize}
+
+Built-in HTML validation:
+\begin{itemize}
+\item use specific \texttt{type} attributes such as number or email
+\item use attributes for validation such as required, minlength/maxlength, min/max, pattern
+\item use CSS pseudo-class selectors for validation feedback such as :required or :invalid
+\end{itemize}
+\subsection{Regular Expressions}
+\label{sec:orgc4b729f}
+A sequence of characters that specifies a search pattern in text:
+\begin{itemize}
+\item from language theory and theoretical CS
+\item a regex pattern describes a deterministic finite automaton (DFA)
+\end{itemize}
+
+Used in form validation to test if string is in correct format.
+\subsection{Constraint Validation API}
+\label{sec:org721a3bd}
+Only available on some widgets like button, input, and select.
+
+Using \texttt{novalidate} attribute in the form turns off standard validation messages.
+
+API properties and methods are \texttt{validity} and \texttt{checkValidity()}.
+\subsection{Custom Validation}
+\label{sec:orgac0e37f}
+For custom input widgets, must write a custom validator:
+\begin{itemize}
+\item create classes for invalid, etc.
+\item listen to input event for custom widget
+\item test against conditions (like regex)
+\end{itemize}
+\subsection{Input Formatting and Masking}
+\label{sec:orgcb34ce6}
+Form text formatted as it is typed.
+
+\textbf{Input formatting} updates the string in textfield as the user types, so the input event listener
+rewrites the textfield with standard formatting.
+
+\textbf{Input masking} provides a graphical representation of the final format and fills it in as the
+user types:
+\begin{itemize}
+\item input event listener rewrites textfield with standard formatting and placeholders
+\item can use more elaborate formatting with custom element
+\end{itemize}
+\end{document}

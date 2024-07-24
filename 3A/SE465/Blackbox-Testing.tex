@@ -1,0 +1,334 @@
+% Created 2024-04-05 Fri 11:44
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Blackbox Testing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Blackbox Testing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Blackbox Testing}
+\label{sec:org90884de}
+Testing without having insight into code, based on a system's specification rather
+than structure. Can have notion of coverage applied.
+
+Rigorous specifications help functional testing, test case generation, and test
+oracles.
+
+Advantages:
+\begin{itemize}
+\item no need for source code
+\item wide applicability
+\end{itemize}
+
+Disadvantages:
+\begin{itemize}
+\item does not test hidden functions
+\end{itemize}
+\subsection{Error Guessing}
+\label{sec:orgd3cb772}
+Ad-hoc approach based on experience, developing and maintaning own error models.
+
+Approach:
+\begin{enumerate}
+\item Make list of possible errors or error-prone situations
+\item Yields an error model
+\item Design test cases to cover error model
+\end{enumerate}
+\subsection{Test Case Derivation from Functional Requirements}
+\label{sec:orgbed97da}
+Involves clarification and restatement of the requirements such that requirements
+are testable. Requires point form formulation that enumerates single requirements
+and groups related requirements.
+
+For each requirement, provide
+\begin{itemize}
+\item one test case showing requirement functioning
+\item one test case trying to falsify something
+\item test boundaries and constraints when possible
+\end{itemize}
+\subsection{Test Case Derivation from Use Cases}
+\label{sec:orge893991}
+For each use case:
+\begin{enumerate}
+\item develop a scenario graph
+\item determine all possible scenarios
+\item analyze and rank scenarios
+\item generate test cases from scenarios to meet coverage goal
+\item execute test cases
+\end{enumerate}
+
+Scenario graphs are generated from a use case:
+\begin{itemize}
+\item a node corresponds to a point where we wait for the next event to occur
+\item one starting node, end of use case is finish node
+\item edge corresponds to event occurrence
+\item full scenario is a path from start to finish
+\end{itemize}
+
+If too many scenarios, rank based on criticality and frequency, always
+including main scenario, then generate test cases.
+\section{Equivalence Partitioning}
+\label{sec:orgec99514}
+Motivation: want a sense of complete functional testing and hope to avoid
+redundancy
+
+\textbf{Equivalence classes (ECs)}: a partition of the input set according to
+specification
+\begin{itemize}
+\item entire set is covered: completeness
+\item disjoint classes: avoid redundancy
+\end{itemize}
+
+ECs must be chosen wisely using heuristics.
+
+\textbf{Weak equivalence class testing (WECT)}:
+choose one variable value from each equivalence class
+
+\textbf{Strong equivalence class testing (SECT)}:
+based on Cartesian product of partition subsets
+
+If error conditions are a high priority, should extend SECT to include
+both valid and invalid inputs.
+Equivalence partitioning is appropriate when input data is defined in
+terms of range and sets of discrete values.
+SECT makes the assumption that the variables are independent.
+Heuristics are required in the case of too many test cases.
+
+Advantages of Equivalence Partitioning:
+\begin{itemize}
+\item small number of test cases needed
+\item probability of uncovering defects with the selected test cases higher than that
+with a randomly chosen test suite of the same size
+\end{itemize}
+
+Limitations of Equivalence Partitioning:
+\begin{itemize}
+\item strongly typed languages eliminate need for consideration of some invalid inputs
+\item specification does not always define expected output for invalid test cases
+\item test selection approach does not work well when input variables are not
+independent
+\item brute force definition of test case for every combo of input ECs is impractical
+\end{itemize}
+\subsection{Heuristics for Identifying EC}
+\label{sec:org4c1929c}
+For each external input:
+\begin{enumerate}
+\item if input is a range of valid values, define:
+\begin{itemize}
+\item one valid EC (within the range)
+\item two invalid EC (one outside each end of the range)
+\end{itemize}
+\item if input is a number \(N\) of valid values, define
+\begin{itemize}
+\item one valid EC
+\item two invalid EC (none and more than \(N\))
+\end{itemize}
+\item if input is an element from a set of valid values, define:
+\begin{itemize}
+\item one valid EC (within set)
+\item one invalid EC (outside set)
+\end{itemize}
+\item if input is a must be situation (condition), define:
+\begin{itemize}
+\item one valid EC (satisfies condition)
+\item one invalid EC (does not satisfy condition)
+\end{itemize}
+\item if there is a reason to believe that elements in an EC are not
+handled in an identical manner by the program:
+\begin{itemize}
+\item subdivide EC into smaller ECs
+\end{itemize}
+\item consider creating equivalence partitions that handle the
+default, empty, blank, null, zero, or none conditions
+\end{enumerate}
+\subsection{Test Selection Approach}
+\label{sec:orgffa913a}
+\begin{enumerate}
+\item until all valid ECs have been covered by test cases,
+write a new test case that covers as many of the uncovered
+valid ECs as possible
+\item until all invalid ECs have been covered by test cases,
+write a test case that covers only one of the uncovered invalid ECs
+(allows tester to observer response to single invalid input)
+\end{enumerate}
+\section{Boundary Value Analysis}
+\label{sec:org6bfa044}
+Some typical programming errors tend to occur near extreme values,
+focus of boundary value testing.
+Simpler but complementary to previous techniques.
+
+\textbf{Data types with boundary conditions}: numeric, character, position,
+quantity, speed, location, size, etc.
+\subsection{Guidelines}
+\label{sec:org9229884}
+Use input variable values (within a class) at min, just above min,
+a nominal value, just below max, and at max.
+
+Hold all other values at nominal values and include each boundary condition
+in at least one valid test case.
+\subsection{Limitations}
+\label{sec:org7821089}
+Test cases are 4 times the number of variables.
+This works well with variables that represent bounded physical quantities, since
+there is no consideration of the nature of the function and the meaning
+of the variables.
+
+For more robust testing, include value just beyond boundary in at least
+one invalid test case.
+\subsection{Worst Case Testing}
+\label{sec:orgd1fdb0c}
+For programs with more than one variable with an extreme value,
+take the Cartesian product of the min, min+, nom, max-, and max.
+
+Much more effort: \(5^{n}\) test cases
+\section{Category Partitioning}
+\label{sec:org035e0fd}
+Systematic, spec-based methodology that uses an informal functional spec to
+produce a formal test spec.
+
+Integrated EC testing and boundary value analysis and adds refinements.
+
+Consists of:
+\begin{itemize}
+\item identification of categories
+\item partitioning each category into choices
+\item creating test frames as selection of choices
+\item creating test cases
+\end{itemize}
+
+Steps
+\begin{enumerate}
+\item decompose the fucntional spec into functional units that can be independently
+tested
+\item examine each functional unit
+\begin{enumerate}
+\item identify params
+\item identify environmental conditions
+\end{enumerate}
+\item find categories for each param and environmental condition (major property or
+characteristic)
+\item subdivide categories further into choices in the same way as equivalence partitioning
+is applied
+\item determine constraints among choices: how they interact and affect each other
+\item create test frames
+\item create test cases
+\end{enumerate}
+\subsection{Criteria for Using Chocies}
+\label{sec:org8f4ae0b}
+\textbf{All Combinations (AC)}: typically done when using category partitioning, one value
+for every choice of every param must be used with one value of every possible
+choice of every other category
+
+Number of test cases for AC is sum of number of choices in all categories.
+
+\textbf{Each Choice (EC)}: weaker criterion, one value from each choice for each category
+must be used at least in one test case
+
+Number of test cases for EC is maximum number of choices in a category.
+
+\textbf{Base Choice (BC)}: a compromise
+\begin{itemize}
+\item a base choice is chosen for each category and a first base test is formed by using
+the base choice for each category
+\item subsequent tests chosen by holding all but one base choice constant and forming
+choice combos by covering all non-base choices of the selected category
+\item this procedure is repeatd for all categories
+\end{itemize}
+
+Number of test cases for BC is sum of the number of choices in all categories minus
+the number of categories.
+
+BC can be the simplest, smallest, first in some ordering, or the most likely to be used.
+\section{Decision Tables}
+\label{sec:org0b3782d}
+Precise and compact way to model complex logic, by associating conditions with actions
+to perform.
+\subsection{Terminology}
+\label{sec:org1a83c8a}
+\textbf{Limited entry table}: condition entries restricted to binary values
+
+\textbf{Extended entry table}: condition entries have more than 2 values
+\subsubsection{Don't Care}
+\label{sec:org8a5103a}
+Reduces number of variants, not the same as unknown.
+
+Corresponds to the cases where:
+\begin{itemize}
+\item inputs are necessary but have no effect
+\item inputs may be omitted
+\item mutually exclusive cases
+\end{itemize}
+
+When conditions are equivalent classes, inputs are mutually exclusive.
+\subsection{Software Testing}
+\label{sec:org172ed9a}
+Condition entries in a decision table are interpreted by a computer program as
+input and equivalence class of inputs.
+
+Action entries in a decision table are interpreted as output and major functional
+processing portions.
+
+Rules then become test cases.
+
+Limited entry tables have exponential growth from conditions to rules, though this
+can be reduced with don't cares.
+
+Less rules than combination rule count indicates missing rules, and more rules
+than combination count indicates either redundant rules or inconsistent table.
+\subsection{Applicability}
+\label{sec:org7c76fa4}
+Given spec can be converted to a decision table:
+\begin{itemize}
+\item the order in which predicates or rules are evaluated does not affect rule
+interpretation or resulting actions
+\item once a rule is satisfied and the action is selected, no other rule needs to be
+exaned
+\item the order of executing actions in a satisfied rule does not matter
+\end{itemize}
+\subsection{Issues}
+\label{sec:orgc7abb43}
+Before deriving test cases, ensure:
+\begin{itemize}
+\item rules are complete, that every combo of predicate truth values is
+explicit in the decision table
+\item rules are consistent, that every combo of predicate truth values is only one
+action or set of actions
+\end{itemize}
+\subsection{Guidelines and Observations}
+\label{sec:org73c6c20}
+Decision table is best for programs with:
+\begin{itemize}
+\item lots of decision making
+\item important logical relationships among input variables
+\item calculations involving subsets of input variables
+\item cause and effect between input and output
+\item complex computational logic
+\end{itemize}
+
+Decision tables do not scale well and must be iteratively refined.
+
+Important to look for redundant, inconsistent, and missing rules.
+\end{document}

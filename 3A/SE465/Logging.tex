@@ -1,0 +1,163 @@
+% Created 2024-04-22 Mon 19:05
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Software Monitoring, Logging, and AIOps}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Software Monitoring, Logging, and AIOps},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{DevOps}
+\label{sec:org3454cd0}
+\textbf{Software operations}: people and management processes associated with IT service management to deliver
+the right set of services at the right quality and at competitive costs for customers
+
+Tradition system admin as manual, automated operations use repeated scripts (manually-coded rules).
+
+DevOps combines software development and operations to shorten the delivery cycle.
+DevOps aims to improve collaboration between development and operations.
+DevOps is a culture that aims to break development-operations barrier with continuous integration
+and continuous feedback.
+DevOps engineers monitor software systems to understand state and runtime behaviour.
+
+Monitoring is critical for ensuring quality of delivered services and bridges the gap between development
+and operations.
+
+Challenges:
+\begin{itemize}
+\item observing a system perturbs it
+\item increasing volume and complexity of monitoring data
+\end{itemize}
+\section{Logging}
+\label{sec:orgd218a0c}
+Inserting log statements into code can help debugging, anomaly detection, system comprehension, auditing,
+and more.
+May be the only way because debeggers are not always available or applicable (production, distributed).
+
+DevLogs can be:
+\begin{itemize}
+\item performance metrics
+\item timestamp
+\item level/severity
+\item thread name
+\item method name
+\item message
+\end{itemize}
+
+More logs are better since allows diagnosis, distributed systems require them, and legal compliance.
+However there are performance overheads.
+Logging everything is the same as logging nothing (since unusable).
+
+Log messages should tell what happened and why:
+\begin{itemize}
+\item who was involved
+\item what happened
+\item where/when/why/how did it happen
+\end{itemize}
+
+Log types are:
+\begin{itemize}
+\item \textbf{AAA (authentication, authorization, access)}: successful and failed authentication or authoorization
+decisions, and system/data/application/remote access
+\item \textbf{change events}: system or application changes, data changes, and application and component installation
+and changes
+\item \textbf{badness/threats}: invalid inputs and other likely application abuses, and other security issues known
+to affect the application
+\item \textbf{resource issues}: exhausted resources, exceeded capacities, connectivity issues/problems, reached limits
+\item \textbf{mixed availability issues}: startups and shutdown of systems/applications/modules/components, faults
+and errors (availability), backup successes and failures
+\end{itemize}
+
+Log structure can be unstructured (require later processing, difficult to find info).
+
+Logs contain data aside from context.
+Can be consumed in different formats to add structure.
+
+Old fashioned file logs are robust but don't scale since risk of losing logs, killing machine, and
+difficulty to prase.
+
+Modern log architectures are:
+\begin{itemize}
+\item syslog (old) which sends logs to an aggregator that stores files on an individual machine
+\item aggregate into a single engine, providing a single interface to log data, so search language is
+more expressive than grep or regex, and can give analytics
+\end{itemize}
+
+Simple analytics involve checking for exceptions, overtime, performance from real users.
+Can check unique values, counts, and sanity check.
+See behaviour overtime and traffic patterns overtime.
+\subsection{Library}
+\label{sec:org6d31c39}
+Logging library disables certain log statements while enabling others.
+
+Logger hierarchy is maintained using a dot structure.
+Get any logger with \texttt{LogManager.getLogger}.
+
+For log level hierarchy, if log level is defined in the config use it, otherwise use parent's level.
+
+Logger name and assigned logger config must match exactly.
+
+Appender allows printing logs to multiple destinations forwarded down the hierarchy.
+
+Ideally, logs should be put into a formatted datastore.
+Many logs are formatted according to a pattern, so this requires regexp to do any kind of analysis.
+\subsection{Analysis}
+\label{sec:org4fd1fca}
+Filtering, normalization, and correlation can be done with:
+\begin{itemize}
+\item \textbf{raw log data}: start with this, first input into the process
+\item \textbf{filter}: look for log messages that are important, unimportant ones can be dropped to reduce load
+on the overall system
+\begin{itemize}
+\item keeping or discarding log data based on importance
+\item parsing the raw log message into a common format for easier analysis (log parsing)
+\end{itemize}
+\item \textbf{normalization}: take the raw log data and map its various elements (ex. source and destination IP)
+to a common format
+\begin{itemize}
+\item assume that important log data is known
+\item parse log messages into common format
+\end{itemize}
+\item \textbf{correlation}: often leads to groups of individually unimportant events to be flagged
+\begin{itemize}
+\item tie together several similar or dissimilar events in a single piece of knowledge that something
+much larger is happening
+\end{itemize}
+\item \textbf{action}: generally what is done after a correlation has occurred
+\end{itemize}
+
+Steps for normalization:
+\begin{enumerate}
+\item get documentation for product(s) being used
+\item read documentation for descriptions of what the raw log data looks like and what each field is
+\item come up with the proper parsing expression to normalize data, like regex
+\item test parsing logic on sample raw log data
+\item deploy parsing logic
+\end{enumerate}
+
+Rule correlation deals with crafting a rule which is able to model a certain behaviour.
+
+AIOps is Artificial Intelligence for IT operations.
+\end{document}

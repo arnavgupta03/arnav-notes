@@ -1,0 +1,152 @@
+% Created 2024-04-09 Tue 17:51
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Minimum Spanning Trees}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Minimum Spanning Trees},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Spanning Trees}
+\label{sec:org8813c3c}
+For a connected graph \(G = (V, E)\), a spanning tree in \(G\) is a tree of the form \((V, A)\)
+with \(A\) a subset of \(E\) (a tree with edges from \(E\) that covers all vertices).
+
+The goal is to find a spanning tree with minimal weight.
+\section{Kruskal's Algorithm}
+\label{sec:orgf6e6e37}
+\begin{verbatim}
+GreedyMST(G):
+    A = []
+    sort edges by increasing weight
+    for k = 1, ..., m:
+        if e_k does not create a cycle in A:
+            append e_k to A
+\end{verbatim}
+\subsection{Augmenting Sets without Cycles}
+\label{sec:org7b04a7e}
+\textbf{Claim}: Let \(G\) be a connected graph and let \(A\) be a subset of the edges of \(G\).
+If \((V, A)\) has no cycle and \(|A| < n - 1\), then one can find an edge \(e\) not in \(A\)
+such that \(A \cup \{e\}\) still has no cycle.
+
+\textbf{Proof}:
+\begin{itemize}
+\item in any graph, \# vertices - \# connected components \(\le\) \# edges
+\item for \((V, A)\), this gives \(n - c < n - 1\) so \(c > 1\)
+\item take any edge on a path that connects two components
+\end{itemize}
+\subsection{Properties of the Output}
+\label{sec:org2f61793}
+\textbf{Claim}: If the output is \(A = [e_{1}, \dots, e_{r}]\) then \((V, A)\) is a spanning tree
+\(r = n - 1\).
+
+\textbf{Proof}:
+\begin{itemize}
+\item \((V, A)\) has no cycle
+\item suppose \((V,A)\) is not a spanning tree, then there exists an edge \(e\) not in A such
+that \((V, A \cup \{e\})\) still has no cycle
+\begin{itemize}
+\item for the case where \(w(e) < w(e_{1})\), this is impossible since \(e_{1}\) has the
+smallest weight
+\item for the case where \(w(e_{i}) < w(e) < w(e_{i+1})\), this is impossible since at
+the moment we had inserted \(e_{i+1}\), we decided not to include \(e\) which means
+that \(e\) created a loop with \(e_{1}, \dots, e_{i}\)
+\item for the case where \(w(e_{r}) < w(e)\), this is impossible since if it was included
+in \(A\) since there is no loop in \(A \cup \{e\}\)
+\end{itemize}
+\end{itemize}
+\subsection{Exchanging Edges}
+\label{sec:orgb06c5a2}
+\textbf{Claim}: Let \((V, A)\) and \((V, T)\) be 2 spanning trees and let \(e\) be an edge in \(t\) but not in \(A\).
+Then there is some edge \(e'\) in \(A\) but not in \(T\) such that \((V, T + e' - e)\) is still a spanning
+tree. Further, \(e'\) is on the cycle that \(e\) creates in \(A\).
+
+\textbf{Proof}:
+\begin{itemize}
+\item consider \(e = \{v, w\}\)
+\item \((V, A + e)\) contains a cycle \(c = v, w, \dots, v\)
+\item removing \(e\) from \(T\) splits \((V, T - e)\) into two connected components \(T_{1}, T_{2}\)
+\item \(c\) starts in \(T_{1}\), crosses over to \(T_{2}\), so it contains another edge \(e'\) between \(T_{2}\)
+and \(T_{1}\)
+\item \(e'\) is in \(A\) but not in \(T\)
+\item \((V, T + e' - e)\) is a spanning tree
+\end{itemize}
+\subsection{Correctness: Exchange Argument}
+\label{sec:orga6015c6}
+Let \(A\) be the output of the algorithm, \((V,T)\) be any spanning tree.
+If \(T \ne A\), let \(e\) be an edge in \(T\) but not in \(A\). This means there is an edge \(e'\)
+in \(A\) but not in \(T\) such that \((V, T + e' - e)\) is a spanning tree and \(e'\) is on the
+cycle that \(e\) creates in \(A\).
+
+During the algorithm, we considered \(e\) but rejected it because it created a cycle in \(A\).
+All other elements in this cycle have smaller (or equal) weight, so \(w(e') \le w(e)\) and so
+\(T' = T + e' - e\) has weight \(\le w(T)\) and one more common element with \(A\). This continues.
+\section{Data Structures for Kruskal's Algorithm}
+\label{sec:orgd6b036d}
+Operations possible on disjoint sets of vertices are:
+\begin{itemize}
+\item \textbf{find}: identify which set contains a given vertex
+\item \textbf{union}: replace 2 sets by their union
+\end{itemize}
+\subsection{Implementation}
+\label{sec:orgc5f0f30}
+\begin{verbatim}
+GreedyMST_UnionFind(G):
+    T = []
+    U = {{v1}, ..., {vn}}
+    sort edges by increasing weight
+    for k in range(1, m):
+        if U.find(ek.1) != U.find(ek.2):
+            U.union(U.find(ek.1), U.find(ek.2))
+            append ek to T
+\end{verbatim}
+\subsection{Linked List}
+\label{sec:orgf4d7cbf}
+Uses an array of linked lists for \(U\).
+
+To do find, add an array of indices where \(X[i]\) is the set that contains \(i\).
+
+In the worst case for this, find is \(O(1)\) but union traverses one of the linked lists,
+updates the corresponding entries of \(X\), and concatenates 2 linked lists,
+so union worst case is \(\Theta(n)\).
+
+This gives Kruskal's Algorithm to be \(O(m \log(m))\) in sorting edges, \(O(m)\) for find,
+\(O(n)\) for union, and overall worst case \(O(m \log(m) + n^{2})\).
+\subsection{Simple Heuristics for Union}
+\label{sec:org777ed7f}
+\subsubsection{Modified Union}
+\label{sec:org04f4c16}
+Each set in \(U\) keeps track of its size and only traverse the smaller list.
+
+Also, add a pointer to the trail of the lists to concatenate in \(O(1)\).
+\subsubsection{Key Observation}
+\label{sec:orgaff035d}
+Worst case for 1 union is still \(\Theta(n)\) but better total time:
+\begin{itemize}
+\item for any given vertex \(v\), the size of the set containing \(v\) at least doubles when
+we update \(X[v]\), so \(X[v]\) updated at most \(\log(n)\) times
+\item so the total cost of union per vertex is \(O(\log(n))\)
+\end{itemize}
+\end{document}

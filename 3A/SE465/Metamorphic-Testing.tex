@@ -1,0 +1,51 @@
+% Created 2024-04-19 Fri 15:20
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Metamorphic Testing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Metamorphic Testing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Metamorphic Testing}
+\label{sec:orgc2b53b8}
+Software testing assumes the availability of a test oracle, but this may not hold in practice.
+
+For software running in production, if there is no crash, no way to know if there is a mistake.
+
+\textbf{Metamorphic testing} is the generation of new test cases based on the input/output pairs of
+previous test cases, in particular successful ones.
+
+Assume there are errors inside the software in spite of apparently correct output produced
+from the current input.
+New test cases evolve from old ones that are normally selected according to some existing
+selection criteria.
+
+Given a program P and test case x, the corresponding output is P(x).
+Assume x0 is a test case with output P(x0).
+Metamorphic testing constructs a number of new test cases based on the input-output pair
+(x0, P(x0)) and the error usually associated with P.
+New test cases are designed to reveal errors that go undetected by the test case x0.
+\end{document}

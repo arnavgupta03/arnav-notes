@@ -1,0 +1,412 @@
+% Created 2024-04-22 Mon 16:09
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Code Review}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Code Review},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Inspection and Reviews}
+\label{sec:org54b5808}
+Verification and Validation (V\&V) can be static (analysis) or dynamic (executing code).
+
+\textbf{Software inspections \& reviews}: use system knowledge, its domain, and technologies used to discover
+problems
+
+Advantages over dynamic V\&V are:
+\begin{itemize}
+\item cascading errors can obfuscate test results (later errors may be new or come from prior error)
+\item incomplete versions can be inspected (tests require executable system, inspections don't)
+\item good inspections are more than bug hunts (uncover inefficiencies and style issues)
+\end{itemize}
+
+\textbf{Review process}: a process or meeting during which a work product, or set of work products, is
+presented to project personell, managers, users, customers, or other interested parties for comment
+or approval
+
+Purposes:
+\begin{itemize}
+\item identify defects and new risks
+\item informally exchange knowledge
+\item collect data to learn from mistakes
+\end{itemize}
+
+Human examination of a work product is static, white-box.
+Applies to requirements, design, source code, test cases, etc.
+Types are inspection (structured and formal), walkthrough (less formal), buddy check (informal),
+and web-based reviews.
+Essential activity for quality.
+
+Review reports are to rate the severity of a defect.
+Possibly determine statistics about findings and invested resources, quality/efficiency metrics.
+For formal inspection/reviews, reports may be required, like an inspection/FDR meeting notice report
+to launch review process.
+
+Checklists are the most important tool for reviews.
+Generic checklists are for reviewing requirements, design, generic code, specific language code, and generic
+documents.
+Organizations develop specific checklists for particular objectives, past experience, etc.
+They should be maintained, improved, developed, and updated.
+\subsection{Inspections}
+\label{sec:org5d368e4}
+Inspections are a strict, very formal form of review, to obtain defects, collect data, and communicate
+development documents.
+Done in a team of 3 to 6 people.
+Roles are:
+\begin{itemize}
+\item \textbf{moderator}
+\begin{itemize}
+\item crucial role
+\item ensures inspection procedures are followed
+\item verifies work product's readiness for inspection
+\item verifies entry criteria are met
+\item assembles an effective inspection team
+\item keeps the inspection meeting on track
+\item verifies that exit criteria are met
+\item comes from outside the project team (but still a peer)
+\end{itemize}
+\item \textbf{recorder} (scribe)
+\begin{itemize}
+\item documents all defects that arise from the inspection meeting in an inspection defect list
+\item not just a procedural task, requires technical knowledge
+\end{itemize}
+\item \textbf{reviewer}
+\begin{itemize}
+\item analyzes and detects defects in the work product
+\item all participants play that role
+\item depending on reviewed document, consider a representative each from requirements (or user),
+test, design, and implementation teams
+\end{itemize}
+\item \textbf{reader} (presenter)
+\begin{itemize}
+\item leads inspection team through inspection meeting by reading aloud small logical units,
+paraphrasing where appropriate
+\end{itemize}
+\item \textbf{producer} (author)
+\begin{itemize}
+\item work product author
+\item responsible for correcting any found defects
+\end{itemize}
+\end{itemize}
+
+Inspection process is:
+\begin{itemize}
+\item \textbf{planning} (done by moderator)
+\begin{itemize}
+\item identify work product
+\item determine whether product inspected meets entry criteria
+\item select team
+\item assign roles
+\item prepare and distribute the inspection forms and materials
+\item set inspection schedule
+\item determine whether to hold an overview
+\end{itemize}
+\item \textbf{overview} (done by moderator and reviewers)
+\begin{itemize}
+\item optional phase where team members who are unfamiliar with the work product to be inspected
+receive orientation
+\end{itemize}
+\item \textbf{preparation} (done by reviewers)
+\begin{itemize}
+\item key stage
+\item members of inspection team inspect work individually looking for defects in the work product
+\item most defects found during this step, not during inspection meeting
+\end{itemize}
+\item \textbf{inspection meeting} (done by moderator, reviewers, recorder, presenter, producer)
+\begin{itemize}
+\item inspection team members meet to find, categorize, and record possible defects in the work product
+\item no resolution of defects attempted, but action items assigned
+\item beware of team size and long, detailed presentations
+\end{itemize}
+\item \textbf{third hour}
+\begin{itemize}
+\item optional additional time apart from inspection meeting that can be used for discussion,
+possible solutions, or closure of open issues raised during the inspection meeting
+\item if actual review task needs >2 hours because of complexity, schedule another review session
+(no more than 2 a day)
+\end{itemize}
+\item \textbf{rework} (done by producer)
+\begin{itemize}
+\item work product is revised by the author to correct defects found during inspection
+\end{itemize}
+\item \textbf{follow-up} (done by moderator and producer)
+\begin{itemize}
+\item meeting to determine if defects found during inspection meeting have been corrected and to ensure
+that no additional defects have been introduced
+\item final inspection data is collected and summarized, and the inspection is officially closed
+\end{itemize}
+\end{itemize}
+
+Coverage of 5 to 15\% of document pages represents a significant contribution to quality, which
+depends on choice of review target.
+
+Recommended for inclusion:
+\begin{itemize}
+\item sections with complicated logic
+\item critical sections (defects severely damage essential system capability)
+\item sections dealing with new environments
+\end{itemize}
+
+Recommended for omission:
+\begin{itemize}
+\item straightforward sections
+\item sections similar to already reviewed ones
+\item sections not expected to affect functionality if faulty
+\item reused sections
+\end{itemize}
+
+Inspections help with learning from each other, foster team spirit, help testing team identify
+problem areas and test cases to focus on, and give management an idea of whether the project is
+on track.
+
+Inspection Guidelines:
+\begin{enumerate}
+\item review product, not producer
+\item set agenda and maintain it
+\item limit debate and rebuttal (90 to 120 min for meeting)
+\item identify problem areas, but problem solving should be after review meeting
+\item take written notes
+\item limit number of participants and insist upon preparation
+\item develop checklist for each product that is likely to be reviewed
+\item allocate resources and schedule time for reviews
+\item conduct meaningful training for all reviewers
+\item prepare report and establish follow-up procedure
+\item review the review process
+\end{enumerate}
+\subsection{Walkthrough}
+\label{sec:orgf238564}
+To find defects, become familiar with development documents.
+
+Done with teams of 2 to 7 people, where material must be distributed in advance, but only presenter
+must prepare.
+
+Each participant lists potential defects and points that need further explanation.
+Can be directed by anyone.
+
+Changes only suggested, further investigation and fixes are not in the scope of a walkthrough.
+
+Differences in inspections and walkthrough is different roles, less preparation, and no formal
+follow-up.
+
+Buddy check is a code walkthrough by 1+ reviewers, they read code and report errors back to the
+developer.
+
+Pair programming includes a form of buddy check.
+\subsection{Modern Reviews}
+\label{sec:org0d26961}
+Traditional: mandated reviewer checklists and in-person meetings
+
+Modern: lightweight, tool-supported, flexible, and asynchronous
+
+Modern is used in open source systems.
+
+Modern review roles are:
+\begin{itemize}
+\item \textbf{author}
+\begin{itemize}
+\item responsible for correcting problems that are identified during the review
+\end{itemize}
+\item \textbf{reviewer}
+\begin{itemize}
+\item analyzes and detects problems in the artifacts
+\item engineer with expertise in the context the artifact operates within
+\item often 2+ reviewers must agree with an artifcat before it is valid
+\end{itemize}
+\end{itemize}
+
+Many more artifacts reviewed than traditional.
+\section{Metrics}
+\label{sec:orgc0b5fd0}
+\textbf{Quality metric}:
+\begin{itemize}
+\item quantitative measure of the degree to which an item possesses a given quality attribute
+\item a function whose inputs are software data and output is a single numerical value that can be interpreted
+as the degree to which the software possesses a given quality attribute
+\end{itemize}
+
+Goal is to keep track of project-level or organizational-level metrics, not an individual person's
+performance.
+
+\textbf{Measure}: quantitative indication of the extent, amount, dimension, capacity, or size of some attribute
+of a product, project, or process (single data point)
+
+\textbf{Measurement}: act of determining a measure
+
+\textbf{Metric}: quantitative measure of the degree to which a system, component, project, or process
+possesses a given attribute, may relate individual measures
+
+\textbf{Indicator}: metric that provides insight into software process, project, or product (compared against
+a standard or threshold)
+\subsection{Objectives}
+\label{sec:orgd033aeb}
+Assist management in:
+\begin{itemize}
+\item control of software development projects and software maintenance
+\item support of decision making
+\item initiation of preventative or corrective action
+\end{itemize}
+
+Further objectives are:
+\begin{enumerate}
+\item facilitate managerial control, planning, and intervention based on calculation of metrics regarding
+deviations of actual from planned for functional (quality) performance and timetable/budget
+performance
+\item identify situations for development or maintenance process improvement (preventative or
+corrective actions) based on accumulation of metrics information regarding performance of
+teams, units, etc
+\end{enumerate}
+
+Software size measures are used, like:
+\begin{itemize}
+\item \textbf{KLOC}: thousands of lines of code
+\begin{itemize}
+\item problematic since language and programming style dependent and difficult to
+predict before code is written
+\end{itemize}
+\item \textbf{function points}: measure of development resources (human resources) required to develop a program,
+based on functionality specified for the software system
+\begin{itemize}
+\item pre-project estimates of size are stated in terms of required development resources
+\begin{itemize}
+\item assesment based on requirements document
+\item refined during analysis phase
+\item not dependent on development tools or programming languages
+\end{itemize}
+\item disadvantages
+\begin{itemize}
+\item detailed requirements may not be available early on
+\item subjective results depend on experience
+\item domain-dependent, so cannot be universally applied
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\subsection{Types of Metrics}
+\label{sec:org325f38b}
+\textbf{Process metrics}: to improve software process, refer to development, such as defect metrics,
+effectiveness of defect removal, and productivity
+\begin{itemize}
+\item software process quality metrics, like error density metrics and error severity metrics
+\item software process timetable metrics
+\item error removal effectiveness metrics
+\item software process productivity metrics
+\end{itemize}
+
+\textbf{Product metrics}: characteristics of product, refer to operational phase, such as failure metrics
+and help desk/maintenance services
+
+\textbf{Project metrics}: project characteristics and execution, such as staffing pattern over life cycle and
+productivity
+
+Error counted measures are the number of code errors detected by code inspections and testing (NCE)
+vs the weighted number of code errors detected by code inspections and testing (WCE),
+where the higher the metrics, the lower the quality.
+Weights assigned based on severity.
+
+Similarly other measures are number of development (design and code) errors detected during
+development (NDE) and WDE is the weighted version.
+
+Error density metrics are:
+\begin{itemize}
+\item CED (code error density) where \(CED = NCE/KLOC\)
+\item DED (development error density) where \(DED = NDE/KLOC\)
+\item WCED (weighted code error density) where \(WCED = WCE/KLOC\)
+\item WDED (weighted development error density) where \(WDED = WDE/KLOC\)
+\item WCEF (weighted code errors per function point) where \(WCEF = WCE/NFP\)
+\item WDEF (weighted development errors per function point) where \(WDEF = WDE/NFP\)
+\end{itemize}
+
+Error severity metrics are:
+\begin{itemize}
+\item ASCE (average severity of code errors) where \(ASCE = WCE/NCE\)
+\item ASDE (average severity of development errors) where \(ASDE = WDE/NDE\)
+\end{itemize}
+
+Error severity metrics are used when error density metrics are decreasing, to detect adverse situations
+of increasing numbers of severe errors.
+More severe errors means lower quality.
+
+For timetables, metrics are milestones completed on time (MSOT), MS (total number of milestones),
+and TCDAM (total completion delays for all milestones) with delays in time unit of choice and
+milestones completed before the scheduled date counted as either 0 or minus delays, as long as
+they are done consistently.
+
+Software process timetable metrics are:
+\begin{itemize}
+\item TTO (time table observance) where \(TTO = MSOT/MS\)
+\item ADMC (average delay of milestone completion) where \(ADMC = TCDAM / MS\)
+\end{itemize}
+
+Higher TTO means greater quality, higher ADMC means lower quality.
+
+For error removal, metrics used are number of software failures detected during a year of maintenance
+service or any defined period (NYF) and the weighted equivalent (WYF).
+
+Error removal effectiveness metrics are:
+\begin{itemize}
+\item DERE (development errors removal effectiveness) where \(DERE = NDE / (NDE + NYF)\)
+\item DWERE (development weighted errors removal effectiveness) where \(DWERE = WDE / (WDE + WYF)\)
+\end{itemize}
+
+Higher metrics means greater quality.
+
+For software process productivity, metrics used are total working hours invested in development of
+software system (DevH), number of thousands of reused LOC (ReKLOC), number of reused pages of
+documentation (ReDoc), and number of pages of documentation (NDoc).
+
+Software process productivity metrics are:
+\begin{itemize}
+\item DevP (development productivity) where \(DevP = DevH / KLOC\)
+\item FDevP (function point development productivity) where \(FDevP = DevH / NFP\)
+\item CRe (code reuse) where \(CRe = ReKLOC / KLOC\)
+\item DocRe (documentation reuse) where \(DocRe = ReDoc / NDoc\)
+\end{itemize}
+
+Higher DevP or FDevP means lower quality, higher CRe or DocRe means higher quality.
+
+To implement software quality metrics:
+\begin{enumerate}
+\item define an attribute to be measured
+\item define the metrics that measure the attribute
+\item determine comparative target values (indicators)
+\item define method of reporting and metrics data collection
+\end{enumerate}
+
+Limitations of software metrics are:
+\begin{itemize}
+\item universal obstacles
+\begin{itemize}
+\item enough resources allocated for developing and collecting metrics
+\item opposition from employees
+\item uncertainty regarding data validity, from partial and biased reporting
+\end{itemize}
+\item software obstacles
+\begin{itemize}
+\item low validity and limited comprehensiveness of metrics
+\item KLOC is not a very good estimate for development time
+\item defects detected depend of thoroughness of review/testing and reporting style
+\end{itemize}
+\end{itemize}
+\end{document}

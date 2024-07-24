@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-03-19 Tue 09:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Polynomial Time Reduction</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Polynomial Time Reduction</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1471935">1. Decision Problems</a></li>
+<li><a href="#orgdbdb8e4">2. Polynomial Time Reduction</a>
+<ul>
+<li><a href="#org809a7d9">2.1. Transitivity</a></li>
+<li><a href="#org8c3fff9">2.2. Proving Hardness</a></li>
+<li><a href="#org202ffc2">2.3. Simple Reductions</a>
+<ul>
+<li><a href="#org171ac93">2.3.1. Maximum Clique (Clique)</a></li>
+<li><a href="#org83cb23a">2.3.2. Maximum Independent Set (IS)</a></li>
+<li><a href="#org9aee150">2.3.3. Minimum Vertex Cover (VC)</a></li>
+<li><a href="#orgc6023be">2.3.4. Connections</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1471935" class="outline-2">
+<h2 id="org1471935"><span class="section-number-2">1.</span> Decision Problems</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Decision Problem</b>: given a problem instance \(I\), answer a certain question yes or no
+</p>
+
+<p>
+<b>Problem Instance</b>: input for the specified problem
+</p>
+
+<p>
+<b>Problem Solution</b>: correct answer (yes or no) for the specified problem instance
+</p>
+<ul class="org-ul">
+<li>I is a yes-instance if the correct answer for the instance I is yes</li>
+<li>I is a no-instance if the correct answer for the instance I is no</li>
+</ul>
+
+<p>
+<b>Size of a problem instance</b>: the number of bits required to specify (or encode) the
+instance I
+</p>
+</div>
+</div>
+<div id="outline-container-orgdbdb8e4" class="outline-2">
+<h2 id="orgdbdb8e4"><span class="section-number-2">2.</span> Polynomial Time Reduction</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Polynomial Time Reduction</b>: a decision problem \(A\) is polynomial time reducible to a decision
+problem \(B\), if there is a polynomial time algorithm \(F\) that transforms any instance \(I_{A}\)
+of \(A\) to an instance \(I_{B}\) of \(B\) such that \(I_{A}\) is a yes-instance of \(A\) if and only if
+\(F(I_{A}) = I_{B}\) is a yes-instance of \(B\).
+</p>
+
+<p>
+\(A \le_{P} B\) means such a polynomial time reduction exists.
+\(A =_{P} B\) means \(A \le_{P} B\) and \(B \le_{P} A\).
+</p>
+
+<p>
+For decision problems \(A\) and \(B\), with a polynomial time algorithm to solve \(B\) and a
+polynomial reduction \(F\) which gives a polynomial time reduction from \(A\) to \(B\),
+\(A\) can be solved in polynomial time by applying \(F\) and using the algorithm to solve \(B\).
+Further, the size of \(F(I_{A})\) must be polynomial since returning \(F(I_{A})\) fits in the
+polynomial-time reduction from \(A\) to \(B\).
+</p>
+</div>
+<div id="outline-container-org809a7d9" class="outline-3">
+<h3 id="org809a7d9"><span class="section-number-3">2.1.</span> Transitivity</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+\(A \le_{P} B\) and \(B \le_{P} C\) gives \(A \le_{P} C\)
+</p>
+</div>
+</div>
+<div id="outline-container-org8c3fff9" class="outline-3">
+<h3 id="org8c3fff9"><span class="section-number-3">2.2.</span> Proving Hardness</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Given a problem A known to be impossible to be solved in polynomial time,
+$A &le;<sub>P</sub> B \implies \(B\) cannot be solved in polynomial time.
+</p>
+
+<p>
+\(A \le_{P} B\) means \(B\) is at least as hard as \(A\).
+In other words, if \(B\) could be solved in polynomial time, \(A\) could be solved in polynomial time.
+</p>
+</div>
+</div>
+<div id="outline-container-org202ffc2" class="outline-3">
+<h3 id="org202ffc2"><span class="section-number-3">2.3.</span> Simple Reductions</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+The following 3 problems are equivalent in terms of polynomial-time solvability.
+</p>
+</div>
+<div id="outline-container-org171ac93" class="outline-4">
+<h4 id="org171ac93"><span class="section-number-4">2.3.1.</span> Maximum Clique (Clique)</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+\(S \subseteq V\) is a clique if \(\{ u, v \} \in E\) for all \(u,v \in S\)
+</p>
+
+<p>
+<b>Input</b>: \(G = (V,E)\) and an integer \(k\)
+</p>
+
+<p>
+<b>Output</b>: (answer to the question) is there a clique in \(G\) with at least \(k\) vertices
+</p>
+</div>
+</div>
+<div id="outline-container-org83cb23a" class="outline-4">
+<h4 id="org83cb23a"><span class="section-number-4">2.3.2.</span> Maximum Independent Set (IS)</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+\(S \subseteq V\) is an independent set if \(\{u, v\} \not\in E\) for all \(u,v \in S\)
+</p>
+
+<p>
+<b>Input</b>: \(G = (V,E)\) and an integer \(k\)
+</p>
+
+<p>
+<b>Output</b>: (answer to the question) is there an independent set in \(G\) with at least \(k\) vertices
+</p>
+</div>
+</div>
+<div id="outline-container-org9aee150" class="outline-4">
+<h4 id="org9aee150"><span class="section-number-4">2.3.3.</span> Minimum Vertex Cover (VC)</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+\(S \subseteq V\) is a vertex cover if \(\{u,v\} \cap S \ne \emptyset\) for all \(\{u,v\} \in E\)
+</p>
+
+<p>
+<b>Input</b>: \(G = (V,E)\) and an integer \(k\)
+</p>
+
+<p>
+<b>Output</b>: (answer to the question) is there a vertex cover in \(G\) with at most \(k\) vertices
+</p>
+</div>
+</div>
+<div id="outline-container-orgc6023be" class="outline-4">
+<h4 id="orgc6023be"><span class="section-number-4">2.3.4.</span> Connections</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<p>
+To get Clique \(\le_{P}\) IS:
+</p>
+<ul class="org-ul">
+<li>Clique informally means find a set of size at least \(k\) vertices with all edges in between</li>
+<li>IS informally means fnd a set of size at least \(k\) vertices with no edges in between</li>
+<li><b>idea</b>: change edges in the input to non edges (find complement of the graph, where an
+edge in the original means no edge in the new graph and vice versa)</li>
+<li>\(F\) is the algorithm to construct the complement of the input \(G\)</li>
+<li>clearly this can be done in polynomial time and one can check that \(S \subseteq V\) is a
+clique in \(G\) if and only if \(S\) is an independent set in \(\bar{G}\)</li>
+<li>hence, \(\{G,k\}\) is a yes instance for Clique if and only if \(\{\bar{G}, k\}\) is a yes
+instance for IS</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-03-19 Tue 09:50</p>
+</div>
+</body>
+</html>

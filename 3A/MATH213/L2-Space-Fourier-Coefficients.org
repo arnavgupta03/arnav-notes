@@ -1,0 +1,44 @@
+#+title: L2 Space, Inner Product on L2, Computing Fourier Coefficients
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* L2 Space
+A complex valued function $f$ is in $L^{2}([a,b])$ if
+$$
+\int_{a}^{b} |f(x)|^{2} dx
+$$
+exists and is finite.
+
+$f$ is in the class $L^{2}$ if
+$$
+\int_{-\infty}^{b} |f(x)|^{2} dx
+$$
+exists and is finite.
+
+L2 space forms a vector space.
+
+* Fourier Coefficients
+** Inner Product for L2
+If $f$ and $g$ are complex valued function in $L^{2}([a,b])$, then the *standard inner product* is
+$$
+\left< f,g \right> = \frac{1}{b-a} \int_{a}^{b} f(t) \overline{g(t)}\, dt
+$$
+If $f,g \in L^{2}([a,b])$, then $\left< f,g \right>$ exists and is finite.
+
+The set of complex exponentials
+$\left\{e^{\frac{2\pi n}{\tau}jt} \mid n \in \{0, \pm 1, \pm 2, \dots\}\right\}$ is an
+orthonormal basis for a subspace of $L^{2}([-\tau/2,\tau/2])$.
+
+** Fourier Series
+If $f \in L^{2}([-\tau/2,\tau/2])$, then the Fourier series in complex form of $f(t)$ is
+$$
+\sum_{n = -\infty}^{\infty} c_{n} e^{\frac{2\pi n}{\tau}jt}
+$$
+where $c_{n}$ are found by projecting $f$ into the basis of complex exponentials.
+
+If $f \in L^{2}([-\tau/2,\tau/2])$, then the Fourier coefficients $c_{n}$ of $f(t)$ are
+$$
+c_{n} = \left< f(t), e^{\frac{2\pi n}{\tau}jt} \right>
+$$
+If $f$ is real valued, then $c_{n} = \overline{c_{-n}}$.

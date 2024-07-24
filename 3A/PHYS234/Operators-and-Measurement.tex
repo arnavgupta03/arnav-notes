@@ -1,0 +1,102 @@
+% Created 2024-04-17 Wed 17:47
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Operators and Measurement}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Operators and Measurement},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Operators, Eigenvalues, and Eigenvectors}
+\label{sec:org6f6c1a8}
+\textbf{Operator}: mathematical object that acts on a ket and transforms it into a new ket
+
+\textbf{Postulate 2}: a physical observable is represented mathematically by an operator \(A\)
+that acts on a ket
+
+\textbf{Postulate 3}: the only possible result of a measurement of an observable is one of
+the eigenvalues \(a_{n}\) of the corresponding operator \(A\)
+
+An operator is always diagonal in its own basis.
+Eigenvectors are unit vectors in their own basis.
+\subsection{Matrix Representation of Operators}
+\label{sec:org0dac4c4}
+Each matrix element can be found as a bra multiplied by an operator multiplied by
+a ket.
+\section{New Operators}
+\label{sec:org2109d70}
+\subsection{Hermetian Operators}
+\label{sec:orge73f16e}
+An operator \(A\) is Hermetian if it is equal to its Hermetian adjoint.
+\subsection{Projection Operators}
+\label{sec:org4c0b7f5}
+\textbf{Closure/Completeness}: the sum of the projector operators for all eigenstates is the identity operator.
+
+When a projector operator for an eigenstate acts on a state, it produces a new ket that is aligned
+along the eigenstate and has a magnitude equal to the amplitude (including the phase) for the
+state to be in that eigenstate.
+
+\textbf{Postulate 5}: after a measurement of \(A\) that yields the result \(a_{n}\), the quantum system
+is in a new state that is the normalized projection of the original system ket onto the
+ket or kets corresponding to the result of the measurement, giving
+$$
+        \ket{\psi '} = \frac{P_{n} \ket{\psi}}{\sqrt{\bra{\psi} P_{n} \ket{\psi}}}
+$$
+
+Quantum measurements cannot be made without disturbing the system (except where input and
+output are the same), this leads to collapse.
+\section{Measurement}
+\label{sec:org73204a0}
+The mean (expected value) measurement for an operator \(A\) on a state \(\ket{\psi}\) is
+$$
+        \left< A \right> = \bra{\psi} A \ket{\psi} = \sum_{n} a_{n} P_{a_{n}}
+$$
+
+The standard deviation is defined as:
+$$
+        \Delta A = \sqrt{\left< (A - \left< A \right>)^{2} \right>}
+        = \sqrt{\left< A^{2} \right> - \left< A \right>^{2}}
+$$
+which is derived from root-mean-square.
+\section{Commuting Observables}
+\label{sec:org6619904}
+The commutator of two operators is \([A, B] = AB - BA\).
+
+If the commutator is 0, the operators commute.
+
+Commuting operators share common eigenstates.
+
+The commutation relations for the spin component operators are:
+$$
+[S_{x}, S_{y}] = i \hslash S_{z}, [S_{y}, S_{z}] = i \hslash S_{x}, [S_{z}, S_{x}] = i \hslash S_{y}
+$$
+\section{Uncertainty Principle}
+\label{sec:org0b090b1}
+$$
+\Delta A \Delta B \ge \frac{1}{2} \left| \left< \left[A, B\right] \right> \right|
+$$
+
+One spin component can be known absolutely but not 2 or simultaneously.
+\end{document}

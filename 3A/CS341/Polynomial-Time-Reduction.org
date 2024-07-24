@@ -1,0 +1,182 @@
+#+title: Polynomial Time Reduction
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Decision Problems
+*Decision Problem*: given a problem instance $I$, answer a certain question yes or no
+
+*Problem Instance*: input for the specified problem
+
+*Problem Solution*: correct answer (yes or no) for the specified problem instance
+- I is a yes-instance if the correct answer for the instance I is yes
+- I is a no-instance if the correct answer for the instance I is no
+
+*Size of a problem instance*: the number of bits required to specify (or encode) the
+instance I
+
+* Polynomial Time Reduction
+*Polynomial Time Reduction*: a decision problem $A$ is polynomial time reducible to a decision
+problem $B$, if there is a polynomial time algorithm $F$ that transforms any instance $I_{A}$
+of $A$ to an instance $I_{B}$ of $B$ such that $I_{A}$ is a yes-instance of $A$ if and only if
+$F(I_{A}) = I_{B}$ is a yes-instance of $B$.
+
+$A \le_{P} B$ means such a polynomial time reduction exists.
+$A =_{P} B$ means $A \le_{P} B$ and $B \le_{P} A$.
+
+For decision problems $A$ and $B$, with a polynomial time algorithm to solve $B$ and a
+polynomial reduction $F$ which gives a polynomial time reduction from $A$ to $B$,
+$A$ can be solved in polynomial time by applying $F$ and using the algorithm to solve $B$.
+Further, the size of $F(I_{A})$ must be polynomial since returning $F(I_{A})$ fits in the
+polynomial-time reduction from $A$ to $B$.
+
+** Transitivity
+$A \le_{P} B$ and $B \le_{P} C$ gives $A \le_{P} C$
+
+** Proving Hardness
+Given a problem A known to be impossible to be solved in polynomial time,
+$A \le_{P} B \implies $B$ cannot be solved in polynomial time.
+
+$A \le_{P} B$ means $B$ is at least as hard as $A$.
+In other words, if $B$ could be solved in polynomial time, $A$ could be solved in polynomial time.
+
+** Simple Reductions
+The following 3 problems are equivalent in terms of polynomial-time solvability.
+
+*** Maximum Clique (Clique)
+$S \subseteq V$ is a clique if $\{ u, v \} \in E$ for all $u,v \in S$
+
+*Input*: $G = (V,E)$ and an integer $k$
+
+*Output*: (answer to the question) is there a clique in $G$ with at least $k$ vertices
+
+*** Maximum Independent Set (IS)
+$S \subseteq V$ is an independent set if $\{u, v\} \not\in E$ for all $u,v \in S$
+
+*Input*: $G = (V,E)$ and an integer $k$
+
+*Output*: (answer to the question) is there an independent set in $G$ with at least $k$ vertices
+
+*** Minimum Vertex Cover (VC)
+$S \subseteq V$ is a vertex cover if $\{u,v\} \cap S \ne \emptyset$ for all $\{u,v\} \in E$
+
+*Input*: $G = (V,E)$ and an integer $k$
+
+*Output*: (answer to the question) is there a vertex cover in $G$ with at most $k$ vertices
+
+*** Connections
+To get Clique $\le_{P}$ IS:
+- Clique informally means find a set of size at least $k$ vertices with all edges in between
+- IS informally means fnd a set of size at least $k$ vertices with no edges in between
+- *idea*: change edges in the input to non edges (find complement of the graph, where an
+  edge in the original means no edge in the new graph and vice versa)
+- $F$ is the algorithm to construct the complement of the input $G$
+- clearly this can be done in polynomial time and one can check that $S \subseteq V$ is a
+  clique in $G$ if and only if $S$ is an independent set in $\bar{G}$
+- hence, $\{G,k\}$ is a yes instance for Clique if and only if $\{\bar{G}, k\}$ is a yes
+  instance for IS
+
+*Lemma*: assume $G = (V,E)$ is a graph, then $S \subseteq V$ is a vertex cover if and only
+if $V-S$ is an independent set in $G$
+- assume $S$ is a $VC in $G$
+  - if $V \setminus G$ is not an IS, then we have $x,y \in V \setminus S$ such that
+    $\{x, y\} \in E$
+  - by definition of a vertex cover, one of $x$ or $y$ (or both) must be in $S$, which is
+    a contradiction
+- let $V \setminus S$ be an IS
+  - if $S$ is not a vertex cover, then there exists an edge $\{x,y\} \in E$ such that
+    $x \not\in S$ and $y \not\in S$
+  - this means that $x,y \in V \setminus S$ and there is an edge between them, which
+    is a contradiction
+
+This lemma gives that $G$ has a VC of size at most $k$ if and only if $G$ has an IS
+of size at least $n-k$.
+This means the reduction algorithm maps $\{G, k\}$ for VC to $\{G, n-k\}$ for IS.
+This runs in poly-time and maps yes/no instances for VC to yes/no instances for IS,
+which shows that
+$$
+Clique =_{P} IS =_{P} VC
+$$
+
+*** Hamiltonian Cycle (HC)
+A cycle is a Hamiltonian Cycle if it touches every vertex exactly once.
+
+*Input*: undirected graph $G = (V,E)$
+
+*Output*: (answer to) does $G$ have a Hamiltonian Cycle?
+
+*** Hamiltonian Path (HP)
+A path is a Hamiltonian Path if it touches every vertex exactly once.
+
+*Input*: undirected graph $G = (V,E)$
+
+*Output*: (answer to) does $G$ have a Hamiltonian path?
+
+*** HC-HP Connection
+$HP =_{P} HC$ can be shown as follows.
+
+First, $HP \le_{P} HC$ will be shown.
+- given $G = (V,E)$ for HP, it must be transformed to $G' = (V', E')$ for HC
+- construct $G'$ in the following way:
+  - add a vertex $s$ to $V$: $V' = V \cup \{s\}$
+  - add edges $(s,x)$ for $x \in V$
+- this reduction runs in poly-time
+- it will be shown that $G$ has a Hamiltonian path if and only if $G$ has a
+  Hamiltonian cycle
+  - (forward) assume $P$ is a Hamiltonian path in $G$, with endpoints $u,w$,
+    then $P + su + sw$ is a Hamiltonian cycle in $G'$
+  - (backward) assume $C'$ is a Hamiltonian cycle in $G'$, then there must be
+    2 indicident edges on $s$ which can be removed from $C'$ to get $C$
+    which is a Hamiltonian path in $G$
+
+Next, $HC \le_{P} HP$ will be shown.
+- given $G = (V,E)$ for HC, construct $G' = (V', E')$ in the following way:
+  - choose an arbitrary vertex $x \in V$
+  - add a duplicate $x'$ of $x$
+  - add vertices $t,t'$ with degree 1 with edges $tx$ and $t'x'$
+- this reduction runs in poly-time
+- it will be shown that $G$ has a Hamiltonian cycle if and only if $G'$
+  has a Hamiltonian path
+  - (forward) assume there is a Hamiltonian cycle $C$ in $G$, take some vertex $x$
+    with neighbours $u$ and $w$ on $C$, then $C - xu + x'u + x't' + xt$ is a
+    Hamiltonian path
+  - (backward) assume there is a Hamiltonian path in $G'$, it should have
+    endpoints $t, t'$ in $G'$ which are adjacent to $x, x'$ respectively, then an
+    edge can be added from some neighbour of $x'$ to $x$ (since $x'$ and $x$
+    have the same neighbours), which gives a Hamiltonian Cycle
+
+*** 3-SAT
+For $X = \{x_{1}, \dots, x_{n}\}$ where $x_{i}$ is a Boolean variable:
+- a literal term is either $x_{i}$ or $\overline{x_{i}}$
+- a clause is a disjunctio of distinct literals, which has length $\ell$
+- an assignment satisfies a clause $C$ if it causes $C$ to evaluate to true
+- a conjunction of a finite set of clauses is called a formula in
+  Conjunctive Normal Form (CNF)
+
+  *Input*: a CNF-formula in which each clause has at most 3 literals
+
+  *Output*: (answer to) is there truth assignment to these variables that
+  satisfies all the clauses?
+
+*** 3-SAT and IS Connection
+Convert each clause to a graph with edges between each term.
+Then place edges between negated terms and find an independent set of this graph.
+
+To force exactly one choice from each clause, set $k$ to be the number of clauses.
+
+*Proof*:
+First, consider the forward direction. If there is a satisfying assignment, then choose
+1 literal that is set to true in each clause and the corresponding vertex will be in the
+independent set.
+Since the CNF is satisfiable, there is at least 1 true literal in each clause and so the set
+has exactly $k$ vertices.
+
+The $k$ vertices form an independent set as there are no clause edges between them, since only
+one literal vertex in each clause. Further, no negation edges between chosen vertices, since this
+cannot be chosen in the satisfying assignment.
+
+Next, consider the reverse direction. Assume there is an independent set of size $k$ in $G$.
+Any independent set can choose only 1 vertex from each clause, since there are edges within a clause.
+Only $k$ clauses, so an independent set of size $k$ chooses exactly 1 vertex from each clause.
+Further, for each variable, choose either the literal or its negation.
+This means the assignment satisfies the CNF.

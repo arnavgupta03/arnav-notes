@@ -1,0 +1,98 @@
+% Created 2024-04-09 Tue 17:49
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Dijkstras Algorithms}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Dijkstras Algorithms},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Preliminaries}
+\label{sec:org6f6cbe4}
+A graph \(G = (V, E)\) is a directed graph with a weight function: \(w: E \to \mathbb{R}\)
+\begin{itemize}
+\item weight of the path \(P = \left< v_{0}, \dots, v_{k} \right>\) is \(w(P) = \sum_{i=1}^{k} w(v_{i-1}, v_{i})\)
+\end{itemize}
+
+Shortest path does not exist for directed weighted graphs with negative-weight cycles.
+
+Under the assumption that \(G\) has no negative-weight cycles,
+the shortest path weight from \(u\) to \(v\):
+$$
+        \delta(u, v) = \begin{cases}
+                \min\{ w(P): u \to v \} & \text{if there exists a path from $u$ to $v$} \\
+                \infty & \text{otherwise}
+        \end{cases}
+$$
+\subsection{Single-Source Shortest Path Problem}
+\label{sec:orgb4016e3}
+\begin{itemize}
+\item input: \(G = (V,E)\), \(w: E \to \mathbb{R}\) and a source \(s \in v\)
+\item output: a shortest path from \(s\) to each \(v \in V\)
+\end{itemize}
+
+Consider the following:
+if \(\left< v_{0}, v_{1}, \dots, v_{k} \right>\) is a shortest path from \(v_{0}\) to \(v_{k}\),
+then \(\left< v_{0}, v_{1}, \dots, v_{k} \right>\) is a shortest path from \(v_{0}\) to \(v_{i}\),
+for any \(0 \le i \le k\)
+\section{Dijkstra's Algorithm}
+\label{sec:orgf085249}
+A greedy algorithm that takes a weighted directed graph with non-negative edge weights.
+
+Important quantities:
+\begin{itemize}
+\item \(d[v]\): a shortest path estimate from \(s\) to \(v\)
+\item \(\pi[v]\): predecessor in the path (a vertex or NIL)
+\end{itemize}
+\subsection{Explanation}
+\label{sec:org45b5bdd}
+\begin{itemize}
+\item iniitialize \(C = \emptyset\), repeat the following untit \(C = V\)
+\begin{enumerate}
+\item add \(u \in V - C\) with smallest \(d\) value to \(C\)
+\item update \(d\) values of vertices \(v\) with \((u, v) \in E\):
+$$
+        d[v] \gets \min \{ d[v], d[u] + w(u, v) \}
+     $$
+\item update \(\pi[v]\) if \(d[v]\) is changed
+\end{enumerate}
+
+\item Priority Queue is ADT that should be used for vertices
+\begin{itemize}
+\item implemented as binary min-heap with costs
+\begin{itemize}
+\item insert: \(O(\log(n))\)
+\item extract-min: \(O(\log(n))\)
+\item update-key: \(O(\log(n))\)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\subsection{Complexity Analysis}
+\label{sec:orgfe56315}
+\begin{itemize}
+\item array implementation has time complexity \(O(|V|^{2})\)
+\item heap implementation has time complexity \(O((|V| + |E|)\log(|V|))\)
+\end{itemize}
+\end{document}

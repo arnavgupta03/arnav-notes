@@ -1,0 +1,180 @@
+% Created 2024-04-05 Fri 11:44
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Fuzzing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Fuzzing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Fuzzing}
+\label{sec:org4902d0a}
+Set of automated testing techniques that identifies abnormal program behaviours by
+evaluating how the tested program responds to various random inputs.
+
+Basic fuzzer is purely random:
+\begin{itemize}
+\item easy to implement and fast, but relies on luck and has shallow program exploration.
+\end{itemize}
+
+Fuzzer categories:
+\begin{itemize}
+\item \textbf{generation-based}: inputs generated from scratch
+\item \textbf{mutation-based}: inputs from modifying existing inputs
+\item \textbf{dumb} or \textbf{smart} depending on awareness of input structure
+\item \textbf{white/grey/black box} depending on awareness of program structure
+\end{itemize}
+\subsection{Goal}
+\label{sec:org3433d56}
+\begin{enumerate}
+\item Find real bugs
+\item Reduce the number of false positives
+\begin{enumerate}
+\item generate reasonable input
+\end{enumerate}
+\end{enumerate}
+\subsection{Mutation-Based Fuzzing}
+\label{sec:orge950eef}
+\begin{enumerate}
+\item Take existing input
+\item Randomly modify it
+\item Pass it to the program
+\end{enumerate}
+\subsubsection{Grammar-Based Fuzzing}
+\label{sec:orged0b1a2}
+Grammars can easily formally specify input languages.
+
+A simple grammar fuzzer:
+\begin{enumerate}
+\item starts with the start symbol then keeps expanding it
+\item to avoid expansion to infinite inputs, place a limit on the \# of nonterminals
+\item to avoid being stuck in a situation where we cannot reduce the number of symbols
+further, limit the total \# of expansion steps
+\end{enumerate}
+
+Grammar generated inputs can be seeds in mutation-based fuzzing.
+\subsubsection{Guiding by Coverage}
+\label{sec:org6cdb748}
+Retrieve coverage of a test run and evolve inputs that are successful (where a new
+path was found during test execution).
+\subsection{Gerybox Fuzzing}
+\label{sec:org79573f5}
+\textbf{Power schedule}: distributes fuzzing time among the seeds in the population
+
+\textbf{Objective}: maximize the time spend fuzzing the seeds that lead to higher coverage
+increase in shorter time.
+
+\textbf{Seed Energy}: likelihood with which a seed is chosen from a population
+\subsubsection{Directed Gerybox Fuzzing}
+\label{sec:org81f13aa}
+Implement a power schedule that assigns more energy to seeds with a low distance
+to the target function:
+\begin{itemize}
+\item build a call graph among function in a program
+\item for each function executed in the test, calculate its shortest path to the
+target function, then do an average distance, using the distance to calculate
+the power schedule
+\item can do more complex calculation by considering finer grained info
+\end{itemize}
+\subsection{Search-Based Fuzzing}
+\label{sec:org2b29be5}
+For deriving specific test inputs that achieve some objective.
+Uses domain knowledge of which inputs is closest to what one is looking for.
+\subsubsection{Hillclimbing Algorithm}
+\label{sec:org08aef75}
+\begin{enumerate}
+\item Take a random starting point
+\item Determine fitness value of all neighbours
+\item Move to the neighbour with the best fitness value
+\item If solution not found, back to step 2.
+\end{enumerate}
+\subsubsection{Genetic Algorithm}
+\label{sec:orgf655098}
+Based on the idea that solutions can be genetically encoded, based on natural
+selection.
+A fitness function takes the info contained in the description and evaluates
+properties.
+
+Emulates natural evolution with the following process:
+\begin{itemize}
+\item create an initial population of random chromosomes
+\item select fit individuals for reproduction
+\item generate new population through reproduction of selected individuals
+(selecting parents and creating mutations)
+\item continue until an optimal solution or limit reached
+\end{itemize}
+\begin{enumerate}
+\item Challenge 1: Feeding Inputs
+\label{sec:orgab242ce}
+The fuzzing engine executes the fuzz target many times, so the target must:
+\begin{itemize}
+\item tolerate any kind of input
+\item not exit on any input
+\item join all threads at the end
+\item be fast and as deterministic as possible
+\item not modify any global state
+\item be as narrow as possible
+\end{itemize}
+\item Challenge 2: Detecting Abnormal Behaviour
+\label{sec:org07baee8}
+Refers to crashes, triggerring user-provided assertion failure, hanging,
+or allocating too much memory.
+
+For early crash detection use sanitizers for address, thread, memory,
+undefined behaviour, or leaks.
+\item Challenge 3: Ensuring Progress
+\label{sec:orgd3ef699}
+Use coverage to evolve test cases that find new paths through program
+execution, with Gerybox or search-based approaches.
+
+Coverage with American Fuzzy Lop captures branch coverage by
+instrumenting compiled programs which is fast.
+\item Challenge 4: Coming up with Interesting Inputs
+\label{sec:org5744615}
+Must understand input type and structure, using model, grammar, or
+protocol based fuzz.
+\item Challenge 5: Speed
+\label{sec:org14cbfe3}
+To help with speed:
+\begin{itemize}
+\item initialize once and fork for other inputs
+\item replace costly resources with cheaper ones
+\item run many inputs on a single process
+\item minimize the \# of test cases, discarding redundant ones
+\item run in parallel, distributed
+\end{itemize}
+\end{enumerate}
+\subsection{Problems with Fuzzing}
+\label{sec:org91a0305}
+Many false positive that are expensive.
+
+Focus on code coverage, which is less important than reasonable inputs.
+
+Cleaning to make random input more reasonable:
+\begin{itemize}
+\item \textbf{minimization}: eliminate redundant test failures through diffing
+\item \textbf{triage}: finding similar outputs/stackdumps and grouping them in bug report
+\end{itemize}
+\end{document}

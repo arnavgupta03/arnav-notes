@@ -1,0 +1,117 @@
+% Created 2024-04-17 Wed 17:47
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Schrödinger Time Evolution}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Schrödinger Time Evolution},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Schrödinger Equation}
+\label{sec:orgbbf4d30}
+\textbf{Postulate 6}: the time evolution of a quantum system is determined by the Hamiltonian or total energy
+operator \(H(t)\) through the Schrödinger equation
+$$
+i\hslash \frac{d}{dt} \ket{\psi(t)} = H(t) \ket{\psi(t)}
+$$
+
+The Hamiltonian is an observable so it is a Hermetian operator.
+The energy eigenvalue equation is
+$$
+H \ket{E_{n}} = E_{n} \ket{E_{n}}
+$$
+
+The basis of eigenvectors of the Hamiltonian is the \textbf{energy basis}.
+
+If the initial state of the system at time 0 is
+$$
+\ket{\psi(0)} = \sum_{n} c_{n} \ket{E_{n}}
+$$
+then the time evolution of this state under the action of the time-independent Hamiltonian \(H\)
+is
+$$
+\ket{\psi(t)} = \sum_{n} c_{n} e^{-iE_{n} t/\hslash} \ket{E_{n}}
+$$
+
+For an observable \(A\) whose eigenstates consist of superpositions of energy eigenstates,
+where \(\ket{a_{1}} = \alpha_{1} \ket{E_{1}} + \alpha_{2} \ket{E_{2}}\).
+Then for \(\ket{psi(0)} = c_{1}\ket{E_{1}} + c_{2} \ket{E_{2}}\),
+\$\$
+P\textsubscript{a\textsubscript{1}} = |\(\alpha\)\textsubscript{1}|\textsuperscript{2} |c\textsubscript{1}|\textsuperscript{2} + |\(\alpha\)\textsubscript{2}|\textsuperscript{2} |c\textsubscript{2}|\textsuperscript{2}
+\begin{itemize}
+\item 2\text{Re}\left( \(\alpha\)\textsubscript{1} c\textsubscript{1}\textsuperscript{$\backslash$*} \(\alpha\)\textsubscript{2}\textsuperscript{$\backslash$*} c\textsubscript{2} e\textsuperscript{-i(E\textsubscript{2} - E\textsubscript{1})t/\hslash} \right)
+\end{itemize}
+$$
+and so the probabilities are time dependent, which is determined by the difference of the energies
+of the 2 states involved in the superposition.
+The corresponding angular frequency of the time evolution
+$$
+\(\omega\)\textsubscript{21} = \frac\{E\textsubscript{2} - E\textsubscript{1}\}\{\hslash\}
+\$\$
+is the \textbf{Bohr frequency}.
+\subsection{Recipe for Solving Time-Dependent Quantum Mechanics}
+\label{sec:org432f06e}
+Given a Hamiltonian \(H\) and an initial state \(\ket{\psi(0)}\), find the probability that
+the eigenvalue \(a_{j}\) of the observable \(A\) is measured at time \(t\).
+\begin{enumerate}
+\item Diagonalize \(H\) to find the eigenvalues and eigenvectors for the energies.
+\item Write \(\ket{\psi(0)}\) in terms of the energy eigenstates \(\ket{E_{n}}\).
+\item Multiply each eigenstate coefficient by \(e^{-iE_{n}t/\hslash}\) to get \(\ket{\psi(t)}\).
+\item Calculate the probability \(P_{a_{j}} = \left| \braket{a_{j} \mid \psi(t)} \right|^{2}\).
+\end{enumerate}
+\section{Spin Precession}
+\label{sec:org465994a}
+For the magnetic dipole
+$$
+\mu = g \frac{q}{2m_{e}} S
+$$
+the Hamiltonian is
+$$
+H = -g \frac{q}{2m_{e}} S \cdot B
+$$
+\subsection{Magnetic Field in the z-Direction}
+\label{sec:orgc95d80c}
+If \(B = B_{0} \hat{z}\), then \(H = \omega_{0} S_{z}\)
+for \(\omega_{0} = -g\frac{q}{2m_{e}} B_{0}\).
+
+\textbf{Spin precession}: where probabilities change for certain spins since the Hamiltonian
+is defined for other spins
+
+\textbf{Larmor precession}: the precession of the spin vector
+
+\textbf{Larmor frequency}: the frequency of precession
+
+\textbf{Ehrenfest's Theorem}: quantum mechanical expectation values obey classical laws
+\subsection{Magnetic Field in a General Direction}
+\label{sec:org46d9eb6}
+\textbf{Spin flip}: where a state flips to the orthogonal state
+
+The probability of a spin flip is
+$$
+P_{+ \to -} = \frac{\omega_{1}^{2}}{\omega_{0}^{2} + \omega_{1}^{2}}
+\sin^{2} \left( \frac{\sqrt{\omega_{0}^{2} + \omega_{1}^{2}}}{2} t \right)
+$$
+which is Rabi's formula.
+\end{document}

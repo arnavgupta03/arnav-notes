@@ -1,0 +1,165 @@
+% Created 2024-04-18 Thu 15:47
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Asynchronous}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Asynchronous},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{UI Responsiveness}
+\label{sec:orgbfa1633}
+Responsive UIs deliver feedback to the user in a timely manner.
+User does not wait longer than necessary and state of long tasks is communicated to the user.
+
+Can make a UI responsive by:
+\begin{enumerate}
+\item designing to meet human expectations and perceptions
+\item loading data efficiently so it is quickly available
+\end{enumerate}
+
+Responsiveness is affected by:
+\begin{itemize}
+\item user exectations: how quickly a system should react to complete some task
+\begin{itemize}
+\item expectations for technology (ex. web vs desktop)
+\end{itemize}
+\item application and interface design
+\begin{itemize}
+\item interface keeps up with user actions
+\item interface informs user about application status
+\item interface doesn't make user wait unexpectedly
+\end{itemize}
+\end{itemize}
+
+Responsiveness is the most important factor is the most important factor in user satisfaction, more than
+ease of learning/use.
+
+Responsiveness is \textbf{not} just system performance.
+
+If slow performance, to keep the UI responsive:
+\begin{itemize}
+\item provide feedback to confirm user actions (let user know input received)
+\item provide feedback about events (how long an operation will take)
+\item allow users to perform other tasks while waiting
+\item anticipate the user's most common requests (pre-fetch data below current scroll vew)
+\item perform low-priority system tasks in the background
+\end{itemize}
+
+Knowing duration of perceptual and cognitive processes can inform design of interactive systems that
+feel responsive:
+\begin{itemize}
+\item minimal time to detect gap of silence in sound: 4 ms
+\item minimal time to be affected by visual stimulus: 10 ms
+\begin{itemize}
+\item continuous input latency should be less than this
+\end{itemize}
+\item time that vision is supressed during saccade: 100 ms
+\item max interval between cause-effect events: 140 ms
+\begin{itemize}
+\item if UI feedback takes longer, perception of cause-effect is broken
+\end{itemize}
+\item time to comprehend printed word: 150 ms
+\item visual motor reaction time to observed event: 1 s
+\begin{itemize}
+\item display busy/progress indicators for operations >1 s
+\item present a skeleton screen
+\end{itemize}
+\item time to prepare for conscious cognition task: 10 s
+\begin{itemize}
+\item display a fake version of application interface or image of document on last save
+while real one loads in < 10s
+\end{itemize}
+\item duration of unbroken attention to a single task: 6 s to 30 s
+\end{itemize}
+
+Skelton screens are a minimal version of an interface while the real one loads
+(generic layout or minimal version of content).
+\begin{itemize}
+\item user adjusts to layout
+\item loading process seems faster since there is an initial result
+\end{itemize}
+
+Progress indicator best practices:
+\begin{itemize}
+\item show work remaining, not completed
+\item show total progress when multiple steps, not only step progress
+\item display finished state briefly at the end
+\item show smooth progress, not bursts
+\item use human precision, not computer precision
+\end{itemize}
+
+\textbf{Progressive loading} involves providing user with some data while loading the rest of the data.
+
+\textbf{Predicting next operation} involved using periods of low load to pre-compute resources to high
+probability requests, which speeds up subsequent responses.
+
+\textbf{Graceful degradation of feedback} involves simplifying feedback for high-computation tasks.
+
+Goals for handling long tasks in a UI are:
+\begin{itemize}
+\item to keep the UI responsive
+\item provide progress feedback
+\item ideally allow long task to be paused or cancelled
+\end{itemize}
+\section{Worker Thread}
+\label{sec:org525c182}
+With multi-threading, manage multiple concurrent threads with shared resources, but executing
+different instructions.
+
+Threads divide computation and reduce blocking.
+Concurrency risks exist, such as 2 threads updating a variable.
+
+Browsers support \textbf{worker threads}: dedicated works, shared works, and service workers.
+\section{Fetch API}
+\label{sec:orgafdb80e}
+The JS runtime environment has a JS Engine, Web API, and message queue.
+
+JS Engine has an execution context stack (ECS), with code to execute next, and a heap, with
+function definitions, objects, etc.
+
+Web API has a DOM API for handling DOM events, Fetch API for loading remote resources (cloud API,
+server data, etc), and timer functions (\texttt{setTimeout}, \texttt{setInterval}, \texttt{requestAnimationFrame}).
+
+Message queue holds methods for events that have occurred. Methods that generate messages are stored
+in the event table.
+
+To execute an asynchronous method from the message queue, it must be moved to the ECS.
+An event loop continually checks if the ECS is empty, and if it is, it moves a method from the
+message queue to the ECS to the JS Engine can execute it.
+
+Input events are asynchronous methods (callbacks bound to a DOM element).
+
+Fetch API is an interface for fetching resources across the network.
+The \texttt{fetch} function starts the process of fetching a resource from the network and returns a
+\texttt{Promise} object with 3 possible states:
+\begin{itemize}
+\item \emph{pending}: when fetch process is happening
+\item \emph{resolved}: when process was successful and has a valid response
+\item \emph{rejected}: when the process failed and has an error
+\end{itemize}
+
+Complex to get progress during fetch.
+\end{document}

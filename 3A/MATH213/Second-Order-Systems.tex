@@ -1,0 +1,114 @@
+% Created 2024-04-05 Fri 11:57
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Standard 2nd Order System, PI Controllers, and Extra Poles}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Standard 2nd Order System, PI Controllers, and Extra Poles},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Standard Second Order System}
+\label{sec:org62c989b}
+The standard second order system has a transfer function given by
+$$
+H(s) = \frac{\omega^{2}}{s^{2} + 2\xi \omega s + \omega^{2}}
+$$
+where \(\omega > 0\) and \(\xi \ge 0\).
+
+The poles of \(H(s)\) are \(s_{\pm} = -\xi \omega \pm \omega \sqrt{\xi^{2} - 1}\),
+and so forms of the solution depend on the poles.
+\subsection{Case 1: Overdamped Case}
+\label{sec:org93bd4bd}
+For 2 real distinct poles, \(\sqrt{\xi^{2} - 1}\) is real and more than 0.
+This means \(\xi > 1\) and this means the standard second order system can be
+decomposed as a sum of 2 first order systems with poles that have
+negative real parts.
+
+This means that for this case any bounded input will give a bounded system
+response.
+
+The system's impulse response is \(h(t) = A_{+} e^{s_{ +}t} + A_{-} e^{s_{ -}t}\)
+where the \(A\) terms are the coefficients of the corresponding poles in the
+PF decomposition.
+\subsection{Case 2: Critically Damped Case}
+\label{sec:orgdc9fc0f}
+For 1 real repeated pole, \(xi = 1\) and the repeated pole is at \(s_{root} = - \omega\),
+which has a negative real part.
+
+The system's impulse response is \(h(t) = \omega^{2} t e^{-\omega t}\).
+\subsection{Case 3: Underdamped Case}
+\label{sec:orgcbf7da7}
+For 2 complex conjugate poles with a non-zero real component, \(0 < \xi < 1\) and
+poles are at
+$$
+s_{\pm} = -\xi \omega \pm \omega j \sqrt{1 - \xi^{2}}
+$$
+which have negative real parts.
+
+The system's impulse response is
+$$
+h(t) = \frac{\omega}{\sqrt{1 - \xi^{2}}} e^{-\xi \omega t}
+\sin((\omega \sqrt{1 - \xi^{2}})t)
+$$
+
+If \(\omega\) increases, the poles move further from the origin and the response
+is faster.
+
+if \(\xi\) increases, \(\theta\) decreases and there is more damping.
+\subsection{Case 4: Undamped Case}
+\label{sec:org6339caf}
+For 2 complex conjugate poles with a zero real component, \(\xi = 0\) and poles are at
+$$
+s_{\pm} = \pm \omega j
+$$
+which have 0 real parts and so the system may not be well behaved.
+
+The system's impulse response is
+$$
+h(t) = \omega \sin(\omega t)
+$$
+\subsection{Step Response}
+\label{sec:org77ba733}
+The step response for \(\xi \ge 0\) other than \(\xi = 1\) is
+$$
+1 - \frac{1}{\sqrt{1 - \xi^{2}}} e^{-\xi \omega t} \sin \left(
+(\omega \sqrt{1 - \xi^{2}}) t + \theta
+\right)
+$$
+where \(\theta = \cos^{-1} \xi\).
+
+At \(\xi = 1\) this is a \(t\) scaled exponential.
+\section{PI Controllers}
+\label{sec:org97294b8}
+P controllers can get to goal quickly but miss the exact value.
+I controllers can get to exact velocity but too slowly.
+
+P and I controllers can be used together and give a system with
+transfer function
+$$
+H_{RV}(s) = \frac{\frac{k_{i}}{m} \left( \frac{k_{p}}{k_{i}} s + 1 \right)}{s^{2} +
+\left( \frac{b + k_{p}}{m} \right) s + \frac{k_{i}}{m}}
+$$
+\end{document}

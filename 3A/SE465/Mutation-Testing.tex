@@ -1,0 +1,158 @@
+% Created 2024-04-05 Fri 11:42
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Mutation Testing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Mutation Testing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Test Case Effectiveness}
+\label{sec:orge75f001}
+The best test suite can detect every bug, whenever a bug is introduced
+at least one test case will fail.
+
+To measure effectiveness:
+\begin{itemize}
+\item simple solution: find all bugs in the software (causality dilemma)
+\item state-of-the-art solution: artificially inject bugs
+\begin{itemize}
+\item mutation testing: modify some statements in code so that there
+are different versions, where each version is a bug, to see if
+the test cases can find the bugs
+\end{itemize}
+\end{itemize}
+\section{Mutation Testing}
+\label{sec:orgf17829d}
+Fault-based testing: directed towards typical faults that could occur
+in a program
+
+Idea
+\begin{itemize}
+\item create similar programs (mutants) differing in one small way (fault)
+\item original test data is run through mutants
+\item if test data detects all differences in mutants, then mutants
+are dead, and test set is adequate
+\end{itemize}
+
+Should be used in conjunction with traditional testing techniques.
+
+Mutants remain live either because it is equivalent to the original
+program or test set is inadequate to kill the mutant.
+Automated mutant generation uses mutation operators (predefined
+program modification rules).
+
+Insignificant mutants:
+\begin{itemize}
+\item \textbf{stillborn mutant}: synactically incorrect, killed by compiler
+\item \textbf{trivial mutant}: killed by almost any test case
+\item \textbf{equivalent mutant}: produces same output as original program
+(undecidable problem)
+\end{itemize}
+
+Can design mutants that introduce non-functional issues (such
+as performance), but infection and propagation are hard to define.
+\subsection{Mutation Operators}
+\label{sec:orgba02110}
+Mutation operators change with programming languages, design,
+and specification paradigm. They should be representative
+of all realistic types of faults that could occur.
+
+Specific operators are:
+\begin{itemize}
+\item absolute value insertion
+\item arithmetic operator replacement
+\item relational operator replacement
+\item conditional operator replacement
+\item shift operator replacement
+\item logical operator replacement
+\item unary operator deletion
+\item scalar variable replacement
+\item bomb statement replacement
+\end{itemize}
+
+For OOP languages:
+\begin{itemize}
+\item replacing type with compatible subtype
+\item changing access modifier of attribute or method
+\item changing instance creation expression
+\item changing order of params in method definition
+\item changing order of params in a call
+\item removing an overloading method
+\item reducing the number of params
+\item removing an overriding method
+\end{itemize}
+
+\textbf{Competent programmer assumption}: given a spec a programmer
+develops a programmer that is either correct or differs from
+the correct program by a combination of simple errors
+
+\textbf{Coupling effect assumption}: test data that distinguishes
+all programs differing from a correct one by only
+simple errors is so sensitive that it also implicitly
+distinguishes more complex errors (complex faults
+coupled to simple faults)
+\section{Mutation Coverage}
+\label{sec:orgdb0e7fe}
+Complete coverate equates to killing all non-equivalent
+mutants, with the amount of coverage called mutation score.
+$$
+        \text{mutation score} = 100 * \frac{\text{dead mutants}}
+        {(\text{\# of mutants} - \text{\# of equivalent mutants})}
+$$
+
+\textbf{Strong mutation}: fault must be reachable, infect the state,
+and propagate to output
+
+\textbf{Weak mutation}: fault which kills mutant needs only be reachable
+and infect the state
+\subsection{Types of Mutation Coverage}
+\label{sec:org655d26c}
+\subsubsection{Strong Mutation Coverage}
+\label{sec:org1ce966b}
+Strongly killing mutants
+\begin{itemize}
+\item given a mutant \(m\) for a program \(P\) and a test case \(t\),
+\(t\) is said to strongly kill \(m\) iff the output of \(t\)
+on \(P\) is different from the output of \(t\) on \(M\)
+\end{itemize}
+
+\textbf{Strong mutation coverage}: for each mutant \(m\) in \(M\),
+a test case exists that strongly kills \(m\)
+\subsubsection{Weak Mutation Coverage}
+\label{sec:org3f92ed1}
+Weakly killing mutants
+\begin{itemize}
+\item given a mutant \(m\) that modifies a source location \(L\)
+in a program \(P\) and a test case \(t\),
+\(t\) is said to weakly kill \(m\) iff the state of the
+execution of \(P\) on \(t\) is different from the
+state of the execution of \(m\) on \(t\),
+immediately after some execution of \(L\)
+\end{itemize}
+
+\textbf{Weak mutation coverage}: for each mutant \(m\) in \(M\),
+a test case exists that weakly kills \(m\)
+\end{document}

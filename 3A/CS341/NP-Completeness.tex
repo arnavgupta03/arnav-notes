@@ -1,0 +1,104 @@
+% Created 2024-03-30 Sat 02:09
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{NP-Completeness}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={NP-Completeness},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{NP Class}
+\label{sec:org5e36904}
+For a problem \(X\), represent an instance of \(X\) as a binary string \(S\).
+
+A problem \(X\) is \textbf{in NP} if there is a polynomial time verification algorithm \(ALG_{X}\) such that
+the input \(S\) is a yes-instance if and only if there is a proof (certificate) \(t\) which is a binary
+string of length \(\text{poly}(|S|)\) so that \(ALG_{X}(S,t)\) returns yes.
+
+Vertex Cover, Clique, IS, HC, HP, Subset-Sum, and 3-SAT are in NP.
+
+Not all problems are in NP.
+
+\textbf{co-NP}: the set of decison problems whose no-instances can be certified in polynomial time
+
+Every polynomial time solvable problem is in NP, where \textbf{P} is the set of decision problems that
+can be solved in polynomial time.
+$$
+P \subseteq NP
+$$
+The most important open problme in theoretical computer science is \(P = NP\)?
+
+The name NP comes from Non-deterministic Polynomial time, where a non-deterministic machine
+has the power to correctly guess a solution.
+\section{NP-Completeness}
+\label{sec:org537a92c}
+A problem is NP-complete if it is the hardest problem in NP.
+
+A problem \(X \in NP\) is \textbf{NP-complete} if \(Y \le_{P} X\) for all \(Y \in NP\)
+
+\(P = NP\) if an only if an NP-complete problem can be solved in poly-time
+
+3-SAT is NP-Complete, proven by Cook and Levin
+
+Consequences of this are
+\begin{itemize}
+\item for any NP problem \(X\), if one can prove 3-SAT \(\le_{P} X\), then \(X\) is NP-complete
+\item to prove that a problem \(X \in NP\) is NP-complete, just need to find an NP-complete problem
+\(Y\) and prove that \(Y \le_{P} X\)
+\end{itemize}
+
+Some NP-complete problems are
+\begin{itemize}
+\item 3-SAT, SAT
+\item independent set, vertex cover, clique
+\item (directed) Hamiltonian cycle, Hamiltonian path
+\item travelling salesman
+\item subset sum
+\item 0/1 knapsack
+\end{itemize}
+\subsection{Circuit Satisfiability}
+\label{sec:org9da4aff}
+Circuit-SAT is defined by
+\begin{itemize}
+\item instance: a circuit is a DAG with labels on the vertices
+\item inputs labelled by and/or/not
+\item there is a marked vertex \(v\) for output
+\item \textbf{problem}: is there a choice of boolean \(x_{i}\) that makes \(v\) true
+\end{itemize}
+
+Plan for the Cook-Levin Theorem is
+\begin{enumerate}
+\item show that Circuit-SAT is NP-complete
+\item show that Circuit-SAT \(\le_{P}\) 3-SAT
+\end{enumerate}
+
+Sketch of proof that Circuit-SAT is NP-complete uses the following idea:
+\begin{itemize}
+\item given: instance \(S\) of \(A \in NP\)
+\item want: proof (certificate) \(t\) such that \(ALG_{A}(S,t)\) is true
+\item verification algorithm \(ALG_{A}(S,t)\) can be turned into a circuit with \(t\) as input
+\item call Circuit-SAT to find \(t\)
+\end{itemize}
+\end{document}

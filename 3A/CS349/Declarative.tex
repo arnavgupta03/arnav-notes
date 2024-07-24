@@ -1,0 +1,142 @@
+% Created 2024-04-19 Fri 01:31
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Declarative}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Declarative},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{UI Programming Paradigms}
+\label{sec:org843ccc0}
+Imperative is describing \emph{how} to achieve a result.
+Declarative is describing \emph{what} the desired result is.
+
+SimpleKit used imperative to build a UI (tree of nodes with events, code describes how to
+make that tree).
+
+HTML can be declarative (tree of nodes with events, but markup describes the desired tree/DOM).
+
+Some DOM manipulation methods mix declarative and imperative UI building with HTML
+for declarative (layout) and TypeScript for imperative (events or modifying layout).
+\section{Declarative Syntax}
+\label{sec:org4356248}
+HyperScript is a language to generate descriptions of UI trees.
+\texttt{hyperscript} is an npm package to generate HyperScript.
+
+HyperScript function calls create a representation of the UI tree, which is a JS object.
+This is commonly referred to as a virtual DOM.
+
+HTM is syntactic sugar for HyperScript.
+\section{Components and Virtual DOM}
+\label{sec:org450ec9d}
+Virtual DOM is used for 2 purposes:
+\begin{enumerate}
+\item render an actual DOM using imperative methods
+\item lightweight abstraction of DOM to compare changes, which enables efficient DOM diffing for
+reactivity
+\end{enumerate}
+\section{Preact and JSX}
+\label{sec:orge51820b}
+\textbf{Library}: a collection of code (types, objects, functions, etc)
+\begin{itemize}
+\item can use parts in a flexible way
+\item call library code
+\item unopinionated collections of code
+\item ex. React, Preact, Bootstrap
+\end{itemize}
+
+\textbf{Framework}: a structure to use a collection of provided code
+\begin{itemize}
+\item modify and extend, but follow a set of rules
+\item framework calls code (inversion of control)
+\item frameworks are opinionated libraries
+\item ex. Angular, NextJS
+\end{itemize}
+
+\textbf{Toolkit}: a collection of compatible libraries, such as Bootstrap
+
+\textbf{Tool}: software to perform a certain task, such as Vite
+
+Preact is not a reimplementation of React.
+Differences are:
+\begin{itemize}
+\item Preact uses native DOM elements, where React has its own synthetic event system
+\begin{itemize}
+\item quirks: onInput vs onChange, onDblClick vs onDoubleClick
+\end{itemize}
+\item Preact treats children nodes as native JS arrays, where React has its own object for managing
+children
+\item Preact supports \texttt{class} to set class attribute, where React uses \texttt{className}
+\end{itemize}
+\subsection{JSX}
+\label{sec:org52f0ed2}
+Describe DOM trees with a mixture of JS and HTML.
+Files with JSX are compiled into JS (hyperscript function calls).
+
+How JSX works:
+\begin{enumerate}
+\item JSX is compiled into hyperscript
+\item hyperscript is used to render
+\begin{enumerate}
+\item \texttt{h} function to create a virtual DOM object
+\item \texttt{render} function to create DOM from virtual DOM
+\end{enumerate}
+\end{enumerate}
+\subsection{Components}
+\label{sec:org8d9dd63}
+Components are the building blocks of a Preact application, and have custom properties (props).
+
+Functions are the most common way to create components.
+
+Components can also be defined as classes, though this is no longer common and functional
+components are better.
+
+Components can be nested like HTML elements, and can have HTML or components nodes as children.
+Enables control over how virtual DOM elements nested witin a component should be rendered.
+Array of children is a special implicit prop.
+
+For TypeScript, best practice is to define a props type for a component, which can have
+optional props.
+
+Props can be destructured in the functional component header to make it easier to assign
+default prop values.
+
+Preact uses standard DOM events with declarative syntax.
+If the even handler is small, the function can be defined inline.
+Else, a handler function should be called.
+
+Event handlers can be passed as props to components.
+
+An \textbf{expression} is a valid unit of code that resolves to a value.
+
+JSX is an expression, and everything in JSX must be an expression, using curly braces.
+For arrays, use map. For conditional logic, use the ternary operator.
+
+For dynamic attributes, either use template literal or hyperscript object.
+
+If code does not naturally have a single root node, wrap component nodes in
+\texttt{<Fragment>} or \texttt{<>} tags, which are not rendered in the DOM.
+\end{document}

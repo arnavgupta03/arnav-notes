@@ -1,0 +1,85 @@
+% Created 2024-04-09 Tue 17:52
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Dynamic Programming Part 2}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Dynamic Programming Part 2},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Longest Increasing Subsequence}
+\label{sec:orgc9e0fca}
+\textbf{Input}: an array \(A\) of \(n\) integers
+
+\textbf{Output}: a longest increasing subsequence of \(A\) that doe not need to be contiguous
+
+\textbf{Remark}: there are \(2^{n}\) subsequences
+\subsection{Idea}
+\label{sec:org467c0ff}
+A longest increasing subsequence \(S\) ending at \(A[i]\) looks like
+\(S = [..., A[j], A[i]] = s' + [A[i]]\).
+
+\(S'\) is a longest increasing subsequence ending at \(A[j]\) or empty.
+
+Don't know \(j\) but can try all \(j < i\) for which \(A[j] < A[i]\).
+
+\begin{verbatim}
+LongestIncreasingSubsequence(A[1..n]):
+  L[1] = 1
+  for i in range(2, n):
+      L[i] = 1
+      for j in range(1, i-1):
+          if A[j] < A[i]:
+              L[i] = max(L[i], L[j] + 1)
+  return max entry in L
+\end{verbatim}
+
+\textbf{Runtime}: \(\Theta(n^{2})\)
+
+\textbf{Remark}: the algorithm does not return the sequence itself, but could be modified
+to do so
+\section{Longest Common Subsequence}
+\label{sec:org4848e07}
+\textbf{Input}: arrays \(A\) and \(B\) of length \(n\) and \(m\) characters respectively
+
+\textbf{Output}: the max length \(k\) of a common subsequence to \(A\) and \(B\) (no need to be contiguous)
+
+\textbf{Remark}: there are \(2^{n}\) subsequences in \(A\) and \(2^{m}\) subsequences in \(B\)
+\subsection{Bivariate Recurrence}
+\label{sec:orgd1af8be}
+\textbf{Definition}: let \(M[i,j]\) be the longest subsequence between \(A[1..i]\) and \(B[1..j]\)
+\begin{itemize}
+\item \(M[0, j] = 0\) for all \(j\)
+\item \(M[i, 0] = 0\) for all \(i\)
+\item \(M[i, j]\) is the max of up to 3 values:
+\begin{itemize}
+\item \(M[i, j-1]\) (don't use \(B[j]\))
+\item \(M[i-1, j]\) (don't use \(A[i]\))
+\item \(1 + M[i-1, j-1]\) if \(A[i] = B[j]\)
+\end{itemize}
+\end{itemize}
+
+The algorithm computes all \(M[i, j]\) using 2 nested loops so runtime \(\Theta(mn)\)
+\end{document}

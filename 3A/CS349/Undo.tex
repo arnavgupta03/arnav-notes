@@ -1,0 +1,163 @@
+% Created 2024-04-18 Thu 13:37
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Undo}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Undo},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Principles and Concepts}
+\label{sec:org8c39932}
+Benefits:
+\begin{itemize}
+\item allows recovery from errors (input/human and interpretation/computer)
+\begin{itemize}
+\item can work quickly and without fear
+\end{itemize}
+\item enables exploratory learning
+\begin{itemize}
+\item try things without knowing consequences
+\item try alternative solutions
+\end{itemize}
+\item evaluate modifications
+\begin{itemize}
+\item fast do-undo-redo cycle to evaluate last change to document
+\end{itemize}
+\end{itemize}
+
+Checkpointing is a manual undo method, save the current state to rollback later.
+\section{Undo Patterns}
+\label{sec:org271160b}
+Undo design choices:
+\begin{enumerate}
+\item \textbf{undoable actions}: what actions can/should be undone
+\item \textbf{state restoration}: what part of UI is restored after undo
+\item \textbf{granularity}: how much should be undone at a time
+\item \textbf{scope}: is undo global, local, or somewhere in between
+\end{enumerate}
+\subsection{Undoable Actions}
+\label{sec:orgd30cd03}
+Some actions may be omitted, destructive, not easily undone, or cannot be undone.
+
+Suggestions:
+\begin{itemize}
+\item all changes to the document/model should be undoable
+\item changes to the view/interface should only be undoable if tedious or requiring significant effort
+\item ask for confirmation before doing a destructive action that cannot be easily undone
+\end{itemize}
+\subsection{State Restoration}
+\label{sec:org06595e6}
+User interface state should be meaningful after redo action:
+\begin{itemize}
+\item restore prior selection of objects restored by redo
+\item scroll to show restored objects (if necessary)
+\item give focus to the control where the state was restored
+\end{itemize}
+\subsection{Granularity}
+\label{sec:orga5966c8}
+A \textbf{chunk} is conceptual change from one state to another, where interaction can be divided into
+undoable chunks and undo reverse 1 chunk.
+
+For drawing interactions, undo full lines, not pixels.
+
+For text interactions, rules differ but can be by word, sentence, timing, line, etc.
+
+Suggestions:
+\begin{itemize}
+\item ignore direct manipulation intermediate states
+\item delimit chunks on discrete input breaks
+\item chunk all changes resulting from a single interface event
+\end{itemize}
+\subsection{Scope}
+\label{sec:org8af59dc}
+One option is to treat all windows as a single model, with a single set of actions that can be undone,
+so on undo/redo, change window focus.
+
+Another option is to have multiple undo/redo stacks, one for each window, and use whichever has focus
+(more typical).
+\section{Implementation}
+\label{sec:org5136925}
+General approaches are:
+\begin{itemize}
+\item \textbf{forward undo}: start from base document, maintain list of changes to compute current document,
+undo by removing last change from list when computing current document
+\item \textbf{reverse undo}: apply change to update document but also save reverse change, undo by applying reverse
+change to document
+\end{itemize}
+
+A \textbf{change record} defines a single transformation to the document/model.
+\subsection{Forward Undo}
+\label{sec:org69d6263}
+Save baseline document state at some past point: \(S^{*}\)
+
+Save change records to transform baseline document into current document state:
+\(S = (c(b(a(S^{*}))))\)
+
+To undo last action, don't apply last change record:
+\$S' = (b(a(S\textsuperscript{*})))
+\subsection{Reverse Undo}
+\label{sec:org77e5abc}
+Save complete current document state: \(S\)
+
+Save reverse change records to return to previous state: \(\{c^{-1}, b^{-1}, a^{-1}\}\)
+
+To undo last change, apply last reverse change record: \(S' = c^{-1}(S)\)
+\subsection{Implementation with Stacks}
+\label{sec:orgfa6ae37}
+Both options require stacks:
+\begin{itemize}
+\item \textbf{undo stack}: all change records, saved as actions performed
+\item \textbf{redo stack}: change records that have been undone (must be reapplied with redo)
+\end{itemize}
+\subsubsection{Reverse Undo Command Pattern}
+\label{sec:orgc0199d0}
+User issues a command, which is executed to create a new document state, then reverse command is
+pushed onto the undo stack, and redo stack is cleared.
+
+Undo pops reverse command from undo stack and executes it to create new document state and
+pushes command onto redo stack.
+
+Redo pops command off redo stack and executes it to create new document state and push reverse
+command onto undo stack.
+
+Reverse Change Record Implementation Options:
+\begin{itemize}
+\item \textbf{command} pattern: save command and reverse command to change state
+\item \textbf{memento} pattern: save snapshots of each document state, could be complete state or
+difference from last state
+\begin{itemize}
+\item executing undo moves top memento to redo stack, then uses new top of undo stack to set model
+\item needs base memento in constructor, so when undo stack is empty, base memento is used
+\end{itemize}
+\end{itemize}
+\subsection{Destructive Commands}
+\label{sec:orga377dc3}
+One option is to use forward command undo.
+
+Another option is to use reverse command undo, but the un-execute command stores previous state for
+destructive commands (a memento).
+Could require a lot memory, so some application limit size of undo stack.
+\end{document}

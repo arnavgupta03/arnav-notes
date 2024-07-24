@@ -1,0 +1,405 @@
+% Created 2024-03-25 Mon 01:44
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Uniprocessor Scheduling}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Uniprocessor Scheduling},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.2 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Types of Processor Scheduling}
+\label{sec:org1e4b5b0}
+\textbf{Long-term scheduling}: decision to add to the pool of processes to be executed
+
+\textbf{Medium-term scheduling}: decision to add to the number of processes that are partially or
+fully in main memory
+
+\textbf{Short-term scheduling}: decision as to which available process will be executed by the
+processor
+
+\textbf{IO scheduling}: decision as to which process's pending IO request shall be handled by an
+available IO device
+
+The aim of processor scheduling is to assign processes to be executed by the processor or
+processors over time, in a way that meets system objectives (response time, throughput,
+processor efficiency).
+
+Scheduling affect system performance since it determines which processes wait and which
+progress.
+Scheduling involves managing queues to minimize queueing delay and to optimize performance
+in a queueing environment.
+\subsection{Long-Term Scheduling}
+\label{sec:org8b7eb74}
+Controls the degree of multiprogramming since it determines which programs are admitted
+to the system.
+
+A newly created process can be added to a queue for a short-term scheduler (admitted)
+or a medium-term scheduler (swapped-out).
+
+Newly submitted jobs are routed to disk and held in a batch queue, which the long-term
+scheduler creates processes from, based on 2 decisions:
+\begin{enumerate}
+\item when the OS can take on one or more additional processes
+\begin{itemize}
+\item driven by the desired degree of multiprogramming
+\item more processes created, smaller percentage of time each process can be executed
+\item each time a job terminates, scheduler may add 1+ jobs
+\item if the fraction of idle time exceeds a threshold, scheduler may be invoked
+\end{itemize}
+\item which job(s) to accept and turn into processes
+\begin{itemize}
+\item can be based on first-come-first-serve or include priority, expected execution time,
+and IO requirements
+\end{itemize}
+\end{enumerate}
+
+For interactive programs in a time-sharing system, the OS accepts all users until the
+system is saturated.
+\subsection{Medium-Term Scheduling}
+\label{sec:org0c46e28}
+Part of the swapping decision, based on memory requirements (memory management) and the
+need to manage the degree of multiprogramming.
+\subsection{Short-Term Scheduling}
+\label{sec:org0dd9ffd}
+Executes most frequently, is invoked whenever an event occurs that may lead to the
+blocking of the current process or provides an opportunity to preempt a currently
+running process in favour of another.
+Such events are:
+\begin{itemize}
+\item clock interrupts
+\item IO interrupts
+\item operating system calls
+\item signals (ex. semaphores)
+\end{itemize}
+\section{Scheduling Algorithms}
+\label{sec:org1e3e68b}
+\subsection{Short-Term Scheduling Criteria}
+\label{sec:org848978e}
+\textbf{Objective}: allocate processor time to optimize 1+ aspects of system behaviour
+
+\textbf{User-oriented criteria} relate to the behaviour of the system as perceived by a user
+or process. (ex. response time - time between request submission and response output)
+\textbf{System-oriented criteria} have the focus on effective and efficient processor
+utilization. (ex. throughput - rate at which processes are completed)
+User-oriented criteria always important, system-oriented criteria only important if
+more than 1 user.
+
+\textbf{Performance-related criteria} are quantitative and can be readily measured (response
+time and throughput). \textbf{Other criteria} are qualitative or cannot be readily measured
+(predictability).
+
+Criteria are interdependent, cannot all be satisfied.
+\subsubsection{User-Oriented, Performance Related}
+\label{sec:orgbf1f197}
+\textbf{Turnaround time}: interval between submission of a process and completion (execution
+time plus time spent waiting for resources
+
+\textbf{Response time}: time from submission of a request and when the response is received
+(request could still be being processed)
+
+\textbf{Deadlines}: when process completion deadlines can be specified, scheduling should
+maximize the percent of deadlines met
+\subsubsection{User-Oriented, Other}
+\label{sec:org8f16e0b}
+\textbf{Predictability}: a job should run in the same amount of time and cost regardless of
+system load
+\subsubsection{System-Oriented, Performance Related}
+\label{sec:org59cb16f}
+\textbf{Throughput}: maximize number of processes completed per unit time (how much work is being
+performed)
+
+\textbf{Processor utilization}: percent of time the processor is busy
+\subsubsection{System-Oriented, Other}
+\label{sec:orgce117b3}
+\textbf{Fairness}: processes should be treated the same, none starving unless otherwise specified
+
+\textbf{Enforcing priorities}: scheduling policy should favour high-priority process
+
+\textbf{Balancing resources}: scheduling policy should keep the resources of the system busy
+\subsection{Use of Priorities}
+\label{sec:org7498890}
+Priority can be implemented with multiple queues in descending order of priority.
+Lower-priority processes may suffer starvation, which can be solved by having the priority
+of a process change with its age or execution history.
+\subsection{Alternative Scheduling Policies}
+\label{sec:org67ccf2e}
+\textbf{Selection function}: determines which process is selected next for execution, could depend
+on priority, resource requirements, or execution characteristics of the process.
+
+\begin{itemize}
+\item \(w\) is the time spent in system so far waiting
+\item \(e\) is the time spent in execution so far
+\item \(s\) is the total service time required by the process including \(e\)
+\end{itemize}
+
+\textbf{Decision mode}: specifies the instants in time when the selection function is exercised:
+\begin{itemize}
+\item \textbf{nonpreemptive}: a running process continues to execute until it terminates or blocks
+itself to wait for IO or some OS service
+\item \textbf{preemptive}: the currently running process may be interrupted by the OS, done when a
+new process arrives, when an interrupt occurs that readies a blocked process, or
+on a clock interrupt
+\end{itemize}
+
+Preemptive policies have more overhead but could have better service.
+Cost can be kept low with efficient process-switching and large main memory.
+\subsubsection{First-Come-First-Served}
+\label{sec:orgcdfdf07}
+As each process becomes ready, it joins the ready queue.
+When the current process ceases to execute, the process that has been the queue the
+longest is selected for running.
+
+Performs better for long processes than short ones.
+Favours processor-bound processes over IO-bound processes.
+
+With priorities, can create an effective scheduler.
+\subsubsection{Round Robin}
+\label{sec:org4d7a2ac}
+When an interrupt occurs, the current process is placed in the ready queue and the
+next ready job is selected on a FCFS basis.
+
+\textbf{Time-slicing}: each process given a slice of time before being preempted
+
+Principle design issue is length of time quantum: very short means too much overhead.
+Time quantum should be slightly greater than the time required for a typical
+interaction or process funciton.
+
+Particularly effective in a general-purpose time-sharing system or transaction
+processing system. Drawback is that processor-bound processes tend to receive an
+unfair portion of processor time.
+
+Virtual round robin uses an auxiliary queue for processes that are moved after
+being released from an IO block. Processes in the auxiliary queue get preference
+over those in the main ready queue. It then runs no longer than a time equal to
+the basic time quantum minus the total time spent running since it was last
+selected from the main ready queue.
+\subsubsection{Shortest Process Next}
+\label{sec:orgf1c8781}
+Nonpreemptive policy where the process with the shortest expected processing
+time is selected next.
+
+Overall performance is improved in terms of response time, though response times
+vary more so less predictability.
+Further, difficult to know actual required processing time.
+
+For interactive processes, the OS keeps a running average of each burst for
+each process. The calculation used is
+$$
+S_{n+1} = \frac{1}{n} T_{n} + \frac{n-1}{n} S_{n}
+$$
+where \(T_{i}\) is the processor execution time for instance \(i\) of the process
+(total exec time for batch job, burst time for interactive job) and
+\(S_{i}\) is the predicted value for instance \(i\)
+
+Preference is giving weight to more recent instances so \textbf{exponential averaging}
+is used:
+$$
+S_{n+1} = \alpha T_{n} + (1 - \alpha) S_{n}
+$$
+where \(\alpha\) is a constant weighting factor. If \(\alpha\) close to 1, the
+average will quickly reflect a rapid change in the observed quantity.
+
+Exponential averaging tracks changes in process behaviour faster than simple
+averaging.
+
+SPN could starve longer processes if enough shorter processes. Though, reduces
+bias in favour of longer jobs. Undesirable for certain environments because of
+lack of preemption.
+\subsubsection{Shortest Remaining Time}
+\label{sec:org24a67a7}
+Scheduler always chooses the process that has the shortest expected remaining processing
+time.
+
+Scheduler may preempt the current process when a new process becomes ready. Must have an
+estimate of processing time to select, and still a risk of starvation of longer
+processes.
+
+Less overhead than round robin since no additional interrupts, though elapsed service
+time must be recorded.
+Faster turnaround time since shorter jobs can preempt longer ones.
+\subsubsection{Higher Response Ratio Next}
+\label{sec:orgbdca44a}
+Based on the ratio
+$$
+R = \frac{w + s}{s}
+$$
+where \(R\) is the \textbf{response ratio}, \(w\) is the time spent waiting for the processor, and
+\(s\) is the expected service time.
+
+Scheduling rule is that when the current process completes or is blocked, choose the
+ready process with the greatest \(R\) value (accounts for process age).
+
+Shorter jobs are favoured but longer processes will also eventually get past competing
+shorter jobs.
+\subsubsection{Feedback}
+\label{sec:org72fecf8}
+SPN, SRT, HRRN cannot be used if no indication of relative process length.
+
+Scheduling is preemptive and dynamic priority is used.
+Every time a running process is preempted, it is demoted to the next lower-priority
+queue.
+Within each queue other than the lowest-priority one, FCFS is used, otherwise round
+robin used.
+Known as \textbf{multilevel feedback}.
+
+Turnaround time can stretch out alarmingly. Can cause starvation if new jobs enter
+system frequently, can compensate by varying time allowed to execute before
+preemption for each queue.
+Another remedy is to promote a process to a higher-priority queue after it spends
+some time in its current queue.
+\subsection{Performance Comparison}
+\label{sec:org0832264}
+Relative performance depdends on distribution of service times, efficiency of scheduling
+and context switching mechanisms, nature of IO demand, and performance of IO subsystems.
+\subsubsection{Queueing Analysis}
+\label{sec:org5060f51}
+Any scheduling discipline that chooses the next item independent of service time obeys
+$$
+\frac{T_{r}}{T_{s}} = \frac{1}{1 - \rho}
+$$
+where \(T_{r}\) is the turnaround time, \(T_{s}\) is the average service time, and \(\rho\)
+is the processor utilization.
+
+For scheduling algorithms that account for service time, compared to FCFS, relative
+performance can be found by considering priority scheduling in which priority is
+based on service time.
+
+For queues with 2 priority categories, assume:
+\begin{enumerate}
+\item poisson arrival rate
+\item priority 1 items are services before priority 2 items
+\item FCFS dispatching for items of equal priority
+\item no item interrupted while being served
+\item no items leave the queue (lost calls delayed)
+\end{enumerate}
+\(\lambda\) is the arrival rate.
+The general formulas are:
+$$
+\lambda = \lambda_{1} + \lambda_{2}
+$$
+$$
+\rho_{1} = \lambda_{1} T_{s1} ; \rho_{2} = \lambda_{2} T_{s2}
+$$
+$$
+\rho = \rho_{1} + \rho_{2}
+$$
+$$
+T_{s} = \frac{\lambda_{1}}{\lambda} T_{s1} + \frac{\lambda_{2}}{\lambda}T_{s2}
+$$
+$$
+T_{r} = \frac{\lambda_{1}}{\lambda} T_{r1} + \frac{\lambda_{2}}{\lambda}T_{r2}
+$$
+If no interrupts, with exponential service times:
+$$
+T_{r1} = T_{s1} + \frac{\rho_{1}T_{s1} + \rho_{2}T_{s2}}{1 + \rho_{1}}
+$$
+$$
+T_{r2} = T_{s2} + \frac{T_{r1} - T_{s1}}{1 - \rho}
+$$
+With preemptive-resume queueing discipline and exponential service times:
+$$
+T_{r1} = T_{s1} + \frac{\rho_{1}T_{s1}}{1 - \rho_{1}}
+$$
+$$
+T_{r2} = T_{s2} + \frac{1}{1 - \rho_{1}} \left(
+\rho_{1} T_{s2} + \frac{\rho T_{s}}{1 - \rho}
+\right)
+$$
+\subsubsection{Simulation Modelling}
+\label{sec:orgcd32060}
+Discrete-event simulation allows a wide range of policies to be modelled, but the results
+for a given run only apply to that particular collection of processes under a particular
+set of assumptions.
+
+Results are presented by grouping processes into service-time percentiles so effects
+of policiies can be viewed as a function of process length.
+\subsection{Fair-Share Scheduling}
+\label{sec:orgbcfe6af}
+In a multiuser system, it is attractive to make scheduling decisions based on sets of processes
+that compose an application which is \textbf{fair-share scheduling}.
+Similar for time-sharing systems, except with groups of users.
+
+Each user assigned a weighting of some sort that defines the user's share of system
+resources as a fraction of total resource usage (a share of the processor).
+
+The fair-share scheduler considers the execution history of a related group of processes
+and each process's execution history to make scheduling decisions.
+The system divides users into groups and allocates each group some processor.
+
+Scheduling done on the basis of priority and accounts for the underlying priority of the
+process, its recent processor usage, and the recent processor usage of the group to which
+the process belongs.
+For a process \(j\) in group \(k\):
+$$
+CPU_{j}(i) = \frac{CPU_{j}(i-1)}{2}
+$$
+$$
+GCPU_{k}(i) = \frac{GCPU_{k}(i-1)}{2}
+$$
+$$
+P_{j}(i) = Base_{j} + \frac{CPU_{j}(i)}{2} + \frac{GCPU_{k}(i)}{4 \times W_{k}}
+$$
+where \(CPU_{j}(i)\) is the processor utilization by process \(j\) through interval \(i\),
+\(GCPU_{k}(i)\) is the processor utilization of group \(k\) through interval \(i\),
+\(P_{j}(i)\) is the priority of process \(j\) at the beginning of interval \(i\) (lower value
+is higher priority),
+\(Base_{j}\) is the base priority of process \(j\),
+and \(W_{k}\) is the weighting assigned to group \(k\).
+
+Each process has a base priority that drops as the process uses the processor and the group
+uses the processor.
+Greater the weight assigned to the group, the less its utilization affects its priority.
+\section{Traditional UNIX Scheduling}
+\label{sec:org114db5f}
+Primarily for time-sharing interactive environments, to provide good response time for
+interactive users while ensuring low-priority background jobs do not starve.
+
+Uses multilevel feedback using round robin within each priority queue.
+System uses 1 second preemption, so if a running process does not block or complete within
+1 second, it is preempted.
+Priority based on process type and execution history with the following formulas:
+$$
+CPU_{j}(i) = \frac{CPU_{j}(i-1)}{2}
+$$
+$$
+P_{j}(i) = Base_{j} + \frac{CPU_{j}(i)}{2} + nice_{j}
+$$
+where \(nice\) is a user-controllable adjustment factor.
+
+Priority of each process recomputed once per second.
+Band priority divides all processes into fixed bands of priority levels.
+\(CPU\) and \(nice\) are restricted to prevent a process from migrating out of assigned band.
+In decreasing order of priority, bands are:
+\begin{itemize}
+\item swapper
+\item block IO device control
+\item file manipulation
+\item character IO device control
+\item user processes
+\end{itemize}
+Provides most efficient use of IO devices.
+For user-processes band, execution history penalizes processor-bound processes, improving
+efficiency.
+\end{document}

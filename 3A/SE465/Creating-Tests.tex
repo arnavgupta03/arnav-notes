@@ -1,0 +1,234 @@
+% Created 2024-04-05 Fri 11:45
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Creating Tests}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Creating Tests},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Creating Test Cases}
+\label{sec:org861de45}
+In order to increase coverage, one needs to generate
+test cases that exercise certain statements or follow
+specific paths:
+\begin{itemize}
+\item how to make paths execute: generate input data that
+satisfies all conditions on the path
+\item key items: input vector, predicate, path predicate,
+predicate interpretation, path predicate expression,
+create test input from path predicate expression
+\end{itemize}
+
+\textbf{Input vector}: collection of all data entities
+read by the routine whose values must be fixed
+prior to entering the routine
+\begin{itemize}
+\item members include input arguments, global vars and
+constants, files, network connections, timers
+\end{itemize}
+
+\textbf{Predicate}: a logical function evaluated at a
+decision point
+
+\textbf{Path predicate}: the set of predicates associated
+with a path
+\begin{itemize}
+\item may contain local variables that
+\begin{itemize}
+\item play no role in selecting inputs that force
+a path to execute
+\item cannot be selected independently of the input
+variables
+\item are eliminated with symbolic execution
+\end{itemize}
+\end{itemize}
+\subsection{Symbolic Execution}
+\label{sec:org5d986d4}
+Symbolically substituting
+operations along a path in order to express
+the predicate solely in terms of the input
+vector and a constant vector.
+
+Key idea:
+\begin{itemize}
+\item evaluate the program on symbolic input values
+\item use an automated theorem prover to check whether
+there are corresponding concrete input values that
+make the program fail
+\end{itemize}
+\subsection{Path Predicate Expression}
+\label{sec:org6ff7f3c}
+Another name for an interpreted path predicate.
+Has the following attributes:
+\begin{itemize}
+\item no local variables
+\item a set of constraints in terms of the input vector
+and maybe constants
+\item by solving the constraints, inputs that force each
+path can be generated
+\item if a path predicate expression has no solution,
+the path is infeasible
+\end{itemize}
+
+Can organize the set of path predicates using
+a decision table.
+\section{Principles of Maintainable Test Code}
+\label{sec:org01109c5}
+Tests should be fast. For slower tests:
+\begin{itemize}
+\item use mocks or stubs
+\item redesign production code so slower pieces of code
+can be tested separately from fast pieces
+\item move slower tests to a different test suite that you
+can run less often
+\end{itemize}
+
+
+Tests should:
+\begin{itemize}
+\item be cohesive: test a single behaviour of the system
+\item be independent: not depend on oher tests to succeed
+\item be isolated: clean up their mess and not rely on
+existing data
+\item have a reason to exist: find bugs or document behaviour
+\item be repeatable: always give same results no matter how
+many times they are executed
+\item have strong assertions: assert that exercised code
+behaves exactly as expected and break on any slight
+change in the output
+\item break if behaviour changes: TDD can help
+\item have a single reason to fail: test code should help
+understand what caused the bug
+\item be easy to write: write good test infrastructure
+that does all setup and tear down
+\item be easy to read: all info should be clear enough
+\item be easy to change and evolve: changing should not
+be painful, less coupled to production code
+\end{itemize}
+\section{Test Smells}
+\label{sec:orga0d6062}
+Code smell indicates symptoms that of deeper problems in
+source code, hindering comprehensibility and maintainability.
+\subsection{Eager Test}
+\label{sec:org2227ac9}
+When a test method checks several methods of the object
+to be tested, it is hard to read and understand so more
+difficult to be used as documentation.
+
+Solution: separate test code into test methods that only
+test one method
+\subsection{Lazy Test}
+\label{sec:org00c1974}
+Occurs when several test methods check the same method
+using the same fixture.
+
+Solution: join them together using inline method
+\subsection{Mystery Guest}
+\label{sec:org4400d37}
+When a test uses external resources, the test is no longer
+self-contained so difficult to understand tested
+functionality.
+Also this introduces hidden dependencies that can cause
+tests to fail.
+
+Solution: use refactoring inline resource, or if
+external resources are needed, apply setup external
+resource to remove hidden dependencies.
+\subsubsection{Refactoring: Inline Resource}
+\label{sec:orgc0ac75f}
+To remove the dependency between a test and some
+external resource, setup a fixture that holds
+the same content as the resource that is used to run
+the test.
+\subsubsection{Refactoring: Setup External Resource}
+\label{sec:org97624c9}
+If necessary for a test to rely on external
+resources, make sure the test explicitly creates
+or allocates these resources before test and
+releases them when done.
+\subsection{Resource Optimism}
+\label{sec:orgd731989}
+Test code that makes optimistic assumptions can cause
+non-deterministic behaviour in test outcomes (flaky tests).
+
+Solution: use setup external resource to allocate
+or initialize all resources used.
+\subsection{Test Run War}
+\label{sec:org619d083}
+Arise when tests run differently on different devices,
+caused by resource interference.
+
+Solution: apply make resource unique to overcome
+interference
+\subsubsection{Refactoring: Make Resource Unique}
+\label{sec:org9ecd8cb}
+Can solve issue of overlapping resource names by
+using unique IDs for all resources (timestamp).
+\subsection{General Fixture}
+\label{sec:org9b39b41}
+When setup fixtures are too general and different
+tests only access part of the fixture, tests run more slowly.
+
+Solution: use setup only for the part of fixture shared
+by all tests and put the rest of the fixture in the
+method that uses it.
+\subsection{Assertion Roulette}
+\label{sec:org7543319}
+Comes from having a number of assertions in a test method
+that have no explanation, if one fails, it is unknown why.
+
+Solution: add assertion explanations
+\subsection{Indirect Testing}
+\label{sec:org03e7f44}
+A test class should test its counterpart in production code,
+not other classes.
+
+Solution: move tests to appropriate class
+\subsection{For Tester Only}
+\label{sec:org0335f8c}
+When a production class contains methods only used by test methods.
+
+Solution: methods can be removed or are only needed to setup tests
+in which case they should be moved to test code
+\subsection{Sensitive Equality}
+\label{sec:org76c1d1f}
+Tests may depend on irrelevant details for equality checks.
+
+Solution: introduce equality method
+\subsubsection{Refactoring: Introduce Equality Method}
+\label{sec:org67e4583}
+If an object structure needs to be checked for equality in
+tests, add an implementation for the equals method.
+\subsection{Test Code Duplication}
+\label{sec:orgcabe8b9}
+Test code can have duplication of responsibility.
+
+Solution: can be removed by extracting methods
+\subsection{Other Test Smells}
+\label{sec:orgb0df1d0}
+Other examples are redundant assertions, unknown tests (without
+assertion), empty test, and duplicate assertions.
+\end{document}

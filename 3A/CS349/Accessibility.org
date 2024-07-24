@@ -1,0 +1,161 @@
+#+title: Accessibility
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Types of Disabilities
+UI Accessibility is developing content to be as accessibly as possible, no matter an individual's
+physical and cognitive abilities and how they access a UI.
+
+Parallel with physical accessibility, access to UIs is considered a human right.
+
+People vary in physical and mental capabilities (can be permanent, temporary, or situational).
+People have a range of ability dimensions like age, gender, cognitive, physical, culture,
+language, lived experience, emotional, and spiritual.
+
+Temporary and Situational disabilites are sick/injured, driving a car, underwater diving, using
+an ATM, etc.
+
+* Accessibility Approaches
+For those walking, as speed and difficulty increased, time to complete tasks and error rate
+increased.
+People read more slowly and answer questions more slowly while walking .
+
+To address situational walking impairment, address reduced dexterity and motor control and
+reduced cognitive ability.
+Increase size of elements and visual cues and widget targets.
+
+With higher age, motor coordination is reduced, visual and hearing impairments, and cognitive
+effects like loss of memory.
+
+For age-related impairments, keep infor simple (cognitive), high contrast colours and large
+text/icons (vision), and large widget and button sizes (motor).
+
+10 to 20% of the population is estimated to have a long term disability.
+
+Modern OS support for accessibility is:
+- control cursor from keyboard (motor)
+- adjust acceleration, tracking, precision (motor)
+- speech dictation (visual/motor)
+- magnify portions of the screen, adjust element sizes or fotn size, provide full voice
+  dictation (visual)
+- captions/subtitles (audio)
+
+For visual impairments:
+- zoom screen or specific area, increase font size
+- high contrast colours, dark mode, remove animations
+- screen reader, voice input
+- real world magnifier
+
+For hearing impairments:
+- show audio alerts visually (vibrate to flashlight alarm)
+- realtime audio processing to filter background noise and amplify the voice of another
+  person
+- monitor audio for certain sounds and send alert (ex. baby crying)
+
+For motor impairments:
+- sticky keys, slow keys, filter keys
+- reduce key repeat rate
+- eye tracking, voice input
+- physical switched and puffers
+- brain-computer interfaces (BCI)
+
+For cognitive impairments:
+- word prediction, grammar and spell check
+- text-to-speech
+- augmenting text with icons and pictures
+- slow down interface
+  - avoid sudden state changes
+  - reduce or remove unnecessary animations (ex. flickering)
+  - eliminate time sensitive actions
+
+Laws and programs designed to benefit vulnerable groups often end up benefiting
+all of society (curbcut effect).
+
+Closed captions benefit more than just those with hearing impairments.
+Helps with watching in silence, noisy environments, learning a 2nd language,
+watching foreign language content, and data mining video content.
+
+Legal obligations in Canada:
+- Accessible Canada Act
+  - government and federally regulated organizations
+  - expected to use Web Content Accessibility Guidelines (WCAG)
+  - fines up to $250k
+- Accessibility for Ontarians with Disabilities Act (since 2005)
+  - applies to all Ontario government websites
+  - applies to Ontario public and private entities (50+ employees)
+  - must adhere to Web Content Accessibility Guidelines (WCAG) 2.0
+  - fines up to $100k
+
+Legal obligations elsewhere:
+- US Disabilities and Rehabilitation Act (section 508)
+  - any organization doing business with federal agency or receives federal
+    funding
+- Americans with Disabilities Act (ADA)
+  - non-profits, business, local and state governments
+- European Union Web Accessibility Directive
+  - all government websites
+  - any organizations financed through public contracts
+
+* Implementing Web Accessibility
+*Accessibilty tree*: the browser generates an accessibility tree from the DOM with
+accessibility-related info for most HTML elements like name, description, role, state
+
+Can access accessibility tree from the DevTools accessibility tab.
+
+Web Content Accessibility Guidelines:
+- include alt text for info imags
+- use headings correctly
+- give links unique and descriptive names
+- use colour with care
+- use tables for tabular data, not layout
+- use ARIA roles and landmarks when necessary
+- make dynamic content accessible
+- make all content accessible using keyboard
+- design forms for accessibility
+
+Semantic HTML is using semantic elements that clearly describe the content meaning like
+article, aside, details, etc. Avoid using div and span for everything.
+
+For Preact, avoid div for component root if semantic element possible.
+Use Fragment instead of div if root has no semantic purpose.
+Some components could have different semantic roles, so use "as Element" pattern to set
+component root element.
+
+Add link at the top of the page so screen readers can skip to content.
+Can use CSS to hide until focused.
+
+ARIA (Accessible Rich Internet Applications) attributes are a specification to add
+semantics to elements.
+
+ARIA roles (use only if not possible to use an HTML element): toolbar, tooltip, feed,
+math, presentation, note
+
+ARIA states and properties (use only for attributes not supported on HTML element):
+aria-required, aria-checked, aria-disabled
+
+ARIA attributes only change the the accessibility tree.
+
+Colour blindness:
+- dichromacy is 1 type of cone missing
+  - protanopia: missing red cones
+  - deuteranopia: missing gree cones
+  - tritanopia: missing blue cones (and blue sensitive rods)
+- monochromacity is 2 or 3 types of cones missing
+
+Human ability to discriminate colours depends on context.
+
+Colour contrast is ratio of perceived luminance for 2 colours, such as
+white on white (1.0), red on white (4.0), and black on white (21.0).
+Can be checked in DevTools.
+
+WCAG colour contrast guidelines are minimum (level AA) at least 4.5 and
+enhanced (level AAA) at least 7.0.
+
+Basic a11y testing methods:
+- disconnect mouse and try to use the app
+  - tab and shift+tab to focus elements
+  - enter to activate element
+  - arrow keys when needed (menu dropdown)
+- test with a screen reader
+- a11y linters/checkers

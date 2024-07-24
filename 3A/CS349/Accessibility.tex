@@ -1,0 +1,225 @@
+% Created 2024-04-19 Fri 14:26
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Accessibility}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Accessibility},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Types of Disabilities}
+\label{sec:orgb92876a}
+UI Accessibility is developing content to be as accessibly as possible, no matter an individual's
+physical and cognitive abilities and how they access a UI.
+
+Parallel with physical accessibility, access to UIs is considered a human right.
+
+People vary in physical and mental capabilities (can be permanent, temporary, or situational).
+People have a range of ability dimensions like age, gender, cognitive, physical, culture,
+language, lived experience, emotional, and spiritual.
+
+Temporary and Situational disabilites are sick/injured, driving a car, underwater diving, using
+an ATM, etc.
+\section{Accessibility Approaches}
+\label{sec:orge66be48}
+For those walking, as speed and difficulty increased, time to complete tasks and error rate
+increased.
+People read more slowly and answer questions more slowly while walking .
+
+To address situational walking impairment, address reduced dexterity and motor control and
+reduced cognitive ability.
+Increase size of elements and visual cues and widget targets.
+
+With higher age, motor coordination is reduced, visual and hearing impairments, and cognitive
+effects like loss of memory.
+
+For age-related impairments, keep infor simple (cognitive), high contrast colours and large
+text/icons (vision), and large widget and button sizes (motor).
+
+10 to 20\% of the population is estimated to have a long term disability.
+
+Modern OS support for accessibility is:
+\begin{itemize}
+\item control cursor from keyboard (motor)
+\item adjust acceleration, tracking, precision (motor)
+\item speech dictation (visual/motor)
+\item magnify portions of the screen, adjust element sizes or fotn size, provide full voice
+dictation (visual)
+\item captions/subtitles (audio)
+\end{itemize}
+
+For visual impairments:
+\begin{itemize}
+\item zoom screen or specific area, increase font size
+\item high contrast colours, dark mode, remove animations
+\item screen reader, voice input
+\item real world magnifier
+\end{itemize}
+
+For hearing impairments:
+\begin{itemize}
+\item show audio alerts visually (vibrate to flashlight alarm)
+\item realtime audio processing to filter background noise and amplify the voice of another
+person
+\item monitor audio for certain sounds and send alert (ex. baby crying)
+\end{itemize}
+
+For motor impairments:
+\begin{itemize}
+\item sticky keys, slow keys, filter keys
+\item reduce key repeat rate
+\item eye tracking, voice input
+\item physical switched and puffers
+\item brain-computer interfaces (BCI)
+\end{itemize}
+
+For cognitive impairments:
+\begin{itemize}
+\item word prediction, grammar and spell check
+\item text-to-speech
+\item augmenting text with icons and pictures
+\item slow down interface
+\begin{itemize}
+\item avoid sudden state changes
+\item reduce or remove unnecessary animations (ex. flickering)
+\item eliminate time sensitive actions
+\end{itemize}
+\end{itemize}
+
+Laws and programs designed to benefit vulnerable groups often end up benefiting
+all of society (curbcut effect).
+
+Closed captions benefit more than just those with hearing impairments.
+Helps with watching in silence, noisy environments, learning a 2nd language,
+watching foreign language content, and data mining video content.
+
+Legal obligations in Canada:
+\begin{itemize}
+\item Accessible Canada Act
+\begin{itemize}
+\item government and federally regulated organizations
+\item expected to use Web Content Accessibility Guidelines (WCAG)
+\item fines up to \$250k
+\end{itemize}
+\item Accessibility for Ontarians with Disabilities Act (since 2005)
+\begin{itemize}
+\item applies to all Ontario government websites
+\item applies to Ontario public and private entities (50+ employees)
+\item must adhere to Web Content Accessibility Guidelines (WCAG) 2.0
+\item fines up to \$100k
+\end{itemize}
+\end{itemize}
+
+Legal obligations elsewhere:
+\begin{itemize}
+\item US Disabilities and Rehabilitation Act (section 508)
+\begin{itemize}
+\item any organization doing business with federal agency or receives federal
+funding
+\end{itemize}
+\item Americans with Disabilities Act (ADA)
+\begin{itemize}
+\item non-profits, business, local and state governments
+\end{itemize}
+\item European Union Web Accessibility Directive
+\begin{itemize}
+\item all government websites
+\item any organizations financed through public contracts
+\end{itemize}
+\end{itemize}
+\section{Implementing Web Accessibility}
+\label{sec:org5c1c293}
+\textbf{Accessibilty tree}: the browser generates an accessibility tree from the DOM with
+accessibility-related info for most HTML elements like name, description, role, state
+
+Can access accessibility tree from the DevTools accessibility tab.
+
+Web Content Accessibility Guidelines:
+\begin{itemize}
+\item include alt text for info imags
+\item use headings correctly
+\item give links unique and descriptive names
+\item use colour with care
+\item use tables for tabular data, not layout
+\item use ARIA roles and landmarks when necessary
+\item make dynamic content accessible
+\item make all content accessible using keyboard
+\item design forms for accessibility
+\end{itemize}
+
+Semantic HTML is using semantic elements that clearly describe the content meaning like
+article, aside, details, etc. Avoid using div and span for everything.
+
+For Preact, avoid div for component root if semantic element possible.
+Use Fragment instead of div if root has no semantic purpose.
+Some components could have different semantic roles, so use ``as Element'' pattern to set
+component root element.
+
+Add link at the top of the page so screen readers can skip to content.
+Can use CSS to hide until focused.
+
+ARIA (Accessible Rich Internet Applications) attributes are a specification to add
+semantics to elements.
+
+ARIA roles (use only if not possible to use an HTML element): toolbar, tooltip, feed,
+math, presentation, note
+
+ARIA states and properties (use only for attributes not supported on HTML element):
+aria-required, aria-checked, aria-disabled
+
+ARIA attributes only change the the accessibility tree.
+
+Colour blindness:
+\begin{itemize}
+\item dichromacy is 1 type of cone missing
+\begin{itemize}
+\item protanopia: missing red cones
+\item deuteranopia: missing gree cones
+\item tritanopia: missing blue cones (and blue sensitive rods)
+\end{itemize}
+\item monochromacity is 2 or 3 types of cones missing
+\end{itemize}
+
+Human ability to discriminate colours depends on context.
+
+Colour contrast is ratio of perceived luminance for 2 colours, such as
+white on white (1.0), red on white (4.0), and black on white (21.0).
+Can be checked in DevTools.
+
+WCAG colour contrast guidelines are minimum (level AA) at least 4.5 and
+enhanced (level AAA) at least 7.0.
+
+Basic a11y testing methods:
+\begin{itemize}
+\item disconnect mouse and try to use the app
+\begin{itemize}
+\item tab and shift+tab to focus elements
+\item enter to activate element
+\item arrow keys when needed (menu dropdown)
+\end{itemize}
+\item test with a screen reader
+\item a11y linters/checkers
+\end{itemize}
+\end{document}

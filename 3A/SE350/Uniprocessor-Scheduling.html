@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-03-25 Mon 01:44 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Uniprocessor Scheduling</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Uniprocessor Scheduling</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org732690a">1. Types of Processor Scheduling</a>
+<ul>
+<li><a href="#org094f5fb">1.1. Long-Term Scheduling</a></li>
+<li><a href="#org5a6f0bf">1.2. Medium-Term Scheduling</a></li>
+<li><a href="#org105fb29">1.3. Short-Term Scheduling</a></li>
+</ul>
+</li>
+<li><a href="#org4edd47f">2. Scheduling Algorithms</a>
+<ul>
+<li><a href="#orgf1cb131">2.1. Short-Term Scheduling Criteria</a>
+<ul>
+<li><a href="#org230955f">2.1.1. User-Oriented, Performance Related</a></li>
+<li><a href="#orgb430b37">2.1.2. User-Oriented, Other</a></li>
+<li><a href="#orgf4bd488">2.1.3. System-Oriented, Performance Related</a></li>
+<li><a href="#org9ae71d5">2.1.4. System-Oriented, Other</a></li>
+</ul>
+</li>
+<li><a href="#orgf641dcf">2.2. Use of Priorities</a></li>
+<li><a href="#org468716d">2.3. Alternative Scheduling Policies</a>
+<ul>
+<li><a href="#org8c4c8af">2.3.1. First-Come-First-Served</a></li>
+<li><a href="#org13b5895">2.3.2. Round Robin</a></li>
+<li><a href="#orga808e86">2.3.3. Shortest Process Next</a></li>
+<li><a href="#orga2c2a31">2.3.4. Shortest Remaining Time</a></li>
+<li><a href="#org3b6f1e0">2.3.5. Higher Response Ratio Next</a></li>
+<li><a href="#org3ac0ff5">2.3.6. Feedback</a></li>
+</ul>
+</li>
+<li><a href="#orgef419cb">2.4. Performance Comparison</a>
+<ul>
+<li><a href="#orgc4f1b0c">2.4.1. Queueing Analysis</a></li>
+<li><a href="#org2337b17">2.4.2. Simulation Modelling</a></li>
+</ul>
+</li>
+<li><a href="#org5f84b59">2.5. Fair-Share Scheduling</a></li>
+</ul>
+</li>
+<li><a href="#orgab57794">3. Traditional UNIX Scheduling</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org732690a" class="outline-2">
+<h2 id="org732690a"><span class="section-number-2">1.</span> Types of Processor Scheduling</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Long-term scheduling</b>: decision to add to the pool of processes to be executed
+</p>
+
+<p>
+<b>Medium-term scheduling</b>: decision to add to the number of processes that are partially or
+fully in main memory
+</p>
+
+<p>
+<b>Short-term scheduling</b>: decision as to which available process will be executed by the
+processor
+</p>
+
+<p>
+<b>IO scheduling</b>: decision as to which process&rsquo;s pending IO request shall be handled by an
+available IO device
+</p>
+
+<p>
+The aim of processor scheduling is to assign processes to be executed by the processor or
+processors over time, in a way that meets system objectives (response time, throughput,
+processor efficiency).
+</p>
+
+<p>
+Scheduling affect system performance since it determines which processes wait and which
+progress.
+Scheduling involves managing queues to minimize queueing delay and to optimize performance
+in a queueing environment.
+</p>
+</div>
+<div id="outline-container-org094f5fb" class="outline-3">
+<h3 id="org094f5fb"><span class="section-number-3">1.1.</span> Long-Term Scheduling</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Controls the degree of multiprogramming since it determines which programs are admitted
+to the system.
+</p>
+
+<p>
+A newly created process can be added to a queue for a short-term scheduler (admitted)
+or a medium-term scheduler (swapped-out).
+</p>
+
+<p>
+Newly submitted jobs are routed to disk and held in a batch queue, which the long-term
+scheduler creates processes from, based on 2 decisions:
+</p>
+<ol class="org-ol">
+<li>when the OS can take on one or more additional processes
+<ul class="org-ul">
+<li>driven by the desired degree of multiprogramming</li>
+<li>more processes created, smaller percentage of time each process can be executed</li>
+<li>each time a job terminates, scheduler may add 1+ jobs</li>
+<li>if the fraction of idle time exceeds a threshold, scheduler may be invoked</li>
+</ul></li>
+<li>which job(s) to accept and turn into processes
+<ul class="org-ul">
+<li>can be based on first-come-first-serve or include priority, expected execution time,
+and IO requirements</li>
+</ul></li>
+</ol>
+
+<p>
+For interactive programs in a time-sharing system, the OS accepts all users until the
+system is saturated.
+</p>
+</div>
+</div>
+<div id="outline-container-org5a6f0bf" class="outline-3">
+<h3 id="org5a6f0bf"><span class="section-number-3">1.2.</span> Medium-Term Scheduling</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Part of the swapping decision, based on memory requirements (memory management) and the
+need to manage the degree of multiprogramming.
+</p>
+</div>
+</div>
+<div id="outline-container-org105fb29" class="outline-3">
+<h3 id="org105fb29"><span class="section-number-3">1.3.</span> Short-Term Scheduling</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Executes most frequently, is invoked whenever an event occurs that may lead to the
+blocking of the current process or provides an opportunity to preempt a currently
+running process in favour of another.
+Such events are:
+</p>
+<ul class="org-ul">
+<li>clock interrupts</li>
+<li>IO interrupts</li>
+<li>operating system calls</li>
+<li>signals (ex. semaphores)</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org4edd47f" class="outline-2">
+<h2 id="org4edd47f"><span class="section-number-2">2.</span> Scheduling Algorithms</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgf1cb131" class="outline-3">
+<h3 id="orgf1cb131"><span class="section-number-3">2.1.</span> Short-Term Scheduling Criteria</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<b>Objective</b>: allocate processor time to optimize 1+ aspects of system behaviour
+</p>
+
+<p>
+<b>User-oriented criteria</b> relate to the behaviour of the system as perceived by a user
+or process. (ex. response time - time between request submission and response output)
+<b>System-oriented criteria</b> have the focus on effective and efficient processor
+utilization. (ex. throughput - rate at which processes are completed)
+User-oriented criteria always important, system-oriented criteria only important if
+more than 1 user.
+</p>
+
+<p>
+<b>Performance-related criteria</b> are quantitative and can be readily measured (response
+time and throughput). <b>Other criteria</b> are qualitative or cannot be readily measured
+(predictability).
+</p>
+
+<p>
+Criteria are interdependent, cannot all be satisfied.
+</p>
+</div>
+<div id="outline-container-org230955f" class="outline-4">
+<h4 id="org230955f"><span class="section-number-4">2.1.1.</span> User-Oriented, Performance Related</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+<b>Turnaround time</b>: interval between submission of a process and completion (execution
+time plus time spent waiting for resources
+</p>
+
+<p>
+<b>Response time</b>: time from submission of a request and when the response is received
+(request could still be being processed)
+</p>
+
+<p>
+<b>Deadlines</b>: when process completion deadlines can be specified, scheduling should
+maximize the percent of deadlines met
+</p>
+</div>
+</div>
+<div id="outline-container-orgb430b37" class="outline-4">
+<h4 id="orgb430b37"><span class="section-number-4">2.1.2.</span> User-Oriented, Other</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+<b>Predictability</b>: a job should run in the same amount of time and cost regardless of
+system load
+</p>
+</div>
+</div>
+<div id="outline-container-orgf4bd488" class="outline-4">
+<h4 id="orgf4bd488"><span class="section-number-4">2.1.3.</span> System-Oriented, Performance Related</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+<b>Throughput</b>: maximize number of processes completed per unit time (how much work is being
+performed)
+</p>
+
+<p>
+<b>Processor utilization</b>: percent of time the processor is busy
+</p>
+</div>
+</div>
+<div id="outline-container-org9ae71d5" class="outline-4">
+<h4 id="org9ae71d5"><span class="section-number-4">2.1.4.</span> System-Oriented, Other</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<p>
+<b>Fairness</b>: processes should be treated the same, none starving unless otherwise specified
+</p>
+
+<p>
+<b>Enforcing priorities</b>: scheduling policy should favour high-priority process
+</p>
+
+<p>
+<b>Balancing resources</b>: scheduling policy should keep the resources of the system busy
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf641dcf" class="outline-3">
+<h3 id="orgf641dcf"><span class="section-number-3">2.2.</span> Use of Priorities</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Priority can be implemented with multiple queues in descending order of priority.
+Lower-priority processes may suffer starvation, which can be solved by having the priority
+of a process change with its age or execution history.
+</p>
+</div>
+</div>
+<div id="outline-container-org468716d" class="outline-3">
+<h3 id="org468716d"><span class="section-number-3">2.3.</span> Alternative Scheduling Policies</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+<b>Selection function</b>: determines which process is selected next for execution, could depend
+on priority, resource requirements, or execution characteristics of the process.
+</p>
+
+<ul class="org-ul">
+<li>\(w\) is the time spent in system so far waiting</li>
+<li>\(e\) is the time spent in execution so far</li>
+<li>\(s\) is the total service time required by the process including \(e\)</li>
+</ul>
+
+<p>
+<b>Decision mode</b>: specifies the instants in time when the selection function is exercised:
+</p>
+<ul class="org-ul">
+<li><b>nonpreemptive</b>: a running process continues to execute until it terminates or blocks
+itself to wait for IO or some OS service</li>
+<li><b>preemptive</b>: the currently running process may be interrupted by the OS, done when a
+new process arrives, when an interrupt occurs that readies a blocked process, or
+on a clock interrupt</li>
+</ul>
+
+<p>
+Preemptive policies have more overhead but could have better service.
+Cost can be kept low with efficient process-switching and large main memory.
+</p>
+</div>
+<div id="outline-container-org8c4c8af" class="outline-4">
+<h4 id="org8c4c8af"><span class="section-number-4">2.3.1.</span> First-Come-First-Served</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+As each process becomes ready, it joins the ready queue.
+When the current process ceases to execute, the process that has been the queue the
+longest is selected for running.
+</p>
+
+<p>
+Performs better for long processes than short ones.
+Favours processor-bound processes over IO-bound processes.
+</p>
+
+<p>
+With priorities, can create an effective scheduler.
+</p>
+</div>
+</div>
+<div id="outline-container-org13b5895" class="outline-4">
+<h4 id="org13b5895"><span class="section-number-4">2.3.2.</span> Round Robin</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+When an interrupt occurs, the current process is placed in the ready queue and the
+next ready job is selected on a FCFS basis.
+</p>
+
+<p>
+<b>Time-slicing</b>: each process given a slice of time before being preempted
+</p>
+
+<p>
+Principle design issue is length of time quantum: very short means too much overhead.
+Time quantum should be slightly greater than the time required for a typical
+interaction or process funciton.
+</p>
+
+<p>
+Particularly effective in a general-purpose time-sharing system or transaction
+processing system. Drawback is that processor-bound processes tend to receive an
+unfair portion of processor time.
+</p>
+
+<p>
+Virtual round robin uses an auxiliary queue for processes that are moved after
+being released from an IO block. Processes in the auxiliary queue get preference
+over those in the main ready queue. It then runs no longer than a time equal to
+the basic time quantum minus the total time spent running since it was last
+selected from the main ready queue.
+</p>
+</div>
+</div>
+<div id="outline-container-orga808e86" class="outline-4">
+<h4 id="orga808e86"><span class="section-number-4">2.3.3.</span> Shortest Process Next</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+Nonpreemptive policy where the process with the shortest expected processing
+time is selected next.
+</p>
+
+<p>
+Overall performance is improved in terms of response time, though response times
+vary more so less predictability.
+Further, difficult to know actual required processing time.
+</p>
+
+<p>
+For interactive processes, the OS keeps a running average of each burst for
+each process. The calculation used is
+\[
+S_{n+1} = \frac{1}{n} T_{n} + \frac{n-1}{n} S_{n}
+\]
+where \(T_{i}\) is the processor execution time for instance \(i\) of the process
+(total exec time for batch job, burst time for interactive job) and
+\(S_{i}\) is the predicted value for instance \(i\)
+</p>
+
+<p>
+Preference is giving weight to more recent instances so <b>exponential averaging</b>
+is used:
+\[
+S_{n+1} = \alpha T_{n} + (1 - \alpha) S_{n}
+\]
+where \(\alpha\) is a constant weighting factor. If \(\alpha\) close to 1, the
+average will quickly reflect a rapid change in the observed quantity.
+</p>
+
+<p>
+Exponential averaging tracks changes in process behaviour faster than simple
+averaging.
+</p>
+
+<p>
+SPN could starve longer processes if enough shorter processes. Though, reduces
+bias in favour of longer jobs. Undesirable for certain environments because of
+lack of preemption.
+</p>
+</div>
+</div>
+<div id="outline-container-orga2c2a31" class="outline-4">
+<h4 id="orga2c2a31"><span class="section-number-4">2.3.4.</span> Shortest Remaining Time</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<p>
+Scheduler always chooses the process that has the shortest expected remaining processing
+time.
+</p>
+
+<p>
+Scheduler may preempt the current process when a new process becomes ready. Must have an
+estimate of processing time to select, and still a risk of starvation of longer
+processes.
+</p>
+
+<p>
+Less overhead than round robin since no additional interrupts, though elapsed service
+time must be recorded.
+Faster turnaround time since shorter jobs can preempt longer ones.
+</p>
+</div>
+</div>
+<div id="outline-container-org3b6f1e0" class="outline-4">
+<h4 id="org3b6f1e0"><span class="section-number-4">2.3.5.</span> Higher Response Ratio Next</h4>
+<div class="outline-text-4" id="text-2-3-5">
+<p>
+Based on the ratio
+\[
+R = \frac{w + s}{s}
+\]
+where \(R\) is the <b>response ratio</b>, \(w\) is the time spent waiting for the processor, and
+\(s\) is the expected service time.
+</p>
+
+<p>
+Scheduling rule is that when the current process completes or is blocked, choose the
+ready process with the greatest \(R\) value (accounts for process age).
+</p>
+
+<p>
+Shorter jobs are favoured but longer processes will also eventually get past competing
+shorter jobs.
+</p>
+</div>
+</div>
+<div id="outline-container-org3ac0ff5" class="outline-4">
+<h4 id="org3ac0ff5"><span class="section-number-4">2.3.6.</span> Feedback</h4>
+<div class="outline-text-4" id="text-2-3-6">
+<p>
+SPN, SRT, HRRN cannot be used if no indication of relative process length.
+</p>
+
+<p>
+Scheduling is preemptive and dynamic priority is used.
+Every time a running process is preempted, it is demoted to the next lower-priority
+queue.
+Within each queue other than the lowest-priority one, FCFS is used, otherwise round
+robin used.
+Known as <b>multilevel feedback</b>.
+</p>
+
+<p>
+Turnaround time can stretch out alarmingly. Can cause starvation if new jobs enter
+system frequently, can compensate by varying time allowed to execute before
+preemption for each queue.
+Another remedy is to promote a process to a higher-priority queue after it spends
+some time in its current queue.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgef419cb" class="outline-3">
+<h3 id="orgef419cb"><span class="section-number-3">2.4.</span> Performance Comparison</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Relative performance depdends on distribution of service times, efficiency of scheduling
+and context switching mechanisms, nature of IO demand, and performance of IO subsystems.
+</p>
+</div>
+<div id="outline-container-orgc4f1b0c" class="outline-4">
+<h4 id="orgc4f1b0c"><span class="section-number-4">2.4.1.</span> Queueing Analysis</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Any scheduling discipline that chooses the next item independent of service time obeys
+\[
+\frac{T_{r}}{T_{s}} = \frac{1}{1 - \rho}
+\]
+where \(T_{r}\) is the turnaround time, \(T_{s}\) is the average service time, and \(\rho\)
+is the processor utilization.
+</p>
+
+<p>
+For scheduling algorithms that account for service time, compared to FCFS, relative
+performance can be found by considering priority scheduling in which priority is
+based on service time.
+</p>
+
+<p>
+For queues with 2 priority categories, assume:
+</p>
+<ol class="org-ol">
+<li>poisson arrival rate</li>
+<li>priority 1 items are services before priority 2 items</li>
+<li>FCFS dispatching for items of equal priority</li>
+<li>no item interrupted while being served</li>
+<li>no items leave the queue (lost calls delayed)</li>
+</ol>
+<p>
+\(\lambda\) is the arrival rate.
+The general formulas are:
+\[
+\lambda = \lambda_{1} + \lambda_{2}
+\]
+\[
+\rho_{1} = \lambda_{1} T_{s1} ; \rho_{2} = \lambda_{2} T_{s2}
+\]
+\[
+\rho = \rho_{1} + \rho_{2}
+\]
+\[
+T_{s} = \frac{\lambda_{1}}{\lambda} T_{s1} + \frac{\lambda_{2}}{\lambda}T_{s2}
+\]
+\[
+T_{r} = \frac{\lambda_{1}}{\lambda} T_{r1} + \frac{\lambda_{2}}{\lambda}T_{r2}
+\]
+If no interrupts, with exponential service times:
+\[
+T_{r1} = T_{s1} + \frac{\rho_{1}T_{s1} + \rho_{2}T_{s2}}{1 + \rho_{1}}
+\]
+\[
+T_{r2} = T_{s2} + \frac{T_{r1} - T_{s1}}{1 - \rho}
+\]
+With preemptive-resume queueing discipline and exponential service times:
+\[
+T_{r1} = T_{s1} + \frac{\rho_{1}T_{s1}}{1 - \rho_{1}}
+\]
+\[
+T_{r2} = T_{s2} + \frac{1}{1 - \rho_{1}} \left(
+\rho_{1} T_{s2} + \frac{\rho T_{s}}{1 - \rho}
+\right)
+\]
+</p>
+</div>
+</div>
+<div id="outline-container-org2337b17" class="outline-4">
+<h4 id="org2337b17"><span class="section-number-4">2.4.2.</span> Simulation Modelling</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+Discrete-event simulation allows a wide range of policies to be modelled, but the results
+for a given run only apply to that particular collection of processes under a particular
+set of assumptions.
+</p>
+
+<p>
+Results are presented by grouping processes into service-time percentiles so effects
+of policiies can be viewed as a function of process length.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5f84b59" class="outline-3">
+<h3 id="org5f84b59"><span class="section-number-3">2.5.</span> Fair-Share Scheduling</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+In a multiuser system, it is attractive to make scheduling decisions based on sets of processes
+that compose an application which is <b>fair-share scheduling</b>.
+Similar for time-sharing systems, except with groups of users.
+</p>
+
+<p>
+Each user assigned a weighting of some sort that defines the user&rsquo;s share of system
+resources as a fraction of total resource usage (a share of the processor).
+</p>
+
+<p>
+The fair-share scheduler considers the execution history of a related group of processes
+and each process&rsquo;s execution history to make scheduling decisions.
+The system divides users into groups and allocates each group some processor.
+</p>
+
+<p>
+Scheduling done on the basis of priority and accounts for the underlying priority of the
+process, its recent processor usage, and the recent processor usage of the group to which
+the process belongs.
+For a process \(j\) in group \(k\):
+\[
+CPU_{j}(i) = \frac{CPU_{j}(i-1)}{2}
+\]
+\[
+GCPU_{k}(i) = \frac{GCPU_{k}(i-1)}{2}
+\]
+\[
+P_{j}(i) = Base_{j} + \frac{CPU_{j}(i)}{2} + \frac{GCPU_{k}(i)}{4 \times W_{k}}
+\]
+where \(CPU_{j}(i)\) is the processor utilization by process \(j\) through interval \(i\),
+\(GCPU_{k}(i)\) is the processor utilization of group \(k\) through interval \(i\),
+\(P_{j}(i)\) is the priority of process \(j\) at the beginning of interval \(i\) (lower value
+is higher priority),
+\(Base_{j}\) is the base priority of process \(j\),
+and \(W_{k}\) is the weighting assigned to group \(k\).
+</p>
+
+<p>
+Each process has a base priority that drops as the process uses the processor and the group
+uses the processor.
+Greater the weight assigned to the group, the less its utilization affects its priority.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgab57794" class="outline-2">
+<h2 id="orgab57794"><span class="section-number-2">3.</span> Traditional UNIX Scheduling</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Primarily for time-sharing interactive environments, to provide good response time for
+interactive users while ensuring low-priority background jobs do not starve.
+</p>
+
+<p>
+Uses multilevel feedback using round robin within each priority queue.
+System uses 1 second preemption, so if a running process does not block or complete within
+1 second, it is preempted.
+Priority based on process type and execution history with the following formulas:
+\[
+CPU_{j}(i) = \frac{CPU_{j}(i-1)}{2}
+\]
+\[
+P_{j}(i) = Base_{j} + \frac{CPU_{j}(i)}{2} + nice_{j}
+\]
+where \(nice\) is a user-controllable adjustment factor.
+</p>
+
+<p>
+Priority of each process recomputed once per second.
+Band priority divides all processes into fixed bands of priority levels.
+\(CPU\) and \(nice\) are restricted to prevent a process from migrating out of assigned band.
+In decreasing order of priority, bands are:
+</p>
+<ul class="org-ul">
+<li>swapper</li>
+<li>block IO device control</li>
+<li>file manipulation</li>
+<li>character IO device control</li>
+<li>user processes</li>
+</ul>
+<p>
+Provides most efficient use of IO devices.
+For user-processes band, execution history penalizes processor-bound processes, improving
+efficiency.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-03-25 Mon 01:44</p>
+</div>
+</body>
+</html>

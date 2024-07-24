@@ -1,0 +1,426 @@
+% Created 2024-04-05 Fri 11:43
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Integration Testing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Integration Testing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Integration Testing}
+\label{sec:org561a1fc}
+\subsection{Strategy}
+\label{sec:org0c15665}
+How individual components are assembled to form larger program entities:
+\begin{itemize}
+\item \textbf{problem 1}: test component interaction
+\item \textbf{problem 2}: determine optimal order of integration
+\end{itemize}
+
+Strategy impacts:
+\begin{itemize}
+\item form of writing unit test cases
+\item type of test tools to use
+\item order of coding/testing components
+\item cost of generating test cases
+\item cost of locating and correcting detected defects
+\end{itemize}
+\subsection{Testing}
+\label{sec:org8764c04}
+\textbf{Objective}: ensure components work in isolation and when assembled, requires
+a component dependency structure
+
+If all components work in isolation, faults will most be interface related.
+\subsubsection{Stubs}
+\label{sec:orgcca9a9c}
+Stubs replace called modules and can replace whole components.
+They must be declared/invoked as the real module (same name, param list,
+return type, modifiers)
+
+Common functions:
+\begin{itemize}
+\item display/log trace message or passed params
+\item return value according to test objective
+\end{itemize}
+\subsubsection{Drivers}
+\label{sec:org25c2f0d}
+Driver modules are used to call tested modules (param passing, handling
+return values), typically simpler than stubs.
+\subsection{Strategies}
+\label{sec:orgfbd5a7a}
+\textbf{Comparison criteria for strategies}: fault localization, effort needed,
+degree of testing of modules achieved, possiblity for parallel development
+\subsubsection{Big Bang Integration}
+\label{sec:org481983b}
+Non-incremental strategy to integrate all components as a whole.
+Assumes components are initially tested in isolation.
+
+Advantages
+\begin{itemize}
+\item convenient for small/stable systems
+\end{itemize}
+
+Disadvantages
+\begin{itemize}
+\item does not allow parallel development
+\item fault localization difficult
+\item easy to miss interface faults
+\end{itemize}
+\subsubsection{Top-Down Integration}
+\label{sec:org7c9a970}
+Incremental strategy to test high level components, then called components
+until lowest-level components.
+Possible to alter order to test as early as possible (critical or IO components).
+
+Advantages:
+\begin{itemize}
+\item fault localization easier
+\item few or no drivers needed
+\item possiblity to obtain an early prototype
+\item testing can be in parallel with implementation
+\item different order of testing/implementation possible
+\item major design flaws found first
+\end{itemize}
+
+Disadvantages:
+\begin{itemize}
+\item needs lots of stubs
+\item potentially reusable components can be inadequately tested
+\end{itemize}
+\subsubsection{Bottom-Up Integration}
+\label{sec:orgb72f1b7}
+Incremental strategy to test low level components, then components calling
+them until highest-level components.
+
+Advantages:
+\begin{itemize}
+\item fault localization easier
+\item no stubs needed
+\item reusable components tested thoroughly
+\item testing can be in parallel with implementation
+\item different order of testing/implementation possible
+\end{itemize}
+
+Disadvantages:
+\begin{itemize}
+\item needs lots of drivers
+\item high-level components tested last
+\item no concept of early skeletal system
+\end{itemize}
+\subsubsection{Sandwich Integration}
+\label{sec:org3e753f5}
+Combines top-down and bottom-up by distinguishing 3 layers: logic (top), middle,
+operational (bottom)
+\subsubsection{Other Integration Testing Strategies}
+\label{sec:orgd124167}
+\begin{itemize}
+\item \textbf{risk driven integration}: integrate based on criticality
+\item \textbf{function/thread-based integration}: integrate components according to
+threads/functions they belong to
+\end{itemize}
+\section{Testing Object-Oriented Systems}
+\label{sec:org8e13734}
+\subsection{Motivation}
+\label{sec:org6b1a38e}
+Object-oriented code needs more testing.
+Where unit testing applies the same, OO concepts must be accounted for
+such as encapsulation, inheritance, polymorphism, abstract classes, and exceptions.
+
+Unit and integration testing especially affected since they are white-box.
+\subsection{Class vs Procedure Testing}
+\label{sec:org10238a3}
+Procedural programming
+\begin{itemize}
+\item basic component is function
+\item testing method is based on IO relation
+\end{itemize}
+
+OO programming
+\begin{itemize}
+\item basic component is class
+\item objects are tested
+\item correctness cannot simply be defined as an IO relation, but also object state
+\end{itemize}
+
+Methods can be tested independently, though complexity lies in method interactions.
+Method behaviour is meaningless unless analyzed in relation to other operations
+and joint effect on shared state.
+
+Testing classes requires recognizing:
+\begin{itemize}
+\item the identification of behaviour to be observed
+\item manipulation of object state without violating encapsulation
+\item polymorphism and dynamic binding to test all possible invocations of interfaces
+\item each exception to be tested
+\end{itemize}
+
+New fault models are required to target OO specific faults.
+\subsection{OO Integration Levels}
+\label{sec:org02abd75}
+Classes introduce a new abstraction level leading to more unit testing methods:
+\begin{itemize}
+\item \textbf{basic unit testing}: the testing of a single operation (method)
+of a class (intra-method testing)
+\item \textbf{unit testing}: the testing of methods within a class (intra-class testing),
+the integration of methods
+\item \textbf{intra-class testing}: black box and white box approaches (data flow), with:
+\begin{itemize}
+\item each exception raised at least once
+\item each interrupt forced to occur at least once
+\item each attribute set and got at least once
+\item testing based on states
+\item done with big bang approach
+\item full cycle of objects
+\item complex methods tested with stubs or mocks
+\end{itemize}
+\end{itemize}
+
+For integration testing, there are different scopes for interactions among
+classes:
+\begin{itemize}
+\item \textbf{cluster integration}
+\begin{itemize}
+\item integration of 2+ classes through inheritance
+\begin{itemize}
+\item incremental test of inheritance hierarchies
+\end{itemize}
+\item integration of 2+ clasxes through containment
+\item integration of 2+ associated classes/clusters to form a component
+\item big bang, bottom-up, top-down, scenario based
+\end{itemize}
+\item \textbf{system/subsystem integration}
+\begin{itemize}
+\item integration of components into a single application
+\item similar techniques as cluster integration
+\item client/server integration
+\end{itemize}
+\end{itemize}
+\subsection{Mock Objects}
+\label{sec:org0692851}
+Testing of OO systems requires drivers and stubs, but it is difficult to
+flexibly stub dependent code without changing code under test or
+maintaining a library of stub objects (which is also difficult).
+
+Mock object:
+\begin{itemize}
+\item a form of stubs based on interfaces
+\item easier to setup and control
+\item isolates code from details that may be filled in later
+\item can be refined incrementally by replacing with actual code
+\item based on dependency inversion principle
+\item test control mock behaviour so mock transparently replaces actual code
+\end{itemize}
+
+Creation can be done manually (more control) or using frameworks like Mockito.
+\subsection{Inheritance}
+\label{sec:orgc53ed34}
+Makes understanding code more difficult. Test suite for a method almost never
+adequate for overriding methods.
+
+Inherited methods must be tested in the context of inheriting classes,
+with accidental reuse, abstract classes, and multiple inheritance.
+
+Interactions possible to miss:
+\begin{itemize}
+\item inherited methods should be retested in the context of a subclass
+\begin{itemize}
+\item modifying a superclass requires retesting subclasses
+\item adding or modifying subclasses requires retesting methods inherited
+from each ancestor superclass
+\end{itemize}
+\item overriding of methods
+\begin{itemize}
+\item overriding subclass method has to be tested but different test
+sets are needed
+\item reason 1: if test cases are derived from program structure
+(data and control flow), the structure of the overriding method
+may be different
+\item reason 2: the overriding method behaviour could also be different
+\end{itemize}
+\item integration and polymorphism
+\begin{itemize}
+\item can make test sets grow exponentially
+\end{itemize}
+\end{itemize}
+
+Coverage must be extended for inheritance to cover the level of
+coverage in the context of each class as separate measurements.
+100\% inheritance means all code fully exercised in each
+appropriate context.
+\subsection{Abstract Classes}
+\label{sec:org6cd8627}
+Cannot be instantiated but they define an interface and
+behaviour that implementing classes must adhere to.
+Must test abstract classes for functional compliance.
+
+\textbf{Functional compliance}: a module's compliance with some
+documented or published functional specification.
+\subsubsection{Abstract Test Pattern}
+\label{sec:orgfbb1014}
+Provides the following:
+\begin{itemize}
+\item a reusable way to build a test suite across descendants
+\item a test suite that can be reused for future descendants
+\end{itemize}
+
+Tests that define the \emph{functionality} of the interface belong in the
+abstract test class. Test specific to an \emph{implementation} belong
+in a concrete test class.
+
+\textbf{Rule 1}
+\begin{itemize}
+\item write an abstract test class for every interface and
+abstract class
+\item an abstract test should have test cases that cannot
+be overridden
+\item should also have an abstract factory method for creating instances
+of the class to be tested
+\end{itemize}
+
+\textbf{Rule 2}
+\begin{itemize}
+\item write a concrete test class for every implementation
+of the interface (or abstract class)
+\item the concrete test class should extend the abstract test class
+and implement the factory method
+\end{itemize}
+\subsection{Cluster Integration}
+\label{sec:org07d7ea9}
+Needs a class dependency tree since the dependency structure
+is not always that clear cut.
+\subsubsection{Big Bang}
+\label{sec:orge2a36d0}
+Recommmended only when the cluster is stable, small, and the components
+are tightly coupled.
+\subsubsection{Bottom-Up}
+\label{sec:org31f0d86}
+Most widely used technique: integrate classes starting from leaves
+and moving up the depdendency tree
+\subsubsection{Top-Down}
+\label{sec:orgd3570e5}
+Widely used technique: integrate classes starting from the top and
+moving down the dependency tree to leaves.
+\subsubsection{Scenario-Based}
+\label{sec:org45d3fdc}
+Describes interaction (collaboration) of classes, represented as
+interaction diagrams.
+
+Approach:
+\begin{enumerate}
+\item Map collaborations onto dependency tree
+\item Choose a sequence to apply collaborations
+\item Develop and run test exercising collaboration
+\end{enumerate}
+\subsection{Integration Order Problem}
+\label{sec:org77abd4f}
+Issues related to integration order:
+\begin{itemize}
+\item not advised to perform a big-bang integration (must be done stepwise,
+leading to stubs)
+\item not always feasible to construct a stub that is simpler than the
+code it simulates
+\item stub generation cannot be automated since it requires an
+understanding of the semantics of the simulated functions
+\item fault potential for some stubs may be the same or higher than
+real function
+\item minimizing the number of stubs to be developed should result
+in drastic savings
+\item class dependency graphs usually do not form simple hierarchies
+but complex networks
+\item most OO systems have strong connectivity and cyclic interdependencies
+\end{itemize}
+\subsubsection{Kung et al Strategy}
+\label{sec:orga7a589c}
+Aims at producing a partial ordering of testing levels based on class
+diagrams.
+
+Classes under test at given level should only depend on classes
+previously tested, no stub required since previously tested
+classes can be included in subsequent testing levels.
+
+Class dependency info can either come from reverse engineering or
+design documentation.
+
+Dynamic relationships between classes are not taken into account by Kung et al.
+
+Some testing levels become infeasible because of abstract classes.
+\subsubsection{Object Relation Diagram}
+\label{sec:orgf02e77b}
+Uses static info only.
+The ORD for a program \(P\) is an edge-labelled graph where the nodes
+represent the classes in \(P\) and the edges represent the
+inheritance, composition, and association relations.
+
+For any two classes:
+\begin{itemize}
+\item edge labelled I means subclass to superclass
+\item edge labelled C means from  composed of to
+\item edge labelled A means from associates with to
+\end{itemize}
+
+Identiy the effect of a class change at the class level using a CFW.
+CFW(\(X\)) for a class \(X\): set of classes that could be
+affected by a change to class \(X\) (should be retested)
+
+Assuming the ORD is not modfied by the change, for adequate testing
+CFW(\(X\)) has to include subclasses of \(X\), classes composed with \(X\), and
+classes associated with \(X\).
+
+Can be defined from UML (more straightforward) or source code.
+
+CFW(\(X\)) contains all the classes such that there is a directed path from
+them to \(X\) in the ORD.
+
+Test order provides the tester with a road map for conducting integration
+testing. Desirable order is the one that minimizes the number of stubs
+or stubbing effort.
+\begin{itemize}
+\item test independent classes first, then dependent classes based on their
+relationships
+\item similarly a subclass would be tested after its superclasses
+\end{itemize}
+
+\textbf{Order of Acyclic ORDs}:
+can generate a test order that ensures that \(X\) is tested before all classes
+of CFW(\(X\)), so stubs are not required (simply a topological sort)
+
+\textbf{Order of Cyclic ORDs}:
+topological sort cannot be applied, so this requires cycle breaking
+
+\textbf{Cluster}: maximal set of nodes that are mutually reachable through the relation
+(strongly connected component)
+
+\textbf{Cycle breaking}: identify and remove an edge from a cluster until the graph
+becomes acyclic
+\begin{itemize}
+\item each deletion results in at least one stub
+\begin{itemize}
+\item cannot be a parent class
+\item should not be a composition
+\item association is good for deletion, every directed cycle always contains
+at least one association edge
+\end{itemize}
+\end{itemize}
+\end{document}

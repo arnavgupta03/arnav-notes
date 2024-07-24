@@ -1,0 +1,36 @@
+#+title: Transformable
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Transformable Shapes
+Direct manipulation widgets to transform an object:
+- scale by dragging corner and side handles
+- rotate by dragging rotation handle
+- translate by dragging shape
+
+For translation:
+- if mousedown inside rectangle, save mouse position
+- on mousemove, calculate a drag delta, which is used for a shape position delta
+- use shape position delta to draw shape
+- on mouseup, commit shape delta to shape position, then clear shape delta
+
+For scale:
+- if mousedown inside circle, save mouse position
+- on mousemove, use drag delta for a shape size delta
+- use shape size delta to draw shape
+- on mouseup, commit shape delta to shape size, then clear shape delta
+
+For rotate:
+- if mousedown inside circle, save mouse position
+- on mousemove, use mouse position to calculate a shape angle delta
+- use delta to draw shape
+  - draw shape centered at 0,0
+  - subtract shape x,y from mx,my
+  - rotate mx,my by -angle
+- simplify hit tests using transformed mouse position
+- simplify angle delta calculation
+- update translate to use rotated delta drag to align coordinate frames of shape
+  and mouse
+- update scale to translate shape so opposite corner remains fixed
+- on mouseup, commit shape delta, then clear shape delta

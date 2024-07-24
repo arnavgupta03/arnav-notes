@@ -1,0 +1,204 @@
+% Created 2024-04-05 Fri 11:41
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip, darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Control Flow}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Control Flow},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Program Graphs}
+\label{sec:org6ee9190}
+Given a program written in an imperative programing language,
+its program graph is a directed graph in which
+\begin{itemize}
+\item nodes are statement fragments (or complete statements)
+\item edges represent flow of control
+\end{itemize}
+\subsection{Control Flow Graphs}
+\label{sec:org9589c83}
+Models all executions of a method by describing control structures:
+\begin{itemize}
+\item nodes are statements or sequences of statements (basic blocks)
+\item edges are transfers of control
+\begin{itemize}
+\item an edge \((s_{1}, s_{2})\) indicates that \(s_{1}\) may be
+followed by \(s_{2}\) in an execution
+\end{itemize}
+\end{itemize}
+
+Basic block: sequence of statements such that if the first statement is executed
+all statements will be (no branches)
+\begin{itemize}
+\item intermediate statements not shown if there is \(\le 1\) exiting edge and \(\le 1\) entering edge
+\item has one entry point and one exit point
+\end{itemize}
+
+Sometimes annotated with branch predicates and defs.
+\subsubsection{The \texttt{if} Statement}
+\label{sec:org9f1d856}
+From source code to CFG there is an issue about branching:
+\begin{itemize}
+\item in a CFG, nodes corresponding to branching should not contain any assignemnts
+\item \texttt{return} nodes must be distinct
+\end{itemize}
+
+Short circuiting conditions must be shown with separate branches for each condition.
+\subsubsection{\texttt{do}, \texttt{while}, and \texttt{for} Loops}
+\label{sec:org5240483}
+Can have:
+\begin{itemize}
+\item dummy nodes for condition checking or initializing loops
+\item nodes to implicitly increment loop
+\end{itemize}
+
+\texttt{do} loops will branch at last step, \texttt{while} loops branch at first
+\subsubsection{\texttt{case} Structure}
+\label{sec:org7f8d399}
+Cases without breaks fall through to the next case
+\subsubsection{\texttt{try-catch} Exceptions}
+\label{sec:org3d0ded9}
+Both \texttt{throw} and catching each type of exception must be shown separately.
+\section{Coverage}
+\label{sec:orge4c21f5}
+\subsection{Statement Coverage}
+\label{sec:org0af3557}
+Has the following characteristics:
+\begin{itemize}
+\item achieved when all statements in a method have been executing at least once.
+\begin{itemize}
+\item faults cannot be discovered if the parts containing them are not executed
+\end{itemize}
+\item equivalent to covering all nodes in a CFG
+\item executing a statement is a weak guarantee of correctness, but easy to achieve
+\end{itemize}
+$$
+        \text{Statement Coverage} = \frac{\text{\# of executed statements}}{\text{total \# of statements}}
+$$
+
+Most used in industry with coverage target at 80-90\%.
+
+Problems include:
+\begin{itemize}
+\item predicate may be tested for only one value
+\item loop bodies may be iterated only once
+\item not all branches (cases) are necessarily covered
+\end{itemize}
+\subsection{Segment Coverage}
+\label{sec:org54da7ba}
+Counts segments (basic blocks) rather than statements
+\begin{itemize}
+\item can produce drastically different numbers since it does not account for \# of statements per segment
+\end{itemize}
+\subsection{Branch Coverage}
+\label{sec:org992b2b0}
+Has the following characteristics:
+\begin{itemize}
+\item achieved when every branch from a node is executed at least once
+\item at least one true and one false evaluation for each predicate
+\item can be achieved with \(D+1\) paths in a CFG with \(D\) 2-way branching nodes and no loops
+\begin{itemize}
+\item less if there are loops
+\end{itemize}
+\end{itemize}
+$$
+        \text{Branch Coverage} = \frac{\text{\# of executed branches}}{\text{total \# of branches}}
+$$
+
+Problems include:
+\begin{itemize}
+\item short-circuit evaluation means that many predicates might not be evaluated
+\item compound predicate treated as a single statement
+\begin{itemize}
+\item if \(n\) clauses, \(2^{n}\) combinations but only 2 tested
+\end{itemize}
+\item only a subset of all entry-exit paths is tested
+\end{itemize}
+\subsection{Condition Coverage}
+\label{sec:orgf0ba0d8}
+Has the following characteristics:
+\begin{itemize}
+\item condition coverage reports the true or false outcome of each condition
+\item measures the conditions independetly of each other
+\item can fail to consider short-circuit
+\end{itemize}
+$$
+        \text{Condition Coverage} =
+        \frac{\text{\# of conditions that are both T and F}}{\text{total \# of conditions}}
+$$
+\subsection{Condition/Decision Coverage}
+\label{sec:org21ac2ad}
+Also called branch and condition coverage,
+it is computed by considering both branch and condition coverage measures.
+\subsection{Multple Condition Coverage}
+\label{sec:org4511c63}
+All combinations of condition constituents in decisions are considered when calculating coverage.
+\begin{itemize}
+\item also implies condition and branch coverage
+\end{itemize}
+\subsection{Modified Condition/Decision Coverage (MC/DC)}
+\label{sec:orgecea819}
+\textbf{Key idea}: test important combinations of conditions and limiting testing costs
+\begin{itemize}
+\item extend branch and decision coverage with the requirement that each condition should affect
+the decision outcome independetly
+\item in other words, each condition should be evaluated one time to true and one time to false,
+and this with affecting the decision's outcome
+\end{itemize}
+\subsection{Path Coverage}
+\label{sec:orgc6a77cb}
+Has the following characteristics:
+\begin{itemize}
+\item test case for each possible path, though some are infeasible and number could be infinite
+\item key is to determine critical paths
+\end{itemize}
+\subsection{Loop Coverage}
+\label{sec:org7610e97}
+Loops are highly fault-prone
+\begin{itemize}
+\item every loop involves a decision to traverse the loop or not
+\item can do boundary value analysis on the index variable
+\end{itemize}
+
+Has the following characteristics:
+\begin{itemize}
+\item minimal coverage should execute the loop body 0, 1, and 2+ times
+\item single loop should have more extensive coverage with setting loop control variable to:
+\begin{itemize}
+\item min - 1, min, min + 1
+\item typical
+\item max - 1, max, max + 1
+\end{itemize}
+\item for nested loop, start at the innermost loop
+\begin{itemize}
+\item set all outer loops to min value
+\item set all other loops to typical values
+\item test cases for a single loop for the innermost loop
+\item move up in nested loop level
+\item if outermost loop done, do cases for single loop for all loops
+in the nest simultanously
+\end{itemize}
+\end{itemize}
+\end{document}

@@ -1,0 +1,108 @@
+#+title: Real Fourier Series Convergence
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+
+* Real Fourier Series
+** Periodic Functions
+A function $f$ defined on $\mathbb{R}$ is $\tau$ *periodic* if for all $t \in \mathbb{R}$
+$$
+f(t) = f(t + \tau)
+$$
+Generally pick the smallest value of $\tau$ such that the above holds.
+
+The theorem for Fourier Coefficients for Series in Complex Form holds for $\tau$ periodic
+functions, and can integrate over 1 period.
+
+When finding the Fourier series without knowing the domain for $f$ and knowing that $f$ is $\tau$
+periodic, first find the $\tau$ period of $f$ and do the computation over a period of $f$.
+
+** Fourier Sinusoidal Series
+A function $f$ is *even* if $f(-t) = f(t)$.
+A function $f$ is *odd* if $f(-t) = -f(t)$.
+
+For a real valued $\tau$ periodic function $f \in L^{2}([-\tau/2,\tau/2])$:
+- if $f$ is even, then the Fourier series can be simplified to a sum of cosine waves: Fourier
+  cosine series
+- if $f$ is odd, then the Fourier series can be simplified to a sum of sine waves: Fourier
+  sine series
+
+If $f$ is a real valued function that is in $L^{2}([-\tau/2,\tau/2])$, then
+- if $f$ is even, then the Fourier cosine series for $f$ is
+  $$
+  \sum_{n=0}^{\infty}c_{n} \cos\left( \frac{2\pi n}{\tau} t \right)
+  $$
+  where
+  $$
+  c_{n} = \begin{cases}
+        \left< f(t), 1 \right> & n = 0 \\
+        2\left< f(t), \cos \left( \frac{2\pi n}{\tau} t \right) \right> & n > 0
+  \end{cases}
+  $$
+- if $f$ is odd, then the Fourier sine series for $f$ is
+  $$
+  \sum_{n=1}^{\infty}s_{n} \sin\left( \frac{2\pi n}{\tau} t \right)
+  $$
+  where
+  $$
+  s_{n} = 2\left< f(t), \sin \left( \frac{2\pi n}{\tau} t \right) \right>
+  $$
+
+If $f$ is real, then it can be decomposed into even and odd functions as follows:
+$$
+f_{even}(t) = \frac{f(t) + f(-t)}{2} \quad \text{and} \quad
+f_{odd}(t) = \frac{f(t) - f(-t)}{2}
+$$
+with $f(t) = f_{even}(t) + f_{odd}(t)$.
+
+Every real valued function in $L^{2}([-\tau/2,\tau/2])$ admits a real valued Fourier series
+with some sin and/or cos terms.
+
+* Convergence of Fourier Series
+** Types of Convergence
+If $f_{1}, f_{2}, \dots, f_{n}, \dots$ is a sequence of $L^{2}$ functions defined on $[a,b]$,
+then:
+- the sequence *converges in the $L^{2}([a,b])$ norm*, or *converges in the mean*, or
+  *converges almost everywhere*, to $f$ if
+  $$
+  \lim_{n \to \infty} \sqrt{\int_{a}^{b} |f_{n}(x) - f(x)|^{2} \, dx} = 0
+  $$
+  which is when the average error goes to 0
+- the sequence *pointwise converges* to $f$ if for any $x \in [a,b]$
+  $$
+  \lim_{n \to \infty} (f_{n}(x) - f(x)) = 0
+  $$
+  which is when the error at each point goes to 0
+- the sequence *uniformly converges* to $f$ if
+  $$
+  \lim_{n \to \infty} \max_{[a,b]} |f_{n}(x) - f(x)| = 0
+  $$
+  which is when the maximum error converges to 0
+  - if the maximum does not exist, then replace it with the smallest upper bound (called
+    the sup)
+
+** Fourier Series Convergence
+A function $f$ is *Piecewise $C^{1}$* (PWC1) on the interval $[a,b]$ if there is a finite
+partition $a = t_{0} < t_{1} < \cdots < t_{k} = b$ such that:
+- $f'$ exists on each interval $(t_{i}, t_{i+1})$
+- $f'$ is continuous on each interval $(t_{i}, t_{i+1})$
+- $f$ and $f'$ are bounded on each interval $(t_{i}, t_{i+1})$
+
+The *periodic extension* of a function $f$ defined on $[a,b]$ is the $b-a$ periodic
+function $f_{p}$ such that
+- $f_{p}(t) = f(t)$ for $t \in (a,b)$ where $f(t)$ is continuous
+- $f_{p}(t) = \frac{f(t^{-}) + f(t^{+})}{2}$ for $t \in (a,b)$ where $f(t)$ is not continuous
+- $f_{p}(a) = \frac{f(a) + f(b)}{2} = f_{p}(b)$
+
+Let $f_{p}$ be the periodic extension of a function $f \in L^{2}([-\tau/2, \tau/2])$:
+- the Fourier series of $f$ converges in the $L^{2}$ norm to $f$ and $f_{p}$ on any finite
+  subinterval of $[-\tau/2, \tau/2]$
+- if $f_{p}$ is piecewise $C^{1}$, then the Fourier series of $f$ converges pointwise to
+  $f_{p}$ for all $x \in \mathbb{R}$
+- if $f_{p}$ is piecewise $C^{1}$ and continuous, then the Fourier series of $f$ converges
+  uniformly to $f_{p}$ on any finite interval of $\mathbb{R}$
+
+*Gibbs Phenomenon*: for an $L^{2}([a,b])$ function $f$ with periodic extension $f_{p}$,
+if $f_{p}$ is not continuous at some point $t_{0}$, then _truncated_ Fourier series of
+$f$ will have growing oscillations near the point $t_{0}$
+- these oscillations do not appear in the infinite sum

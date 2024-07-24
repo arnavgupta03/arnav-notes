@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-03-26 Tue 20:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Multiprocessor, Multicore, and Realtime Scheduling</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Multiprocessor, Multicore, and Realtime Scheduling</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org6c0363a">1. Multiprocessor and Multicore Scheduling</a>
+<ul>
+<li><a href="#orgbc35edb">1.1. Granularity</a>
+<ul>
+<li><a href="#org5264eba">1.1.1. Independent Parallelism</a></li>
+<li><a href="#orgcbb9dce">1.1.2. Coarse and Very Coarse-Grained Parallelism</a></li>
+<li><a href="#org7017e5d">1.1.3. Medium-Grained Parallelism</a></li>
+<li><a href="#org0b407e4">1.1.4. Fine-Grained Parallelism</a></li>
+</ul>
+</li>
+<li><a href="#org3d1bfa8">1.2. Design Issues</a>
+<ul>
+<li><a href="#orgf029829">1.2.1. Assignment of Processes to Processors</a></li>
+<li><a href="#orgfff7acc">1.2.2. Use of Multiprogramming on Individual Processes</a></li>
+<li><a href="#orgb26d220">1.2.3. Process Dispatching</a></li>
+</ul>
+</li>
+<li><a href="#org8d42be4">1.3. Process Scheduling</a></li>
+<li><a href="#orge79e41a">1.4. Thread Scheduling</a>
+<ul>
+<li><a href="#org9b26996">1.4.1. Load Sharing</a></li>
+<li><a href="#org19c5e3b">1.4.2. Gang Scheduling</a></li>
+<li><a href="#orga705d20">1.4.3. Dedicated Processor Assignment</a></li>
+<li><a href="#orgbfe8b3c">1.4.4. Dynamic Scheduling</a></li>
+</ul>
+</li>
+<li><a href="#orge43b6b8">1.5. Multicore Thread Scheduling</a></li>
+</ul>
+</li>
+<li><a href="#org7d4910d">2. Real-Time Scheduling</a>
+<ul>
+<li><a href="#org049ddf8">2.1. Background</a></li>
+<li><a href="#org974bab4">2.2. Characteristics of Real-Time Operating Systems</a></li>
+<li><a href="#orgf0bd5e3">2.3. Real-Time Scheduling</a></li>
+<li><a href="#org95a3100">2.4. Deadline Scheduling</a></li>
+<li><a href="#orgc22aa4f">2.5. Rate Monotonic Scheduling</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6c0363a" class="outline-2">
+<h2 id="org6c0363a"><span class="section-number-2">1.</span> Multiprocessor and Multicore Scheduling</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Multiprocessor systems can be classified as:
+</p>
+<ul class="org-ul">
+<li><b>loosely coupled or distributed multiprocessor or cluster</b>: has collection of relatively
+autonomous systems, each processor having its own main memory and IO channels</li>
+<li><b>functionaly specialized processors</b>: controlled by the master processor and provide services
+to it</li>
+<li><b>tightly coupled multiprocessor</b>: has set of processors that share a common main memory and
+are under the integrated control of an OS</li>
+</ul>
+</div>
+<div id="outline-container-orgbc35edb" class="outline-3">
+<h3 id="orgbc35edb"><span class="section-number-3">1.1.</span> Granularity</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Multiprocessors can be categorized and placed in context with other architectures by
+considering <b>synchronization granularity</b> or frequency between processes in a system.
+</p>
+
+<p>
+Grain categories are:
+</p>
+<ul class="org-ul">
+<li><b>fine</b>: parallelism inherent in a single instruction stream, interval &lt;20 instructions</li>
+<li><b>medium</b>: parallel processing or multitasking within a single application, interval
+20-200 instructions</li>
+<li><b>coarse</b>: multiprocessing of concurrent ptocesses in a multiprogramming environment,
+interval 200-2000 instructions</li>
+<li><b>very coarse</b>: distributed processing across network nodes to form a single computing
+environment, interval 2000-1 million instructions</li>
+<li><b>independent</b>: multiple unrelated processes, interval not applicable</li>
+</ul>
+</div>
+<div id="outline-container-org5264eba" class="outline-4">
+<h4 id="org5264eba"><span class="section-number-4">1.1.1.</span> Independent Parallelism</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+No explicit synchronization between processes, each represents a separate job.
+Example is time-sharing system.
+Works similar to multiprogrammed uniprocessor with shorter average response time.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcbb9dce" class="outline-4">
+<h4 id="orgcbb9dce"><span class="section-number-4">1.1.2.</span> Coarse and Very Coarse-Grained Parallelism</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Only high-level synchronization among processes so can work as concurrent processes
+running on a multiprogrammed uniprocessor, so not much user code change.
+</p>
+
+<p>
+Any collection of concurrent processes that need to communicate or synchronize can
+benefit from multiprocessor use.
+If infrequent process interaction, a distributed system could provide support,
+if frequent, then overhead of network communication negates some speedup.
+</p>
+</div>
+</div>
+<div id="outline-container-org7017e5d" class="outline-4">
+<h4 id="org7017e5d"><span class="section-number-4">1.1.3.</span> Medium-Grained Parallelism</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+If an application is a collection of threads in a process, the programmer must
+specify potential parallelism.
+Typically, much coordination and interaction among the threads of an application.
+</p>
+
+<p>
+Since application threads interact frequently, scheduling decisions concerning 1
+thread may affect application performance.
+</p>
+</div>
+</div>
+<div id="outline-container-org0b407e4" class="outline-4">
+<h4 id="org0b407e4"><span class="section-number-4">1.1.4.</span> Fine-Grained Parallelism</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+More complex use of parallelism found in the use of threads.
+Specialized and fragmented area.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3d1bfa8" class="outline-3">
+<h3 id="org3d1bfa8"><span class="section-number-3">1.2.</span> Design Issues</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+3 interrelated issues for multiprocessor scheduling:
+</p>
+<ol class="org-ol">
+<li>assignment of processes to processors</li>
+<li>use of multiprogramming on individual processors</li>
+<li>actual dispatching a process</li>
+</ol>
+</div>
+<div id="outline-container-orgf029829" class="outline-4">
+<h4 id="orgf029829"><span class="section-number-4">1.2.1.</span> Assignment of Processes to Processors</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Assume multiprocessor architecture is uniform and treat processors as a pooled
+resource and assign processes to processors on demand.
+</p>
+
+<p>
+With static assignment, a processor is permanently assinged to one processor from
+activation to completion, so a dedicated short-term queue is maintained for each
+processor.
+Advantage is less overhead in scheduling since processor assignment is known,
+allows for gang scheduling.
+Disadvantage is uneven load (one processor empty, one has backlog). To fix this,
+a global queue can be used.
+Context info for all processes will be available to all processors and so the
+cost of scheduling will be independent of the identity of the processor on which
+it is scheduled.
+Another option is dynamic load balancing, where threads are moved from a queue
+for one processor to a queue for another processor.
+</p>
+
+<p>
+Approaches to assign processes to processors are master/slave and peer.
+</p>
+
+<p>
+With master/slave, kernel functions like scheduling are only on a particular
+processor (master) and slaves run user programs and call master for service
+calls (IO).
+Conflict resolution simple since 1 processor has control of memory and IO resources.
+Disadvantages are the danger of master failure and bottlenecks from the master.
+</p>
+
+<p>
+With peer architecture, any processor can run kernel and each process self-schedules.
+Must ensure processes aren&rsquo;t lost and 2 processors do not choose the same process.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfff7acc" class="outline-4">
+<h4 id="orgfff7acc"><span class="section-number-4">1.2.2.</span> Use of Multiprogramming on Individual Processes</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+When many processors are available, no need for every processor to be as busy as
+possible but rather provide best average performance.
+</p>
+
+<p>
+An application with many threads may run poorly unless all can run simultaneously.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb26d220" class="outline-4">
+<h4 id="orgb26d220"><span class="section-number-4">1.2.3.</span> Process Dispatching</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+For multiprocessors, priority or scheduling algorithms may have unnecessary overhead.
+For thread scheduling, new issues are in play that may be more important than
+priorities or execution histories.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8d42be4" class="outline-3">
+<h3 id="org8d42be4"><span class="section-number-3">1.3.</span> Process Scheduling</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Most traditional multiprocessor systems have common pool of processors.
+</p>
+
+<p>
+Result of speedup of scheduling algorithms depends on variability in service times,
+measured with coefficient of variation \(C_{s}\).
+Larger \(C_{s}\) means more variation.
+With 2 processors, longer processes do not hold up FCFS too long.
+</p>
+
+<p>
+Specific scheduling discipline is less important with 2+ processors than 1.
+Simple FCFS (possible with priorities) may work for a multiprocessor system.
+</p>
+</div>
+</div>
+<div id="outline-container-orge79e41a" class="outline-3">
+<h3 id="orge79e41a"><span class="section-number-3">1.4.</span> Thread Scheduling</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+On a uniprocessor, threads help with program structure and overlapping IO with
+processing.
+</p>
+
+<p>
+In a multiprocessing environment, threads allow parallelism leading to dramatic gains
+in performance. With medium-grained parallelism, small differences in thread
+management and scheduling can have significant performance impact.
+</p>
+
+<p>
+General approaches for multiprocessor thread scheduling and processor assignment:
+</p>
+<ol class="org-ol">
+<li><b>load sharing</b>: global queue of ready threads and each processor selects a thread
+from the queue when idle</li>
+<li><b>gang scheduling</b>: a set of related threads is scheduled to run on a set of
+processors at the same time on a 1:1 basis</li>
+<li><b>dedicated processor assignment</b>: threads assigned to processors such that each
+thread in a program gets one processor and when program terminates, all processors
+returned to general pool for allocation to another program</li>
+<li><b>dynamic scheduling</b>: number of threads in a process can be altered during execution</li>
+</ol>
+</div>
+<div id="outline-container-org9b26996" class="outline-4">
+<h4 id="org9b26996"><span class="section-number-4">1.4.1.</span> Load Sharing</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Advantages:
+</p>
+<ul class="org-ul">
+<li>load distributed evenly across processors, no unnecessarily idle processor</li>
+<li>no centralized scheduler needed, scheduling run on available processors</li>
+<li>global queue organized and accessed using any scheduling policy</li>
+</ul>
+
+<p>
+Versions of load sharing:
+</p>
+<ol class="org-ol">
+<li><b>FCFS</b>: when a job arrives, each thread placed consecutively at the end of the
+shared queue, idle processors pick the next ready thread</li>
+<li><b>smallest number of threads first</b>: shared ready queue is organized as a
+priority queue with highest priority given to threads from jobs with least
+unscheduled threads, if equal then arrival time used</li>
+<li><b>preemptive smallest number of threads first</b>: highest priority given to
+jobs with least unscheduled threads, and a new job with less threads than
+the current can preempt threads belonging to the scheduled job</li>
+</ol>
+
+<p>
+FCFS is superior since gang scheduling better than load sharing.
+</p>
+
+<p>
+Disadvantages of load sharing are:
+</p>
+<ul class="org-ul">
+<li>central queue has a region of memory that must enforce mutual exclusion,
+which could lead to a bottleneck and could be a problem if not enough
+processors</li>
+<li>preempted threads unlikely to resume execution on the same process, so
+caching less efficient</li>
+<li>unlikely all threads gain access to processors at the same time so much
+coordination required</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org19c5e3b" class="outline-4">
+<h4 id="org19c5e3b"><span class="section-number-4">1.4.2.</span> Gang Scheduling</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+The concept of scheduling a set of processes simultaneously on a set of
+processors.
+</p>
+
+<p>
+Advantages:
+</p>
+<ul class="org-ul">
+<li>if processes in the group are related or coordinated, synchronization blocking
+could be reduced, less process switching, and better performance</li>
+<li>single scheduling decision affects multiple processors and processes, so less
+scheduling overhead</li>
+</ul>
+
+<p>
+<b>Coscheduling</b>: scheduling a related set of tasks (task force) that are small
+and close to the idea of a thread
+</p>
+
+<p>
+Useful for medium and fine-grained applications where performance degrades
+when any part of the application is not running while others are ready
+to run.
+</p>
+
+<p>
+Gang scheduling reduces process switches since all threads are in system
+and saves time in resource allocation since process has IO access.
+</p>
+
+<p>
+If there are several single-thread applications, they could all fit together
+to increase processor utilization. Otherwise, scheduling could be weighted
+by the number of threads.
+</p>
+</div>
+</div>
+<div id="outline-container-orga705d20" class="outline-4">
+<h4 id="orga705d20"><span class="section-number-4">1.4.3.</span> Dedicated Processor Assignment</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+When an application is sceheduled, each thread is assigned a processor
+that is dedicated to that thread until application completion.
+</p>
+
+<p>
+Wastes time in the case of blocking for IO or synchronization.
+Defence of this strategy:
+</p>
+<ol class="org-ol">
+<li>in a highly parallel system, processor utilization is no longer an important
+metric for effectiveness or performance</li>
+<li>avoidance of process switching during program lifetime results in speedup</li>
+</ol>
+
+<p>
+Performance degrades as both total number of processes exceepts number of
+processors.
+More threads means more thread preemption and rescheduling, which leads to
+inefficiency from many sources.
+Limit the number of active threads to the number of processors.
+</p>
+
+<p>
+Activity working set is the minimum number of threads that must be scheduled
+simultaneously on processors for the application to make acceptable progress.
+Not scheduling activity working set could lead to processor thrashing.
+</p>
+
+<p>
+<b>Processor thrashing</b>: when scheduling threads whose services are required
+deschedules other threads whose services are soon needed
+</p>
+
+<p>
+<b>Processor fragmentation</b>: situation in which some processors are left over
+when others are allocated and leftovers have insufficient number or lack
+organization to support waiting applications
+</p>
+
+<p>
+Gang scheduling and dedicated processor allocation avoid these
+</p>
+</div>
+</div>
+<div id="outline-container-orgbfe8b3c" class="outline-4">
+<h4 id="orgbfe8b3c"><span class="section-number-4">1.4.4.</span> Dynamic Scheduling</h4>
+<div class="outline-text-4" id="text-1-4-4">
+<p>
+Number of threads in process can be altered dynamically, so OS can adjust
+load to improve utilization.
+</p>
+
+<p>
+OS partitions processors among jobs and each job executes subset of tasks by
+mapping them to threads (subset decided by application).
+</p>
+
+<p>
+Here, scheduling responsibility of OS is limited to processor allocation.
+When a job requests 1+ processors (when job arrives for the 1st time or
+requirements change):
+</p>
+<ol class="org-ol">
+<li>use idle processors first to satisfy request</li>
+<li>if the requesting job is new, allocate a single processor by taking it from
+any job currently allocated 1+ processors</li>
+<li>if any portion of the request cannot be satisfied, it remains outstanding
+until a process becomes available or the job rescinds the request</li>
+<li>when 1+ processors are released, scan the current queue for unsatisfied
+requests and assign a single processor to each job in the list with no
+processors, then scan again and allocate based on FCFS</li>
+</ol>
+
+<p>
+Dynamic allocation superior to gang scheduling and dedicated processor assignment,
+but overhead may negate performance advantage.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge43b6b8" class="outline-3">
+<h3 id="orge43b6b8"><span class="section-number-3">1.5.</span> Multicore Thread Scheduling</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Some OSs treat multicore the same as multiprocessor systems (use load balancing).
+</p>
+
+<p>
+More cores per chip means minimize access to off-chip memory (with cache and locality)
+rather than maximize processor utilization.
+This could be complex for caches shared by only some cores.
+For this case, scheduling should assign threads that share memory resources to those
+that share cache and vice versa for load balancing.
+</p>
+
+<p>
+Two aspects of cache sharing:
+</p>
+<ul class="org-ul">
+<li><b>cooperative resource sharing</b>: multiple threads access the same set of main memory
+locations
+<ul class="org-ul">
+<li>data brought into a cache by one thread must be accessed by a cooperating thread,
+so cooperating threads should be on adjacent cores (share cache)</li>
+</ul></li>
+<li><b>resource contention</b>: when threads compete for cache memory locations
+<ul class="org-ul">
+<li>if more cache is allocated to one thread, other thread(s) suffer performance
+degradation</li>
+<li>with contention-aware scheduling, allocate threads to cores to maximize
+effectiveness of shared cache memory</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org7d4910d" class="outline-2">
+<h2 id="org7d4910d"><span class="section-number-2">2.</span> Real-Time Scheduling</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org049ddf8" class="outline-3">
+<h3 id="org049ddf8"><span class="section-number-3">2.1.</span> Background</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<b>Real-time computing</b>: computing where system correctness depends on logical results and time when
+results are produced
+</p>
+
+<p>
+Real-time tasks attempt to control or react to events in the outside world, with which it must keep up.
+</p>
+
+<p>
+<b>Hard real-time task</b> must meet its deadline or cause unacceptable damage or fatal error to the system
+</p>
+
+<p>
+<b>Soft real-time task</b> has an associated deadline that is desirable but not mandatory, can still be
+scheduled and completed after its deadline
+</p>
+
+<p>
+<b>Aperiodic task</b> has a deadline by which it must finish or start or may have a constraint on
+start and finish time
+</p>
+
+<p>
+<b>Periodic task</b> has a requirement every \(T\) units apart
+</p>
+</div>
+</div>
+<div id="outline-container-org974bab4" class="outline-3">
+<h3 id="org974bab4"><span class="section-number-3">2.2.</span> Characteristics of Real-Time Operating Systems</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Have unique requirements in the areas of determinism, responsiveness, user control, reliability,
+and fail-soft operation.
+</p>
+
+<p>
+An OS is <b>deterministic</b> based on the extent it performs operations at fixed, predetermined times
+or within predetermined time intervals.
+Impossible when processes compete for resources and in an RTOS, process requests for service are
+dictated by external events and timings.
+Determinism depends on interrupt response speed and request capacity per time.
+One measure of determinism is delay from high priority interrupt to service.
+</p>
+
+<p>
+<b>Responsiveness</b> is concerned with how long after acknowledgement it takes an OS to service the
+interrupt.
+Aspects include:
+</p>
+<ol class="org-ol">
+<li>amount of time required to handle the interrupt and begin execution of the interrupt service
+routine (ISR), if this requires a process switch then longer delay</li>
+<li>amount of time to perform ISR, depends on hardware</li>
+<li>effect of interrupt nesting, service delayed if ISR can be interrupted</li>
+</ol>
+
+<p>
+<b>User control</b> is essential in real-time systems to allow users fine-grained control over task priority.
+User should be able to distinguish between hard and soft tasks and specify relative priorities for each.
+Real-time systems allow the user to specify memory use as well (paging, swapping, resident set, etc).
+</p>
+
+<p>
+<b>Reliability</b> is important since real-time systems respond to and control events in real time.
+Performance degradation may have catastrophic consequences.
+</p>
+
+<p>
+<b>Fail-soft operation</b>: the ability of a system to fail in such a way as to preserve capability and data.
+</p>
+
+<p>
+Real-time systems will not simply fail but attempt to correct or minimize effect of failure and continue
+to run.
+User is notified of corrective action and reduced level of service. If shutdown, data consistency
+maintained.
+</p>
+
+<p>
+A real-time system is stable if the system at least meets the deadlines of its most critical, highest-priority tasks.
+</p>
+
+<p>
+Important features for real-time OSs:
+</p>
+<ul class="org-ul">
+<li>a stricter use of priorities with preemptive scheduling designed to meet real-time requirements</li>
+<li>interrupt latency (time between generation and servicing) bounded and relatively short</li>
+<li>precise and predictable timing characteristics</li>
+</ul>
+
+<p>
+Design short-term scheduler so that all hard real-time tasks complete (or start) by their deadline and as many as possible
+soft real-time tasks complete (or start) by their deadline.
+Most RTOSs are designed to be as responsive as possible to real-time tasks so when a deadline approaches, a task can be
+quickly scheduled.
+</p>
+
+<p>
+Nonpreemptive or preemptive scheduling without priorities does not work for real-time.
+Priority preemptive scheduling or immediate preemption could be used instead.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf0bd5e3" class="outline-3">
+<h3 id="orgf0bd5e3"><span class="section-number-3">2.3.</span> Real-Time Scheduling</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Scheduling approaches depend on
+</p>
+<ol class="org-ol">
+<li>whether a system performs schedulability analysis</li>
+<li>if it does, whether it is done statically or dynamically</li>
+<li>whether the result of analysis produces a schedule or plan according to which tasks are dispatched at runtime</li>
+</ol>
+
+<p>
+Classes of algorithms:
+</p>
+<ul class="org-ul">
+<li><b>static table-driven approaches</b> perform a static analysis of feasible schedules of dispatching, result is a schedule
+that determines at runtime when a task must begin execution
+<ul class="org-ul">
+<li>used for periodic tasks given periodic arrival time, execution time, periodic deadline, and relative priority</li>
+<li>predictable and inflexible since changes require new schedule</li>
+</ul></li>
+<li><b>static priority-driven preemptive approaches</b> perform a static analysis but no schedule, instead assign priorities to
+tasks with a traditional priority-driven preemptive scheduler
+<ul class="org-ul">
+<li>priority related to time constraints</li>
+</ul></li>
+<li><b>dynamic planning-based approaches</b> determine feasibility at runtime rather than statically, arriving task executed only if
+feasible to meet time constraints, result is schedule or plan on when to dispatch task</li>
+<li><b>dynamic best effort approaches</b> have no feasibility analysis and try to meet all deadlines and abort processes whose deadline
+is missed
+<ul class="org-ul">
+<li>on arrival, a task gets a priority</li>
+<li>tasks are aperiodic so no static scheduling analysis</li>
+<li>unknown if deadline will be met until deadline arrives or task complete</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org95a3100" class="outline-3">
+<h3 id="org95a3100"><span class="section-number-3">2.4.</span> Deadline Scheduling</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Real-time applications are not concerned with speed but rather completing tasks at the right time despite dynamic resource
+demands and conflicts, processing overloads, and hardware or software faults.
+</p>
+
+<p>
+Useful info about tasks:
+</p>
+<ul class="org-ul">
+<li><b>ready time</b>: when task becomes ready for execution, known for period and some aperiodic tasks</li>
+<li><b>starting deadline</b>: time by which a task must begin</li>
+<li><b>completion deadline</b>: time by which a task must be completed</li>
+<li><b>processing time</b>: time required to execute task to completion</li>
+<li><b>resource requirements</b>: set of resources (other than processor) required by the task</li>
+<li><b>priority</b>: relative importance of task, hard real-time tasks could have absolute priority and system failure is missed</li>
+<li><b>subtask structure</b>: a task may be decomposed into a mandatory subtask (with hard deadline) and optional subtask</li>
+</ul>
+
+<p>
+A policy of scheduling the task with the earliest deadline minimizes the fraction of tasks that miss their deadlines.
+When start deadlines are specified, use nonpreemptive scheduler (task blocks itself).
+When completion deadlines are specifies, use preemptive scheduler (OS preempts).
+</p>
+
+<p>
+Straightforward scheme is to always schedule the ready task with earliest deadline and let it run to completion.
+For aperiodic tasks, this could lead to missed deadlines.
+Instead, earliest deadline with unforced idle times could be used where the task with the earliest deadline is scheduled
+and run to completion, even if processor is idle.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc22aa4f" class="outline-3">
+<h3 id="orgc22aa4f"><span class="section-number-3">2.5.</span> Rate Monotonic Scheduling</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Assigns priorities to tasks on the basis of their periods, highest priority is shortest period.
+</p>
+
+<p>
+Period \(T\) is the amount of time between arrival of one instance of the task and arrival of the next instance of the task.
+Rate is the inverse of period.
+Execution time \(C\) is the amount of processing time required for each occurrence where \(C \le T\) for uniprocessor.
+If task never denied service, then processor utilization by task is \(U = C/T\).
+</p>
+
+<p>
+To check if all hard deadlines are met, for \(n\) tasks to meet all deadlines, the following must hold (for a perfect
+scheduling algorithm):
+\[
+\frac{C_{1}}{T_{1}} + \frac{C_{2}}{T_{2}} + \cdots + \frac{C_{n}}{T_{n}} \le 1
+\]
+For RMS, this is
+\[
+\frac{C_{1}}{T_{1}} + \frac{C_{2}}{T_{2}} + \cdots + \frac{C_{n}}{T_{n}} \le n(2^{1/n} - 1)
+\]
+which converges to \(\ln(2) \approx 0.693\) for infinite tasks.
+If total utilization is less than this bound, then all tasks will be successfully scheduled.
+</p>
+
+<p>
+For earliest-deadline scheduling, upper bound is 1, so more processor utilization and more periodic tasks accommodated.
+</p>
+
+<p>
+Benefits of RMS:
+</p>
+<ol class="org-ol">
+<li>performance difference is small in practice, as 0.693 is conservative</li>
+<li>most hard real-time systems have soft real-time components that can execute at lower-priorities when not running
+RMS scheduling for hard real-time tasks</li>
+<li>RMS more stable, since essential tasks must have deadlines guaranteed if schedulable, which can be done in RMS by
+giving them short periods or modifying RMS priorities to account for essential tasks
+<ol class="org-ol">
+<li>with earliest deadline, a periodic task&rsquo;s priority changes every period so less guarantees</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-03-26 Tue 20:29</p>
+</div>
+</body>
+</html>

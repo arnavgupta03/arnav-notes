@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-22 Thu 15:33 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Memory Management</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Memory Management</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgf3d73b7">1. Memory Management Requirements</a>
+<ul>
+<li><a href="#orgdd4e959">1.1. Relocation</a></li>
+<li><a href="#org46d497d">1.2. Protection</a></li>
+<li><a href="#org1954489">1.3. Sharing</a></li>
+<li><a href="#orgf3c891c">1.4. Logical Organization</a></li>
+<li><a href="#orgbcea78a">1.5. Physical Organization</a></li>
+</ul>
+</li>
+<li><a href="#org8720cd7">2. Memory Partitioning</a>
+<ul>
+<li><a href="#org97ab9ff">2.1. Fixed Partitioning</a>
+<ul>
+<li><a href="#org87e1a38">2.1.1. Partition Sizes</a></li>
+<li><a href="#org70d80d1">2.1.2. Placement Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#org968aa8b">2.2. Dynamic Partitioning</a>
+<ul>
+<li><a href="#orge242668">2.2.1. Placement Algorithm</a></li>
+<li><a href="#org6efc96d">2.2.2. Replacement Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#org522e72d">2.3. Buddy System</a></li>
+<li><a href="#org83039d1">2.4. Relocation</a></li>
+</ul>
+</li>
+<li><a href="#org9170fb6">3. Paging</a></li>
+<li><a href="#orgad88835">4. Segmentation</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf3d73b7" class="outline-2">
+<h2 id="orgf3d73b7"><span class="section-number-2">1.</span> Memory Management Requirements</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Frame</b>: a fixed-length block of main memory
+</p>
+
+<p>
+<b>Page</b>: a fixed-length block of data that resides in secondary memory, may be temporarily
+copied into a frame of main memory
+</p>
+
+<p>
+<b>Segment</b>: a variable-length block of data that resides in secondary memory, may be
+temporarily copied into an available region of main memory (segmentation) or the segment
+may be divided into pages which can individually be copied into main memory (combined
+segmentation and paging)
+</p>
+
+<p>
+Memory management is intended to satisfy relocation, protection, sharing, logical
+organization, and physical organization.
+</p>
+</div>
+<div id="outline-container-orgdd4e959" class="outline-3">
+<h3 id="orgdd4e959"><span class="section-number-3">1.1.</span> Relocation</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+For multiprogramming systems, main memory is shared among processes that must be
+swapped in and out of main memory to maximize processor utilization.
+During swapping, the process may be required to relocate to a different area of memory.
+</p>
+
+<p>
+Since a program&rsquo;s location is not known ahead of time, there are some concerns related
+to addressing:
+</p>
+<ul class="org-ul">
+<li>OS needs to know location of process control info, execution stack, and entry point
+to the program for this process</li>
+<li>processor must deal with memory references within the program such as branch
+instructions and data reference instructions</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org46d497d" class="outline-3">
+<h3 id="org46d497d"><span class="section-number-3">1.2.</span> Protection</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Each process should be protected against interference from other processes: no
+referencing memory locations in other processes, for instructions or data,
+without permission.
+</p>
+
+<p>
+All memory referencs generated by a process must be checked at runtime to ensure
+they only refer to the memory space allocated to that process.
+</p>
+
+<p>
+Memory protection must be satisfied by the processor rather than OS since it is
+only possible to assess the permissibility of a memory reference at the time of
+execution of the instruction making the reference.
+</p>
+</div>
+</div>
+<div id="outline-container-org1954489" class="outline-3">
+<h3 id="org1954489"><span class="section-number-3">1.3.</span> Sharing</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Protection must still allow processes cooperating on some task to share access to the
+same data structure.
+</p>
+
+<p>
+The memory management system must allow controlled access to shared areas of memory
+without compromising essential protection.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf3c891c" class="outline-3">
+<h3 id="orgf3c891c"><span class="section-number-3">1.4.</span> Logical Organization</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Most programs are organized into modules (some modifiable, some unmodifiable), and so
+if the OS and computer hardware can effectively deal with programs and data in the
+form of modules, then some advantages can be realized:
+</p>
+<ol class="org-ol">
+<li>Modules can be written and compiled independently, with all references from one
+module to another resolved by the system at runtime.</li>
+<li>With some additional overhead, different degrees of protection (read only, execute
+only, etc) can be given to different modules.</li>
+<li>Possible to introduce mechanisms by which modules can be shared among processes,
+and so the advantage of providing sharing on a module level is that this corresponds
+to the user&rsquo;s way of viewing the problem, hence easy for the user to specify the
+sharing desired.</li>
+</ol>
+
+<p>
+Mainly satisfied by segmentation.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbcea78a" class="outline-3">
+<h3 id="orgbcea78a"><span class="section-number-3">1.5.</span> Physical Organization</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Moving information between two levels of memory should be a system responsibility
+because:
+</p>
+<ol class="org-ol">
+<li>The main memory available for a program and its data may be insufficient, so the
+programmer will need to engage in overlaying, where the program and data are
+organized such that various modules can be assigned the same region of memory
+with a main program switching modules in and out as needed, though this wastes
+programmer time.</li>
+<li>For multiprogramming, the programmer does not know at the time of coding how much
+space wll be available or where that space will be.</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org8720cd7" class="outline-2">
+<h2 id="org8720cd7"><span class="section-number-2">2.</span> Memory Partitioning</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Memory management in modern multiprogramming systems involves virtual memory, which
+is based on the use of segmentation and paging.
+</p>
+
+<p>
+Memory management schemes assume the OS occupies some fixed portion of main memory
+and the remaining memory can be used by multiple processes.
+</p>
+</div>
+<div id="outline-container-org97ab9ff" class="outline-3">
+<h3 id="org97ab9ff"><span class="section-number-3">2.1.</span> Fixed Partitioning</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Scheme is to partition available memory into regions with fixed boundaries.
+</p>
+
+<p>
+Main advantage is they are simple to implement with little OS overhead.
+</p>
+
+<p>
+Disadvantages:
+</p>
+<ul class="org-ul">
+<li>number of partitions specified at system generation time limits the number of
+active processes in the system</li>
+<li>since partition sizes are preset at system generation time, small jobs will not
+use partition space efficiently, which is in most cases inefficient (unless
+storage requirement of all jobs is known beforehand)</li>
+</ul>
+</div>
+<div id="outline-container-org87e1a38" class="outline-4">
+<h4 id="org87e1a38"><span class="section-number-4">2.1.1.</span> Partition Sizes</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+This could be done with equal-size partitions, but this has the following
+difficulties:
+</p>
+<ul class="org-ul">
+<li>a program may be too big to fit into a partition, which would require the
+programmer to use overlays so only a portion of the program needs to be in main
+memory at any time</li>
+<li>main memory utilization is inefficient as a program of any size will occupy an
+entire partition, leading to <b>internal fragmentation</b></li>
+</ul>
+
+<p>
+These problems can be lessened by unequal-size partitions, so that larger programs
+can be accommodated without overlays and smaller programs can be accommodated with
+less internal fragmentation.
+</p>
+</div>
+</div>
+<div id="outline-container-org70d80d1" class="outline-4">
+<h4 id="org70d80d1"><span class="section-number-4">2.1.2.</span> Placement Algorithm</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+With equal-size partitions, a process can be loaded into any arbitrary available
+partition. If none exists, choosing which to swap out is a scheduling decision.
+</p>
+
+<p>
+With unequal-size partitions, there are 2 possible strategies:
+</p>
+<ul class="org-ul">
+<li>assign each process to the smallest partition within which it will fit, so
+a scheduling queue is needed to hold swapped out processes destined for that
+partition
+<ul class="org-ul">
+<li>advantage: processes are always assigned to minimize wasted memory within a
+partition (less internal fragmentation)</li>
+<li>disadvantage: larger partitions could always remain unused</li>
+</ul></li>
+<li>employ a single queue for all processes, and when loading a process into main
+memory, the smallest available partition that can hold the process is
+selected, or if all partitions are ocurpied swapping occurs based on the
+smallest partition that will hold the process, priority, or blocked proceses</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org968aa8b" class="outline-3">
+<h3 id="org968aa8b"><span class="section-number-3">2.2.</span> Dynamic Partitioning</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Partitions are of variable length and number, so when a process is brought into
+main memory it is allocated exactly as much memory as it requires.
+</p>
+
+<p>
+This starts well but leads to memory becoming fragmented and memory utilization
+declining, with the holes between processes causing <b>external fragmentation</b>.
+</p>
+
+<p>
+To overcome external fragmentation, use <b>compaction</b>: where the OS shifts
+processes so they are contiguous and all free memory is together in one block.
+However, this is time consuming, wasting processor time, and requires dynamic
+relocation capability.
+</p>
+
+<p>
+Disadvantages are complexity to maintain and overhead of compaction.
+</p>
+</div>
+<div id="outline-container-orge242668" class="outline-4">
+<h4 id="orge242668"><span class="section-number-4">2.2.1.</span> Placement Algorithm</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+To avoid compaction, the OS designer must use an efficient algorithm to assign
+processes to memory.
+</p>
+
+<p>
+Possible algorithms that choose among free blocks of main memory of appropriate
+size are:
+</p>
+<ul class="org-ul">
+<li><b>best-fit</b>: chooses the block closes in size to the request
+<ul class="org-ul">
+<li>usually the worst performer as it leaves the smallest fragment behind</li>
+<li>result is that main memory is littered with blocks too small to satisfy
+memory allocation requests so more compaction</li>
+</ul></li>
+<li><b>first-fit</b>: scans memory from the beginning and chooses the first available
+block large enough
+<ul class="org-ul">
+<li>simplest and often best and fastest</li>
+<li>may litter the front end with small free partitions that must be searched
+over on each first-fit pass</li>
+</ul></li>
+<li><b>next-fit</b>: scans memory from the location of the last placement and chooses
+the next available block large enough
+<ul class="org-ul">
+<li>slightly worse than first-fit, as it more frequently leads to an allocation
+from a free block at the end of memory, so the largest block is quickly
+broken into small fragments leading to more compaction</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6efc96d" class="outline-4">
+<h4 id="org6efc96d"><span class="section-number-4">2.2.2.</span> Replacement Algorithm</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+When all processes in main memory are blocked, the OS swaps one process out
+for a process in a Ready-Suspend state.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org522e72d" class="outline-3">
+<h3 id="org522e72d"><span class="section-number-3">2.3.</span> Buddy System</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Memory blocks are available as size \(2^{K}\) works for \(L \le K \le U\) where
+\(2^{L}\) is the smallest size block allocated and \(2^{U}\) is the largest size
+block allocated (size of the entire memory available).
+</p>
+
+<p>
+Process works as follows:
+</p>
+<ol class="org-ol">
+<li>Begin with the entire space available for allocation, treated as a single
+block of size \(2^{U}\).</li>
+<li>If a request of size \(s\) such that \(2^{U-1} < s \le 2^{U}\) is made, the entire
+block is allocated.
+<ol class="org-ol">
+<li>Otherwise, the block is split into 2 equal buddies of size \(2^{U-1}\),
+with this process repeating until the smallest block \(\ge s\) is generated
+and allocated to the request.</li>
+</ol></li>
+</ol>
+
+<p>
+At any time, the buddy system maintains a list of holes of size \(2^{i}\).
+Whenever a pair of buddies on the \(i\) list is unallocated, they are removed from
+that list and coalesced into a single block on the \((i+1)\) list.
+</p>
+
+<p>
+The following algorithm is used to find a hole of size \(2^{i}\):
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">get_hole</span><span style="color: #51afef;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span><span style="color: #51afef;">)</span>
+<span style="color: #51afef;">{</span>
+    <span style="color: #51afef;">if</span> <span style="color: #c678dd;">(</span>i == <span style="color: #98be65;">(</span>U + <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span><span style="color: #c678dd;">)</span> &lt;failure&gt;;
+    <span style="color: #51afef;">if</span> <span style="color: #c678dd;">(</span>&lt;i_list empty&gt;<span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+        get_hole<span style="color: #98be65;">(</span>i + <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span>;
+        &lt;split hole into buddies&gt;;
+        &lt;put buddies on i_list&gt;;
+    <span style="color: #c678dd;">}</span>
+    &lt;take first hole on i_list&gt;;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+In a binary tree representation of the buddy allocation system, the leaf nodes
+represent the current partitioning of the memory, and if two buddies are leaf nodes,
+at least one must be allocated, otherwise they are coalesced into a larger block.
+</p>
+
+<p>
+Works as a reasonable compromise to overcome the disadvantages of fixed and dynamic
+partitioning (especially for parallel systems), but not as good as paging and
+segmentation.
+</p>
+</div>
+</div>
+<div id="outline-container-org83039d1" class="outline-3">
+<h3 id="org83039d1"><span class="section-number-3">2.4.</span> Relocation</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+For some fixed partitioning, whichever partition is selected when a new process is loaded
+will always be used to swap that process back into memory after it has been swapped out,
+so when the process is first loaded, all relative memory references in the code are
+replaced by absolute main memory addresses, determined by the base address of the loaded
+process.
+</p>
+
+<p>
+For equal-size partitioning, unequal-size partitioning (with a single queue), and dynamic
+partitioning, a process may be assigned to a different partition after being swapped out.
+Further, processes are shifted during compaction.
+</p>
+
+<p>
+Locations referenced by a process are not fixed, so distinctions are made:
+</p>
+<ul class="org-ul">
+<li><b>logical address</b>: a reference to a memory location independent of the current
+assignment of data to memory, translation must be made to a physical address before
+a memory access occurs</li>
+<li><b>relative address</b>: address is expressed as a location relative to some known point,
+usually a value in a processor register
+<ul class="org-ul">
+<li>typically relative to the origin of the program</li>
+<li>hardware mechanism needed to translate relative addresses to physical main memory
+addresses at the time of execution</li>
+</ul></li>
+<li><b>physical address</b>: actual location in main memory</li>
+</ul>
+
+<p>
+For relative addresses:
+</p>
+<ol class="org-ol">
+<li>When a process is assigned to the Running state, a special processor register (base)
+is loaded with the starting address in main memory of the program.
+<ol class="org-ol">
+<li>A bounds register also indicates the end of the program.</li>
+</ol></li>
+<li>When relative addresses are encountered, they go through 2 steps of manipulation by
+the processor:
+<ol class="org-ol">
+<li>the value in the base register is added to produce an absolute address</li>
+<li>the resulting address is compared to the bounds register, and if it is within
+bounds the instruction proceeds, else an interrupt is generated to the OS</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org9170fb6" class="outline-2">
+<h2 id="org9170fb6"><span class="section-number-2">3.</span> Paging</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Pages</b>: chunks of a process
+</p>
+
+<p>
+<b>Frames</b>: available chunks of memory.
+</p>
+
+<p>
+At any given point in time, some frames in memory are in use and some are free, with a
+list of free frames being maintained by the OS.
+</p>
+
+<p>
+If there is enough contiguous unused space frames to hold a process, they are used.
+Otherwise, the OS maintains a <b>page table</b> for each process that shows the frame location
+for each page of the process.
+</p>
+
+<p>
+The OS also maintains a free-frame list of all the frames in main memory that are
+currently unoccupied and available for pages.
+</p>
+
+<p>
+Within the program, logical addresses consist of a page number and an offset within the
+page, and this translation is done by the hardware.
+</p>
+
+<p>
+Relative and logical addresses are the same when the page size is a power of 2.
+Further this makes dynamic address translation at runtime easier for the hardware, as
+only the following steps are needed for address translation:
+</p>
+<ol class="org-ol">
+<li>extract the page number from the logical address (leftmost \(n\) bits)</li>
+<li>use the page number as an index into the process page table to find the frame number
+\(k\)</li>
+<li>the starting physical address of the frame is \(k \times 2^{m}\) and the physical
+address of the referenced byte is that number plus the offset (which is just appending
+that number to the offset)</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgad88835" class="outline-2">
+<h2 id="orgad88835"><span class="section-number-2">4.</span> Segmentation</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+A user program can be divided into variable-length segments (with a max length), and
+similar to paging logical addresses consist of a segment number and an offset.
+</p>
+
+<p>
+Similar to dynamic partitioning, but with segmentation a program may occupy more than one
+partition and these partitions do not need to be contiguous.
+</p>
+
+<p>
+Can still cause external fragmentation, though less than dynamic partitioning since a
+program can be broken into pieces.
+</p>
+
+<p>
+Unlike paging, segmentation is visible to the programer, so modular programs can be
+broken down into multiple segments (within the size limitation).
+</p>
+
+<p>
+No simple relation between logical and physical addresses (since unequal size segments).
+Each segment table entry must have the starting address of the segment in main memory
+and the length of the segment.
+</p>
+
+<p>
+Procedure is similar to paging, except requires checking against size of segment and
+requires addition rather than appending numbers.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-02-22 Thu 15:33</p>
+</div>
+</body>
+</html>

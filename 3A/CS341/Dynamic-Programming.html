@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-03-11 Mon 19:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic Programming</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Dynamic Programming</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2faf882">1. Dynamic Programming</a>
+<ul>
+<li><a href="#org499cf5a">1.1. Recipe</a>
+<ul>
+<li><a href="#orgdc96447">1.1.1. Identify the Subproblem</a></li>
+<li><a href="#org135dfda">1.1.2. Establish DP-recurrence</a></li>
+<li><a href="#org4599d88">1.1.3. Set Values for the Base Case</a></li>
+<li><a href="#org23cbcb3">1.1.4. Specify the Order of Computation</a></li>
+<li><a href="#orgf884fa5">1.1.5. Recovery of the Solution</a></li>
+</ul>
+</li>
+<li><a href="#org3b9f8bc">1.2. Key Features</a></li>
+<li><a href="#org98fb41e">1.3. DP vs Divide-and-Conquer</a></li>
+</ul>
+</li>
+<li><a href="#orgab1053e">2. Interval Scheduling</a>
+<ul>
+<li><a href="#org0c4e9cb">2.1. Sketch of the Algorithm</a></li>
+<li><a href="#org12cac97">2.2. Finding pj&rsquo;s</a></li>
+<li><a href="#org14d1a31">2.3. Main Procedure</a></li>
+</ul>
+</li>
+<li><a href="#org703e159">3. 0/1 Knapsack Problem</a>
+<ul>
+<li><a href="#org7dc2cab">3.1. Pseudo-Polynomial Algorithms</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2faf882" class="outline-2">
+<h2 id="org2faf882"><span class="section-number-2">1.</span> Dynamic Programming</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org499cf5a" class="outline-3">
+<h3 id="org499cf5a"><span class="section-number-3">1.1.</span> Recipe</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orgdc96447" class="outline-4">
+<h4 id="orgdc96447"><span class="section-number-4">1.1.1.</span> Identify the Subproblem</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Typically the computation of solutions of the subproblems will make it natural to retain the
+solutions in an array:
+</p>
+<ul class="org-ul">
+<li>must know dimensions of the array</li>
+<li>specify the precise meaning of the value in any cell of the array</li>
+<li>specify where the answer will be found in the array</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org135dfda" class="outline-4">
+<h4 id="org135dfda"><span class="section-number-4">1.1.2.</span> Establish DP-recurrence</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Specify how a subproblem contributes to the solution of a larger subproblem.
+</p>
+
+<p>
+How the value in a cell of the array depends on the values of other cells in the array.
+</p>
+</div>
+</div>
+<div id="outline-container-org4599d88" class="outline-4">
+<h4 id="org4599d88"><span class="section-number-4">1.1.3.</span> Set Values for the Base Case</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+Define the base values for the DP-recurrence.
+</p>
+</div>
+</div>
+<div id="outline-container-org23cbcb3" class="outline-4">
+<h4 id="org23cbcb3"><span class="section-number-4">1.1.4.</span> Specify the Order of Computation</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+The algorithm must state the order of computation for the cells.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf884fa5" class="outline-4">
+<h4 id="orgf884fa5"><span class="section-number-4">1.1.5.</span> Recovery of the Solution</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+Keep track of the subproblems that provided the best solutions.
+Use a traceback strategy to determine the full solution.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3b9f8bc" class="outline-3">
+<h3 id="org3b9f8bc"><span class="section-number-3">1.2.</span> Key Features</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>solve problems through recursion</li>
+<li>use a small (polynomial) number of nested subproblems</li>
+<li>may have to store results for all subproblems</li>
+<li>can often be turned into 1+ loops</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org98fb41e" class="outline-3">
+<h3 id="org98fb41e"><span class="section-number-3">1.3.</span> DP vs Divide-and-Conquer</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>dynamic programming usually deals with all input sizes from 1 to \(n\)</li>
+<li>divide-and-conquer may not solve subproblems</li>
+<li>divide-and-conquer algorithms not easy to rewrite iteratively</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgab1053e" class="outline-2">
+<h2 id="orgab1053e"><span class="section-number-2">2.</span> Interval Scheduling</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Input</b>: \(n\) intervals of form \(I_{i} = [s_{i}, f_{i}]\), each interval has weight \(w_{i}\)
+</p>
+
+<p>
+<b>Output</b>: a choice \(T\) of intervals that do not overlap and maximizes total weight
+</p>
+
+<p>
+Greedy algorithm works in the case where all weights are 1.
+</p>
+</div>
+<div id="outline-container-org0c4e9cb" class="outline-3">
+<h3 id="org0c4e9cb"><span class="section-number-3">2.1.</span> Sketch of the Algorithm</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<b>Basic Idea</b>: choose \(I_{n}\) or not, then choose the max of
+</p>
+<ul class="org-ul">
+<li>\(w_{n} + O(I_{m1}, \dots, I_{ms})\) if we choose \(I_{n}\) where
+\(I_{m1}, \dots, I_{ms}\) are the intervals that do not overlap with \(I_{n}\)</li>
+<li>\(O(I_{1}, \dots, I_{n-1})\) if we don&rsquo;t choose \(I_{n}\)</li>
+</ul>
+
+<p>
+<b>Goal</b>:
+</p>
+<ul class="org-ul">
+<li>find a way to ensure that \(I_{m1}, \dots, I_{ms}\) are of the form \(I_{1}, \dots, I_{s}\) for some
+\(s < n\)</li>
+<li>it then suffices to optimize over all \(I_{1}, \dots, I_{j}\) where \(1 \le j \le n\)</li>
+</ul>
+
+<p>
+Assume \(I_{1}, \dots, I_{n}\) sorted by increasing end time: \(f_{i} \le f_{i + 1}\).
+</p>
+
+<p>
+<b>Claim</b>: for all \(j\), the set of \(I_{k} \le I_{j}\) that do not overlap \(I_{j}\) is of the form
+\(I_{1}, \dots, I_{p_{j}}\) for some \(0 \le p_{j} \le j\) where \(p_{j} = 0\) if no such interval exists
+</p>
+
+<p>
+The algorithm needs all \(p_{i}\), and this can be found by comparing with finish times.
+</p>
+</div>
+</div>
+<div id="outline-container-org12cac97" class="outline-3">
+<h3 id="org12cac97"><span class="section-number-3">2.2.</span> Finding pj&rsquo;s</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Let \(A\) be a permutation of \([1, ..., n]\) such that
+\(s_{A[1]} \le s_{A[2]} \le \cdots \le s_{A[n]}\).
+</p>
+<div class="org-src-container">
+<pre class="src src-python">FindPj(A, s1, ..., sn, f1, ..., fn):
+  <span style="color: #dcaeea;">f0</span> = -infinity
+  <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>
+  <span style="color: #51afef;">for</span> k <span style="color: #51afef;">in</span> <span style="color: #c678dd;">range</span>(<span style="color: #da8548; font-weight: bold;">0</span>, n):
+      <span style="color: #51afef;">while</span> i &lt;= n <span style="color: #51afef;">and</span> fk &lt;= s[A[i]] &lt; f[k+<span style="color: #da8548; font-weight: bold;">1</span>]:
+          <span style="color: #dcaeea;">pi</span> = k
+          i++
+</pre>
+</div>
+<p>
+<b>Runtime</b>: \(O(n\log(n))\) for sorting and \(O(n)\) for loops
+</p>
+</div>
+</div>
+<div id="outline-container-org14d1a31" class="outline-3">
+<h3 id="org14d1a31"><span class="section-number-3">2.3.</span> Main Procedure</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+<b>Definition</b>: M[i] is the maximal weight to get with \(I_{1}, \dots, I_{i}\)
+</p>
+
+<p>
+<b>Recurrence</b>: M[0] = 0 and for \(i \ge 1\), \(M[i] = \text{max}(M[i-1], M[pi] + wi)\)
+</p>
+
+<p>
+<b>Runtime</b>: \(O(n\log(n))\) for sorting twice and \(O(n)\) for finding all \(M[i]\)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org703e159" class="outline-2">
+<h2 id="org703e159"><span class="section-number-2">3.</span> 0/1 Knapsack Problem</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Input</b>: items from 1 to \(n\) with weights \(w_{i}\) and values \(v_{i}\), along with a capacity \(W\)
+</p>
+
+<p>
+<b>Output</b>: a subset of the items \(S\) that has total weight less than \(W\) and maximizes total value
+</p>
+
+<p>
+<b>Basic idea</b>: either choose item \(n\) or not, then the optimum is the max of:
+</p>
+<ul class="org-ul">
+<li>\(v_{n} + O[W - w_{n}, n - 1]\) if we choose \(n\)</li>
+<li>\(O[W, n-1]\) if we don&rsquo;t choose \(n\)</li>
+</ul>
+
+<p>
+<b>Initial conditions</b>: \(O[0, i] = 0\) for any \(i\) and \(O[w, 0] = 0\) for any \(w\)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">01KnapSack(v1, ..., vn, w1, ..., wn, W):
+  initialize an array O[<span style="color: #da8548; font-weight: bold;">0</span>..n, <span style="color: #da8548; font-weight: bold;">0</span>..W] <span style="color: #51afef;">with</span> O(<span style="color: #da8548; font-weight: bold;">0</span>, j) = <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #51afef;">and</span> O(w, <span style="color: #da8548; font-weight: bold;">0</span>) = <span style="color: #da8548; font-weight: bold;">0</span>
+  <span style="color: #51afef;">for</span> i <span style="color: #51afef;">in</span> <span style="color: #c678dd;">range</span>(<span style="color: #da8548; font-weight: bold;">1</span>, n):
+      <span style="color: #51afef;">for</span> w <span style="color: #51afef;">in</span> <span style="color: #c678dd;">range</span>(<span style="color: #da8548; font-weight: bold;">1</span>, W):
+          <span style="color: #51afef;">if</span> wi &gt; w:
+              <span style="color: #dcaeea;">O</span>[<span style="color: #dcaeea;">w</span>, <span style="color: #dcaeea;">i</span>] = O[w, i-<span style="color: #da8548; font-weight: bold;">1</span>]
+          <span style="color: #51afef;">else</span>:
+              <span style="color: #dcaeea;">O</span>[<span style="color: #dcaeea;">w</span>, <span style="color: #dcaeea;">i</span>] = <span style="color: #c678dd;">max</span>(vi + O[w - wi, i-<span style="color: #da8548; font-weight: bold;">1</span>], O[w, i - <span style="color: #da8548; font-weight: bold;">1</span>])
+</pre>
+</div>
+<p>
+<b>Runtime</b>: \(\Theta(nW)\) which is pseudo-polynomial
+</p>
+</div>
+<div id="outline-container-org7dc2cab" class="outline-3">
+<h3 id="org7dc2cab"><span class="section-number-3">3.1.</span> Pseudo-Polynomial Algorithms</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+In our word RAM model, we assume all vi&rsquo;s and wi&rsquo;s fit in a word,
+so the input size is \(\Theta(n)\) words, but the runtime also depends on the values of the inputs.
+</p>
+
+<p>
+01-knapsack is NP-complete.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-03-11 Mon 19:04</p>
+</div>
+</body>
+</html>
