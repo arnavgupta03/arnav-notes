@@ -1,5 +1,7 @@
 #+title: Data Slice Testing
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Data Slices
 ** Motivation

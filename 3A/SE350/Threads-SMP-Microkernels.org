@@ -1,7 +1,7 @@
 #+title: Threads SMP Microkernels
-#+LATEX: \setlength\parindent{0pt}
-#+STARTUP: latexpreview
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Processes and Threads
 Main characteristics of a process are:
@@ -69,8 +69,7 @@ they do not interfere with each other.
 * Types of Threads
 ** User-Level and Kernel-Level Threads
 For pure user-level:
-- all thread management done by the
-application and the kernel is not aware of them
+- all thread management done by the application and the kernel is not aware of them
 - done using threads libraries that manage
   thread control and state
 

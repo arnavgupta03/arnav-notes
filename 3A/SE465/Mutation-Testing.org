@@ -1,5 +1,7 @@
 #+title: Mutation Testing
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Test Case Effectiveness
 The best test suite can detect every bug, whenever a bug is introduced

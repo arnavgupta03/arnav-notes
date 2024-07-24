@@ -1,5 +1,7 @@
 #+title: Integration Testing
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Integration Testing
 ** Strategy

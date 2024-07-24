@@ -1,5 +1,7 @@
 #+title: Transfer Functions, Responses, and the Standard First-Order System
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode, mathrsfs}
+#+LATEX_HEADER: \enabledarkmode
 
 * Transfer Functions
 If a system is able to be modelled by a linear DE with constant coefficients, then the

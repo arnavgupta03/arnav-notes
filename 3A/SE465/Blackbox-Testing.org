@@ -1,5 +1,7 @@
 #+title: Blackbox Testing
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Blackbox Testing
 Testing without having insight into code, based on a system's specification rather

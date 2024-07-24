@@ -1,5 +1,7 @@
 #+title: Systems Input and Responses
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode, mathrsfs}
+#+LATEX_HEADER: \enabledarkmode
 
 * Impulse Response of an LTI
 For a linear DE with constant coefficients, the ZSR is $Y(s) = H(s) F(s)$,
@@ -8,7 +10,7 @@ forcing term.
 
 The impulse response of the DE is
 $$
-        h(t) = \mathscr{L}^{-1} \{ H(t) \}
+h(t) = \mathscr{L}^{-1} \{ H(t) \}
 $$
 which comes from setting $f(t) = \delta (t)$ so the forcing term is an impulse.
 This is the ZSR to a unit impulse.
@@ -20,7 +22,7 @@ This all holds for linear DEs with constant coefficients.
 The response of an LTI system is the convolution of the input with the system's impulse
 response.
 In other words, given the LTI with input $f(t)$ and output $y(t)$,
-$y(t) = (h * f)(t), where $h(t)$ is the impulse response of the system.
+$y(t) = (h * f)(t)$, where $h(t)$ is the impulse response of the system.
 
 ** Kronecker Delta
 The Kronecker delta function $\delta [t]$ is defined as the function from $\mathbb{Z}$ to
@@ -34,14 +36,14 @@ $$
 
 For all functions $f : \mathbb{Z} \to \mathbb{C}$,
 $$
-        f[t] = \sum_{\tau = -\infty}^{\infty} f [\tau] \delta[t - \tau]
+f[t] = \sum_{\tau = -\infty}^{\infty} f [\tau] \delta[t - \tau]
 $$
 This shows how to decompose every function $f$ into a linear combination of impulse functions.
 
 * Response of an LTI to Exponential Inputs
 If $S: f \to y$ is an LTI, then for any $s \in \mathbb{C}$
 $$
-        e^{st} \to H(s) e^{st}
+e^{st} \to H(s) e^{st}
 $$
 where $H(s)$ is the LT of the system's impulse response and is called the system's transfer
 function.

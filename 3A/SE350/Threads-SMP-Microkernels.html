@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-02-13 Tue 12:52 -->
+<!-- 2024-03-10 Sun 20:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Threads SMP Microkernels</title>
@@ -233,28 +233,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1b090e1">1. Processes and Threads</a>
+<li><a href="#orgecb5ee3">1. Processes and Threads</a>
 <ul>
-<li><a href="#orgaea0c05">1.1. Multithreading</a></li>
-<li><a href="#orgf70f639">1.2. Thread Functionality</a></li>
+<li><a href="#org77e58a8">1.1. Multithreading</a></li>
+<li><a href="#org9983254">1.2. Thread Functionality</a></li>
 </ul>
 </li>
-<li><a href="#orge38ce0a">2. Types of Threads</a>
+<li><a href="#org4fade0a">2. Types of Threads</a>
 <ul>
-<li><a href="#org39cc322">2.1. User-Level and Kernel-Level Threads</a></li>
-<li><a href="#orgd7f48e9">2.2. Other Arrangements</a></li>
+<li><a href="#org3b7b99a">2.1. User-Level and Kernel-Level Threads</a></li>
+<li><a href="#org5cd3ee3">2.2. Other Arrangements</a></li>
 </ul>
 </li>
-<li><a href="#org4f247b4">3. Multicore and Multithreading</a>
+<li><a href="#orgf5d191f">3. Multicore and Multithreading</a>
 <ul>
-<li><a href="#org2868071">3.1. Performance of Software on Multicore</a></li>
+<li><a href="#org6ee40ec">3.1. Performance of Software on Multicore</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1b090e1" class="outline-2">
-<h2 id="org1b090e1"><span class="section-number-2">1.</span> Processes and Threads</h2>
+<div id="outline-container-orgecb5ee3" class="outline-2">
+<h2 id="orgecb5ee3"><span class="section-number-2">1.</span> Processes and Threads</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Main characteristics of a process are:
@@ -272,8 +272,8 @@ Main characteristics of a process are:
 </ul></li>
 </ul>
 </div>
-<div id="outline-container-orgaea0c05" class="outline-3">
-<h3 id="orgaea0c05"><span class="section-number-3">1.1.</span> Multithreading</h3>
+<div id="outline-container-org77e58a8" class="outline-3">
+<h3 id="org77e58a8"><span class="section-number-3">1.1.</span> Multithreading</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Multithreading: ability of the OS to support multiple,
@@ -332,8 +332,8 @@ Scheduling and dispatching is done on threads, not processes.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf70f639" class="outline-3">
-<h3 id="orgf70f639"><span class="section-number-3">1.2.</span> Thread Functionality</h3>
+<div id="outline-container-org9983254" class="outline-3">
+<h3 id="org9983254"><span class="section-number-3">1.2.</span> Thread Functionality</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Key states for a thread are running, ready, and blocked (no suspend).
@@ -363,23 +363,18 @@ they do not interfere with each other.
 </div>
 </div>
 </div>
-<div id="outline-container-orge38ce0a" class="outline-2">
-<h2 id="orge38ce0a"><span class="section-number-2">2.</span> Types of Threads</h2>
+<div id="outline-container-org4fade0a" class="outline-2">
+<h2 id="org4fade0a"><span class="section-number-2">2.</span> Types of Threads</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org39cc322" class="outline-3">
-<h3 id="org39cc322"><span class="section-number-3">2.1.</span> User-Level and Kernel-Level Threads</h3>
+<div id="outline-container-org3b7b99a" class="outline-3">
+<h3 id="org3b7b99a"><span class="section-number-3">2.1.</span> User-Level and Kernel-Level Threads</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 For pure user-level:
 </p>
 <ul class="org-ul">
-<li>all thread management done by the</li>
-</ul>
-<p>
-application and the kernel is not aware of them
-</p>
-<ul class="org-ul">
+<li>all thread management done by the application and the kernel is not aware of them</li>
 <li>done using threads libraries that manage
 thread control and state</li>
 </ul>
@@ -459,8 +454,8 @@ kernel-level, while minimizing disadvantages</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd7f48e9" class="outline-3">
-<h3 id="orgd7f48e9"><span class="section-number-3">2.2.</span> Other Arrangements</h3>
+<div id="outline-container-org5cd3ee3" class="outline-3">
+<h3 id="org5cd3ee3"><span class="section-number-3">2.2.</span> Other Arrangements</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Many-to-many relationship between threads and processes
@@ -480,12 +475,12 @@ One-to-many relationship between threads and processes
 </div>
 </div>
 </div>
-<div id="outline-container-org4f247b4" class="outline-2">
-<h2 id="org4f247b4"><span class="section-number-2">3.</span> Multicore and Multithreading</h2>
+<div id="outline-container-orgf5d191f" class="outline-2">
+<h2 id="orgf5d191f"><span class="section-number-2">3.</span> Multicore and Multithreading</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org2868071" class="outline-3">
-<h3 id="org2868071"><span class="section-number-3">3.1.</span> Performance of Software on Multicore</h3>
+<div id="outline-container-org6ee40ec" class="outline-3">
+<h3 id="org6ee40ec"><span class="section-number-3">3.1.</span> Performance of Software on Multicore</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Performance benefits of multicore organization depend on
@@ -517,7 +512,7 @@ Applications that benefit from the ability to scale throughput with number of co
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-02-13 Tue 12:52</p>
+<p class="date">Created: 2024-03-10 Sun 20:42</p>
 </div>
 </body>
 </html>

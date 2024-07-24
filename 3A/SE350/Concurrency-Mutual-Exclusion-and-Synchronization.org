@@ -1,6 +1,7 @@
 #+title: Concurrency: Mutual Exclusion And Synchronization
-#+LATEX: \setlength\parindent{0pt}
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Concurrency Basics
 Arises in 3 different contexts:

@@ -1,5 +1,7 @@
 #+title: Creating Tests
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Creating Test Cases
 In order to increase coverage, one needs to generate

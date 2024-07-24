@@ -1,5 +1,7 @@
 #+title: Fuzzing
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Fuzzing
 Set of automated testing techniques that identifies abnormal program behaviours by
@@ -116,10 +118,17 @@ To help with speed:
 - run in parallel, distributed
 
 ** Problems with Fuzzing
-Many false positive that are expensive.
+Many false positives that are expensive.
 
 Focus on code coverage, which is less important than reasonable inputs.
 
 Cleaning to make random input more reasonable:
 - *minimization*: eliminate redundant test failures through diffing
 - *triage*: finding similar outputs/stackdumps and grouping them in bug report
+
+* Summary
+Test with most reasonable random input with goal of finding real bugs.
+
+Used in practice at Google, Microsoft, Apple, and more.
+
+Simple to add, but can use real logged input if possible.

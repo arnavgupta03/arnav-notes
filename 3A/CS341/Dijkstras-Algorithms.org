@@ -1,6 +1,7 @@
 #+title: Dijkstras Algorithms
-#+LATEX: \setlength\parindent{0pt}
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Preliminaries
 A graph $G = (V, E)$ is a directed graph with a weight function: $w: E \to \mathbb{R}$

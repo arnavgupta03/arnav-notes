@@ -1,5 +1,7 @@
 #+title: Minimum Spanning Trees
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Spanning Trees
 For a connected graph $G = (V, E)$, a spanning tree in $G$ is a tree of the form $(V, A)$
@@ -23,7 +25,7 @@ If $(V, A)$ has no cycle and $|A| < n - 1$, then one can find an edge $e$ not in
 such that $A \cup \{e\}$ still has no cycle.
 
 *Proof*:
-- in any graph, \# vertices - \# connected components $\le$ \# edges
+- in any graph, # vertices - # connected components $\le$ # edges
 - for $(V, A)$, this gives $n - c < n - 1$ so $c > 1$
 - take any edge on a path that connects two components
 

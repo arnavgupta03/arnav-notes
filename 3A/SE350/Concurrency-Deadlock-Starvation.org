@@ -1,7 +1,7 @@
 #+title: Concurrency: Deadlock and Starvation
-#+LATEX: \setlength\parindent{0pt}
-#+STARTUP: latexpreview
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Principles of Deadlock
 Deadlock: permanent blocking of a set of processes that either compete
@@ -154,7 +154,7 @@ $$C_{ij} - A_{ij} \le V_{j}, \forall j$$
 Once such a process is found, assume it runs to completion and make its resources
 available. Begin again.
 
-The deadlock aavoidance strategy is to ensure that the system is always in a
+The deadlock avoidance strategy is to ensure that the system is always in a
 safe state. If some resource request will put the system in an unsafe state,
 block the process until it is safe to grant the request, otherwise grant it.
 
@@ -169,3 +169,189 @@ Restrictions on its use are:
   must be unconstrained by synchronization requirements)
 - must be a fixed number of resources to allocate
 - no process may exit while holding resources
+
+* Deadlock Detection
+Prevention is conservative, detection finds the circular wait condition.
+
+** Deadlock Detection Algorithm
+Check for deadlocks can be done on each resource request or less frequently.
+Checking at each resource request leads to early detection and simple
+algorithm, but uses more processor time.
+
+The Allocation matrix and Available vector are used along with a request
+matrix $Q$ where $Q_{ij}$ represents the amount of resources of type $j$
+requested by process $i$.
+
+Initially all processes are unmarked. The following steps are performed to
+mark processes that are not part of a deadlocked set:
+1. Mark each process that has a row in the Allocation matrix of all zeros,
+   as a process that has no allocated resources cannot participate in a
+   deadlock.
+2. Initialize a temporary vector $W$ to equal the Available vector.
+3. Find an index $i$ such that process $i$ is currently unmarked and the
+   $i$th row of $Q$ is at most $W$.
+   That is $Q_{ik} \le W_{k}$ for $1 \le k \le m$.
+   If no such row is found, terminate the algorithm.
+4. If such a row is found, mark process $i$ and add the corresponding row
+   of the allocation matrix to $W$.
+   That is, set $W_{k} = W_{k} + A_{ik}$ for $1 \le k \le m$.
+   Return to step 3.
+
+Deadlock exists if and only if there are unmarked processes at the end
+of the algorithm, as these are all deadlocked processes.
+
+** Recovery
+Once deadlock is detected, must recover and the following are possible
+approaches, in increasing sophistication:
+1. Abort all deadlocked processes.
+2. Back up each deadlocked process to some previously defined checkpoint
+   and restart all processes.
+   a. requires rollback and restart mechanisms
+   b. original deadlock could occur again
+3. Successively abort deadlocked process until deadlock no longer exists.
+   a. order is on the basis of some criterion of minimum cost
+   b. detection must be run after each abortion
+4. Successively preempt resources until deadlock no longer exists.
+   a. order is on the basis of some criterion of minimum cost
+   b. detection must be run after each abortion
+   c. process that has resource preempted must be rolled back to a point
+      prior to resource acquisition
+
+Minimum cost could be:
+- least amount of processor time consumed
+- least amount of output produced
+- most estimated time remaining
+- least total resources allocated so far
+- lowest priority
+
+* Integrated Deadlock Strategy
+More efficient to use different deadlock strategies in different situations.
+One such approach:
+- group resources into a number of different resource classes
+- use the linear ordering strategy defined previously for the prevention of
+  circular wait to prevent deadlocks between resource classes
+- within a resource class, use the algorithm that is most appropriate for
+  that class
+
+Some classes could include swappable space (secondary memory), process
+resources (devices, tapes, files, etc), main memory, and internal
+resources (IO channels).
+This order is reasonable due to the sequence of steps that a process may
+follow in its lifetime.
+
+Within each class, the following strategies could be used:
+- *swappable space*: prevention of deadlocks by requiring that all required
+  resources that may be used be allocated at one time (like hold-and-wait),
+  which is reasonable if max storage requirements are known; deadlock
+  avoidance also possible
+- *process resources*: avoidance often effective because can expect processes
+  to declare ahead of time the resources they require in this class; prevention
+  also possible
+- *main memory*: prevention by preemption most appropriate where preemption
+  means a process is swapped
+- *internal resources*: prevention by resource ordering used
+
+* Dining Philosophers Problem
+Round table with spaghetti, 5 plates, 5 forks, and 5 philosophers that each
+require 2 forks to eat.
+
+Problem illustrates basic problems in deadlock and starvation, difficulty in
+concurrent programming, and coordination of shared resources.
+
+** Solution Using Semaphores
+Each philosopher first picks up the fork on the left, then the fork on the
+right. After eating, the forks are replaced on the table. This leads to
+deadlock.
+
+Instead have an attendant that only allows 4 philosophers into the room,
+then at least 1 philosopher has 2 forks.
+
+#+BEGIN_SRC c
+semaphore fork[5] = {1};
+semaphore room = {4};
+int i;
+void philosopher (int i)
+{
+    while (true) {
+        think();
+        wait(room);
+        wait(fork[i]);
+        wait(fork[(i+1) % 5]);
+        eat();
+        signal(fork[(i+1) % 5]);
+        signal(fork[i]);
+        signal(room);
+    }
+}
+void main()
+{
+    parbegin (
+       philosopher(0),
+       philosopher(1),
+       philosopher(2),
+       philosopher(3),
+       philosopher(4),
+        );
+}
+#+END_SRC
+
+** Solution Using a Monitor
+Vector of 5 condition variables defined, 1 per fork. Used to enable a philosopher
+to wait for the availability of a fork.
+Further, there is a Boolean vector that records availability status of each fork.
+
+Monitor consists of 2 procedures.
+
+~get_forks~ used to seize left and right forks, if either unavailable, philosopher
+process queued on the appropriate condition variable so more philosophers
+can enter the monitor.
+
+~release_forks~ used to make 2 forks available.
+
+No deadlocks because only one process at a time may be in the monitor.
+
+#+BEGIN_SRC c
+monitor dining_controller;
+cond ForkReady[5];
+boolean fork[5] = {true};
+
+void get_forks(int pid)
+{
+    int left = pid;
+    int right = (++pid) % 5;
+
+    if (!fork[left])
+        cwait(ForkReady[left]);
+    fork[left] = false;
+
+    if (!fork[right])
+        cwait(ForkReady[right]);
+    fork[right] = false;
+}
+void release_forks(int pid)
+{
+    int left = pid;
+    int right = (++pid) % 5;
+
+    if (empty(ForkReady[left])) // no one waiting for this fork
+        fork[left] = true;
+    else // awaken a process waiting on this fork
+        csignal(ForkReady[left]);
+
+    if (empty(ForkReady[right])) // no one waiting for this fork
+        fork[right] = true;
+    else // awaken a process waiting on this fork
+        csignal(ForkReady[right]);
+}
+
+void philosopher(int k)
+{
+    while (true)
+    {
+        <think>;
+        get_forks(k);
+        <eat spaghetti>;
+        release_forks(k);
+    }
+}
+#+END_SRC

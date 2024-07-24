@@ -1,4 +1,4 @@
-% Created 2024-02-13 Tue 00:03
+% Created 2024-04-11 Thu 10:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -12,24 +12,25 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\author{DESKTOP-H800RKQ}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
 \date{\today}
 \title{Threads SMP Microkernels}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Threads SMP Microkernels},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.2 (Org mode 9.7)}, 
+ pdfcreator={Emacs 29.3 (Org mode 9.7)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\setlength\parindent{0pt}
 \section{Processes and Threads}
-\label{sec:org8b6a5e0}
+\label{sec:org35e42f4}
 Main characteristics of a process are:
 \begin{itemize}
 \item resource ownership
@@ -44,7 +45,7 @@ Main characteristics of a process are:
 \end{itemize}
 \end{itemize}
 \subsection{Multithreading}
-\label{sec:org333c881}
+\label{sec:org0928711}
 
 Multithreading: ability of the OS to support multiple,
 concurrent paths of execution within a single process
@@ -88,7 +89,7 @@ Threads are useful for:
 
 Scheduling and dispatching is done on threads, not processes.
 \subsection{Thread Functionality}
-\label{sec:orgd21a7cf}
+\label{sec:org5044cc7}
 
 Key states for a thread are running, ready, and blocked (no suspend).
 
@@ -108,16 +109,104 @@ for threads within the same process and in different processes.
 Must synchronize the activity of various threads so that
 they do not interfere with each other.
 \section{Types of Threads}
-\label{sec:org74348e2}
+\label{sec:org102a4ea}
 \subsection{User-Level and Kernel-Level Threads}
-\label{sec:org1b5d58c}
+\label{sec:orgd8b0da0}
 For pure user-level:
 \begin{itemize}
-\item all thread management is done by the
-\end{itemize}
-application and the kernel is not aware of them
-\begin{itemize}
+\item all thread management done by the application and the kernel is not aware of them
 \item done using threads libraries that manage
 thread control and state
+\end{itemize}
+
+Advantages to user-level threads over
+kernel-level threads are:
+\begin{enumerate}
+\item no need for kernel-mode privilege to switch threads,
+saves overhead of mode switching
+\item scheduling algorithm can be tailored to the application
+\item user-level threads can run on any OS without knowledge
+of kernel
+\end{enumerate}
+
+Disadvantages of user-level threads to
+kernel-level threads are:
+\begin{enumerate}
+\item any system call blocks all threads in the process
+\item multithreaded application cannot take advantage of
+multiprocessing, only application-level multiprogramming
+(no synchronization)
+\end{enumerate}
+
+Workarounds include:
+\begin{itemize}
+\item using multiple processes, but this increases overhead
+\item jacketing: convert a blocking system call into a non-blocking
+system call
+\end{itemize}
+
+For pure kernel-level:
+\begin{itemize}
+\item all thread managemenet done by the kernel
+\item application just uses an API to the kernel thread facility
+\end{itemize}
+
+Advantages of kernel-level threads over
+user-level threads are:
+\begin{enumerate}
+\item overcoming disadvantages of user-level threads
+\item kernel routines can be multithreaded
+\end{enumerate}
+
+Disadvantages of kernel-level threads to
+user-level threads are:
+\begin{enumerate}
+\item requires more mode switching (order of magnitude difference)
+\end{enumerate}
+
+Benefits of user-level threads and kernel-level threads
+depend on the nature of the applications involved.
+
+Combined system:
+\begin{itemize}
+\item thread creation done in user space
+\item most scheduling and synchronization of threads done
+within an application
+\item user-level threads mapped to kernel-level threads
+\item combines advantages of pure user-level and pure
+kernel-level, while minimizing disadvantages
+\end{itemize}
+\subsection{Other Arrangements}
+\label{sec:org7d2428b}
+Many-to-many relationship between threads and processes
+\begin{itemize}
+\item multiple threads in a process
+\item thread can be performed in multiple address spaces
+\end{itemize}
+
+One-to-many relationship between threads and processes
+\begin{itemize}
+\item thread is the unit of activity, can move across address spaces
+\item useful for distributed computing
+\end{itemize}
+\section{Multicore and Multithreading}
+\label{sec:orgd533b2f}
+\subsection{Performance of Software on Multicore}
+\label{sec:org2a760d9}
+Performance benefits of multicore organization depend on
+the ability to exploit parallel resources.
+
+Amdalhl's Law
+$$\text{Speedup} = \frac{\text{time to execute program on single processor}}{\text{time to execute program on $N$ parallel processors}} = \frac{1}{(1-f) + \frac{f}{N}}$$
+
+Small amount of serial code can reduce speedup, while
+parallelization introduces overhead for communication and distribution of work.
+
+Applications that benefit from the ability to scale throughput with number of cores:
+\begin{itemize}
+\item Multithreaded native applications: have small number of highly threaded processes
+\item Multiprocess applications: have many single-threaded processes
+\item Java applications: JVM is multithreaded
+\item Multi-instance applications: allows for isolation and security
 \end{itemize}
 \end{document}

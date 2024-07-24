@@ -1,5 +1,7 @@
 #+title: Standard 2nd Order System, PI Controllers, and Extra Poles
 #+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip, darkmode}
+#+LATEX_HEADER: \enabledarkmode
 
 * Standard Second Order System
 The standard second order system has a transfer function given by
