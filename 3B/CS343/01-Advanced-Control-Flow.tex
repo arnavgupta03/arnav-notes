@@ -1,0 +1,81 @@
+% Created 2024-09-04 Wed 17:57
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Advanced Control Flow}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Advanced Control Flow},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.8)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Basics of Advanced Control Flow}
+\label{sec:org38e0b80}
+Within a routine, basic and advanced control structures allow any control flow.
+
+\texttt{while} and \texttt{for} are interchangeable for predicate only loops. When using loop indexes, use \texttt{for} only.
+
+\textbf{Multi-exit loops} have 1+ exit locations occurring within the body of the loop (such as \texttt{break}).
+With multi-exit loops, exit conditions are reversed from \texttt{while} and outdented. These eliminate priming
+(duplicated) code.
+
+Multi-exit loops should not be used to simulate \texttt{while} or \texttt{for} and loop exits never need an \texttt{else} clause.
+Multi-exit loops allow multiple exit conditions.
+
+Flag variables that only affect control flow should not be used, since they are equivalent to a \texttt{goto}.
+\subsection{Static Multi-Level Exit}
+\label{sec:org17a7371}
+\textbf{Static multi-level exit} exits multiple control structures where the exit point is known at compile time, done with labeled exit (\texttt{break}, \texttt{continue}).
+
+Labeled exits helps eliminate all flag variables and can help remove duplicated code.
+
+Normal and labeled \texttt{break} are \texttt{goto} with limitations:
+\begin{itemize}
+\item cannot loop (only forward branch) so only loop constructs branch back
+\item cannot branch into a control structure
+\end{itemize}
+
+Only use \texttt{goto} to perform static multi-level exit (simulate labeled \texttt{break} and \texttt{continue}).
+\subsection{Dynamic Memory Allocation}
+\label{sec:orgd5a32ed}
+Stack allocation preferred over heap allocation (eliminates storage-management and more efficient).
+
+Situations where dynamic heap allocation is necessary:
+\begin{enumerate}
+\item when storage must outlive the block in which it is allocated (ownership change)
+\item when the amount of data read is unknown
+\item when an array of objects must be initialized via the object's constructor and each element has a
+different value
+\begin{enumerate}
+\item use stack with \texttt{uArray} if possible (allocates without constructing and proves subscript checking)
+\item calls to \texttt{()} or \texttt{make\_unique<T>()} initialize array elements
+\item allocation is \(O(1)\), so better than unique pointer and vector
+\end{enumerate}
+\item when large local variables are allocated on a small stack
+\begin{enumerate}
+\item \texttt{uArrayPtr} dynamically allocates the array in heap and implicitly frees it at the end of the block
+(like \texttt{unique\_ptr})
+\item alternatives are large stacks (waste virtual space) or dynamic stack growth (complex and pauses)
+\end{enumerate}
+\end{enumerate}
+\end{document}

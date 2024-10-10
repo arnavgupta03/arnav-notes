@@ -1,0 +1,17 @@
+#+title: Intro To Control Systems
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Basics of Control Systems
+Control systems have:
+- some reference/desired output
+- a controller that provides an input into a system
+- possibly some disturbance that influences the input
+- a system that takes in input and produces some output
+- a sensor that reads the output and feeds this to the controller
+- some noise that influences the output read by the sensor
+
+If the measured output is subtracted from the desired output, it is
+negative feedback control.

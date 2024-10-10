@@ -1,0 +1,98 @@
+% Created 2024-09-04 Wed 10:46
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Introduction}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Introduction},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.8)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\label{sec:org05d548f}
+\subsection{Terminology}
+\label{sec:orged1462d}
+\textbf{Architecture analysis} exists between the problem space (requirements) and the solution space
+(implementation and testing).
+
+\textbf{Architecture}: organization of a system embodied in components and their relationships to each other and their environment
+
+\textbf{System}: collection of components organized to accomplish a specific function or set of functions
+
+\textbf{Environment}: determines the setting and circumstances of influences on a system
+
+\textbf{Mission}: use or operation for which a system is intended by stakeholders to meet objectives
+
+\textbf{Stakeholder}: individual, team, or organization with interests/concerns relative to a system
+
+
+\textbf{Software architecture}: conceptual fabric that defines a system, is a type of design, related to parts of a system that would be difficult to change once a system is built
+
+Architectures capture structure, communication, and nonfunctional requirements.
+Architecture helps with stakeholder communication, system analysis, and large-scale reuse.
+
+\textbf{System architecture} is structure, \textbf{conceptual (prescriptive) software architecture} is abstract structure, and \textbf{concrete (descriptive) software architecture} is actual structure.
+
+\textbf{Live architecture}: the mental model, which can be abstract or concrete, but may be fuzzy, incomplete, etc.
+
+\textbf{Complexity}: architecture simplifies a system through focus on structure rather than content
+
+\textbf{Reverse Engineering}: extraction of design from implementation and from developers
+\subsection{Architectural Degradation}
+\label{sec:orgbd5f7ad}
+
+When a system evolves, prescriptive architecture is modified first. In practice, descriptive architecture is often directly modified due to sloppiness, short deadlines, lack of documentation, desire for optimization, or inadequate tool support.
+
+\textbf{Architectural drift}: introduction of principal design decisions into descriptive architecture that are not included in prescriptive architecture but do not violate the prescriptive architecture
+
+\textbf{Architectural erosion}: introduction of architectural design decisions into a system's descriptive architecture that violate prescriptive architecture
+
+If architectural degradation occurs, system architecture must be recovered.
+\textbf{Architectural recovery} is the process of determining a software system's architecture from its implementation-level artifacts.
+\subsection{Expressing Software Architecture}
+\label{sec:org1421cb7}
+
+System architecture needs to express:
+\begin{itemize}
+\item decomposition into subsystems (code dependency)
+\item process interactions (how code calls each other)
+\item distribution of subsystems across networked devices (where to put them)
+\end{itemize}
+
+To form an architectural model, one must use several views of a software architecture:
+\begin{itemize}
+\item \textbf{logical view}: shows key abstractions in the system (objects, object classes)
+\item \textbf{process view}: shows how, at runtime, the system is composed of interacting processes
+\item \textbf{development view}: shows how the software is decomposed for development
+\item \textbf{physical view}: shows the system hardware and how software components are distributed across processors in the system
+\item these all related using use cases or scenarios
+\end{itemize}
+
+\textbf{Architectural style} is the form of structure, \textbf{reference architecture} is the general architectural for an application domain, and \textbf{product line architecture} is the architecture for a line of similar software products.
+\subsection{Architecture vs Design}
+\label{sec:org3cab8ae}
+Architecture is the structure of a system (components and connectors) and should be high level and hard to change.
+
+Design is the inner structure of components and more low level and allows change.
+\end{document}

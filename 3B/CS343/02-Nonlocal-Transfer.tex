@@ -1,0 +1,101 @@
+% Created 2024-09-05 Thu 00:19
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Nonlocal Transfer}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Nonlocal Transfer},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.8)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Nonlocal Transfer}
+\label{sec:org1b4ac61}
+Routine \textbf{activation} (call/invocation) introduces complex control flow.
+Among routines, control flow is controlled by call/return mechanism.
+
+\textbf{Modularization}: from software engineering, any contiguous code block can be factored into a helper
+routine and called in the program
+
+Modularization fails when refactoring exits (multi-level exits).
+
+Software pattern: many routines have multiple outcomes:
+\begin{itemize}
+\item normal: return normal result and transfer after call
+\item exceptional: return alternative result and not transfer after call
+\end{itemize}
+
+\textbf{Nonlocal transfer} allows a routine to transfer back to its caller but not after the call
+\begin{itemize}
+\item generalization of multi-exit loop and multi-level exit
+\item control structures end normally or with an exceptional transfer
+\end{itemize}
+
+This pattern acknowledges that
+\begin{itemize}
+\item algorithms can have multiple outcomes
+\item separating outcomes makes it easy to read and maintain a program
+\end{itemize}
+
+This pattern does not handle multiple levels of nested modularization.
+\section{Traditional Approaches}
+\label{sec:org857a01f}
+\textbf{Return code}: returns value indicating normal or exceptional execution
+
+\textbf{Status flag}: set shared (global) variable indicating normal or exceptional execution which remains
+as long as it is not overwritten
+
+\textbf{Fix-up routine}: a global and/or local routine called for an exceptional event to fix-up and return
+a corrective result so a computation can continue
+
+\textbf{Return union}: modern approach combining result/return-code and requiring return-code check on result
+access, requires that all routines return an appropriate union
+
+Traditional approaches force checking, unless explicitly accessing without \texttt{holds\_alternative}.
+
+Drawbacks of traditional techniques:
+\begin{itemize}
+\item checking return code or status flag is optional, so can be delayed or omitted
+\item return code mixes exceptional and normal values, enlarges type or value range since normal/exceptional
+type/values should be independent
+\end{itemize}
+
+Testing/handling return code or status flag is often done locally (inline) since info could be lost
+otherwise, but local testing/handling:
+\begin{itemize}
+\item reduces readability, since each call results in multiple statements
+\item can be inappropriate since library routines should not terminate a program
+\end{itemize}
+
+Nonlocal testing from nested routine calls is difficult since multiple codes are returned for analysis,
+compounding the mixing problem.
+
+Status flag can be overwritten before being examined and cannot be used in a concurrent environment
+because of sharing issues.
+
+Local fix-up routines increase the number of params since they increase the cost of each call and
+must be passed through multiple levels, enlarging param lists even when fix-up routine is unused.
+
+Nonlocal fix-up routines, implemented with global routine pointer, have identical problems with
+status flags.
+\end{document}

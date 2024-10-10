@@ -1,0 +1,136 @@
+#+title: Introduction
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* What is the Internet?
+
+*Packet switches*: routers or switches that forward packets (chunks of data)
+
+*Communication Links*: fiber, copper, radio, satellite (all have transmission rate)
+
+*Network*: collection of devices, routers, and links managed by an organization
+
+The *Internet* is a network of networks that uses protocols.
+It is also a communication infrastructure that provides service to distributed applications
+and provides a programming interface to distributed applications through hooks and service options.
+
+Internet standards include RFC (Request for Comments) and IETF (Internet Engineering Task Force).
+
+* What is a Protocol?
+
+*Protocols* define the format, order of messages sent and received among network entities, and
+actions taken on message transmission/receipt.
+
+Important protocols include WiFi, Bluetooth, Ethernet, USB, TCP (Transport Control Protocol),
+BGP (Border Gateway Protocol), and AKA (Authentication and Key Agreement).
+
+* Network Edge: Hosts, Digital Transmission, Physical Media, Access Network
+
+The *Network Edge* has hosts (clients/servers) that work together to run application programs, with
+servers often being in data centers.
+
+In the *client/server model*, the client host requests and receives service from an always-on server.
+In the *peer-peer model*, there is minimal/no use of dedicated servers.
+
+*Access networks* are wired or wireless communication links and edge routers.
+
+The *network core* is interconnected routers, such as local/regional/national/global ISPs.
+
+** Links
+
+*Links* perform digital communications. At the lowest level, the transmitter transforms the message
+into a signal suitable for transmission over the physical medium by expanding energy.
+The steps in the links are:
+- *encoder*: to compress and add redundancy to optimize detection at the receiver
+- *modulator*: to convert encoder output to a format suitable for the physical medium
+- the received signal is a corrupted version of the transmitted signal, but the receiver must extract
+  the desired message
+- *demodulator*: to convert perturbed received signal to a form suitable for the decoder
+- *decoder*: to make the best estimate of the message
+
+The transmission of bits by electromagnetic waves is limited by attenuation (power reduced over distance
+traveled), distortion, dispersion (lower power over more distance), and noise.
+
+*Physical Link*: what lies between transmitter and receiver:
+- *guided media*: signals propagate in solid media
+- *unguided media*: signals propagate freely
+
+Three important characteristics of a transmission system are:
+1. *Propagation delay*: time required for signal to travel across media
+2. *Bandwidth/Rate*: bandwidth is the max times per second the signal can change (Hz), rate is
+   the number of bits that can be transmitted on the link in a given unit of time (depends on length
+   of medium and capability of transmitted)
+3. *Bit Error Rate (BER)*: probability that a bit is in error
+
+Physical links can be:
+- *twisted pair*: inexpensive, two insulated copper wires
+- *coaxial cable*: two concentric copper conductors, bidirectional, allows broadband
+- *fiber optic cable*: glass fiber carrying light pulses, each pulse a bit, flexible, high-speed
+  operation (10s-100s Gbps), and low error rate
+- *wireless radio*: signals carried in various bands, broadcast half-duplex (sender to receiver),
+  affected by reflection, obstructed by objects, interference, and noise
+
+Residential access networks:
+- *digital subscriber line*: use telephone line, where data goes to Internet and voice goes to telephone
+- *cable-based access*: use cable TV infrastructure, with hybrid fiber coax (asymmetric, higher download
+  rate), network of cable and fiber attaches homes to ISP router where homes share access network
+  to cable headend
+  - uses *frequency division multiplexing* (FDM) where different channels are transmitted in different
+    frequency bands
+- *fiber to the home*: optical links from central office to the home using Passive Optical Network (PON)
+  or Active Optical Network (AON) like switched Ethernet and has much higher rates
+
+Access networks:
+- *enterprise networks*: mix of wired/wireless links connecting a mix of switches and routers
+- *data center networks*: high-bandwidth links connect 100s to 1000s of servers together and to Internet
+
+* Network Core: Packet/Circuit Switching, Internet Structure
+Three ways to link users together: fully meshed, every node connected to central switch, and hierarchical
+network with shared inter-switch links
+
+*Switch*: device that enables the forwarding of info from any input link to any output link
+
+*Packet-switching*: hosts break application layer messages into packets where the network forwards packets
+from one router to the next, across links on the path from source to destination
+
+Two key network-core functions:
+- *forwarding*: move arriving packets from router's input link to appropriate router output link
+- *routing*: determine source-destination paths taken by packets (routing algos)
+
+Packet-switching at the source consists of hosts that take application messages, break them into packets,
+and transmit packets into access networks, where links can have capacity.
+
+Packet transmission delay is $L/R$ where $L$ is the packet length and $R$ is the transmission rate.
+Switches can have some propagation delay.
+
+*Store and forward*: entire packet must arrive at router before it can be transmitted on the next link
+
+*Pipelining effect*: packets shouldn't be too big so packets can be pipelined
+
+The generic packet switch has *buffers* that store, process, and forward and are in need of smart scheduling
+and discarding policies. They control info in packets.
+
+Packets share resources without reservation so the packet to be transmitted next receives full rate.
+
+If arrival rate to link exceeds transmission rate of the link, packets will queue, waiting to be transmitted
+on the output link and packets can be dropped if the buffer fills up.
+
+In *circuit switching*, network resources are statically divided into small pieces called circuits.
+
+*Frequency Division Multiplexing* uses optimal EMFs divided into narrow frequency bands, where each call
+is allocated its own band and can transmit at max rate of that narrow band.
+
+*Time Division Multiplexing* divides time into periodic frames where each call is allocated some slot and
+can transmit at the max rate only during its time slot.
+
+Packet switching allows more users than circuit switching.
+Packet switching is better for bursty data and can allow for excessive congestion (packet delay and loss
+due to buffer overflow).
+
+* Performance/QoS: Loss, Delay, Throughput
+
+* Protocol Layers, Service Models
+
+* History
