@@ -1,0 +1,146 @@
+% Created 2024-10-10 Thu 18:13
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Agents And Abstraction}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Agents And Abstraction},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Agents}
+\label{sec:orgd7be80e}
+\textbf{Agent}: an entity that performs actions in its environment
+
+The agent and environment make up the world. The black box that comprises the agent
+contains the belief state.
+
+Agents can have properties such as:
+\begin{itemize}
+\item \textbf{abilities}: what actions can the agent perform
+\item \textbf{stimuli}: what and how can the agent sense in its environment
+\item \textbf{prior knowledge}: knowledge about agent capabilities and environment
+\item \textbf{past experience}: which and when actions are useful
+\item \textbf{goals}: what the agent must achieve
+\end{itemize}
+\section{Knowledge Representation}
+\label{sec:org7299752}
+\textbf{Knowledge}: info used to solve tasks
+
+\textbf{Representation}: data structures used to encode knowledge
+
+\textbf{Knowledge Base (KB)}: representation of all knowledge
+
+\textbf{Model}: relationship of KB to world
+
+\textbf{Level of Abstraction}: model accuracy level
+
+For AI agents:
+\begin{enumerate}
+\item specify what needs to be computed
+\item specify how the world works
+\item agent figures out how to do the computation
+\end{enumerate}
+\section{Dimensions of Complexity}
+\label{sec:org84a73a7}
+There are 9 dimensions of complexity that make up the agent design space:
+\begin{enumerate}
+\item \textbf{Modularity}: flat \(\to\) modular \(\to\) hierarchical
+\item \textbf{Planning Horizon}: non-planning \(\to\) finite horizon \(\to\) indefinite horizon \(\to\) infinite horizon
+\item \textbf{Representation}: explicit states \(\to\) features \(\to\) individuals and relations
+\item \textbf{Computational Limits}: perfect rationality \(\to\) bounded rationality
+\item \textbf{Learning}: knowledge is given \(\to\) knowledge is learned
+\item \textbf{Uncertainty}: fully observable \(\to\) partially observable
+\begin{enumerate}
+\item world dynamics: deterministic \(\to\) stochastic
+\end{enumerate}
+\item \textbf{Preference}: goals \(\to\) complex preferences
+\item \textbf{Reasoning by Number of Agents}: single agent \(\to\) adversarial \(\to\) multi-agent
+\item \textbf{Interactivity}: offline \(\to\) online
+\end{enumerate}
+\subsection{Planning Horizon}
+\label{sec:org2926b46}
+How far the agent looks into the future when deciding what to do:
+\begin{itemize}
+\item \textbf{static}: world does not change
+\item \textbf{finite horizon}: agent reasons about a fixed finite number of time steps
+\item \textbf{indefinite horizon}: agent is reasoning about finite, but not predetermined, number of time steps
+\item \textbf{infinite horizon}: agent plans to go on forever (process oriented)
+\end{itemize}
+\subsection{Representation}
+\label{sec:org8b317d3}
+AI is about finding compact representations and exploiting compactness for computational gains.
+An agent can reason in terms of:
+\begin{itemize}
+\item \textbf{explicit states}: state directly represents one way the world could be
+\item \textbf{features/propositions}: describe states in terms of features
+\item \textbf{individuals/relations}: a feature for each relationship on each tuple of individuals
+\end{itemize}
+\subsection{Computational Limits}
+\label{sec:org6bc176d}
+\begin{itemize}
+\item \textbf{perfect rationality}: agent always chooses the optimal solution
+\item \textbf{bounded rationality}: agent chooses an action given its limited computational capacity
+\begin{itemize}
+\item satisficing solution is good enough
+\item approximately optimal solution is has some defined acceptable error
+\end{itemize}
+\end{itemize}
+\subsection{Learning from Experience*}
+\label{sec:org8444819}
+Knowledge is either \textbf{given} or \textbf{learned} from data/past experience.
+\subsection{Uncertainty}
+\label{sec:orgcc4b048}
+What about the state the agent can determine from observations:
+\begin{itemize}
+\item \textbf{fully observable}: the agent knows the state of the world from observations
+\item \textbf{partially observable}: can be many possible states given an observation
+\end{itemize}
+\subsubsection{Uncertain World Dynamics}
+\label{sec:org46dd87e}
+If the agent knew initial states and actions, is the resulting state known?
+
+Dynamics can be:
+\begin{itemize}
+\item \textbf{deterministic}: state resulting from carrying out an action in state is determined from the
+action and the state
+\item \textbf{stochastic}: uncertainty over states resulting from executing a given action in a given state
+\end{itemize}
+\subsection{Goals or Complex Preferences}
+\label{sec:orga0e5765}
+\textbf{Achievement Goal}: goal to achieve, can be complex logical formula
+
+\textbf{Maintenance Goal}: goal to be maintained
+
+\textbf{Complex Preferences}: may involve trade-offs between desiderata, can be ordinal or cardinal
+\subsection{Reasoning by Number of Agents}
+\label{sec:orgc3bd6b1}
+\textbf{Single Agent Reasoning}: an agent assumes that any other agents are part of the environment
+
+\textbf{Adversarial Reasoning}: considers other agents to be opposition
+
+\textbf{Multi-agent Reasoning}: an agent needs to reason strategically about the reasoning of other agents
+
+Agents can be cooperative, competitive, or have independent goals.
+\end{document}
