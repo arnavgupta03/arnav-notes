@@ -1,0 +1,216 @@
+#+title: Features And Constraints
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+LATEX_HEADER: \usepackage{tikz}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Constraint Satisfaction Problems
+A CSP has:
+- a set of variables
+- a domain for each variable
+- a set of constraints or evaluation function
+
+Two kinds of problems:
+1. *Satisfiability* Problems: find an assignment that satisfies constraints (hard constraints)
+2. *Optimization* Problems: find an assignment that optimizes the evaluation function (soft constraints)
+
+A solution to a CSP is an assignment to the variables that satisfies all constraints (model of constraints).
+
+CSPs can be represented as graph searching problems in two ways:
+- *complete* assignment
+  - _nodes_: assignment of value to all variables
+  - _neighbours_: change one variable value
+- *partial* assignment
+  - _nodes_: assignment to first $k-1$ variables
+  - _neighbours_: assignment to variable $k$
+
+Search spaces can get large, so branching factors can be big.
+Still, path to goal is not important, only the goal is.
+No predefined starting node.
+
+CSPs can be solved with:
+- generate and test
+- backtracking
+- consistency
+- hill-climbing
+- randomized including local search
+
+** Representations
+*Primal* representations consider unary and binary constraints.
+*Dual* representations consider N-ary constraints.
+
+** CSP Solutions
+*Generate and Test*: go through all combos and check each one
+
+*** Backtracking
+Prune large portions of the state space:
+1. order all variables
+2. evaluate constraints in the order as soon as they are grounded
+
+Efficiency depends on the order of variables, which can be hard to optimize.
+Best to push failures as high as possible, since this cuts large branches of the tree early.
+
+*** Consistency
+Look for inconsistencies through a graphical representation.
+Specifically, give each domain a value until all constraints are satisfied.
+
+**** Consistency Networks
+
+*Domain constraint*: a unary constraint on values in a domain, written $\left< X, c(X) \right>$.
+
+A node in a consistency networks (CNs) is *domain consistent* if no domain value violates any domain constraint.
+A CN is domain consistent if all nodes are domain consistent.
+
+Arc $\left< X, c(X, Y) \right>$ is a *constraint* on $X$.
+An arc $\left< X, c(X, Y) \right>$ is *arc consistent* if $\forall X \in D_{X}$, there is some
+$Y \in D_{Y}$ such that $c(X, Y)$ is satisfied.
+A CN is arc consistent if all arcs are arc consistent.
+
+A set of variables $\{ X_{1}, X_{2}, X_{3}, \dots, X_{N} \}$ is *path consistent* if all arcs
+and domains are consistent.
+
+* AC-3
+Makes a CN arc consistent and domain consistent with a *To-Do Arcs* (TDA) queue that has all inconsistent arcs.
+
+*Algorithm*:
+1. make all domains domain consistent
+2. put all arcs $\left< Z, c(Z, \_) \right>$ in TDA
+3. repeat the following until TDA is empty
+   a. select and remove an arc $\left< X, c(X, Y) \right>$ from TDA
+   b. remove all values of the domain of $X$ that don't have a value in the domain of $Y$ that satisfies
+      the constraint $c(X, Y)$
+   c. if any were removed, add all arcs $\left< Z, c'(Z, X) \right>$ to TDA $\forall Z \ne Y$
+
+AC-3 is guaranteed to terminate with one of:
+- every domain is empty: no solution
+- every domain has a single value: solution
+- some domain has more than one value: split into two, run AC-3 recursively on each half
+
+AC-3 has time complexity $O(cd^{3})$ where $c$ is the number of binary constraints and $d$ is the maximum
+size of each domain.
+
+* Variable Elimination
+Eliminate the variables one by one, passing their constraints to their neighbours.
+When a single variable remains, if it has no variables, the CN is *inconsistent*.
+Variables are eliminated according to some elimination ordering.
+
+*Algorithm*:
+- if there is only 1 variable, return the intersection of the unary constraints that contain it
+- select a variable $X$
+  - join the constraints in which $X$ appears, forming constraint $R$
+  - project $R$ onto its variables other than $X$: call this $R_{2}$
+  - place $R_{2}$ between all variables that were connected to $X$
+  - remove $X$
+  - recursively solve the simplified problem
+  - return $R$ joined with the recursive solution
+
+* Local Search
+*Steps*:
+- maintain an assignment to each variable
+- at each step, select a neighbour of the current assignment
+- terminate when a satisfying assignment is found, or return the best assignment found
+
+The aim is to find an assignment with no unsatisfied constraints (no conflicts).
+So, the heuristic to be minimized is the number of conflicts.
+
+** Greedy Descent
+Goal is to find the variable-value pair that minimizes the number of conflicts at each step.
+
+#+BEGIN_SRC latex
+\begin{center}
+\begin{tikzpicture}
+
+    % Outermost ring
+    \draw[blue!30, thick] (0, 0) ellipse (5 and 2.5);
+
+    % Second ring
+    \draw[blue!30, thick] (0, 0) ellipse (4 and 2);
+
+    % Third ring
+    \draw[blue!30, thick] (0, 0) ellipse (3 and 1.5);
+
+    % Innermost ring
+    \draw[blue!30, thick] (0, 0) ellipse (1.6 and 0.8);
+
+    % Starting point
+    \fill[green!40] (5, 0) circle (3pt) node[above right] {Start};
+
+    % Greedy descent path around the contours
+    \draw[->, thick, red!50] (5, 0)
+        -- (4.5, 1)
+        -- (4, 1.5)
+        -- (3.5, 1.8)
+        -- (3, 2)
+        -- (2.5, 1.5)
+        -- (2, 1)
+        -- (1.5, 0.7)
+        -- (1, 0.5)
+        -- (0.5, 0.3)
+        -- (0, 0.2)
+        -- (0.2, 0) node[midway, below right] {Greedy Descent};
+
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+*Variants*:
+- select variable in most conflicts and value that minimizes number of conflicts
+- select variable in any conflict and value that minimizes number of conflicts
+- select variable at random and value that minimizes number of conflicts
+- select variable and value at random
+
+Problems can arise with finding:
+- local minima rather than global minima
+- plateaus where heuristics are uninformative
+- ridges: local minima where looking ahead some number of steps may help
+
+*Randomized Greedy Descent* allows for random steps (not just downward) and random restart
+(reassign random values to variables).
+
+In high dimensions, search spaces can have flat canyons that are hard to optimize.
+
+** Stochastic Local Search
+Mix of greedy descent (move to lowest neighbour), random walk (take random steps), and random restart.
+
+*** Simulated Annealing
+*Steps*:
+- pick a variable and new value at random
+- if it improves, adopt the new value
+- otherwise, adopt it probabilistically depending on temperature $T$
+  - with current assignment $n$ and proposed assignment $n'$, move to $n'$ with probability
+    $e^{-(h(n') - h(n))/T}$
+- temperature can be reduced
+
+High temperature $\to$ higher probability of accepting a worse change.
+
+*** Tabu List
+To prevent cycling, maintain a *tabu list* of $k$ last assignments and do not allow assignment
+already on tabu list.
+
+Can be implemented more efficiently than a list of complete assignments, but still expensive.
+
+*** Parallel Search
+Total assignment called an *individual*:
+- maintain a population of $k$ individuals instead of one
+- at each stage, update each individual
+- whenever an individual is a solution, it can be reported
+- similar to using $k$ restarts but uses $k$ times the minimum number of steps
+
+*** Beam Search
+Like parallel search, but choose the $k$ best out of all neighbours.
+
+**** Stochastic Beam Search
+Probabilistically choose the $k$ individuals at the next generation, using the heuristic:
+$e^{-h(n)/T}$.
+
+Maintains diversity and heuristic reflects fitness.
+
+*** Genetic Algorithms
+Pairs of individuals combine to create offspring:
+- randomly choose pairs of individuals where the fittest are most likely to be chosen
+- for each pair, perform a *cross-over*: form offspring taking parts of the parents
+- mutate some values
+
+** Comparing Stochastic Algorithms
+*Runtime Distribution*: plot runtime and proportion of runs that are solved in that runtime
