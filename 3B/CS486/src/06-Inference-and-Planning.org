@@ -1,0 +1,190 @@
+#+title: Inference And Planning
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows, positioning}
+#+LATEX_HEADER: \usepackage{booktabs,colortbl}
+#+LATEX_HEADER: \usepackage{algorithm,algpseudocode}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Problem Solving
+Two methods for solving problems:
+- *procedural*
+  - devise an algorithm
+  - program an algorithm
+  - execute the program
+- *declarative*
+  - identify knowledge needed
+  - encode the knowledge in a representation (knowledge base - KB)
+  - use logical consequences of KB to solve the problem
+
+A logic consists of *syntax*, *semantics*, and *proof procedure*.
+
+*Proof*: a sequence of sentences derivable using an inference rule
+
+** Logical Consequence
+For a set of *statements* $\{X\}$:
+- a set of truth assignments is an *interpretation*
+- an interpretation that makes it true is a *model*
+- if it has no model, it is *inconsistent*
+
+A statement is a *logical consequence* of a set of statements if the statement is true in every
+model of the set.
+
+#+BEGIN_SRC latex
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ccccccc}
+        \toprule
+        \( P \) & \( H \) & \( C \) & \( P \to(\neg H \to C) \) & \( P \to \neg H \) & \( P \to C \) \\
+        \midrule
+        \rowcolor{green!30!black!70}
+        F & F & F & T & T & T \\
+        \rowcolor{green!30!black!70}
+        F & F & T & T & T & T \\
+        \rowcolor{green!30!black!70}
+        F & T & F & T & T & T \\
+        \rowcolor{green!30!black!70}
+        F & T & T & T & T & T \\
+        T & F & F & T & F & F \\
+        T & T & F & T & F & T \\
+        T & T & T & T & F & T \\
+        \rowcolor{green!30!black!70}
+        T & F & T & T & T & T \\
+        \bottomrule
+    \end{tabular}
+    \caption{Truth table with highlighted models, showing $P_{1}, P_{2} \models D$.}
+\end{table}
+#+END_SRC
+
+An argument is *valid* if:
+- conclusions are logical consequences of the premise
+- conclusions are true in every model of the premises
+
+* Proofs
+*Knowledge Base*: set of axioms
+
+KB $\vdash g$ means $g$ can be derived from KB using the proof procedure.
+If it is true, then $g$ is a theorem.
+
+*Soundness*: if KB $\vdash g$, then KB $\models g$.
+
+*Completeness*: if KB $\models g$, then KB $\vdash g$.
+
+Assume a *closed world*:
+- agent knows everything
+- if it cannot prove something, it must be false
+- negation is failure
+
+** Bottom-Up Proof
+*Forward chaining*: start from facts and use rules to generate all possible atoms
+
+#+BEGIN_SRC latex
+\begin{algorithm}
+    \caption{Bottom-Up Proof}
+    \begin{algorithmic}[1]
+        \State $C \gets \{\}$  \Comment{Initialize the set of conclusions}
+        \Repeat
+            \State Select $r \in KB$ such that
+            \State \quad $r$ is $h \gets b_1 \land \ldots \land b_m$
+            \State \quad $b_i \in C \; \forall i$  \Comment{All premises are in $C$}
+            \State \quad $h \notin C$  \Comment{$h$ is not already in $C$}
+            \State $C \gets C \cup \{h\}$  \Comment{Add $h$ to the conclusions}
+        \Until{no more clauses can be selected}
+    \end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+Forward chaining is sound and complete.
+
+** Top-Down Proof
+Start with query and work backwards, trying to see if it is proved from the premises.
+#+BEGIN_SRC latex
+\begin{algorithm}
+    \caption{Top-Down Proof}
+    \begin{algorithmic}[1]
+        \Procedure{solve}{$q_1 \land \ldots \land q_k$}
+            \State $ac \gets \text{"yes} \gets q_1 \land \ldots \land q_k$"  \Comment{Initialize the answer condition}
+            \Repeat
+                \State Select a conjunct $q_i$ from the body of $ac$
+                \State Choose a clause $C$ from $KB$ with $q_i$ as the head
+                \State Replace $q_i$ in the body of $ac$ by the body of $C$
+            \Until{$ac$ is an answer}
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+In the _select_ step, some selections will lead to solutions more quickly, though any should lead
+to a solution in the end.
+In the _choose_ step, if one choice doesn't give a solution, others may, so all must be tried.
+
+KB can contain *relations* (predicates) or *quantification*.
+
+* Planning and Actions
+*Planning*: decide what to do based on the agent's ability, goals, and state of the world; basically find
+a sequence of actions to the goal
+
+Assume:
+- a single agent
+- deterministic world
+- no events outside the agent's control that change the state of the world
+- agent knows what state the world is in (full observability)
+- time progresses discreetly
+- goals are predicates of states that must be achieved/maintained
+
+*Action*: partial function (some actions only possible from some states) from states to states
+
+*Preconditions* of an action specify if it can occur. *Effect* of an action specifies resulting state.
+
+*Causal rules* specify when a feature gets a new value. *Frame rules* specify when the feature keeps
+its values.
+
+In planning, the givens are:
+- description of effects and preconditions of actions
+- description of initial state
+- goal to achieve
+
+Achieved by finding a sequence of possible actions that will result is state that satisfies the goal.
+
+** Forward Planning
+Search in the state-space graph:
+- nodes represent states
+- arcs correspond to actions legal from that state
+- plan is a path from the initial state to a goal state
+- heuristics can be important
+
+#+BEGIN_SRC latex
+\begin{center}
+\begin{tikzpicture}[
+    node distance=2.5cm,
+    state/.style={draw, circle, fill=blue!80!black!60, minimum size=1cm}
+]
+
+    % Define state nodes
+    \node[state] (start) {Start};
+    \node[state] (s1) [right of=start] {S1};
+    \node[state] (s2) [below of=s1] {S2};
+    \node[state] (goal) [right of=s2, xshift=2cm] {Goal}; % Goal positioned to the right
+    \node[state] (s3) [above right of=s2, xshift=1cm] {S3}; % Positioned above the edge
+
+    % Draw edges between state nodes with action labels
+    \path[->]
+        (start) edge node[midway, above] {A1} (s1)
+        (s1) edge node[midway, right] {A2} (s2)
+        (s1) edge node[midway, above] {A3} (s3)
+        (s2) edge node[midway, above] {A4} (goal)
+        (s3) edge node[midway, right] {A4} (goal);
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+** Regression Planning
+Search backwards from the goal description with nodes corresponding to subgoals and arcs to actions:
+- nodes are propositions (assignments of values to features)
+- arcs correspond to actions that can achieve goals
+- neighbours of a node specify what must be true immediately before the arc so that the node is true
+  immediately after
+- start node is the goal to be achieved
+- $\text{goal}(N)$ is true if $N$ is a proposition true of the initial state
