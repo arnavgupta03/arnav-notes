@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-18 Fri 03:45 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Features And Constraints</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Features And Constraints</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2d16f47">1. Constraint Satisfaction Problems</a>
+<ul>
+<li><a href="#org066a6d8">1.1. Representations</a></li>
+<li><a href="#org5ca7954">1.2. CSP Solutions</a>
+<ul>
+<li><a href="#org3a30894">1.2.1. Backtracking</a></li>
+<li><a href="#org406d799">1.2.2. Consistency</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org8f1550d">2. AC-3</a></li>
+<li><a href="#org6d2b173">3. Variable Elimination</a></li>
+<li><a href="#org076702d">4. Local Search</a>
+<ul>
+<li><a href="#org7523cef">4.1. Greedy Descent</a></li>
+<li><a href="#org30ac664">4.2. Stochastic Local Search</a>
+<ul>
+<li><a href="#org8a7b3b7">4.2.1. Simulated Annealing</a></li>
+<li><a href="#org2b97db5">4.2.2. Tabu List</a></li>
+<li><a href="#orgc16dc3f">4.2.3. Parallel Search</a></li>
+<li><a href="#org8fcc25a">4.2.4. Beam Search</a></li>
+<li><a href="#orga5c8ada">4.2.5. Genetic Algorithms</a></li>
+</ul>
+</li>
+<li><a href="#org846c785">4.3. Comparing Stochastic Algorithms</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2d16f47" class="outline-2">
+<h2 id="org2d16f47"><span class="section-number-2">1.</span> Constraint Satisfaction Problems</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A CSP has:
+</p>
+<ul class="org-ul">
+<li>a set of variables</li>
+<li>a domain for each variable</li>
+<li>a set of constraints or evaluation function</li>
+</ul>
+
+<p>
+Two kinds of problems:
+</p>
+<ol class="org-ol">
+<li><b>Satisfiability</b> Problems: find an assignment that satisfies constraints (hard constraints)</li>
+<li><b>Optimization</b> Problems: find an assignment that optimizes the evaluation function (soft constraints)</li>
+</ol>
+
+<p>
+A solution to a CSP is an assignment to the variables that satisfies all constraints (model of constraints).
+</p>
+
+<p>
+CSPs can be represented as graph searching problems in two ways:
+</p>
+<ul class="org-ul">
+<li><b>complete</b> assignment
+<ul class="org-ul">
+<li><span class="underline">nodes</span>: assignment of value to all variables</li>
+<li><span class="underline">neighbours</span>: change one variable value</li>
+</ul></li>
+<li><b>partial</b> assignment
+<ul class="org-ul">
+<li><span class="underline">nodes</span>: assignment to first \(k-1\) variables</li>
+<li><span class="underline">neighbours</span>: assignment to variable \(k\)</li>
+</ul></li>
+</ul>
+
+<p>
+Search spaces can get large, so branching factors can be big.
+Still, path to goal is not important, only the goal is.
+No predefined starting node.
+</p>
+
+<p>
+CSPs can be solved with:
+</p>
+<ul class="org-ul">
+<li>generate and test</li>
+<li>backtracking</li>
+<li>consistency</li>
+<li>hill-climbing</li>
+<li>randomized including local search</li>
+</ul>
+</div>
+<div id="outline-container-org066a6d8" class="outline-3">
+<h3 id="org066a6d8"><span class="section-number-3">1.1.</span> Representations</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<b>Primal</b> representations consider unary and binary constraints.
+<b>Dual</b> representations consider N-ary constraints.
+</p>
+</div>
+</div>
+<div id="outline-container-org5ca7954" class="outline-3">
+<h3 id="org5ca7954"><span class="section-number-3">1.2.</span> CSP Solutions</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<b>Generate and Test</b>: go through all combos and check each one
+</p>
+</div>
+<div id="outline-container-org3a30894" class="outline-4">
+<h4 id="org3a30894"><span class="section-number-4">1.2.1.</span> Backtracking</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Prune large portions of the state space:
+</p>
+<ol class="org-ol">
+<li>order all variables</li>
+<li>evaluate constraints in the order as soon as they are grounded</li>
+</ol>
+
+<p>
+Efficiency depends on the order of variables, which can be hard to optimize.
+Best to push failures as high as possible, since this cuts large branches of the tree early.
+</p>
+</div>
+</div>
+<div id="outline-container-org406d799" class="outline-4">
+<h4 id="org406d799"><span class="section-number-4">1.2.2.</span> Consistency</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Look for inconsistencies through a graphical representation.
+Specifically, give each domain a value until all constraints are satisfied.
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org3754b5a"></a>Consistency Networks<br />
+<div class="outline-text-5" id="text-1-2-2-1">
+<p>
+<b>Domain constraint</b>: a unary constraint on values in a domain, written \(\left< X, c(X) \right>\).
+</p>
+
+<p>
+A node in a consistency networks (CNs) is <b>domain consistent</b> if no domain value violates any domain constraint.
+A CN is domain consistent if all nodes are domain consistent.
+</p>
+
+<p>
+Arc \(\left< X, c(X, Y) \right>\) is a <b>constraint</b> on \(X\).
+An arc \(\left< X, c(X, Y) \right>\) is <b>arc consistent</b> if \(\forall X \in D_{X}\), there is some
+\(Y \in D_{Y}\) such that \(c(X, Y)\) is satisfied.
+A CN is arc consistent if all arcs are arc consistent.
+</p>
+
+<p>
+A set of variables \(\{ X_{1}, X_{2}, X_{3}, \dots, X_{N} \}\) is <b>path consistent</b> if all arcs
+and domains are consistent.
+</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org8f1550d" class="outline-2">
+<h2 id="org8f1550d"><span class="section-number-2">2.</span> AC-3</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Makes a CN arc consistent and domain consistent with a <b>To-Do Arcs</b> (TDA) queue that has all inconsistent arcs.
+</p>
+
+<p>
+<b>Algorithm</b>:
+</p>
+<ol class="org-ol">
+<li>make all domains domain consistent</li>
+<li>put all arcs \(\left< Z, c(Z, \_) \right>\) in TDA</li>
+<li>repeat the following until TDA is empty
+<ol class="org-ol">
+<li>select and remove an arc \(\left< X, c(X, Y) \right>\) from TDA</li>
+<li>remove all values of the domain of \(X\) that don&rsquo;t have a value in the domain of \(Y\) that satisfies
+the constraint \(c(X, Y)\)</li>
+<li>if any were removed, add all arcs \(\left< Z, c'(Z, X) \right>\) to TDA \(\forall Z \ne Y\)</li>
+</ol></li>
+</ol>
+
+<p>
+AC-3 is guaranteed to terminate with one of:
+</p>
+<ul class="org-ul">
+<li>every domain is empty: no solution</li>
+<li>every domain has a single value: solution</li>
+<li>some domain has more than one value: split into two, run AC-3 recursively on each half</li>
+</ul>
+
+<p>
+AC-3 has time complexity \(O(cd^{3})\) where \(c\) is the number of binary constraints and \(d\) is the maximum
+size of each domain.
+</p>
+</div>
+</div>
+<div id="outline-container-org6d2b173" class="outline-2">
+<h2 id="org6d2b173"><span class="section-number-2">3.</span> Variable Elimination</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Eliminate the variables one by one, passing their constraints to their neighbours.
+When a single variable remains, if it has no variables, the CN is <b>inconsistent</b>.
+Variables are eliminated according to some elimination ordering.
+</p>
+
+<p>
+<b>Algorithm</b>:
+</p>
+<ul class="org-ul">
+<li>if there is only 1 variable, return the intersection of the unary constraints that contain it</li>
+<li>select a variable \(X\)
+<ul class="org-ul">
+<li>join the constraints in which \(X\) appears, forming constraint \(R\)</li>
+<li>project \(R\) onto its variables other than \(X\): call this \(R_{2}\)</li>
+<li>place \(R_{2}\) between all variables that were connected to \(X\)</li>
+<li>remove \(X\)</li>
+<li>recursively solve the simplified problem</li>
+<li>return \(R\) joined with the recursive solution</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org076702d" class="outline-2">
+<h2 id="org076702d"><span class="section-number-2">4.</span> Local Search</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<b>Steps</b>:
+</p>
+<ul class="org-ul">
+<li>maintain an assignment to each variable</li>
+<li>at each step, select a neighbour of the current assignment</li>
+<li>terminate when a satisfying assignment is found, or return the best assignment found</li>
+</ul>
+
+<p>
+The aim is to find an assignment with no unsatisfied constraints (no conflicts).
+So, the heuristic to be minimized is the number of conflicts.
+</p>
+</div>
+<div id="outline-container-org7523cef" class="outline-3">
+<h3 id="org7523cef"><span class="section-number-3">4.1.</span> Greedy Descent</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Goal is to find the variable-value pair that minimizes the number of conflicts at each step.
+</p>
+
+<p>
+<b>Variants</b>:
+</p>
+<ul class="org-ul">
+<li>select variable in most conflicts and value that minimizes number of conflicts</li>
+<li>select variable in any conflict and value that minimizes number of conflicts</li>
+<li>select variable at random and value that minimizes number of conflicts</li>
+<li>select variable and value at random</li>
+</ul>
+
+<p>
+Problems can arise with finding:
+</p>
+<ul class="org-ul">
+<li>local minima rather than global minima</li>
+<li>plateaus where heuristics are uninformative</li>
+<li>ridges: local minima where looking ahead some number of steps may help</li>
+</ul>
+
+<p>
+<b>Randomized Greedy Descent</b> allows for random steps (not just downward) and random restart
+(reassign random values to variables).
+</p>
+
+<p>
+In high dimensions, search spaces can have flat canyons that are hard to optimize.
+</p>
+</div>
+</div>
+<div id="outline-container-org30ac664" class="outline-3">
+<h3 id="org30ac664"><span class="section-number-3">4.2.</span> Stochastic Local Search</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Mix of greedy descent (move to lowest neighbour), random walk (take random steps), and random restart.
+</p>
+</div>
+<div id="outline-container-org8a7b3b7" class="outline-4">
+<h4 id="org8a7b3b7"><span class="section-number-4">4.2.1.</span> Simulated Annealing</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+<b>Steps</b>:
+</p>
+<ul class="org-ul">
+<li>pick a variable and new value at random</li>
+<li>if it improves, adopt the new value</li>
+<li>otherwise, adopt it probabilistically depending on temperature \(T\)
+<ul class="org-ul">
+<li>with current assignment \(n\) and proposed assignment \(n'\), move to \(n'\) with probability
+\(e^{-(h(n') - h(n))/T}\)</li>
+</ul></li>
+<li>temperature can be reduced</li>
+</ul>
+
+<p>
+High temperature \(\to\) higher probability of accepting a worse change.
+</p>
+</div>
+</div>
+<div id="outline-container-org2b97db5" class="outline-4">
+<h4 id="org2b97db5"><span class="section-number-4">4.2.2.</span> Tabu List</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+To prevent cycling, maintain a <b>tabu list</b> of \(k\) last assignments and do not allow assignment
+already on tabu list.
+</p>
+
+<p>
+Can be implemented more efficiently than a list of complete assignments, but still expensive.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc16dc3f" class="outline-4">
+<h4 id="orgc16dc3f"><span class="section-number-4">4.2.3.</span> Parallel Search</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<p>
+Total assignment called an <b>individual</b>:
+</p>
+<ul class="org-ul">
+<li>maintain a population of \(k\) individuals instead of one</li>
+<li>at each stage, update each individual</li>
+<li>whenever an individual is a solution, it can be reported</li>
+<li>similar to using \(k\) restarts but uses \(k\) times the minimum number of steps</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org8fcc25a" class="outline-4">
+<h4 id="org8fcc25a"><span class="section-number-4">4.2.4.</span> Beam Search</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<p>
+Like parallel search, but choose the \(k\) best out of all neighbours.
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org884cdb8"></a>Stochastic Beam Search<br />
+<div class="outline-text-5" id="text-4-2-4-1">
+<p>
+Probabilistically choose the \(k\) individuals at the next generation, using the heuristic:
+\(e^{-h(n)/T}\).
+</p>
+
+<p>
+Maintains diversity and heuristic reflects fitness.
+</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-orga5c8ada" class="outline-4">
+<h4 id="orga5c8ada"><span class="section-number-4">4.2.5.</span> Genetic Algorithms</h4>
+<div class="outline-text-4" id="text-4-2-5">
+<p>
+Pairs of individuals combine to create offspring:
+</p>
+<ul class="org-ul">
+<li>randomly choose pairs of individuals where the fittest are most likely to be chosen</li>
+<li>for each pair, perform a <b>cross-over</b>: form offspring taking parts of the parents</li>
+<li>mutate some values</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org846c785" class="outline-3">
+<h3 id="org846c785"><span class="section-number-3">4.3.</span> Comparing Stochastic Algorithms</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+<b>Runtime Distribution</b>: plot runtime and proportion of runs that are solved in that runtime
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-10-18 Fri 03:45</p>
+</div>
+</body>
+</html>
