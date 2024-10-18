@@ -50,7 +50,7 @@ Treat the frontier as a stack, select the last element added to the frontier to 
 
 #+BEGIN_SRC latex
 \begin{center}
-        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
                 \node (A) {A};
                 \node (B) [right=of A] {B};
                 \node (C) [right=of B] {C};
@@ -109,7 +109,7 @@ Treats the frontier as a queue, select the earliest element added to the frontie
 
 #+BEGIN_SRC latex
 \begin{center}
-        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         \node (A) {A};
         \node (B) [right=of A] {B};
         \node (C) [right=of B] {C};
@@ -168,7 +168,7 @@ For every depth limit, perform DFS until the depth limit is reached.
 
 #+BEGIN_SRC latex
 \begin{center}
-    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         % Nodes
         \node (A) {A};
         \node (B) [right=of A] {B};
@@ -201,7 +201,7 @@ For every depth limit, perform DFS until the depth limit is reached.
         \end{tikzpicture}
 
     \vspace{1cm} % Space between the two graphs
-        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         % Nodes
         \node (A) {A};
         \node (B) [right=of A] {B};
@@ -251,7 +251,7 @@ It is an uninformed/blind search (does not take the goal into account).
 
 #+BEGIN_SRC latex
 \begin{center}
-    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         \node (A) {A};
         \node (B) [right=of A] {B};
         \node (C) [right=of B] {C};
@@ -310,7 +310,7 @@ Frontier is a PQ sorted by cost, with each node keeping track
 
 #+BEGIN_SRC latex
 \begin{center}
-  \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+  \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
     \node (A) {A;0};
     \node (B) [right=of A] {B;1};
     \node (C) [right=of B] {C;3};

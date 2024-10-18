@@ -1,4 +1,4 @@
-% Created 2024-10-17 Thu 22:07
+% Created 2024-10-17 Thu 22:52
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,7 +32,7 @@
 \tableofcontents
 
 \section{Introduction to Search}
-\label{sec:org0668178}
+\label{sec:org4afc4ee}
 Solving some problems requires searching for a solution by searching a directed graph that is
 the \textbf{state space} of the problem.
 A graph consists of a set of nodes and a set of arcs/edges.
@@ -79,11 +79,11 @@ Useful quantities:
 \item \(d\): depth of the shallowest goal node
 \end{itemize}
 \section{Depth-First Search}
-\label{sec:orgab29510}
+\label{sec:orgf5cc66d}
 Treat the frontier as a stack, select the last element added to the frontier to be expanded.
 
 \begin{center}
-        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
                 \node (A) {A};
                 \node (B) [right=of A] {B};
                 \node (C) [right=of B] {C};
@@ -120,7 +120,7 @@ Treat the frontier as a stack, select the last element added to the frontier to 
 DFS can be implemented recursively, with cycle checking.
 With this implementation, the frontier is implicitly stored in the call stack.
 \subsection{Properties of DFS}
-\label{sec:org6c2f232}
+\label{sec:org41f3308}
 Properties:
 \begin{itemize}
 \item \emph{space complexity}: \(O(bm)\)
@@ -142,11 +142,11 @@ DFS is poor when:
 \item multiple paths to a node
 \end{itemize}
 \section{Breadth-First Search}
-\label{sec:org37a7d2a}
+\label{sec:orgd6ccbd6}
 Treats the frontier as a queue, select the earliest element added to the frontier to be expanded.
 
 \begin{center}
-        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         \node (A) {A};
         \node (B) [right=of A] {B};
         \node (C) [right=of B] {C};
@@ -177,14 +177,14 @@ Treats the frontier as a queue, select the earliest element added to the frontie
         \end{tikzpicture}
 \end{center}
 \subsection{Multi-Path Pruning}
-\label{sec:orge838cf3}
+\label{sec:orge603eba}
 Prune a path to a given node than any path has been found to, since a path has already been found to it.
 
 Pruning subsumes a cycle check, since the current path is a path to the node.
 
 Requires storing all nodes paths have been found to, and must guarantee that this allows optimality.
 \subsection{Properties of BFS}
-\label{sec:org8a32412}
+\label{sec:org7366dae}
 Properties:
 \begin{itemize}
 \item \emph{space complexity}: \(O(b^{d})\)
@@ -205,11 +205,11 @@ BFS is a poor method when:
 \item problem is large and graph is dynamically generated
 \end{itemize}
 \section{Iterative Deepening Search}
-\label{sec:org379264a}
+\label{sec:org065ebf6}
 For every depth limit, perform DFS until the depth limit is reached.
 
 \begin{center}
-    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         % Nodes
         \node (A) {A};
         \node (B) [right=of A] {B};
@@ -242,7 +242,7 @@ For every depth limit, perform DFS until the depth limit is reached.
         \end{tikzpicture}
 
     \vspace{1cm} % Space between the two graphs
-        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+        \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         % Nodes
         \node (A) {A};
         \node (B) [right=of A] {B};
@@ -276,7 +276,7 @@ For every depth limit, perform DFS until the depth limit is reached.
         \end{tikzpicture}
 \end{center}
 \subsection{Properties of IDS}
-\label{sec:org802a756}
+\label{sec:org3efc72c}
 Properties:
 \begin{itemize}
 \item \emph{space complexity}: \(O(bd)\)
@@ -285,14 +285,14 @@ Properties:
 \item \emph{optimality}: no, it is guaranteed to find the shallowest goal node
 \end{itemize}
 \section{Lowest-Cost-First Search}
-\label{sec:org9749e49}
+\label{sec:org6626f85}
 Selects a path on the frontier with lowest cost, where the frontier is a priority queue ordered
 by path cost.
 
 It is an uninformed/blind search (does not take the goal into account).
 
 \begin{center}
-    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
         \node (A) {A};
         \node (B) [right=of A] {B};
         \node (C) [right=of B] {C};
@@ -332,7 +332,7 @@ It is an uninformed/blind search (does not take the goal into account).
     \end{tikzpicture}
 \end{center}
 \subsection{Properties of LCFS}
-\label{sec:org7169866}
+\label{sec:orgcc2f058}
 Properties:
 \begin{itemize}
 \item \emph{space complexity}: exponential
@@ -347,13 +347,13 @@ Completeness and optimality require that:
 \item the cost of every edge is strictly positive
 \end{enumerate}
 \subsection{Dijkstra's Algorithm}
-\label{sec:org36f3c5c}
+\label{sec:org457a783}
 Variant of LCFS with multi-path pruning.
 
 Frontier is a PQ sorted by cost, with each node keeping track
 
 \begin{center}
-  \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!40}]
+  \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, fill=blue!80!black!60}]
     \node (A) {A;0};
     \node (B) [right=of A] {B;1};
     \node (C) [right=of B] {C;3};
