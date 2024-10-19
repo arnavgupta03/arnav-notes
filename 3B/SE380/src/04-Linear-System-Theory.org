@@ -1,0 +1,170 @@
+#+title: Linear System Theory
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{pgfplots}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Stability
+For the initial value problem with $\dot{\mathbf{x}} = \mathbf{Ax}$ and
+$\mathbf{x}(t_{0}) = x_{0}$,
+the unique solution is
+$$
+\mathbf{x}(t) = e^{A(t-t_{0})} x_{0}
+$$
+
+Note that the matrix exponential comes from the Taylor series
+$$
+e^{M} = \sum_{k = 0}^{\infty} \frac{M^{k}}{k!}
+$$
+where $M^{0} = I$.
+
+A system in state-space form is:
+- _stable_ if, for every initial condition $\mathbf{x}(t_{0}) = x_{0} \in \mathbb{R}^{n}$,
+  $\mathbf{x}(t) = e^{A(t - t_{0})} x_{0}$ is uniformly bounded
+- _asymptotically stable_ if, in addition, for every initial condition $\mathbf{x}(t_{0}) = x_{0} \in \mathbb{R}^{n}$,
+  $\mathbf{x}(t) \to 0$ as $t \to \infty$
+- _unstable_ otherwise
+
+A system is asymptotically stable if and only if all eigenvalues of $A$ have negative real part.
+
+A *Bounded-Input-Bounded-Output (BIBO) stable* system is one with bounded response to a bounded input.
+
+A system is BIBO stable if and only if all poles of all entries of its transfer function have negative real
+part.
+
+Asymptotic stability implies BIBO stability.
+
+* Performance
+Important performance metrics to describe the behaviour of a system with a unit step signal are:
+- *steady-state gain*: $\lim_{t \to \infty} y(t)$
+- *rise time*: time to go from 10% to 90% of steady-state
+- *peak time*: time at which peak is achieved
+- *overshoot percentage*: $OS\% = \frac{|C_{\text{max}| - C_{ss}}}{C_{ss}} \times 100 \%$
+- *settling time*: smallest time such that $\forall t \ge T, \frac{|C_{ss}-y(t)|}{|C_{ss}|} \le \varepsilon$
+
+#+BEGIN_SRC latex
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+        axis lines=middle,
+        xmin=0, xmax=15,
+        ymin=0, ymax=1.5,
+        xlabel=$t$,
+        ylabel={$y(t)$},
+        xlabel style={at=(current axis.right of origin), anchor=west},
+        ylabel style={at=(current axis.above origin), anchor=south},
+        xtick={0, 0.4726, 1.79398, 1.96605, 3.2236, 11.0855},
+        xticklabels={$0$, {}, {}, $t_r$, $t_p$, $t_s$},
+        ytick={0, 0.1, 0.9, 1, 1.3714},
+        yticklabels={$0$, $0.1$, $0.9$, $1$, $M_p$}
+    ]
+    \addplot[smooth,
+             red!60!black!80,
+             thick,
+             mark=none,
+             domain=0:12.4,
+             samples=100]
+    {1-exp(-0.3*x)*(cos(deg(sqrt(1-0.3^2)*x))+0.3/(sqrt(1-0.3^2))*sin(deg(sqrt(1-0.3^2)*x)))};
+    %
+    \addplot[cyan, dotted] coordinates{(0.4726,0.1)} -- (axis cs:0,0.1);
+    \addplot[cyan, dotted] coordinates{(0.4726,0.1)} -- (axis cs:0.4726,0);
+    %
+    \addplot[cyan, dotted] coordinates{(1.79398,0.9)} -- (axis cs:0,0.9);
+    \addplot[cyan, dotted] coordinates{(1.79398,0.9)} -- (axis cs:1.79398,0);
+    %
+    \addplot[cyan, dotted] coordinates{(1.96605,1)} -- (axis cs:1.96605,0);
+    %
+    \addplot[cyan, dotted] coordinates{(3.2236,1.3714)} -- (axis cs:0,1.3714);
+    \addplot[cyan, dotted] coordinates{(3.2236,1.3714)} -- (axis cs:3.2236,0);
+    %
+    \addplot[cyan, dotted] coordinates{(11.0855,1.025)} -- (axis cs:11.0855,0);
+    %
+    \addplot[red!60!black!80, thick] coordinates{(15,0.9872)} -- (axis cs:12.4,0.9872);
+    %
+    \addplot[cyan, dashed] coordinates{(15,1)} -- (axis cs:0,1);
+    %
+    \addplot[lime, dashed] coordinates{(15,0.975)} -- (axis cs:0,0.975);
+    \addplot[lime, dashed] coordinates{(15,1.025)} -- (axis cs:0,1.025);
+
+    \coordinate (a) at (axis cs:0,0);
+    \coordinate (b) at (axis cs:1.79398,0);
+
+    \end{axis}
+
+    % \draw [shorten <=1mm,shorten >=1mm] (a) -- ++(0,-1cm) coordinate (aa);
+    % \draw (b) -- ++(0,-1cm) coordinate (bb);
+    % \draw [|<->|] (aa) -- (bb) node [midway,fill=black] {$t_r$};
+
+    \end{tikzpicture}
+\end{center}
+#+END_SRC
+
+** First Order Systems
+Steady-state gain is $\mu$.
+
+Rise-time is $2 \tau$.
+
+Peak time and overshoot would not make sense for a first order system.
+
+Settling time is $-\tau \ln(\varepsilon)$.
+For $\varepsilon = 0.05, T_{s} \approx 3\tau$.
+For $\varepsilon = 0.03, T_{s} \approx 4\tau$.
+For $\varepsilon = 0.01, T_{s} \approx 5\tau$.
+
+** Second Order Systems
+Steady-state gain is $\mu$.
+
+Rise-time is
+$$
+\frac{2.16 \zeta + 0.16}{\omega_{n}}
+$$
+
+Peak time is
+$$
+\frac{\pi}{\sqrt{1 - \zeta^{2} \omega_{n}}}
+$$
+
+Overshoot percentage is
+$$
+e^{\frac{-\zeta \pi}{1 - \zeta^{2}}}
+$$
+
+Settling time is
+$$
+-\frac{\ln(\varepsilon)}{\zeta \omega_{n}}
+$$
+
+* Lower Order Approximations
+Higher order systems often have a few poles that are much closer to the imaginary
+axis than others, these are *dominant poles*.
+
+For a system with transfer function:
+$$
+G(s) = G_{fast}(s) G_{slow}(s)
+$$
+where the poles of $G_{slow}(s)$ are more dominant, the fast components can be
+approximated by a static transfer function whose value is equal to steady-state
+gain, $G_{fast}(0)$.
+
+* System Identification
+Assume a structure of the model
+$$G(s) = \frac{Y(s)}{U(s)} = \frac{b_{m} s^{m} + \cdots + b_{1} s + b_{0}}{s^{n} + a_{n-1} s^{n-1} + \cdots + a_{1} s + a_{0}}$$
+which gives
+$$y^{(n)}(t) + a_{n-1} y^{(n-1)}(t) + \cdots + a_{1} \dot{y}(t) + a_{0} y(t) = b_{m} u^{(m)}(t) + \cdots + b_{1} u(t) + b_{0} u(t)$$
+
+For any time $t_{k}$, set
+$$
+y^{(n)}(t_{k}) = b_{m}u^{(m)}(t_{k}) + \cdots + b_{0} u(t_{k})+ a_{n-1} \left( -y^{(n-1)} (t_{k}) \right) + \cdots + a_{0} (-y(t_{k}))
+$$
+which can be represented as:
+$$ d^{T} (t_{k}) \theta = \begin{pmatrix} u^{(m)} (t_{k}) & \cdots & u(t_{k}) & -y^{(n-1)} (t_{k}) & \cdots & -y(t_{k}) \end{pmatrix} \begin{pmatrix} b_{m} \\ \vdots \\ b_{0} \\ a_{n-1} \\ \vdots \\ a_{0} \end{pmatrix} $$
+
+Consider times $t_{1}, \dots, t_{N}$, where $N \gg n + m + 1$.
+$$ Y = D \theta \implies \begin{pmatrix} y^{(n)} (t_{1}) \\ \vdots \\ y^{(n)} (t_{N}) \end{pmatrix} = \begin{pmatrix} d^{T} (t_{1}) \\ \vdots \\ d^{T} (t_{N}) \end{pmatrix} \theta $$
+
+By minimizing $\| Y - D \theta\|^{2}$, $\theta$ can be found that best approximates the system:
+$$
+\theta^{*} = (D^{T}D)^{-1} D^{T} Y = D^{\dagger} Y
+$$
