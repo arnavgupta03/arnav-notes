@@ -2,6 +2,8 @@
 #+author: Arnav Gupta
 #+LATEX_HEADER: \usepackage{parskip,darkmode}
 #+LATEX_HEADER: \enabledarkmode
+#+LATEX_HEADER: \usepackage{tikz,xcolor}
+#+LATEX_HEADER: \usetikzlibrary{arrows, positioning}
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
 
 * Basics of Control Systems
@@ -14,4 +16,46 @@ Control systems have:
 - some noise that influences the output read by the sensor
 
 If the measured output is subtracted from the desired output, it is
-negative feedback control.
+negative feedback control. If it is added, it is positive feedback
+control.
+
+#+BEGIN_SRC latex
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{controller} = [block, fill=cyan!30!black!60]
+\tikzstyle{plant} = [block, fill=lime!30!black!60]
+\tikzstyle{sensor} = [block, fill=red!30!black!60]
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input] {};
+    \node [sum, right of=input, node distance=2cm] (sum) {};
+    \node [controller, right of=sum, node distance=3cm] (controller) {controller};
+    \node [plant, right of=controller, node distance=3cm] (plant) {plant};
+    \node [sensor, below of=plant] (sensor) {sensor};
+    \node [output, right of=plant, node distance=3cm] (output) {};
+
+    % Connections between nodes
+    \draw [->] (input) -- node {reference} (sum);
+    \draw [->] (sum) -- node {error} (controller);
+    \draw [->] (controller) -- node[name=u] {} (plant);
+    \draw [->] (plant) -- node [name=y] {output} (output);
+    \draw [->] (y) |- (sensor);
+    \draw [->] (sensor) -| node[pos=0.99] {$-$} node [near end] {measured output} (sum);
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+* Control System Design
+Consists of the following steps:
+1. Study the system to be controlled and establish control goals.
+2. Identify variables to be controlled.
+3. Define control specifications.
+4. Obtain a model for the system.
+5. Simplify the model as much as possible.
+6. Design the controller and select key parameters to be adjusted.
+7. Simulate the controlled system.
+8. Optimize the parameters and analyze performance through iterating
+   if necessary.

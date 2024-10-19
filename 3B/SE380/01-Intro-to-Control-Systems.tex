@@ -1,0 +1,90 @@
+% Created 2024-10-18 Fri 22:45
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\usepackage{tikz,xcolor}
+\usetikzlibrary{arrows, positioning}
+\author{Arnav Gupta}
+\date{\today}
+\title{Intro To Control Systems}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Intro To Control Systems},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Basics of Control Systems}
+\label{sec:org8b8a44a}
+Control systems have:
+\begin{itemize}
+\item some reference/desired output
+\item a controller that provides an input into a system
+\item possibly some disturbance that influences the input
+\item a system that takes in input and produces some output
+\item a sensor that reads the output and feeds this to the controller
+\item some noise that influences the output read by the sensor
+\end{itemize}
+
+If the measured output is subtracted from the desired output, it is
+negative feedback control. If it is added, it is positive feedback
+control.
+
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{controller} = [block, fill=cyan!30!black!60]
+\tikzstyle{plant} = [block, fill=lime!30!black!60]
+\tikzstyle{sensor} = [block, fill=red!30!black!60]
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input] {};
+    \node [sum, right of=input, node distance=2cm] (sum) {};
+    \node [controller, right of=sum, node distance=3cm] (controller) {controller};
+    \node [plant, right of=controller, node distance=3cm] (plant) {plant};
+    \node [sensor, below of=plant] (sensor) {sensor};
+    \node [output, right of=plant, node distance=3cm] (output) {};
+
+    % Connections between nodes
+    \draw [->] (input) -- node {reference} (sum);
+    \draw [->] (sum) -- node {error} (controller);
+    \draw [->] (controller) -- node[name=u] {} (plant);
+    \draw [->] (plant) -- node [name=y] {output} (output);
+    \draw [->] (y) |- (sensor);
+    \draw [->] (sensor) -| node[pos=0.99] {$-$} node [near end] {measured output} (sum);
+\end{tikzpicture}
+\end{center}
+\section{Control System Design}
+\label{sec:org80194aa}
+Consists of the following steps:
+\begin{enumerate}
+\item Study the system to be controlled and establish control goals.
+\item Identify variables to be controlled.
+\item Define control specifications.
+\item Obtain a model for the system.
+\item Simplify the model as much as possible.
+\item Design the controller and select key parameters to be adjusted.
+\item Simulate the controlled system.
+\item Optimize the parameters and analyze performance through iterating
+if necessary.
+\end{enumerate}
+\end{document}
