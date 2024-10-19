@@ -1,0 +1,325 @@
+#+title: Mathematical Models Of Control Systems
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{tikz,xcolor}
+#+LATEX_HEADER: \usetikzlibrary{arrows, positioning, calc}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* From Differential Equations to State Space
+*Time-varying control system*: system in which one or more system parameters
+may vary as a function of time
+
+*State of a system*: set of variables whose values, together with input,
+will provide future state and output of the system
+
+*State vector*: column vector consisting of the state variables
+$$
+\mathbf{x}(t) = \begin{pmatrix} x_{1}(t) \\ x_{2}(t) \\ \vdots \\ x_{n}(t) \end{pmatrix}
+$$
+
+*Input vector*: column vector consisting of the input variables
+$$
+\mathbf{u}(t) = \begin{pmatrix} u_{1}(t) \\ u_{2}(t) \\ \vdots \\ u_{m}(t) \end{pmatrix}
+$$
+
+*State differential equation*: representation of the system
+$$
+\dot{\mathbf{x}}(t) = \mathbf{Ax}(t) + \mathbf{Bu}(t)
+$$
+where $\mathbf{A}$ is an $n \times n$ matrix and $\mathbf{B}$ is a $n \times m$ matrix.
+
+*Output equation*: relation of outputs to state variables and input signals
+$$
+\mathbf{y}(t) = \mathbf{Cx}(t) + \mathbf{Du}(t)
+$$
+
+#+BEGIN_SRC latex
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em, fill=cyan!50!black!80]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input_u] {};
+    \node [block, right of=input_u, node distance=4cm] (block) {Block};
+    \node [input, name=input_x] [above of=block] {};
+    \node [output, right of=block, node distance=4cm] (output) {};
+
+    % Connections
+    \draw [->] (input_u) -- node[above] {Input: $u(t)$} (block);
+    \draw [->] (input_x) -- node[right] {ICs: $x(0)$} (block);
+    \draw [->] (block) -- node[above] {Output: $y(t)$} (output);
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+*State space representation* uses the state differential equation and output equation.
+#+BEGIN_SRC latex
+\begin{center}
+$$
+\begin{cases}
+        \dot{\mathbf{x}}(t) = f(x(t), u(t)) \\
+        \mathbf{y}(t) = h(x(t), u(t))
+\end{cases}
+$$
+$\mathbf{x}(t) \in \mathbb{R}^{n}, \mathbf{u}(t) \in \mathbb{R}^{m},
+\mathbf{y}(t) \in \mathbb{R}^{p}, f : \mathbb{R}^{n} \times \mathbb{R}^{m} \to \mathbb{R}^{m},
+h: \mathbb{R}^{n} \times \mathbb{R}^{m} \to \mathbb{R}^{p}$
+\end{center}
+#+END_SRC
+
+* Linearization
+A pair $(\bar{x}, \bar{u}) \in \mathbb{R}^{n} \times \mathbb{R}^{m}$ is an *equilibrium point*
+if $f(\bar{x}, \bar{u}) = 0$.
+
+Note that $\mathbf{x}(t) \equiv \bar{x}, \mathbf{u}(t) \equiv \bar{u}, \mathbf{y}(t) \equiv \bar{y} = h(\bar{x}, \bar{u})$
+is a solution to the state space representation.
+
+Consider some small deviation from an equilibrium point $\delta \mathbf{x}$ and $\delta \mathbf{u}$.
+By defining these variations of state and output as $\delta \mathbf{x}(t) = \mathbf{x}(t) - \bar{x}$
+and $\delta \mathbf{y}(t) = \mathbf{y}(t) - \bar{y}$, the state space form becomes (with Taylor expansion)
+#+BEGIN_SRC latex
+\begin{center}
+$$
+\begin{cases}
+        \dot{\delta \mathbf{x}}(t) = f(x, u)
+        = \frac{\partial f}{\partial x} ( \bar{x}, \bar{u} ) \delta x(t) + \frac{\partial f}{\partial u} ( \bar{x}, \bar{u} ) \delta u(t)
+        + \mathcal{O} ( \| \delta x(t) \|^{2} ) + \mathcal{O} ( \| \delta u(t) \|^{2} )\\
+        \mathbf{y}(t) = h(x, u) - \bar{y}
+        = \frac{\partial h}{\partial x} ( \bar{x}, \bar{u} ) \delta x(t) + \frac{\partial h}{\partial u} ( \bar{x}, \bar{u} ) \delta u(t)
+        + \mathcal{O} ( \| \delta x(t) \|^{2} ) + \mathcal{O} ( \| \delta u(t) \|^{2} )
+\end{cases}
+$$
+\end{center}
+#+END_SRC
+
+This can be represented with matrices as (dropping the deltas):
+#+BEGIN_SRC latex
+\begin{center}
+$$
+\begin{cases}
+        \dot{\mathbf{x}}(t) = \mathbf{Ax}(t) + \mathbf{Bu}(t) \\
+        \mathbf{y}(t) = \mathbf{Cx}(t) + \mathbf{Du}(t)
+\end{cases}
+$$
+\end{center}
+#+END_SRC
+which is the linearization around $(\bar{x}, \bar{u})$.
+
+With the definition from the Taylor expansion, the matrices can be found from the Jacobian matrix.
+For example:
+$$
+\mathbf{A} = \frac{\partial f}{\partial x} ( \bar{x}, \bar{u} )
+= \begin{pmatrix} \frac{\partial f_{1}}{\partial x_{1}} (\bar{x}, \bar{u}) & \dots & \frac{\partial f_{1}}{\partial x_{n}} (\bar{x}, \bar{u}) \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_{n}}{\partial x_{1}} (\bar{x}, \bar{u}) & \dots & \frac{\partial f_{n}}{\partial x_{n}} (\bar{x}, \bar{u}) \end{pmatrix}
+$$
+
+* Laplace Transform
+The *Laplace Transform* for a function $f(t)$ is
+$$
+F(s) = \int_{0^{-}}^{\infty} f(t) e^{-st} \, dt = \mathcal{L} \{ f(t) \}
+$$
+
+Some Laplace Tranform properties:
+- Laplace Transform is linear
+- $\mathcal{L}\{f(t - \tau)\} = e^{-\tau s}F(s)$
+- $\mathcal{L}\{e^{\alpha t} f(t)\} = F(s - \alpha)$
+- $\mathcal{L} \left\{ \frac{d}{dt} f(t) \right\} = sF(s) - f(0^{-})$
+- $\mathcal{L} \left\{ t f(t) \right\} = -\frac{d}{ds} F(s)$
+- $\mathcal{L} \left\{ f(t) * g(t) \right\} = F(s) G(s)$
+
+The *Final Value Theorem* states that
+$$
+\lim_{t \to \infty} y(t) = \lim_{s \to 0} sY(s)
+$$
+where all poles of $Y(s)$ lie in the left-hand side of the plane and
+$Y(s)$ must not have $>1$ pole at the origin.
+
+The *Initial Value Theorem* states that
+$$
+\lim_{t \to 0^{+}} f(t) = \lim_{s \to \infty} sF(s)
+$$
+
+* Transfer Function
+For a single-input-single-output (SISO) system, the *transfer function* is
+$$
+G(s) = \frac{\mathcal{L}\{y(t)\}}{\mathcal{L}\{u(t)\}} = \frac{Y(s)}{U(s)}
+$$
+where Laplace transforms are taken assuming zero initial conditions of the
+state.
+
+For a general LTI system, the transfer function $G(s)$ is given by
+$$
+G(s) = C(sI - A)^{-1} B + D
+$$
+
+With the transfer function, the output to an input signal can be found by:
+1. Compute $U(s)$.
+2. Compute $Y(s) = G(s)U(s)$.
+3. Compute $y(t) = \mathcal{L}^{-1} \{ Y(s) \}$.
+
+A transfer function $G(s)$ is *real rational* if it can be expressed as
+$$
+G(s) = \frac{b_{m}s^{m} + \cdots + b_{1}s + b_{0}}{s^{n} + a_{n-1}s^{n-1} + \cdots + a_{1} s + a_{0}}
+$$
+for real coefficients $a_{i} \in \mathbb{R}, \forall i \in [0,n-1]$, and $b_{i} \in \mathbb{R}, \forall i \in [0,m]$.
+
+$G(s)$ is *proper* if $\lim_{s \to \infty}G(s)$ exists in $\mathbb{C}$ (such that $n \ge m$).
+$G(s)$ is *strictly proper* if $\lim_{s \to \infty}G(s) = 0$ (such that $n > m$).
+
+$p \in \mathbb{C}$ is a *pole* of $G(s)$ if $\lim_{s \to p} |G(s)| = \infty$.
+$z \in \mathbb{C}$ is a *zero* of $G(s)$ if $\lim_{s \to z} |G(s)| = 0$.
+
+For rational transfer function, poles and zeros are the roots of the denominator and numerator respectively.
+
+#+BEGIN_SRC latex
+\begin{center}
+\begin{tikzpicture}[scale=1]
+
+% Draw axes
+\draw[->] (-3.5, 0) -- (3.5, 0) node[right] {\textbf{Real}};
+\draw[->] (0, -2.5) -- (0, 3.5) node[above] {\textbf{Imaginary}};
+
+% Draw the poles (X's)
+\filldraw[red!80!black!60] (-2, 0) node[anchor=north] {} circle (2pt);
+\filldraw[red!80!black!60] (2, 0) node[anchor=south] {} circle (2pt);
+\filldraw[red!80!black!60] (-1, 2) node[anchor=south east] {} circle (2pt);
+\filldraw[red!80!black!60] (-1, -2) node[anchor=north east] {} circle (2pt);
+
+% Draw the zero (O)
+\filldraw[cyan!50!black!80] (-3, 0) node[anchor=north] {} circle (2pt);
+
+% Draw dashed lines to axes from complex poles
+\draw[dashed] (-1, 2) -- (-1, 0); % Line from -1 + i to real axis
+\draw[dashed] (-1, -2) -- (-1, 0); % Line from -1 - i to real axis
+\draw[dashed] (-1, 2) -- (0, 2);   % Line from -1 + i to imaginary axis
+\draw[dashed] (-1, -2) -- (0, -2); % Line from -1 - i to imaginary axis
+
+% Add a caption using a node
+\node at (0, -3) {Poles in Red, Zero in Blue};
+
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+First order systems have transfer functions of the form:
+$$
+G_{1}(s) = \frac{K}{1 + \tau s}
+$$
+where $K$ is the *steady-state gain* of the system and $\tau$ is the
+*time constant* of the system.
+
+#+BEGIN_SRC latex
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{controller} = [block, fill=cyan!50!black!80]
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input] {};
+    \node [sum, right of=input, node distance=2cm] (sum) {};
+    \node [controller, right of=sum, node distance=3cm] (controller) {$\frac{K}{\tau s}$};
+    \node [output, right of=controller, node distance=3cm] (output) {};
+
+    % Connections between nodes
+    \draw [->] (input) -- node {$U(s)$} (sum);
+    \draw [->] (sum) -- node {$E(s)$} (controller);
+    \draw [->] (controller) -- node [name=y] {$Y(s)$} (output);
+    \draw [->] (y) -- ++(0, -2) |- ++(-5, 0) -| node[pos=0.99] {$-$} node [near end] {} (sum);
+\end{tikzpicture}
+\end{center}
+\vspace{10pt}
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input] {$U(s)$};
+    \node [controller, right of=input, node distance=4cm] (controller) {$G(s) = \frac{K}{\tau s + 1}$};
+    \node [output, right of=controller, node distance=3cm] (output) {};
+
+    % Connections between nodes
+    \draw [->] (input) -- node {} (controller);
+    \draw [->] (controller) -- node [name=y] {$Y(s)$} (output);
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+Second order systems have transfer functions of the form:
+$$
+G_{2}(s) = \frac{\omega_{n}^{2}}{s^{2} + 2 \zeta \omega_{n} + \omega_{n}^{2}}
+$$
+where $\omega_{n}$ is the *natural frequency* of the system and $\zeta$ is the
+*damping ratio* of the system.
+This has roots at $-\zeta \omega_{n} \pm \omega_{n} \sqrt{\zeta^{2} - 1}$.
+
+When $\zeta > 1$, the roots are real and the system is *overdamped*.
+When $\zeta < 1$, the roots are real and the system is *underdamped*.
+When $\zeta = 1$, the roots are real and the system is *critically damped*.
+
+#+BEGIN_SRC latex
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{controller} = [block, fill=cyan!50!black!80]
+\tikzstyle{plant} = [block, fill=lime!60!black!100]
+\tikzstyle{sensor} = [block, fill=red!50!black!80]
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input] {};
+    \node [sum, right of=input, node distance=2cm] (sum) {};
+    \node [plant, right of=sum, node distance=3cm] (plant) {$P(s)$};
+    \node [sensor, below of=plant] (sensor) {$Q(s)$};
+    \node [output, right of=plant, node distance=3cm] (output) {$Y(s)$};
+
+    % Connections between nodes
+    \draw [->] (input) -- node {$U(s)$} (sum);
+    \draw [->] (sum) -- node {$E(s)$} (plant);
+    \draw [->] (plant) -- node [name=y] {$Y(s)$} (output);
+    \draw [->] (y) |- (sensor);
+    \draw [->] (sensor) -| node[pos=0.99] {$-$} node [near end] {} (sum);
+\end{tikzpicture}
+\end{center}
+\vspace{10pt}
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Nodes for the block diagram
+    \node [input, name=input] {};
+    \node [controller, right of=input, node distance=3cm] (controller) {$G(s) = \frac{\omega_{n}^{2}}{s^{2} + 2 \zeta \omega_{n} + \omega_{n}^{2}}$};
+    \node [output, right of=controller, node distance=3cm] (output) {};
+
+    % Connections between nodes
+    \draw [->] (input) -- node {$U(s)$} (controller);
+    \draw [->] (controller) -- node [name=y] {$Y(s)$} (output);
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+The *Laplacian* matrix is the degree matrix minus the adjacency matrix.
+#+BEGIN_SRC latex
+\begin{center}
+$$
+L = \begin{pmatrix}
+2 & 0 & 0 & 0 & 0 \\
+0 & 3 & 0 & 0 & 0 \\
+0 & 0 & 2 & 0 & 0 \\
+0 & 0 & 0 & 2 & 0 \\
+0 & 0 & 0 & 0 & 3
+\end{pmatrix} - \begin{pmatrix}
+0 & 1 & 0 & 0 & 1 \\
+1 & 0 & 1 & 0 & 1 \\
+0 & 1 & 0 & 1 & 0 \\
+0 & 0 & 1 & 0 & 1 \\
+1 & 1 & 0 & 1 & 0
+\end{pmatrix}
+$$
+\end{center}
+#+END_SRC
+
+A system where $\delta \dot{x} = \delta u$ is a *single integrator* system, since the
+system output is simply an integral of the input signal.

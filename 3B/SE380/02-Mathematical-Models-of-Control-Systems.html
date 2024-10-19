@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-19 Sat 11:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mathematical Models Of Control Systems</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Mathematical Models Of Control Systems</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgf425672">1. From Differential Equations to State Space</a></li>
+<li><a href="#org077ea76">2. Linearization</a></li>
+<li><a href="#orgc81ed6f">3. Laplace Transform</a></li>
+<li><a href="#org9ba5a4e">4. Transfer Function</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf425672" class="outline-2">
+<h2 id="orgf425672"><span class="section-number-2">1.</span> From Differential Equations to State Space</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Time-varying control system</b>: system in which one or more system parameters
+may vary as a function of time
+</p>
+
+<p>
+<b>State of a system</b>: set of variables whose values, together with input,
+will provide future state and output of the system
+</p>
+
+<p>
+<b>State vector</b>: column vector consisting of the state variables
+\[
+\mathbf{x}(t) = \begin{pmatrix} x_{1}(t) \\ x_{2}(t) \\ \vdots \\ x_{n}(t) \end{pmatrix}
+\]
+</p>
+
+<p>
+<b>Input vector</b>: column vector consisting of the input variables
+\[
+\mathbf{u}(t) = \begin{pmatrix} u_{1}(t) \\ u_{2}(t) \\ \vdots \\ u_{m}(t) \end{pmatrix}
+\]
+</p>
+
+<p>
+<b>State differential equation</b>: representation of the system
+\[
+\dot{\mathbf{x}}(t) = \mathbf{Ax}(t) + \mathbf{Bu}(t)
+\]
+where \(\mathbf{A}\) is an \(n \times n\) matrix and \(\mathbf{B}\) is a \(n \times m\) matrix.
+</p>
+
+<p>
+<b>Output equation</b>: relation of outputs to state variables and input signals
+\[
+\mathbf{y}(t) = \mathbf{Cx}(t) + \mathbf{Du}(t)
+\]
+</p>
+
+<p>
+<b>State space representation</b> uses the state differential equation and output equation.
+</p>
+</div>
+</div>
+<div id="outline-container-org077ea76" class="outline-2">
+<h2 id="org077ea76"><span class="section-number-2">2.</span> Linearization</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+A pair \((\bar{x}, \bar{u}) \in \mathbb{R}^{n} \times \mathbb{R}^{m}\) is an <b>equilibrium point</b>
+if \(f(\bar{x}, \bar{u}) = 0\).
+</p>
+
+<p>
+Note that \(\mathbf{x}(t) \equiv \bar{x}, \mathbf{u}(t) \equiv \bar{u}, \mathbf{y}(t) \equiv \bar{y} = h(\bar{x}, \bar{u})\)
+is a solution to the state space representation.
+</p>
+
+<p>
+Consider some small deviation from an equilibrium point \(\delta \mathbf{x}\) and \(\delta \mathbf{u}\).
+By defining these variations of state and output as \(\delta \mathbf{x}(t) = \mathbf{x}(t) - \bar{x}\)
+and \(\delta \mathbf{y}(t) = \mathbf{y}(t) - \bar{y}\), the state space form becomes (with Taylor expansion)
+</p>
+<p>
+This can be represented with matrices as (dropping the deltas):
+</p>
+<p>
+which is the linearization around \((\bar{x}, \bar{u})\).
+</p>
+
+<p>
+With the definition from the Taylor expansion, the matrices can be found from the Jacobian matrix.
+For example:
+\[
+\mathbf{A} = \frac{\partial f}{\partial x} ( \bar{x}, \bar{u} )
+= \begin{pmatrix} \frac{\partial f_{1}}{\partial x_{1}} (\bar{x}, \bar{u}) & \dots & \frac{\partial f_{1}}{\partial x_{n}} (\bar{x}, \bar{u}) \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_{n}}{\partial x_{1}} (\bar{x}, \bar{u}) & \dots & \frac{\partial f_{n}}{\partial x_{n}} (\bar{x}, \bar{u}) \end{pmatrix}
+\]
+</p>
+</div>
+</div>
+<div id="outline-container-orgc81ed6f" class="outline-2">
+<h2 id="orgc81ed6f"><span class="section-number-2">3.</span> Laplace Transform</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The <b>Laplace Transform</b> for a function \(f(t)\) is
+\[
+F(s) = \int_{0^{-}}^{\infty} f(t) e^{-st} \, dt = \mathcal{L} \{ f(t) \}
+\]
+</p>
+
+<p>
+Some Laplace Tranform properties:
+</p>
+<ul class="org-ul">
+<li>Laplace Transform is linear</li>
+<li>\(\mathcal{L}\{f(t - \tau)\} = e^{-\tau s}F(s)\)</li>
+<li>\(\mathcal{L}\{e^{\alpha t} f(t)\} = F(s - \alpha)\)</li>
+<li>\(\mathcal{L} \left\{ \frac{d}{dt} f(t) \right\} = sF(s) - f(0^{-})\)</li>
+<li>\(\mathcal{L} \left\{ t f(t) \right\} = -\frac{d}{ds} F(s)\)</li>
+<li>\(\mathcal{L} \left\{ f(t) * g(t) \right\} = F(s) G(s)\)</li>
+</ul>
+
+<p>
+The <b>Final Value Theorem</b> states that
+\[
+\lim_{t \to \infty} y(t) = \lim_{s \to 0} sY(s)
+\]
+where all poles of \(Y(s)\) lie in the left-hand side of the plane and
+\(Y(s)\) must not have \(>1\) pole at the origin.
+</p>
+
+<p>
+The <b>Initial Value Theorem</b> states that
+\[
+\lim_{t \to 0^{+}} f(t) = \lim_{s \to \infty} sF(s)
+\]
+</p>
+</div>
+</div>
+<div id="outline-container-org9ba5a4e" class="outline-2">
+<h2 id="org9ba5a4e"><span class="section-number-2">4.</span> Transfer Function</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+For a single-input-single-output (SISO) system, the <b>transfer function</b> is
+\[
+G(s) = \frac{\mathcal{L}\{y(t)\}}{\mathcal{L}\{u(t)\}} = \frac{Y(s)}{U(s)}
+\]
+where Laplace transforms are taken assuming zero initial conditions of the
+state.
+</p>
+
+<p>
+For a general LTI system, the transfer function \(G(s)\) is given by
+\[
+G(s) = C(sI - A)^{-1} B + D
+\]
+</p>
+
+<p>
+With the transfer function, the output to an input signal can be found by:
+</p>
+<ol class="org-ol">
+<li>Compute \(U(s)\).</li>
+<li>Compute \(Y(s) = G(s)U(s)\).</li>
+<li>Compute \(y(t) = \mathcal{L}^{-1} \{ Y(s) \}\).</li>
+</ol>
+
+<p>
+A transfer function \(G(s)\) is <b>real rational</b> if it can be expressed as
+\[
+G(s) = \frac{b_{m}s^{m} + \cdots + b_{1}s + b_{0}}{s^{n} + a_{n-1}s^{n-1} + \cdots + a_{1} s + a_{0}}
+\]
+for real coefficients \(a_{i} \in \mathbb{R}, \forall i \in [0,n-1]\), and \(b_{i} \in \mathbb{R}, \forall i \in [0,m]\).
+</p>
+
+<p>
+\(G(s)\) is <b>proper</b> if \(\lim_{s \to \infty}G(s)\) exists in \(\mathbb{C}\) (such that \(n \ge m\)).
+\(G(s)\) is <b>strictly proper</b> if \(\lim_{s \to \infty}G(s) = 0\) (such that \(n > m\)).
+</p>
+
+<p>
+\(p \in \mathbb{C}\) is a <b>pole</b> of \(G(s)\) if \(\lim_{s \to p} |G(s)| = \infty\).
+\(z \in \mathbb{C}\) is a <b>zero</b> of \(G(s)\) if \(\lim_{s \to z} |G(s)| = 0\).
+</p>
+
+<p>
+For rational transfer function, poles and zeros are the roots of the denominator and numerator respectively.
+</p>
+
+<p>
+First order systems have transfer functions of the form:
+\[
+G_{1}(s) = \frac{K}{1 + \tau s}
+\]
+where \(K\) is the <b>steady-state gain</b> of the system and \(\tau\) is the
+<b>time constant</b> of the system.
+</p>
+
+<p>
+Second order systems have transfer functions of the form:
+\[
+G_{2}(s) = \frac{\omega_{n}^{2}}{s^{2} + 2 \zeta \omega_{n} + \omega_{n}^{2}}
+\]
+where \(\omega_{n}\) is the <b>natural frequency</b> of the system and \(\zeta\) is the
+<b>damping ratio</b> of the system.
+This has roots at \(-\zeta \omega_{n} \pm \omega_{n} \sqrt{\zeta^{2} - 1}\).
+</p>
+
+<p>
+When \(\zeta > 1\), the roots are real and the system is <b>overdamped</b>.
+When \(\zeta < 1\), the roots are real and the system is <b>underdamped</b>.
+When \(\zeta = 1\), the roots are real and the system is <b>critically damped</b>.
+</p>
+
+<p>
+The <b>Laplacian</b> matrix is the degree matrix minus the adjacency matrix.
+</p>
+<p>
+A system where \(\delta \dot{x} = \delta u\) is a <b>single integrator</b> system, since the
+system output is simply an integral of the input signal.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-10-19 Sat 11:47</p>
+</div>
+</body>
+</html>
