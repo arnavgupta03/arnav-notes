@@ -1,4 +1,4 @@
-% Created 2024-10-18 Fri 22:45
+% Created 2024-10-19 Sat 00:32
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,7 +32,7 @@
 \tableofcontents
 
 \section{Basics of Control Systems}
-\label{sec:org8b8a44a}
+\label{sec:org490279a}
 Control systems have:
 \begin{itemize}
 \item some reference/desired output
@@ -74,16 +74,20 @@ control.
 \end{tikzpicture}
 \end{center}
 \section{Control System Design}
-\label{sec:org80194aa}
+\label{sec:orge198d2f}
 Consists of the following steps:
 \begin{enumerate}
 \item Study the system to be controlled and establish control goals.
 \item Identify variables to be controlled.
-\item Define control specifications.
-\item Obtain a model for the system.
+\item Define control specifications (performance metrics).
+\item Obtain a model for the system (first principles or data).
 \item Simplify the model as much as possible.
+\begin{enumerate}
+\item No extra info
+\item Linearize to simplify
+\end{enumerate}
 \item Design the controller and select key parameters to be adjusted.
-\item Simulate the controlled system.
+\item Simulate the controlled system (unsimplified).
 \item Optimize the parameters and analyze performance through iterating
 if necessary.
 \end{enumerate}

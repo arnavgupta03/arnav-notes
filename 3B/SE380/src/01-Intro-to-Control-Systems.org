@@ -52,10 +52,12 @@ control.
 Consists of the following steps:
 1. Study the system to be controlled and establish control goals.
 2. Identify variables to be controlled.
-3. Define control specifications.
-4. Obtain a model for the system.
+3. Define control specifications (performance metrics).
+4. Obtain a model for the system (first principles or data).
 5. Simplify the model as much as possible.
+   a. No extra info
+   b. Linearize to simplify
 6. Design the controller and select key parameters to be adjusted.
-7. Simulate the controlled system.
+7. Simulate the controlled system (unsimplified).
 8. Optimize the parameters and analyze performance through iterating
    if necessary.
