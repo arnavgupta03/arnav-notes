@@ -1,0 +1,384 @@
+% Created 2024-10-20 Sun 02:49
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Introduction}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Introduction},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{What is the Internet?}
+\label{sec:orgafd23fc}
+
+\textbf{Packet switches}: routers or switches that forward packets (chunks of data)
+
+\textbf{Communication Links}: fiber, copper, radio, satellite (all have transmission rate)
+
+\textbf{Network}: collection of devices, routers, and links managed by an organization
+
+The \textbf{Internet} is a network of networks that uses protocols.
+It is also a communication infrastructure that provides service to distributed applications
+and provides a programming interface to distributed applications through hooks and service options.
+
+Internet standards include RFC (Request for Comments) and IETF (Internet Engineering Task Force).
+\section{What is a Protocol?}
+\label{sec:orgaa2432c}
+
+\textbf{Protocols} define the format, order of messages sent and received among network entities, and
+actions taken on message transmission/receipt.
+
+Important protocols include WiFi, Bluetooth, Ethernet, USB, TCP (Transport Control Protocol),
+BGP (Border Gateway Protocol), and AKA (Authentication and Key Agreement).
+\section{Network Edge: Hosts, Digital Transmission, Physical Media, Access Network}
+\label{sec:org68f713f}
+
+The \textbf{Network Edge} has hosts (clients/servers) that work together to run application programs, with
+servers often being in data centers.
+
+In the \textbf{client/server model}, the client host requests and receives service from an always-on server.
+In the \textbf{peer-peer model}, there is minimal/no use of dedicated servers.
+
+\textbf{Access networks} are wired or wireless communication links and edge routers.
+
+The \textbf{network core} is interconnected routers, such as local/regional/national/global ISPs.
+\subsection{Links}
+\label{sec:org5a5a562}
+
+\textbf{Links} perform digital communications. At the lowest level, the transmitter transforms the message
+into a signal suitable for transmission over the physical medium by expanding energy.
+The steps in the links are:
+\begin{itemize}
+\item \textbf{encoder}: to compress and add redundancy to optimize detection at the receiver
+\item \textbf{modulator}: to convert encoder output to a format suitable for the physical medium
+\item the received signal is a corrupted version of the transmitted signal, but the receiver must extract
+the desired message
+\item \textbf{demodulator}: to convert perturbed received signal to a form suitable for the decoder
+\item \textbf{decoder}: to make the best estimate of the message
+\end{itemize}
+
+The transmission of bits by electromagnetic waves is limited by attenuation (power reduced over distance
+traveled), distortion, dispersion (lower power over more distance), and noise.
+
+\textbf{Physical Link}: what lies between transmitter and receiver:
+\begin{itemize}
+\item \textbf{guided media}: signals propagate in solid media
+\item \textbf{unguided media}: signals propagate freely
+\end{itemize}
+
+Three important characteristics of a transmission system are:
+\begin{enumerate}
+\item \textbf{Propagation delay}: time required for signal to travel across media
+\item \textbf{Bandwidth/Rate}: bandwidth is the max times per second the signal can change (Hz), rate is
+the number of bits that can be transmitted on the link in a given unit of time (depends on length
+of medium and capability of transmitted)
+\item \textbf{Bit Error Rate (BER)}: probability that a bit is in error
+\end{enumerate}
+
+Physical links can be:
+\begin{itemize}
+\item \textbf{twisted pair}: inexpensive, two insulated copper wires
+\item \textbf{coaxial cable}: two concentric copper conductors, bidirectional, allows broadband
+\item \textbf{fiber optic cable}: glass fiber carrying light pulses, each pulse a bit, flexible, high-speed
+operation (10s-100s Gbps), and low error rate
+\item \textbf{wireless radio}: signals carried in various bands, broadcast half-duplex (sender to receiver),
+affected by reflection, obstructed by objects, interference, and noise
+\end{itemize}
+
+Residential access networks:
+\begin{itemize}
+\item \textbf{digital subscriber line}: use telephone line, where data goes to Internet and voice goes to telephone
+\item \textbf{cable-based access}: use cable TV infrastructure, with hybrid fiber coax (asymmetric, higher download
+rate), network of cable and fiber attaches homes to ISP router where homes share access network
+to cable headend
+\begin{itemize}
+\item uses \textbf{frequency division multiplexing} (FDM) where different channels are transmitted in different
+frequency bands
+\end{itemize}
+\item \textbf{fiber to the home}: optical links from central office to the home using Passive Optical Network (PON)
+or Active Optical Network (AON) like switched Ethernet and has much higher rates
+\end{itemize}
+
+Access networks:
+\begin{itemize}
+\item \textbf{enterprise networks}: mix of wired/wireless links connecting a mix of switches and routers
+\item \textbf{data center networks}: high-bandwidth links connect 100s to 1000s of servers together and to Internet
+\end{itemize}
+\section{Network Core: Packet/Circuit Switching, Internet Structure}
+\label{sec:org4d85718}
+Three ways to link users together: fully meshed, every node connected to central switch, and hierarchical
+network with shared inter-switch links
+
+\textbf{Switch}: device that enables the forwarding of info from any input link to any output link
+
+\textbf{Packet-switching}: hosts break application layer messages into packets where the network forwards packets
+from one router to the next, across links on the path from source to destination
+
+Two key network-core functions:
+\begin{itemize}
+\item \textbf{forwarding}: move arriving packets from router's input link to appropriate router output link
+\item \textbf{routing}: determine source-destination paths taken by packets (routing algos)
+\end{itemize}
+
+Packet-switching at the source consists of hosts that take application messages, break them into packets,
+and transmit packets into access networks, where links can have capacity.
+
+Packet transmission delay is \(L/R\) where \(L\) is the packet length and \(R\) is the transmission rate.
+Switches can have some propagation delay.
+
+\textbf{Store and forward}: entire packet must arrive at router before it can be transmitted on the next link
+
+\textbf{Pipelining effect}: packets shouldn't be too big so packets can be pipelined
+
+The generic packet switch has \textbf{buffers} that store, process, and forward and are in need of smart scheduling
+and discarding policies. They control info in packets.
+
+Packets share resources without reservation so the packet to be transmitted next receives full rate.
+
+If arrival rate to link exceeds transmission rate of the link, packets will queue, waiting to be transmitted
+on the output link and packets can be dropped if the buffer fills up.
+
+In \textbf{circuit switching}, network resources are statically divided into small pieces called circuits:
+\begin{itemize}
+\item end-to-end resources allocated, reserved for flow between source and destination
+\item there is no sharing (except for sharing of the link), guaranteed performance
+\end{itemize}
+
+\textbf{Frequency Division Multiplexing} uses optimal EMFs divided into narrow frequency bands, where each call
+is allocated its own band and can transmit at max rate of that narrow band.
+
+\textbf{Time Division Multiplexing} divides time into periodic frames where each call is allocated some slot and
+can transmit at the max rate only during its time slot.
+
+Packet switching allows more users than circuit switching.
+Packet switching is better for bursty data.
+Excessive congestion (packet delay and loss due to buffer overflow) is possible, so protocols are needed
+for reliable data transfer.
+
+In the Internet, hosts connect via ISPs and so \textbf{access ISPs} must be interconnected so that any hosts
+can send packets to each other.
+This can be done by connecting access ISPs to a single \textbf{global transit ISP}.
+Global ISPs can be connected with \textbf{Internet exchange points}.
+There may also be \textbf{regional ISPs} that connect \textbf{access ISPs} to \textbf{global ISPs}.
+\textbf{Content provider networks} also connect data centers to the Internet, bypassing global and regional ISPs.
+\section{Performance/QoS: Loss, Delay, Throughput}
+\label{sec:org8835def}
+Errors in data networks include:
+\begin{itemize}
+\item bit-level errors
+\item link and node failures
+\item packets are delayed
+\item third party eavesdrop
+\end{itemize}
+\subsection{Quality of Service (QoS)}
+\label{sec:orgd4b6cdf}
+Users must be able to rely on the network, so they focus on some QoS metric(s) like:
+\begin{itemize}
+\item packet loss
+\item delay
+\item delay variation
+\item rates
+\item ease of installation/maintenance
+\item availability/reliability
+\item QoS differentiation
+\item privacy
+\item security
+\end{itemize}
+
+Today the Internet is best effort, so no guarantees.
+
+Users must be willing to pay for QoS.
+Providing a guarantee implies reservation and costly traffic management infrastructure.
+\subsection{Packet Loss and Delay}
+\label{sec:orgec7d5bb}
+Packets queue in router buffers, waiting for transmission, so \textbf{loss} occurs when buffer fills up.
+Lost packets may be retransmitted by previous node, source end system, or not at all.
+
+The packet being transmitted has \uline{transmission delay}, packets in the buffer have
+\uline{queueing delay}, checking packets for bit errors gives \uline{nodal processing delay},
+and delay from the packet being propagated is \uline{propagation delay}:
+\begin{itemize}
+\item Nodal processing delay: check bit errors, determine output link, \(< \mu \text{s}\)
+\item Queueing delay: time waiting for transmission, based on congestion of buffer
+\item Transmission delay: \(L/R\) for packet length \(L\) and link transmission rate \(R\)
+\item Propagation delay: \(d/s\) for physical link \(d\) and propagation speed \(s\)
+\end{itemize}
+
+Packet queueing delay is
+$$ \frac{La}{R} $$
+for average packet arrival rate \(a\), packet length \(L\), and link bandwidth (bit transmission rate) \(R\):
+\begin{itemize}
+\item queueing delay close to 0 means average queueing delay small
+\item queueing delay close to 1 means average queueing delay large
+\item queueing delay above 1 means average queueing delay infinite
+\end{itemize}
+
+\textbf{Throughput}: rate (bits/time unit) at which bits are being sent from sender to receiver
+\begin{itemize}
+\item \textbf{instantaneous}: rate at given point in time
+\item \textbf{average}: rate over longer period of time
+\end{itemize}
+
+\textbf{Bottleneck link}: link on end-to-end path that constrains end-to-end throughput,
+which is the link with lower throughput
+
+If a link is shared, the per-connection end-to-end throughput considers the link's rate divided
+by the number of connections.
+\section{Protocol Layers, Service Models}
+\label{sec:org971d297}
+\textbf{Layers}: each layer implements a service with its own internal-layer actions and relying on services
+from the layer below
+
+Layering provides structure to identify system pieces and modularization allows for easier
+maintenance/updates (just change that layer rather than the whole system).
+
+Internet protocol stack:
+\begin{itemize}
+\item \textbf{application}: supports network applications (HTTP, IMAP, SMTP, DNS)
+\item \textbf{transport}: process-to-process data transfer (TCP, UDP)
+\item \textbf{network}: routing datagrams from source to destination (IP, routing protocols)
+\item \textbf{link}: data transfer between neighbouring network elements (Ethernet, WiFi, PPP)
+\item \textbf{physical}: bits on the wire
+\end{itemize}
+\subsection{Application Layer}
+\label{sec:org5544773}
+Distributed over multiple end systems with the application in one end system using the protocol
+to exchange data with the application in another end system.
+
+\textbf{Message}: data unit at the application layer
+\subsection{Transport Layer}
+\label{sec:orgbe3e99a}
+\textbf{Process}: application endpoints
+
+Two transport protocols in the Internet:
+\begin{itemize}
+\item \textbf{TCP}: connection-oriented service to applications
+\begin{itemize}
+\item guaranteed delivery of messages
+\item flow control
+\item congestion control
+\end{itemize}
+\item \textbf{UDP}: connectionless service
+\begin{itemize}
+\item no reliability
+\item no flow control
+\item no congestion control
+\end{itemize}
+\end{itemize}
+
+\textbf{Segment}: data unit at the transport layer
+\subsection{Network Layer}
+\label{sec:org7f285fa}
+\textbf{Datagram}: data unit at the network layer
+
+TCP or UDP in a host passes a segment and destination address.
+Routing protocols determine the routes that datagrams take between sources and destination.
+\subsection{Link Layer and Physical Layer}
+\label{sec:org26d88b2}
+Work hop-by-hop, from link to link.
+A datagram may be handled by different link-layer protocols at different links along its route.
+
+\textbf{Frame}: data unit at the link layer
+
+Physical layer moves bits from one node to the next, with protocols depending on the transmission
+medium.
+\subsection{Encapsulation}
+\label{sec:org532c937}
+Transport layer protocol encapsulates message with transport layer header to create segment.
+
+Network layer protocol encapsulates segment with network layer header to create datagram.
+
+Link layer protocol encapsulates datagram with link layer header to create frame.
+\section{History}
+\label{sec:orga1f4f54}
+\subsection{Early Packet-Switching Principles}
+\label{sec:org6ef9964}
+1961, Kleinrock: queueing theory shows effectiveness of packet-switching
+
+1964, Baran: packet-switching in military nets
+
+1967: ARPAnet conceived by Advanced Research Projects Agency
+
+1969: first ARPAnet node operational
+
+1972: ARPAnet public demo, first email program, ARPAnet has 15 nodes
+\subsection{Internetworking}
+\label{sec:org7a57282}
+1970: ALOHAnet satellite network in Hawaii
+
+1974, Cerf and Kahn: architecure for interconnecting networks
+\begin{itemize}
+\item minimalism and autonomy: no internal changes required to interconnected networks
+\item best-effort service model
+\item stateless routing
+\item decentralized control
+\end{itemize}
+
+1976: Ethernet at Xerox PARC
+
+1979: ARPAnet at 200 nodes
+\subsection{New Protocols}
+\label{sec:orgcfa8043}
+1983: deployment of TCP/IP
+
+1982: SMTP email protocol defined
+
+1983: DNS defined for name-to-IP-address translation
+
+1988: TCP congestion control
+
+New national networks: CSnet, BITnet, NSFnet, Minitel
+
+100,000 hosts connected to confederation of networks.
+\subsection{Commercialization}
+\label{sec:orgbb30ee3}
+Early 1990s: ARPAnet decommissioned, web begins
+\begin{itemize}
+\item hypertext
+\item HTML, HTTP: Berners-Lee
+\end{itemize}
+
+1994: Mosaic, later Netscape
+
+Late 1990s: commercialization of the web
+
+Late 1990s to 2000s:
+\begin{itemize}
+\item more applications (instant messaging, file sharing)
+\item network security to forefront
+\item estimated 50 million hosts, 100+ million users
+\item backbone links running at Gbps
+\end{itemize}
+\subsection{Scale, Mobility, Cloud}
+\label{sec:org77ab12a}
+Aggressive deployment of broadband (10-100s Mbps) and increasing ubiquity of high-speed wireless
+(4G/5G, WiFi).
+
+Service providers create their own networks to connect close to end user.
+
+Enterprises run their services in the cloud.
+
+2017: rise of smartphones, so more mobile than fixed devices on the Internet, \textasciitilde{}18B devices attached to
+the Internet
+\end{document}

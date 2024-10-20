@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-20 Sun 02:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Introduction</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Introduction</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc4f30ca">1. What is the Internet?</a></li>
+<li><a href="#org9dcead6">2. What is a Protocol?</a></li>
+<li><a href="#orgfe63afd">3. Network Edge: Hosts, Digital Transmission, Physical Media, Access Network</a>
+<ul>
+<li><a href="#orgda85ec4">3.1. Links</a></li>
+</ul>
+</li>
+<li><a href="#org1640a91">4. Network Core: Packet/Circuit Switching, Internet Structure</a></li>
+<li><a href="#orgd5ac1aa">5. Performance/QoS: Loss, Delay, Throughput</a>
+<ul>
+<li><a href="#org0772a06">5.1. Quality of Service (QoS)</a></li>
+<li><a href="#org5375b84">5.2. Packet Loss and Delay</a></li>
+</ul>
+</li>
+<li><a href="#orgf1e6f6e">6. Protocol Layers, Service Models</a>
+<ul>
+<li><a href="#org07bfb1a">6.1. Application Layer</a></li>
+<li><a href="#orgbbe48e3">6.2. Transport Layer</a></li>
+<li><a href="#org81a4686">6.3. Network Layer</a></li>
+<li><a href="#orgd577a8f">6.4. Link Layer and Physical Layer</a></li>
+<li><a href="#org23be6c8">6.5. Encapsulation</a></li>
+</ul>
+</li>
+<li><a href="#org6dba7a3">7. History</a>
+<ul>
+<li><a href="#org35e0e17">7.1. Early Packet-Switching Principles</a></li>
+<li><a href="#org135d864">7.2. Internetworking</a></li>
+<li><a href="#org5d54105">7.3. New Protocols</a></li>
+<li><a href="#org316adf4">7.4. Commercialization</a></li>
+<li><a href="#orgc27693f">7.5. Scale, Mobility, Cloud</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc4f30ca" class="outline-2">
+<h2 id="orgc4f30ca"><span class="section-number-2">1.</span> What is the Internet?</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Packet switches</b>: routers or switches that forward packets (chunks of data)
+</p>
+
+<p>
+<b>Communication Links</b>: fiber, copper, radio, satellite (all have transmission rate)
+</p>
+
+<p>
+<b>Network</b>: collection of devices, routers, and links managed by an organization
+</p>
+
+<p>
+The <b>Internet</b> is a network of networks that uses protocols.
+It is also a communication infrastructure that provides service to distributed applications
+and provides a programming interface to distributed applications through hooks and service options.
+</p>
+
+<p>
+Internet standards include RFC (Request for Comments) and IETF (Internet Engineering Task Force).
+</p>
+</div>
+</div>
+<div id="outline-container-org9dcead6" class="outline-2">
+<h2 id="org9dcead6"><span class="section-number-2">2.</span> What is a Protocol?</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Protocols</b> define the format, order of messages sent and received among network entities, and
+actions taken on message transmission/receipt.
+</p>
+
+<p>
+Important protocols include WiFi, Bluetooth, Ethernet, USB, TCP (Transport Control Protocol),
+BGP (Border Gateway Protocol), and AKA (Authentication and Key Agreement).
+</p>
+</div>
+</div>
+<div id="outline-container-orgfe63afd" class="outline-2">
+<h2 id="orgfe63afd"><span class="section-number-2">3.</span> Network Edge: Hosts, Digital Transmission, Physical Media, Access Network</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The <b>Network Edge</b> has hosts (clients/servers) that work together to run application programs, with
+servers often being in data centers.
+</p>
+
+<p>
+In the <b>client/server model</b>, the client host requests and receives service from an always-on server.
+In the <b>peer-peer model</b>, there is minimal/no use of dedicated servers.
+</p>
+
+<p>
+<b>Access networks</b> are wired or wireless communication links and edge routers.
+</p>
+
+<p>
+The <b>network core</b> is interconnected routers, such as local/regional/national/global ISPs.
+</p>
+</div>
+<div id="outline-container-orgda85ec4" class="outline-3">
+<h3 id="orgda85ec4"><span class="section-number-3">3.1.</span> Links</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+<b>Links</b> perform digital communications. At the lowest level, the transmitter transforms the message
+into a signal suitable for transmission over the physical medium by expanding energy.
+The steps in the links are:
+</p>
+<ul class="org-ul">
+<li><b>encoder</b>: to compress and add redundancy to optimize detection at the receiver</li>
+<li><b>modulator</b>: to convert encoder output to a format suitable for the physical medium</li>
+<li>the received signal is a corrupted version of the transmitted signal, but the receiver must extract
+the desired message</li>
+<li><b>demodulator</b>: to convert perturbed received signal to a form suitable for the decoder</li>
+<li><b>decoder</b>: to make the best estimate of the message</li>
+</ul>
+
+<p>
+The transmission of bits by electromagnetic waves is limited by attenuation (power reduced over distance
+traveled), distortion, dispersion (lower power over more distance), and noise.
+</p>
+
+<p>
+<b>Physical Link</b>: what lies between transmitter and receiver:
+</p>
+<ul class="org-ul">
+<li><b>guided media</b>: signals propagate in solid media</li>
+<li><b>unguided media</b>: signals propagate freely</li>
+</ul>
+
+<p>
+Three important characteristics of a transmission system are:
+</p>
+<ol class="org-ol">
+<li><b>Propagation delay</b>: time required for signal to travel across media</li>
+<li><b>Bandwidth/Rate</b>: bandwidth is the max times per second the signal can change (Hz), rate is
+the number of bits that can be transmitted on the link in a given unit of time (depends on length
+of medium and capability of transmitted)</li>
+<li><b>Bit Error Rate (BER)</b>: probability that a bit is in error</li>
+</ol>
+
+<p>
+Physical links can be:
+</p>
+<ul class="org-ul">
+<li><b>twisted pair</b>: inexpensive, two insulated copper wires</li>
+<li><b>coaxial cable</b>: two concentric copper conductors, bidirectional, allows broadband</li>
+<li><b>fiber optic cable</b>: glass fiber carrying light pulses, each pulse a bit, flexible, high-speed
+operation (10s-100s Gbps), and low error rate</li>
+<li><b>wireless radio</b>: signals carried in various bands, broadcast half-duplex (sender to receiver),
+affected by reflection, obstructed by objects, interference, and noise</li>
+</ul>
+
+<p>
+Residential access networks:
+</p>
+<ul class="org-ul">
+<li><b>digital subscriber line</b>: use telephone line, where data goes to Internet and voice goes to telephone</li>
+<li><b>cable-based access</b>: use cable TV infrastructure, with hybrid fiber coax (asymmetric, higher download
+rate), network of cable and fiber attaches homes to ISP router where homes share access network
+to cable headend
+<ul class="org-ul">
+<li>uses <b>frequency division multiplexing</b> (FDM) where different channels are transmitted in different
+frequency bands</li>
+</ul></li>
+<li><b>fiber to the home</b>: optical links from central office to the home using Passive Optical Network (PON)
+or Active Optical Network (AON) like switched Ethernet and has much higher rates</li>
+</ul>
+
+<p>
+Access networks:
+</p>
+<ul class="org-ul">
+<li><b>enterprise networks</b>: mix of wired/wireless links connecting a mix of switches and routers</li>
+<li><b>data center networks</b>: high-bandwidth links connect 100s to 1000s of servers together and to Internet</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org1640a91" class="outline-2">
+<h2 id="org1640a91"><span class="section-number-2">4.</span> Network Core: Packet/Circuit Switching, Internet Structure</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Three ways to link users together: fully meshed, every node connected to central switch, and hierarchical
+network with shared inter-switch links
+</p>
+
+<p>
+<b>Switch</b>: device that enables the forwarding of info from any input link to any output link
+</p>
+
+<p>
+<b>Packet-switching</b>: hosts break application layer messages into packets where the network forwards packets
+from one router to the next, across links on the path from source to destination
+</p>
+
+<p>
+Two key network-core functions:
+</p>
+<ul class="org-ul">
+<li><b>forwarding</b>: move arriving packets from router&rsquo;s input link to appropriate router output link</li>
+<li><b>routing</b>: determine source-destination paths taken by packets (routing algos)</li>
+</ul>
+
+<p>
+Packet-switching at the source consists of hosts that take application messages, break them into packets,
+and transmit packets into access networks, where links can have capacity.
+</p>
+
+<p>
+Packet transmission delay is \(L/R\) where \(L\) is the packet length and \(R\) is the transmission rate.
+Switches can have some propagation delay.
+</p>
+
+<p>
+<b>Store and forward</b>: entire packet must arrive at router before it can be transmitted on the next link
+</p>
+
+<p>
+<b>Pipelining effect</b>: packets shouldn&rsquo;t be too big so packets can be pipelined
+</p>
+
+<p>
+The generic packet switch has <b>buffers</b> that store, process, and forward and are in need of smart scheduling
+and discarding policies. They control info in packets.
+</p>
+
+<p>
+Packets share resources without reservation so the packet to be transmitted next receives full rate.
+</p>
+
+<p>
+If arrival rate to link exceeds transmission rate of the link, packets will queue, waiting to be transmitted
+on the output link and packets can be dropped if the buffer fills up.
+</p>
+
+<p>
+In <b>circuit switching</b>, network resources are statically divided into small pieces called circuits:
+</p>
+<ul class="org-ul">
+<li>end-to-end resources allocated, reserved for flow between source and destination</li>
+<li>there is no sharing (except for sharing of the link), guaranteed performance</li>
+</ul>
+
+<p>
+<b>Frequency Division Multiplexing</b> uses optimal EMFs divided into narrow frequency bands, where each call
+is allocated its own band and can transmit at max rate of that narrow band.
+</p>
+
+<p>
+<b>Time Division Multiplexing</b> divides time into periodic frames where each call is allocated some slot and
+can transmit at the max rate only during its time slot.
+</p>
+
+<p>
+Packet switching allows more users than circuit switching.
+Packet switching is better for bursty data.
+Excessive congestion (packet delay and loss due to buffer overflow) is possible, so protocols are needed
+for reliable data transfer.
+</p>
+
+<p>
+In the Internet, hosts connect via ISPs and so <b>access ISPs</b> must be interconnected so that any hosts
+can send packets to each other.
+This can be done by connecting access ISPs to a single <b>global transit ISP</b>.
+Global ISPs can be connected with <b>Internet exchange points</b>.
+There may also be <b>regional ISPs</b> that connect <b>access ISPs</b> to <b>global ISPs</b>.
+<b>Content provider networks</b> also connect data centers to the Internet, bypassing global and regional ISPs.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd5ac1aa" class="outline-2">
+<h2 id="orgd5ac1aa"><span class="section-number-2">5.</span> Performance/QoS: Loss, Delay, Throughput</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Errors in data networks include:
+</p>
+<ul class="org-ul">
+<li>bit-level errors</li>
+<li>link and node failures</li>
+<li>packets are delayed</li>
+<li>third party eavesdrop</li>
+</ul>
+</div>
+<div id="outline-container-org0772a06" class="outline-3">
+<h3 id="org0772a06"><span class="section-number-3">5.1.</span> Quality of Service (QoS)</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Users must be able to rely on the network, so they focus on some QoS metric(s) like:
+</p>
+<ul class="org-ul">
+<li>packet loss</li>
+<li>delay</li>
+<li>delay variation</li>
+<li>rates</li>
+<li>ease of installation/maintenance</li>
+<li>availability/reliability</li>
+<li>QoS differentiation</li>
+<li>privacy</li>
+<li>security</li>
+</ul>
+
+<p>
+Today the Internet is best effort, so no guarantees.
+</p>
+
+<p>
+Users must be willing to pay for QoS.
+Providing a guarantee implies reservation and costly traffic management infrastructure.
+</p>
+</div>
+</div>
+<div id="outline-container-org5375b84" class="outline-3">
+<h3 id="org5375b84"><span class="section-number-3">5.2.</span> Packet Loss and Delay</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Packets queue in router buffers, waiting for transmission, so <b>loss</b> occurs when buffer fills up.
+Lost packets may be retransmitted by previous node, source end system, or not at all.
+</p>
+
+<p>
+The packet being transmitted has <span class="underline">transmission delay</span>, packets in the buffer have
+<span class="underline">queueing delay</span>, checking packets for bit errors gives <span class="underline">nodal processing delay</span>,
+and delay from the packet being propagated is <span class="underline">propagation delay</span>:
+</p>
+<ul class="org-ul">
+<li>Nodal processing delay: check bit errors, determine output link, \(< \mu \text{s}\)</li>
+<li>Queueing delay: time waiting for transmission, based on congestion of buffer</li>
+<li>Transmission delay: \(L/R\) for packet length \(L\) and link transmission rate \(R\)</li>
+<li>Propagation delay: \(d/s\) for physical link \(d\) and propagation speed \(s\)</li>
+</ul>
+
+<p>
+Packet queueing delay is
+\[ \frac{La}{R} \]
+for average packet arrival rate \(a\), packet length \(L\), and link bandwidth (bit transmission rate) \(R\):
+</p>
+<ul class="org-ul">
+<li>queueing delay close to 0 means average queueing delay small</li>
+<li>queueing delay close to 1 means average queueing delay large</li>
+<li>queueing delay above 1 means average queueing delay infinite</li>
+</ul>
+
+<p>
+<b>Throughput</b>: rate (bits/time unit) at which bits are being sent from sender to receiver
+</p>
+<ul class="org-ul">
+<li><b>instantaneous</b>: rate at given point in time</li>
+<li><b>average</b>: rate over longer period of time</li>
+</ul>
+
+<p>
+<b>Bottleneck link</b>: link on end-to-end path that constrains end-to-end throughput,
+which is the link with lower throughput
+</p>
+
+<p>
+If a link is shared, the per-connection end-to-end throughput considers the link&rsquo;s rate divided
+by the number of connections.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf1e6f6e" class="outline-2">
+<h2 id="orgf1e6f6e"><span class="section-number-2">6.</span> Protocol Layers, Service Models</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+<b>Layers</b>: each layer implements a service with its own internal-layer actions and relying on services
+from the layer below
+</p>
+
+<p>
+Layering provides structure to identify system pieces and modularization allows for easier
+maintenance/updates (just change that layer rather than the whole system).
+</p>
+
+<p>
+Internet protocol stack:
+</p>
+<ul class="org-ul">
+<li><b>application</b>: supports network applications (HTTP, IMAP, SMTP, DNS)</li>
+<li><b>transport</b>: process-to-process data transfer (TCP, UDP)</li>
+<li><b>network</b>: routing datagrams from source to destination (IP, routing protocols)</li>
+<li><b>link</b>: data transfer between neighbouring network elements (Ethernet, WiFi, PPP)</li>
+<li><b>physical</b>: bits on the wire</li>
+</ul>
+</div>
+<div id="outline-container-org07bfb1a" class="outline-3">
+<h3 id="org07bfb1a"><span class="section-number-3">6.1.</span> Application Layer</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Distributed over multiple end systems with the application in one end system using the protocol
+to exchange data with the application in another end system.
+</p>
+
+<p>
+<b>Message</b>: data unit at the application layer
+</p>
+</div>
+</div>
+<div id="outline-container-orgbbe48e3" class="outline-3">
+<h3 id="orgbbe48e3"><span class="section-number-3">6.2.</span> Transport Layer</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+<b>Process</b>: application endpoints
+</p>
+
+<p>
+Two transport protocols in the Internet:
+</p>
+<ul class="org-ul">
+<li><b>TCP</b>: connection-oriented service to applications
+<ul class="org-ul">
+<li>guaranteed delivery of messages</li>
+<li>flow control</li>
+<li>congestion control</li>
+</ul></li>
+<li><b>UDP</b>: connectionless service
+<ul class="org-ul">
+<li>no reliability</li>
+<li>no flow control</li>
+<li>no congestion control</li>
+</ul></li>
+</ul>
+
+<p>
+<b>Segment</b>: data unit at the transport layer
+</p>
+</div>
+</div>
+<div id="outline-container-org81a4686" class="outline-3">
+<h3 id="org81a4686"><span class="section-number-3">6.3.</span> Network Layer</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+<b>Datagram</b>: data unit at the network layer
+</p>
+
+<p>
+TCP or UDP in a host passes a segment and destination address.
+Routing protocols determine the routes that datagrams take between sources and destination.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd577a8f" class="outline-3">
+<h3 id="orgd577a8f"><span class="section-number-3">6.4.</span> Link Layer and Physical Layer</h3>
+<div class="outline-text-3" id="text-6-4">
+<p>
+Work hop-by-hop, from link to link.
+A datagram may be handled by different link-layer protocols at different links along its route.
+</p>
+
+<p>
+<b>Frame</b>: data unit at the link layer
+</p>
+
+<p>
+Physical layer moves bits from one node to the next, with protocols depending on the transmission
+medium.
+</p>
+</div>
+</div>
+<div id="outline-container-org23be6c8" class="outline-3">
+<h3 id="org23be6c8"><span class="section-number-3">6.5.</span> Encapsulation</h3>
+<div class="outline-text-3" id="text-6-5">
+<p>
+Transport layer protocol encapsulates message with transport layer header to create segment.
+</p>
+
+<p>
+Network layer protocol encapsulates segment with network layer header to create datagram.
+</p>
+
+<p>
+Link layer protocol encapsulates datagram with link layer header to create frame.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org6dba7a3" class="outline-2">
+<h2 id="org6dba7a3"><span class="section-number-2">7.</span> History</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org35e0e17" class="outline-3">
+<h3 id="org35e0e17"><span class="section-number-3">7.1.</span> Early Packet-Switching Principles</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+1961, Kleinrock: queueing theory shows effectiveness of packet-switching
+</p>
+
+<p>
+1964, Baran: packet-switching in military nets
+</p>
+
+<p>
+1967: ARPAnet conceived by Advanced Research Projects Agency
+</p>
+
+<p>
+1969: first ARPAnet node operational
+</p>
+
+<p>
+1972: ARPAnet public demo, first email program, ARPAnet has 15 nodes
+</p>
+</div>
+</div>
+<div id="outline-container-org135d864" class="outline-3">
+<h3 id="org135d864"><span class="section-number-3">7.2.</span> Internetworking</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+1970: ALOHAnet satellite network in Hawaii
+</p>
+
+<p>
+1974, Cerf and Kahn: architecure for interconnecting networks
+</p>
+<ul class="org-ul">
+<li>minimalism and autonomy: no internal changes required to interconnected networks</li>
+<li>best-effort service model</li>
+<li>stateless routing</li>
+<li>decentralized control</li>
+</ul>
+
+<p>
+1976: Ethernet at Xerox PARC
+</p>
+
+<p>
+1979: ARPAnet at 200 nodes
+</p>
+</div>
+</div>
+<div id="outline-container-org5d54105" class="outline-3">
+<h3 id="org5d54105"><span class="section-number-3">7.3.</span> New Protocols</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+1983: deployment of TCP/IP
+</p>
+
+<p>
+1982: SMTP email protocol defined
+</p>
+
+<p>
+1983: DNS defined for name-to-IP-address translation
+</p>
+
+<p>
+1988: TCP congestion control
+</p>
+
+<p>
+New national networks: CSnet, BITnet, NSFnet, Minitel
+</p>
+
+<p>
+100,000 hosts connected to confederation of networks.
+</p>
+</div>
+</div>
+<div id="outline-container-org316adf4" class="outline-3">
+<h3 id="org316adf4"><span class="section-number-3">7.4.</span> Commercialization</h3>
+<div class="outline-text-3" id="text-7-4">
+<p>
+Early 1990s: ARPAnet decommissioned, web begins
+</p>
+<ul class="org-ul">
+<li>hypertext</li>
+<li>HTML, HTTP: Berners-Lee</li>
+</ul>
+
+<p>
+1994: Mosaic, later Netscape
+</p>
+
+<p>
+Late 1990s: commercialization of the web
+</p>
+
+<p>
+Late 1990s to 2000s:
+</p>
+<ul class="org-ul">
+<li>more applications (instant messaging, file sharing)</li>
+<li>network security to forefront</li>
+<li>estimated 50 million hosts, 100+ million users</li>
+<li>backbone links running at Gbps</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc27693f" class="outline-3">
+<h3 id="orgc27693f"><span class="section-number-3">7.5.</span> Scale, Mobility, Cloud</h3>
+<div class="outline-text-3" id="text-7-5">
+<p>
+Aggressive deployment of broadband (10-100s Mbps) and increasing ubiquity of high-speed wireless
+(4G/5G, WiFi).
+</p>
+
+<p>
+Service providers create their own networks to connect close to end user.
+</p>
+
+<p>
+Enterprises run their services in the cloud.
+</p>
+
+<p>
+2017: rise of smartphones, so more mobile than fixed devices on the Internet, ~18B devices attached to
+the Internet
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-10-20 Sun 02:49</p>
+</div>
+</body>
+</html>
