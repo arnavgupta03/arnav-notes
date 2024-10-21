@@ -1,4 +1,4 @@
-% Created 2024-10-19 Sat 16:08
+% Created 2024-10-21 Mon 01:18
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,7 +32,7 @@
 \tableofcontents
 
 \section{Stability}
-\label{sec:org985bd11}
+\label{sec:org084a7cb}
 For the initial value problem with \(\dot{\mathbf{x}} = \mathbf{Ax}\) and
 \(\mathbf{x}(t_{0}) = x_{0}\),
 the unique solution is
@@ -64,7 +64,7 @@ part.
 
 Asymptotic stability implies BIBO stability.
 \section{Performance}
-\label{sec:org8a0071d}
+\label{sec:orgb5b5903}
 Important performance metrics to describe the behaviour of a system with a unit step signal are:
 \begin{itemize}
 \item \textbf{steady-state gain}: \(\lim_{t \to \infty} y(t)\)
@@ -129,7 +129,7 @@ Important performance metrics to describe the behaviour of a system with a unit 
     \end{tikzpicture}
 \end{center}
 \subsection{First Order Systems}
-\label{sec:org61cc685}
+\label{sec:org404ae14}
 Steady-state gain is \(\mu\).
 
 Rise-time is \(2 \tau\).
@@ -138,10 +138,10 @@ Peak time and overshoot would not make sense for a first order system.
 
 Settling time is \(-\tau \ln(\varepsilon)\).
 For \(\varepsilon = 0.05, T_{s} \approx 3\tau\).
-For \(\varepsilon = 0.03, T_{s} \approx 4\tau\).
+For \(\varepsilon = 0.02, T_{s} \approx 4\tau\).
 For \(\varepsilon = 0.01, T_{s} \approx 5\tau\).
 \subsection{Second Order Systems}
-\label{sec:org544a734}
+\label{sec:org38001c4}
 Steady-state gain is \(\mu\).
 
 Rise-time is
@@ -164,7 +164,7 @@ $$
 -\frac{\ln(\varepsilon)}{\zeta \omega_{n}}
 $$
 \section{Lower Order Approximations}
-\label{sec:org3ea6cba}
+\label{sec:org7855083}
 Higher order systems often have a few poles that are much closer to the imaginary
 axis than others, these are \textbf{dominant poles}.
 
@@ -176,7 +176,7 @@ where the poles of \(G_{slow}(s)\) are more dominant, the fast components can be
 approximated by a static transfer function whose value is equal to steady-state
 gain, \(G_{fast}(0)\).
 \section{System Identification}
-\label{sec:org3dcf00f}
+\label{sec:orgf19bb91}
 Assume a structure of the model
 $$G(s) = \frac{Y(s)}{U(s)} = \frac{b_{m} s^{m} + \cdots + b_{1} s + b_{0}}{s^{n} + a_{n-1} s^{n-1} + \cdots + a_{1} s + a_{0}}$$
 which gives

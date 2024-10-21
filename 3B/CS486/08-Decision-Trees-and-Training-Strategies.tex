@@ -1,4 +1,4 @@
-% Created 2024-10-18 Fri 20:26
+% Created 2024-10-21 Mon 01:18
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,7 +33,7 @@
 \tableofcontents
 
 \section{Decision Trees}
-\label{sec:org212fe35}
+\label{sec:org9d455e3}
 Technique for supervised learning from discrete data:
 \begin{itemize}
 \item representation is a decision tree
@@ -112,7 +112,7 @@ Criteria for good decision trees: small, good classification (low error on train
 \end{algorithmic}
 \end{algorithm}
 \subsection{Stopping Criteria}
-\label{sec:org1ed547c}
+\label{sec:org1beab73}
 Related to the final return value, depends on what must be done.
 
 Possible stopping criteria:
@@ -121,7 +121,7 @@ Possible stopping criteria:
 \item performance on training data good enough
 \end{itemize}
 \subsection{Feature Selection}
-\label{sec:orgd81a515}
+\label{sec:org8360a81}
 Choose sequence of features that result in smallest tree.
 
 In practice, split based on what gives best performance.
@@ -133,7 +133,7 @@ Heuristics for best performing feature:
 \item GINI index
 \end{itemize}
 \section{Information Theory}
-\label{sec:orgd8f4b3c}
+\label{sec:org5908e32}
 \(n\) bits can distinguish \(2^{n}\) items, but can do better with probabilities.
 
 In general, need \(-\log_{2} P(x)\) bits to encode \(x\).
@@ -148,7 +148,7 @@ $$
 $$
 bits of info per symbol are needed on average, which is the \textbf{info content} or \textbf{entropy} of the sequence.
 \subsection{Information Gain}
-\label{sec:org3e81235}
+\label{sec:orgbf764a1}
 Given a set \(E\) of \(N\) training examples, if the number of examples with output feature \(Y = y_{i}\)
 is \(N_{i}\), then
 $$
@@ -167,8 +167,11 @@ I(E_{split}) = \frac{N_{1}}{N} I(E_{1}) + \frac{N_{2}}{N} I(E_{2})
 $$
 so the desirable \(X_{i}\) is the one that maximizes \textbf{info gain}:
 $$
-I(E) - I(E_{split}) = - \sum_{y \in Y} P(y) \log P(y) + \sum_{x \in X, y \in Y} \log \frac{P(x,y)}{P(x)}
-\ge -\log \left( \sum_{x \in X, y \in Y} P(x, y) \frac{P(x)P(y)}{P(x, y)} \right)
+I(E) - I(E_{split}) = - \sum_{y \in Y} P(y) \log P(y) + \sum_{x \in X, y \in Y}P(x,y) \log  \frac{P(x,y)}{P(x)}
+$$
+which gives the inequality
+$$
+IG = - \sum_{x \in X, y \in Y} P(x,y) \log \frac{P(x) P(y)}{P(x,y)} \ge -\log \left( \sum_{x \in X, y \in Y} P(x, y) \frac{P(x)P(y)}{P(x, y)} \right)
 $$
 
 Info gain is the reduction in uncertainty about the output feature \(T\) given the value
@@ -176,9 +179,9 @@ of a certain input feature \(X\).
 
 \textbf{Jensen's inequality}: for a convex function \(f(x)\), \(E[f(x)] \ge f(E[x])\).
 \section{Training Strategies}
-\label{sec:org09be2ee}
+\label{sec:orgd7f2e65}
 \subsection{Final Return Value}
-\label{sec:orgc3fe50c}
+\label{sec:orgd2f36a6}
 Point estimate (prediction of target features) of \(Y\) over all examples.
 
 A point estimate could be mean, median, mode, or
@@ -186,7 +189,7 @@ $$
 P(Y = y_{i}) = \frac{N_{i}}{N}
 $$
 \subsection{Priority Queue}
-\label{sec:org5c1dab0}
+\label{sec:org1f217d0}
 Sort leaves using a priority queue ranked by how much info can be gained with the best feature at that
 leaf.
 Always expand the leaf at the top of the queue.
@@ -213,7 +216,7 @@ Always expand the leaf at the top of the queue.
 \end{algorithmic}
 \end{algorithm}
 \subsection{Overfitting}
-\label{sec:org3dece28}
+\label{sec:org4a401f2}
 When there is not enough data, the decision tree does not generalize to test data.
 
 Methods to avoid overfitting:

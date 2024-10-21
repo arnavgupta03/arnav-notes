@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-19 Sat 16:08 -->
+<!-- 2024-10-21 Mon 01:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linear System Theory</title>
@@ -234,20 +234,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc8af37b">1. Stability</a></li>
-<li><a href="#orgcaf5b57">2. Performance</a>
+<li><a href="#orgafa2be4">1. Stability</a></li>
+<li><a href="#orgb78a2f8">2. Performance</a>
 <ul>
-<li><a href="#org5e42687">2.1. First Order Systems</a></li>
-<li><a href="#org36245d5">2.2. Second Order Systems</a></li>
+<li><a href="#org5cf2343">2.1. First Order Systems</a></li>
+<li><a href="#orge6973b0">2.2. Second Order Systems</a></li>
 </ul>
 </li>
-<li><a href="#org2da5f4d">3. Lower Order Approximations</a></li>
-<li><a href="#org157d0b5">4. System Identification</a></li>
+<li><a href="#orgce4693f">3. Lower Order Approximations</a></li>
+<li><a href="#org1a829c5">4. System Identification</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc8af37b" class="outline-2">
-<h2 id="orgc8af37b"><span class="section-number-2">1.</span> Stability</h2>
+<div id="outline-container-orgafa2be4" class="outline-2">
+<h2 id="orgafa2be4"><span class="section-number-2">1.</span> Stability</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 For the initial value problem with \(\dot{\mathbf{x}} = \mathbf{Ax}\) and
@@ -295,8 +295,8 @@ Asymptotic stability implies BIBO stability.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcaf5b57" class="outline-2">
-<h2 id="orgcaf5b57"><span class="section-number-2">2.</span> Performance</h2>
+<div id="outline-container-orgb78a2f8" class="outline-2">
+<h2 id="orgb78a2f8"><span class="section-number-2">2.</span> Performance</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Important performance metrics to describe the behaviour of a system with a unit step signal are:
@@ -309,8 +309,8 @@ Important performance metrics to describe the behaviour of a system with a unit 
 <li><b>settling time</b>: smallest time such that \(\forall t \ge T, \frac{|C_{ss}-y(t)|}{|C_{ss}|} \le \varepsilon\)</li>
 </ul>
 </div>
-<div id="outline-container-org5e42687" class="outline-3">
-<h3 id="org5e42687"><span class="section-number-3">2.1.</span> First Order Systems</h3>
+<div id="outline-container-org5cf2343" class="outline-3">
+<h3 id="org5cf2343"><span class="section-number-3">2.1.</span> First Order Systems</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Steady-state gain is \(\mu\).
@@ -327,13 +327,13 @@ Peak time and overshoot would not make sense for a first order system.
 <p>
 Settling time is \(-\tau \ln(\varepsilon)\).
 For \(\varepsilon = 0.05, T_{s} \approx 3\tau\).
-For \(\varepsilon = 0.03, T_{s} \approx 4\tau\).
+For \(\varepsilon = 0.02, T_{s} \approx 4\tau\).
 For \(\varepsilon = 0.01, T_{s} \approx 5\tau\).
 </p>
 </div>
 </div>
-<div id="outline-container-org36245d5" class="outline-3">
-<h3 id="org36245d5"><span class="section-number-3">2.2.</span> Second Order Systems</h3>
+<div id="outline-container-orge6973b0" class="outline-3">
+<h3 id="orge6973b0"><span class="section-number-3">2.2.</span> Second Order Systems</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Steady-state gain is \(\mu\).
@@ -369,8 +369,8 @@ Settling time is
 </div>
 </div>
 </div>
-<div id="outline-container-org2da5f4d" class="outline-2">
-<h2 id="org2da5f4d"><span class="section-number-2">3.</span> Lower Order Approximations</h2>
+<div id="outline-container-orgce4693f" class="outline-2">
+<h2 id="orgce4693f"><span class="section-number-2">3.</span> Lower Order Approximations</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Higher order systems often have a few poles that are much closer to the imaginary
@@ -388,8 +388,8 @@ gain, \(G_{fast}(0)\).
 </p>
 </div>
 </div>
-<div id="outline-container-org157d0b5" class="outline-2">
-<h2 id="org157d0b5"><span class="section-number-2">4.</span> System Identification</h2>
+<div id="outline-container-org1a829c5" class="outline-2">
+<h2 id="org1a829c5"><span class="section-number-2">4.</span> System Identification</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Assume a structure of the model
@@ -423,7 +423,7 @@ By minimizing \(\| Y - D \theta\|^{2}\), \(\theta\) can be found that best appro
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-10-19 Sat 16:08</p>
+<p class="date">Created: 2024-10-21 Mon 01:19</p>
 </div>
 </body>
 </html>

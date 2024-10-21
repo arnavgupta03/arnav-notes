@@ -110,7 +110,7 @@ Peak time and overshoot would not make sense for a first order system.
 
 Settling time is $-\tau \ln(\varepsilon)$.
 For $\varepsilon = 0.05, T_{s} \approx 3\tau$.
-For $\varepsilon = 0.03, T_{s} \approx 4\tau$.
+For $\varepsilon = 0.02, T_{s} \approx 4\tau$.
 For $\varepsilon = 0.01, T_{s} \approx 5\tau$.
 
 ** Second Order Systems
