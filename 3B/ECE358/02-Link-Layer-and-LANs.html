@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-23 Wed 18:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Link Layer And LANs</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Link Layer And LANs</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org6fc4f4d">1. Introduction</a></li>
+<li><a href="#org8bbaa71">2. Framing, Error Detection, Correction</a>
+<ul>
+<li><a href="#org1912079">2.1. Error Detection</a></li>
+</ul>
+</li>
+<li><a href="#org4fb88e3">3. Retransmission Mechanisms</a>
+<ul>
+<li><a href="#org8ee201b">3.1. Stop and Wait</a>
+<ul>
+<li><a href="#org18643d3">3.1.1. Performance</a></li>
+</ul>
+</li>
+<li><a href="#orgdad851b">3.2. Pipelining</a>
+<ul>
+<li><a href="#orge9b80ed">3.2.1. Go-Back-N</a></li>
+<li><a href="#orgcd5dc11">3.2.2. Selective Repeat</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org64930fc">4. Multiple Access Protocols</a>
+<ul>
+<li><a href="#org078ae61">4.1. Scheduling Using Time Division Multiple Access</a></li>
+<li><a href="#org83470cc">4.2. Scheduling Using Frequency Division Multiple Access</a></li>
+<li><a href="#org6c39d6b">4.3. OFDMA</a></li>
+<li><a href="#org04cef58">4.4. Polling</a></li>
+<li><a href="#orgcd5d723">4.5. Slotted ALOHA</a></li>
+<li><a href="#orgeed3519">4.6. Pure ALOHA</a></li>
+<li><a href="#org62d4f06">4.7. Carrier Sense Multiple Access (CSMA)</a>
+<ul>
+<li><a href="#org81481ab">4.7.1. CSMA/CD</a></li>
+</ul>
+</li>
+<li><a href="#orgab8de2e">4.8. Cable Access Network</a></li>
+</ul>
+</li>
+<li><a href="#orgb97ba28">5. LANs</a>
+<ul>
+<li><a href="#orgbb587f0">5.1. Addressing, ARP</a>
+<ul>
+<li><a href="#orgdf1e056">5.1.1. MAC Address</a></li>
+<li><a href="#org5b2b8d4">5.1.2. Address Resolution Protocol (ARP)</a></li>
+<li><a href="#orgfba7ea7">5.1.3. Routing to Another Subnet</a></li>
+</ul>
+</li>
+<li><a href="#orgc6e85bd">5.2. Ethernet</a></li>
+<li><a href="#org6783a14">5.3. Switches</a>
+<ul>
+<li><a href="#org9cd7aef">5.3.1. Switches vs Routers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6fc4f4d" class="outline-2">
+<h2 id="org6fc4f4d"><span class="section-number-2">1.</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Link layer</b> is responsible to transfer a datagram from one node to a physically adjacent node over
+a link.
+</p>
+
+<p>
+Two types of links: point-to-point and point-to-multipoint (shared medium)
+</p>
+
+<p>
+Each link protocol provides different services:
+</p>
+<ul class="org-ul">
+<li><span class="underline">framing, link access</span> (compulsory)
+<ul class="org-ul">
+<li>encapsulate datagram into frame, adding header, trailer</li>
+<li>channel access if shared medium</li>
+<li>MAC addresses in frame header identify source and destination</li>
+</ul></li>
+<li><span class="underline">error detection</span>
+<ul class="org-ul">
+<li>errors caused by signal attentuation and noise</li>
+<li>receiver detects errors, signals retransmission or drops frame</li>
+</ul></li>
+<li><span class="underline">error correction</span>
+<ul class="org-ul">
+<li>receiver identifies and corrects bit errors without retransmission</li>
+</ul></li>
+<li><span class="underline">reliable delivery between adjacent nodes</span>
+<ul class="org-ul">
+<li>seldom used on low bit-error links</li>
+<li>always used on high-error rate wireless links</li>
+</ul></li>
+<li><span class="underline">flow control</span>
+<ul class="org-ul">
+<li>pacing between sending and receiving nodes</li>
+</ul></li>
+</ul>
+
+<p>
+Link layer is implemented in every host, switch, and router, in a <b>network interface card</b> (NIC) or
+on a chip that attaches into host system buses.
+Only one NIC per link.
+</p>
+
+<p>
+Communication interfaces:
+</p>
+<ul class="org-ul">
+<li>sending side
+<ul class="org-ul">
+<li>encapsulates datagram in frame</li>
+<li>adds error checking bits, reliable data transfer, flow control, and more</li>
+</ul></li>
+<li>receiving side
+<ul class="org-ul">
+<li>looks for errors, reliable data transfer, flow control, and more</li>
+<li>extracts datagram from frame, passes to upper layer at receiving side</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org8bbaa71" class="outline-2">
+<h2 id="org8bbaa71"><span class="section-number-2">2.</span> Framing, Error Detection, Correction</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Frame contains datagram with header, footer, and flags.
+Header and footer carry link layer protocol info.
+Flags help to extract a frame from a bit stream.
+</p>
+
+<p>
+<b>Bit stuffing</b> can be used:
+</p>
+<ul class="org-ul">
+<li>use special bit patterns for the flag and idle</li>
+<li>have one flag at the start of data and one at the end of data</li>
+<li>if the flag or idle pattern seem to show up in data, insert extra bits and remove at receiver</li>
+</ul>
+
+<p>
+Noise and interference cause errors, which often come in bursts.
+</p>
+
+<p>
+<b>Bit Error Rate</b> (BER) represents how often errors occur on average.
+</p>
+</div>
+<div id="outline-container-org1912079" class="outline-3">
+<h3 id="org1912079"><span class="section-number-3">2.1.</span> Error Detection</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Performed at link, transport, and network layers.
+</p>
+
+<p>
+Uses error detection bits (redundancy), preferably a large field of error detection for better detection.
+The protocol may miss some errors, though this is rare.
+</p>
+
+<p>
+Can use <span class="underline">parity checking</span> (single bit for detection or 2D bit for detection and correction)
+since errors come in bursts.
+</p>
+
+<p>
+<b>Cyclic Redundancy Check</b> (CRC) is more powerful and uses a bit pattern \(G\) called the generator
+with \(r+1\) bits (along with the data \(D\)):
+</p>
+<ul class="org-ul">
+<li>the sender computes \(r\) CRC bits \(R\) such that \(\left< D, R \right> = D \times 2^{r} \text{XOR} R\)
+is exactly divisible by \(G \pmod{2}\)
+<ul class="org-ul">
+<li>\(R\) is the remainder of the division (mod 2) of \(D \times 2^{r}\) by \(G\)</li>
+</ul></li>
+<li>the receiver knows \(G\) and divides \(\left< D, R \right>\) by \(G\)
+<ul class="org-ul">
+<li>if this has a non-zero remainder, errors are detected</li>
+</ul></li>
+</ul>
+
+<p>
+CRC can detect all burst errors less than \(r + 1\) bits (and any two errors), so it is widely used
+in practice.
+</p>
+
+<p>
+Correction technique is to correct error at the receiver, but this is computationally expensive and has
+high overhead.
+This may be useful for real-time communication, long pipes, or noisy channels.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org4fb88e3" class="outline-2">
+<h2 id="org4fb88e3"><span class="section-number-2">3.</span> Retransmission Mechanisms</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Reliable service is an abstraction where, to the network layer, the link layer is a reliable channel.
+Specifically, a link is a reliable channel.
+</p>
+
+<p>
+The complexity of reliable data transfer depends on the characteristics of an unreliable channel, whether
+it loses, corrupts, or reorders data.
+</p>
+
+<p>
+A retransmission mechanism should deliver data to the receiver without error, in the right order without
+any duplicate.
+</p>
+
+<p>
+The sender and receiver do not know the other&rsquo;s state, unless this is communicated via a message on the
+same unreliable channel.
+</p>
+
+<p>
+The unreliable channel may flip bits in the frame or lose frames, though frames have a CRC.
+</p>
+
+<p>
+Only unidirectional data transfer will be considered, though control info will flow in both directions.
+</p>
+</div>
+<div id="outline-container-org8ee201b" class="outline-3">
+<h3 id="org8ee201b"><span class="section-number-3">3.1.</span> Stop and Wait</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Sender sends one packet (frame) and waits for receiver response.
+</p>
+
+<p>
+This needs:
+</p>
+<ul class="org-ul">
+<li><b>acknowledgements (ACKs)</b>: receiver tells sender packet received</li>
+<li><b>negative acknowledgements (NAKs)</b>: receiver tells sender that packet had errors (sender retransmits
+the packet on receipt of NAK)</li>
+<li><b>sequence number (SN)</b>: sender tells receiver which packet this is in the sequence of packets to be sent
+and receiver tells sender which packet this ACK is for</li>
+<li><b>timeout</b>: how long to wait before retransmission</li>
+</ul>
+
+<p>
+A frame containing a packet or an ACK can be corrupted, lost, or delayed.
+</p>
+
+<p>
+With this, the ACK is piggybacking, with separate SN fields for data and ACk in the header.
+</p>
+</div>
+<div id="outline-container-org18643d3" class="outline-4">
+<h4 id="org18643d3"><span class="section-number-4">3.1.1.</span> Performance</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+\(U_{sender}\) is <b>utilization</b>: the fraction of time the sender is busy sending
+</p>
+
+<p>
+\(G\) is <b>goodput</b>: the number of successful data received per second (packets per second or bits per second)
+</p>
+
+<p>
+If no error, the utilization is
+\[ \frac{L/R}{A/R + L/R + (2 \times \text{prop})} \]
+where \(R\) is the link rate, \(L\) is the packet length, \(A\) is the ACK length, and \(\text{prop}\) is the
+propagation delay.
+</p>
+
+<p>
+For stop and wait, the transmitter is mostly idle and goodput is low.
+</p>
+
+<p>
+To tune the timeout perfectly, the timeout must be
+\[ \gamma = (2 \times \text{prop}) + \frac{A}{R} \]
+</p>
+
+<p>
+A frame is received and acknowledged correctly after
+\[ t = \frac{L}{R} + \gamma \]
+if the frame and its ACK are not corrupted. Otherwise, it takes \(kt\) time where \(k-1\) is the number
+of retransmissions.
+</p>
+
+<p>
+Stop and wait limits the performance of underlying infrastructure (channel).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdad851b" class="outline-3">
+<h3 id="orgdad851b"><span class="section-number-3">3.2.</span> Pipelining</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Sender allows multiple yet-to-be-acknowledged packets
+</p>
+
+<p>
+Retransmission strategies for pipelining are:
+</p>
+<ul class="org-ul">
+<li><b>go-back-N</b>: receiver only accepts the next expected packet, no extra buffering at the receiver</li>
+<li><b>selective repeat</b>: receiver accepts and stores out of order packets, extra buffering</li>
+</ul>
+
+<p>
+There is a tradeoff here between network traffic and buffer space and complexity.
+These both require a larger range of sequence numbers.
+</p>
+
+<p>
+Pipelined retransmission mechanisms are complex but have high performance.
+</p>
+</div>
+<div id="outline-container-orge9b80ed" class="outline-4">
+<h4 id="orge9b80ed"><span class="section-number-4">3.2.1.</span> Go-Back-N</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+Sender can have up to \(N\) unacknowledged packets in the pipeline.
+The <span class="underline">receiver</span> only sends cumulative ACKs and does not keep packets out of order.
+The <span class="underline">sender</span> has a timer for the oldest unacknowledged packets, and if the timer expires,
+retransmit all unacknowledged packets.
+</p>
+
+<p>
+<b>Cumulative ACK</b>: ACKs all packets up to and including the sequence number, and once received
+move window forward to begin at the next number
+</p>
+
+<p>
+The timer is for the oldest in-flight packet, and so the timeout retransmits that packet and all
+higher sequence number packets in the window.
+</p>
+
+<p>
+<b>ACK-only</b>: always send ACK for the correctly-received packet so far, with the highest in-order
+sequence number (no jumps or skips).
+This can generate duplicate ACKs.
+</p>
+
+<p>
+If an out-of-order packet is received it is discarded and the highest in-order sequence number is
+re-ACKed.
+</p>
+
+<p>
+Given a sender window size of \(N = 2^{n}\), \(m>N\) distinct sequence numbers are needed,
+which is at least \(n+1\) bits.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcd5dc11" class="outline-4">
+<h4 id="orgcd5dc11"><span class="section-number-4">3.2.2.</span> Selective Repeat</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+Sender can have up to \(N\) unacknowledged packets in the pipeline.
+The <span class="underline">receiver</span> keeps packets out of order and acknowledges individual frames.
+The <span class="underline">sender</span> maintains a timer for each unacknowledged packet, and if the timer expires only
+retransmit the single unacknowledged packet.
+</p>
+
+<p>
+The sender window is \(N\) consecutive sequence numbers, and this limits the sequence numbers of
+sent, unACKed packets.
+</p>
+
+<p>
+The sender checks if the next available SN is in the window and sends the packet accordingly.
+If a timeout occurs, only that packet is resent.
+Upon receiving an ACK, the packet is marked as received and if it is the smallest unACKed packet,
+the window is advanced one step forward.
+</p>
+
+<p>
+The receiver sends an ACK for the SN when it receives a packet.
+If this is out of order, the packet remains in the buffer.
+If this is in order, the packet is then delivered (as well as any buffered in-order packets),
+and the window is advanced to the next not-yet-received packet.
+If the packet has already been received and is in the window, just return an ACK for that SN.
+Otherwise, ignore the packet.
+</p>
+
+<p>
+Given a sender window size of \(N = 2^{n}\), \(m > 2N-1\) distinct SNs are needed.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org64930fc" class="outline-2">
+<h2 id="org64930fc"><span class="section-number-2">4.</span> Multiple Access Protocols</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Two types of links:
+</p>
+<ul class="org-ul">
+<li><b>point-to-point</b>: between Ethernet switch and host or fiber between routers</li>
+<li><b>broadcast (shared wire or medium)</b>
+<ul class="org-ul">
+<li>old-fashioned Ethernet</li>
+<li>cable-based access networks</li>
+<li>wireless LAN, cellular, satellite</li>
+</ul></li>
+</ul>
+
+<p>
+<b>Multiple Access Mechanism</b>:
+</p>
+<ul class="org-ul">
+<li>distributed algorithm that determines how nodes share a channel</li>
+<li>communication about channel sharing must use the same channel as well</li>
+</ul>
+
+<p>
+Multiple access mechanisms use a single shared broadcast channel, which can cause <b>collisions</b> if a
+node received 2+ signals at the same time.
+</p>
+
+<p>
+The ideal (nonexistent) multiple access mechanism:
+</p>
+<ul class="org-ul">
+<li><span class="underline">given</span>: a multipoint link of rate \(R\) bps</li>
+<li><span class="underline">desiderata</span>:
+<ul class="org-ul">
+<li>when a single node wants to transmit, it can send at rate \(R\)</li>
+<li>when \(M\) nodes want to transmit, each can send at average rate \(R/M\)</li>
+<li>fully decentralized
+<ul class="org-ul">
+<li>no special node to coordinate transmissions</li>
+<li>no synchronization of clocks, slots</li>
+</ul></li>
+<li>simple</li>
+</ul></li>
+</ul>
+
+<p>
+Two broad classes of MAC mechanisms:
+</p>
+<ul class="org-ul">
+<li>scheduling via a control node (<b>centralized</b>)</li>
+<li><b>random access</b>: allow collisions and recover
+<ul class="org-ul">
+<li>when a node has a packet to send, it transmits at full channel data rate \(R\), so no coordination</li>
+<li>protocols specify:
+<ul class="org-ul">
+<li>degree of politeness</li>
+<li>how to detect collisions</li>
+<li>how to recover from collisions</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-org078ae61" class="outline-3">
+<h3 id="org078ae61"><span class="section-number-3">4.1.</span> Scheduling Using Time Division Multiple Access</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Time is divided into time slots and there is a repeating cycle.
+The controller allocates time slots to stations.
+When a station&rsquo;s frame occurs, it can broadcast.
+</p>
+</div>
+</div>
+<div id="outline-container-org83470cc" class="outline-3">
+<h3 id="org83470cc"><span class="section-number-3">4.2.</span> Scheduling Using Frequency Division Multiple Access</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Channel spectrum is divided into frequency bands.
+Each station can broadcast in their allocated frequency band.
+</p>
+</div>
+</div>
+<div id="outline-container-org6c39d6b" class="outline-3">
+<h3 id="org6c39d6b"><span class="section-number-3">4.3.</span> OFDMA</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+<b>Orthogonal Frequency-Division Multiple Access</b>: mix of TDMA and FDMA, each station has some frequency
+band(s) and time band(s).
+</p>
+</div>
+</div>
+<div id="outline-container-org04cef58" class="outline-3">
+<h3 id="org04cef58"><span class="section-number-3">4.4.</span> Polling</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Used before scheduling, but still used in Bluetooth.
+</p>
+
+<p>
+Master invites nodes to transmit in turn.
+</p>
+
+<p>
+Has polling overhead, latency, and single point of failure (master).
+</p>
+</div>
+</div>
+<div id="outline-container-orgcd5d723" class="outline-3">
+<h3 id="orgcd5d723"><span class="section-number-3">4.5.</span> Slotted ALOHA</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Assume the following:
+</p>
+<ul class="org-ul">
+<li>all L2 frames are the same size</li>
+<li>time is divided into equally sized slots, where each is the time to transmit a single L2 frame</li>
+<li>nodes start to transmit at slot beginning and are synchronized</li>
+<li>if 2+ nodes transmit in a slot, all nodes detect collision before the next slot</li>
+</ul>
+
+<p>
+When a node obtains a new frame, it transmit it until success:
+</p>
+<ul class="org-ul">
+<li><i>if no collision</i>: the node can move onto the next frame (if it exists)</li>
+<li><i>if collision</i>: node retransmits the frame in each subsequent slot with probability \(p\) until success</li>
+</ul>
+
+<p>
+Advantages:
+</p>
+<ul class="org-ul">
+<li>single active node continuously transmit at the full rate of the channel</li>
+<li>highly decentralized: only slots need to be synchronized</li>
+<li>simple</li>
+</ul>
+
+<p>
+Disadvantages:
+</p>
+<ul class="org-ul">
+<li>collisions waste slots</li>
+<li>idle slots are likely</li>
+<li>nodes may be able to detect collision less than time to transmit packet</li>
+<li>must have clock synchronization</li>
+</ul>
+
+<p>
+<b>Efficiency</b>: long-run fraction of successful slots
+</p>
+
+<p>
+Max efficiency is \(1/e = 0.37\), so at best, the channel is used for useful transmissions 37% of the time.
+</p>
+</div>
+</div>
+<div id="outline-container-orgeed3519" class="outline-3">
+<h3 id="orgeed3519"><span class="section-number-3">4.6.</span> Pure ALOHA</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+No synchronization so no slots.
+When the frame arrives, transmit immediately.
+</p>
+
+<p>
+Collision probability increases since the frame will collide with any frames sent before or after it
+within the time it takes to send a single frame.
+</p>
+
+<p>
+Max efficiency is 18%.
+</p>
+</div>
+</div>
+<div id="outline-container-org62d4f06" class="outline-3">
+<h3 id="org62d4f06"><span class="section-number-3">4.7.</span> Carrier Sense Multiple Access (CSMA)</h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+Listen before transmit; if the channel is busy, defer transmission until it is free
+</p>
+
+<p>
+Collisions can still occur since propagation delay means that two nodes may not hear transmissions
+from the other started around the same time.
+</p>
+
+<p>
+If a collision occurs, the entire packet transmission time was wasted.
+This depends on the distance and propagation delay.
+</p>
+</div>
+<div id="outline-container-org81481ab" class="outline-4">
+<h4 id="org81481ab"><span class="section-number-4">4.7.1.</span> CSMA/CD</h4>
+<div class="outline-text-4" id="text-4-7-1">
+<p>
+CSMA with collision detection:
+</p>
+<ul class="org-ul">
+<li>collisions are detected quickly</li>
+<li>upon collision, abort transmission</li>
+</ul>
+
+<p>
+Collision detection is easier in wired LANs since signal strengths can be measured so that transmitted
+and received signals can be compared.
+</p>
+
+<p>
+Let \(T_{p}\) be the maximum propagation delay and \(T_{C}\) be time after which everyone is
+aware of the collision.
+The minimum frame size so that the first sender can detect that there is a collision is
+\(F_{min}/R > T_{C}\), where \(R\) is the rate.
+</p>
+
+<p>
+After aborting, the NIC enters <b>binary (exponential) backoff</b>, so it creates time-slots of 512 bit times.
+After the collision \(m\) for \(m < 16\), the NIC chooses a random number between 0 and \(2^{m} - 1\)
+and waits 512 times this number before retrying.
+After collision 16, the NIC aborts sending the frame.
+</p>
+
+<p>
+Consider a maximum propagation delay between 2 nodes of \(T_{p}\) and transmission time for the max-size
+frame $t<sub>trans</sub>.
+The efficiency is
+\[ \frac{1}{1 + 5T_{p}/t_{trans}} \]
+</p>
+
+<p>
+As \(T_{p}\) goes to 0 and as \(t_{trans}\) goes to \(\infty\), the efficiency goes to 1.
+</p>
+
+<p>
+Much better performance than ALOHA, and simple, cheap, and decentralized.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgab8de2e" class="outline-3">
+<h3 id="orgab8de2e"><span class="section-number-3">4.8.</span> Cable Access Network</h3>
+<div class="outline-text-3" id="text-4-8">
+<p>
+Can use FDM, TDM, and random access.
+</p>
+
+<p>
+Uses multiple downstream (broadcast) FDM channels (up to 1.6 Gbps/channel).
+A single cable modem termination system transmits into channels.
+</p>
+
+<p>
+Uses multiple upstream channels (up to 1 Gbps/channel) that use multiple access:
+all users content for certain upstream mini time slots to send requests, others use time slots that
+are assigned through a map.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb97ba28" class="outline-2">
+<h2 id="orgb97ba28"><span class="section-number-2">5.</span> LANs</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+LANs are cheap, easy to install, and can be large.
+</p>
+
+<p>
+Ancient LANs were a shared link. Modern LANs are many shared links connected by L2 switches.
+</p>
+</div>
+<div id="outline-container-orgbb587f0" class="outline-3">
+<h3 id="orgbb587f0"><span class="section-number-3">5.1.</span> Addressing, ARP</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="outline-container-orgdf1e056" class="outline-4">
+<h4 id="orgdf1e056"><span class="section-number-4">5.1.1.</span> MAC Address</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<p>
+Each interface on a LAN has a unique 48-bit MAC address.
+This is usually burned into NIC ROM, but can also be set with software sometimes.
+</p>
+
+<p>
+Allocation is administered by IEEE.
+MAC flat address can move from one LAN to another, so it is portable.
+</p>
+
+<p>
+The broadcast address is FF-FF-FF-FF-FF-FF.
+</p>
+
+<p>
+MAC addresses are used locally to get frames from interface to another physically-connected interface.
+</p>
+</div>
+</div>
+<div id="outline-container-org5b2b8d4" class="outline-4">
+<h4 id="org5b2b8d4"><span class="section-number-4">5.1.2.</span> Address Resolution Protocol (ARP)</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<p>
+Each node on a LAN has an ARP table that has:
+</p>
+<ul class="org-ul">
+<li>IP/MAC address mappings for some LAN nodes</li>
+<li><b>TTL (time to live)</b> for each node, which is the time after which the address mapping will be
+forgotten</li>
+</ul>
+
+<p>
+To get a MAC address, a node will broadcast an ARP query containing the related IP address
+and another node will reply with the relevant MAC address.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfba7ea7" class="outline-4">
+<h4 id="orgfba7ea7"><span class="section-number-4">5.1.3.</span> Routing to Another Subnet</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<p>
+To send a datagram from \(A\) to \(B\) via router \(R\), assuming:
+</p>
+<ul class="org-ul">
+<li>\(A\) knows the IP address of \(B\)</li>
+<li>\(A\) knows the IP address of \(R\)</li>
+<li>\(A\) knows the MAC address of \(R\)</li>
+</ul>
+
+<p>
+\(A\) creates an IP datagram with IP source \(A\) and destination \(B\).
+\(A\) then creates a link-layer frame containing this datagram, with the MAC address of \(R\) as the
+frame&rsquo;s destination.
+</p>
+
+<p>
+Upon receipt at \(R\), \(R\) repeats the same process to \(B\).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc6e85bd" class="outline-3">
+<h3 id="orgc6e85bd"><span class="section-number-3">5.2.</span> Ethernet</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Standards define:
+</p>
+<ul class="org-ul">
+<li>network topology</li>
+<li>endpoint addressing scheme</li>
+<li>frame (packet) format</li>
+<li>media access mechanism</li>
+<li>physical layer aspects and wiring</li>
+</ul>
+
+<p>
+Standards issued by IEEE, IETF, ITU, ISO, and W3C.
+</p>
+
+<p>
+IEEE Project 802 focuses on L1 and L2, dividing L2 into <i>logical link control</i> (LLC) and
+<i>media access control</i> (MAC).
+</p>
+
+<p>
+Ethernet is the dominant wired LAN technology. It is simple, cheap, high speed and uses a single
+chip to produce multiple speeds.
+</p>
+
+<p>
+<b>Bus</b>: all nodes in the same collision domain
+</p>
+
+<p>
+<b>Switched</b>: active link-layer 2 switch in center, with each spoke running a separate Ethernet protocol
+(no collision)
+</p>
+
+<p>
+The Ethernet frame structure involves encapsulating IP datagram in Ethernet frame with a preamble
+(used to synchronize receiver and sender), destination address, source address, type (higher layer
+protocol), data, and CRC (4 bytes).
+</p>
+
+<p>
+Addresses are destination MAC addresses.
+</p>
+
+<p>
+The minimum frame size is 64 bytes and maximum datagram size is 1500 bytes.
+</p>
+
+<p>
+<b>Connectionless</b>: no handshaking between sending and receiving NICs
+</p>
+
+<p>
+<b>Unreliable</b>: receiving NIC doesn&rsquo;t send ACKs or NAKs, so data in dropped frames can only be
+recovered at higher levels
+</p>
+
+<p>
+MAC protocol is unslotted CSMA/CD with binary backoff.
+</p>
+</div>
+</div>
+<div id="outline-container-org6783a14" class="outline-3">
+<h3 id="org6783a14"><span class="section-number-3">5.3.</span> Switches</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Link-layer device that takes an active role by storing and forwarding Ethernet frames.
+</p>
+
+<p>
+Switches examine incoming frame&rsquo;s MAC address, and selectively forwards frame to 1+ outgoing links
+using CSMA/CD to access each link.
+</p>
+
+<p>
+<b>Transparent</b>: hosts unaware of presence of switches
+</p>
+
+<p>
+<b>Plug-and-play</b>: switches do not need to be configured
+</p>
+
+<p>
+Hosts have dedicated, direct connection to switch which switches buffer packets.
+</p>
+
+<p>
+The Ethernet protocol is used on each incoming link so there are no collisions (full duplex)
+and each link is in its own collision domain.
+</p>
+
+<p>
+Transmissions can occur simultaneously without collisions as long as there is no overlap
+in the interfaces used.
+</p>
+
+<p>
+Each switch has a <b>switch table</b> where each entry has:
+</p>
+<ul class="org-ul">
+<li>MAC address of host</li>
+<li>interface to reach host</li>
+<li>timestamp</li>
+</ul>
+
+<p>
+The switch learns which hosts can be reached through which interfaces.
+It learns the location of the sender from the incoming LAN segment and records the
+sender/location pair in the switch table.
+</p>
+
+<p>
+To learn the location of the destination, it sends a flood.
+</p>
+
+<p>
+Self-learning switches can be connected together.
+</p>
+</div>
+<div id="outline-container-org9cd7aef" class="outline-4">
+<h4 id="org9cd7aef"><span class="section-number-4">5.3.1.</span> Switches vs Routers</h4>
+<div class="outline-text-4" id="text-5-3-1">
+<p>
+Both are store and forward and have forwarding tables.
+</p>
+
+<p>
+<b>Router</b>: network-layer device (examine network-layer headers)
+</p>
+
+<p>
+<b>Switch</b>: link-layer device (examine link-layer headers)
+</p>
+
+<p>
+Routers compute tables using routing algorithms and IP addresses.
+Switches learn forwarding table through flooding, learning, and
+MAC addresses.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-10-23 Wed 18:51</p>
+</div>
+</body>
+</html>
