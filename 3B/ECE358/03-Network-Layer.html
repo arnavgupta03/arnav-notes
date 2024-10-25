@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-24 Thu 22:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Network Layer</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Network Layer</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3cb5131">1. Overview</a>
+<ul>
+<li><a href="#org7fda016">1.1. Best Effort Service</a></li>
+</ul>
+</li>
+<li><a href="#orgd7d3a90">2. Data Plane: The Internet Protocol</a>
+<ul>
+<li><a href="#org040e33d">2.1. Fragmentation and Assembly</a></li>
+<li><a href="#org27bbe72">2.2. IPv4 Addressing</a></li>
+<li><a href="#org06254cf">2.3. IPv6 Addressing</a></li>
+</ul>
+</li>
+<li><a href="#org828892d">3. What&rsquo;s Inside a Router</a>
+<ul>
+<li><a href="#org23c0d61">3.1. Switching Fabrics</a>
+<ul>
+<li><a href="#org8ec8ae8">3.1.1. Switching via Memory</a></li>
+<li><a href="#org4fa22b7">3.1.2. Switching via Bus</a></li>
+<li><a href="#org5317c51">3.1.3. Interconnection Network</a></li>
+</ul>
+</li>
+<li><a href="#org98f4001">3.2. Port Queuing</a>
+<ul>
+<li><a href="#org4f4ced2">3.2.1. Input Port Queuing</a></li>
+<li><a href="#org56a5dfb">3.2.2. Output Port Queuing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org64a698f">4. Control Plane: ICMP, Routing</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3cb5131" class="outline-2">
+<h2 id="org3cb5131"><span class="section-number-2">1.</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Network layer protocols transport segments from sending to receiving hosts.
+The <span class="underline">sender</span> encapsulates segments into datagrams and passes them to the link
+layer. The <span class="underline">receiver</span> delivers segments to the transport layer protocol.
+</p>
+
+<p>
+Every Internet device uses network layer protocols.
+</p>
+
+<p>
+<b>Routers</b> examine header fields in all IP datagrams passing through them
+and move datagrams from input interfaces to output inferfaces to
+transfer datagrams along end-to-end paths.
+</p>
+
+<p>
+Key network-layer functions:
+</p>
+<ul class="org-ul">
+<li><b>forwarding</b>: move packets from a router&rsquo;s input link to appropriate
+router output links (done for all datagrams very fast)</li>
+<li><b>routing</b>: network-wide process that determines route taken by packets
+from source to destination to fill forwarding tables (done in the background,
+takes longer), uses routing algorithms</li>
+</ul>
+
+<p>
+The <b>data plane</b> is a local, per-router function and determines how a datagram
+arriving on router input interface is forwarded to router output interface.
+</p>
+
+<p>
+The <b>control plane</b> uses network-wide logic to determine how a datagram is routed
+among routers along end-to-end paths from source host to destination host.
+</p>
+
+<p>
+Control plane approaches:
+</p>
+<ul class="org-ul">
+<li><b>traditional routing algorithms</b>: implemented in routers (both planes implemented
+monolithically within a router)
+<ul class="org-ul">
+<li>individual routing algorithm components in every router interact in the control
+plane</li>
+</ul></li>
+<li><b>software-defined networking</b>: explicitly separate the two planes by implementing
+the control plane as a service in remote servers
+<ul class="org-ul">
+<li>remote controller computes and installs forwarding tables in routers</li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-org7fda016" class="outline-3">
+<h3 id="org7fda016"><span class="section-number-3">1.1.</span> Best Effort Service</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The Internet runs on a &ldquo;best effort&rdquo; service model, so there are no guarantees on:
+</p>
+<ul class="org-ul">
+<li>successful datagram delivery to the destination</li>
+<li>timing or order of delivery</li>
+<li>bandwidth available for end-to-end flow</li>
+</ul>
+
+<p>
+Best effort is simple and has allowed Internet to be widely adopted.
+Successful provisioning of bandwidth allows performance of real-time
+applications to be good enough for most of the time.
+</p>
+
+<p>
+Replicated, application-layer distributed services connect close to client networks
+which allows services to be provided from multiple locations.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd7d3a90" class="outline-2">
+<h2 id="orgd7d3a90"><span class="section-number-2">2.</span> Data Plane: The Internet Protocol</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Data plane is:
+</p>
+<ul class="org-ul">
+<li>connectionless (datagram-based)</li>
+<li>best-effort delivery
+<ul class="org-ul">
+<li>packets can be lost, delivered out of order, or delayed</li>
+</ul></li>
+<li>a common packet format for IPv4 and new packet format for IPv6</li>
+<li>global addressing for identifying all hosts (ARP)</li>
+<li>sister protocol that performs error reporting and enables signaling between
+routers: ICMP (v4, v6)</li>
+</ul>
+
+<p>
+IPv4 datagram has
+</p>
+<ul class="org-ul">
+<li>IP version number</li>
+<li>header length (bytes)</li>
+<li>type of service</li>
+<li>total datagram length (bytes)</li>
+<li>16-bit identifier</li>
+<li>flag</li>
+<li>fragmentation/reassembly and offset info</li>
+<li>time to live: remaining max hops</li>
+<li>upper layer protocol (TCP or UDP)</li>
+<li>header checksum</li>
+<li>32-bit source IP address</li>
+<li>32-bit destination IP address</li>
+<li>options (timestamp, record route taken, etc)</li>
+<li>payload data</li>
+</ul>
+
+<p>
+When no options, overhead is 20 bytes.
+Upper layer protocol can be:
+</p>
+<ul class="org-ul">
+<li>ICMP: 1</li>
+<li>TCP: 6</li>
+<li>UDP: 17</li>
+<li>IPv4: 4</li>
+<li>IPv6: 41</li>
+</ul>
+
+<p>
+If header checksum detects an error, datagram is dropped.
+Must be recomputed at every hop because of TTL and options.
+</p>
+</div>
+<div id="outline-container-org040e33d" class="outline-3">
+<h3 id="org040e33d"><span class="section-number-3">2.1.</span> Fragmentation and Assembly</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Link layer protocols have maximum transfer unit size, which is the largest
+possible data size in a frame.
+</p>
+
+<p>
+Large IP datagrams can be divided (fragmented) within a network, and then
+reassembled at the final destination.
+IP header bits are used to identify and order related fragments.
+</p>
+
+<p>
+A receiver cannot hold fragments forever and fragments can arrive out of order,
+so loss of fragments can mean loss of entire datagram.
+The receiver starts a timer when the first fragment of a datagram arrives.
+If the timer expires before all the fragments are received, those already
+received are discarded.
+</p>
+
+<p>
+Fragmentation complicated routers and end-systems, which is used by attackers.
+</p>
+</div>
+</div>
+<div id="outline-container-org27bbe72" class="outline-3">
+<h3 id="org27bbe72"><span class="section-number-3">2.2.</span> IPv4 Addressing</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<b>IP address</b>: 32-bit identifier associated with each host or router interface
+(about 4 billion total)
+</p>
+
+<p>
+<b>Interface</b>: connection between host/router and physical link
+</p>
+<ul class="org-ul">
+<li>routers typically have multiple interfaces</li>
+<li>hosts typically have 1 or 2 interfaces</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org06254cf" class="outline-3">
+<h3 id="org06254cf"><span class="section-number-3">2.3.</span> IPv6 Addressing</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Possibly not enough 32-bit IPv4 addresses. Also, IPv4 is slow (variable length header).
+IPv6 allows different network-layer treatment of flows and better mobility management.
+</p>
+
+<p>
+IPv6 datagram has:
+</p>
+<ul class="org-ul">
+<li>IP version</li>
+<li>priority among datagrams in flow</li>
+<li>flow label: identify datagrams in same flow</li>
+<li>payload length</li>
+<li>next header</li>
+<li>hop limit</li>
+<li>128-bit source address</li>
+<li>128-bit destination address</li>
+<li>data payload</li>
+</ul>
+
+<p>
+Compared to IPv4, has no checksum, fragmentation/reassembly, and options.
+</p>
+
+<p>
+Not all routers can be upgraded simultaneously so must operate with mixed IPv4
+and IPv6.
+</p>
+
+<p>
+<b>Tunneling</b>: IPv6 datagram is carried as payload in IPv4 datagram among IPv4
+routers (packet within a packet)
+</p>
+
+<p>
+44.5% of clients access services via IPv6, so takes time to deploy.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org828892d" class="outline-2">
+<h2 id="org828892d"><span class="section-number-2">3.</span> What&rsquo;s Inside a Router</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+High-level view of generic router architecture has <b>routing processor</b> (control plane) and
+<b>high-speed switching fabric</b> (data plane).
+</p>
+
+<p>
+Input ports have a physical layer, link layer, and decentralized switching (using header
+field values, lookup output port using forwarding table in input port memory).
+</p>
+
+<p>
+<b>Destination-based forwarding</b>: forward based only on destination IP address
+</p>
+
+<p>
+<b>Generalized forwarding</b>: forward based on any set of header field values
+</p>
+</div>
+<div id="outline-container-org23c0d61" class="outline-3">
+<h3 id="org23c0d61"><span class="section-number-3">3.1.</span> Switching Fabrics</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Transfer packets from input link to appropriate output link.
+</p>
+
+<p>
+<b>Switching rate</b>: rate at which packets can be transferred from inputs to outputs,
+measured as multiple of input/output line rate
+</p>
+
+<p>
+For \(N\) inputs, switching rate of \(N\) times the line rate is desirable.
+</p>
+
+<p>
+Major types of switching fabrics are:
+</p>
+<ul class="org-ul">
+<li>memory</li>
+<li>bus</li>
+<li>interconnection network</li>
+</ul>
+</div>
+<div id="outline-container-org8ec8ae8" class="outline-4">
+<h4 id="org8ec8ae8"><span class="section-number-4">3.1.1.</span> Switching via Memory</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+Used traditionally, with switching under direct control of CPU.
+</p>
+
+<p>
+The packet is copied into system memory and speed is limited by memory bandwidth
+(2 bus crossings per datagram).
+</p>
+</div>
+</div>
+<div id="outline-container-org4fa22b7" class="outline-4">
+<h4 id="org4fa22b7"><span class="section-number-4">3.1.2.</span> Switching via Bus</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+Datagram from input port memory to output port memory via shared bus.
+</p>
+
+<p>
+<b>Bus contention</b>: switching speed is limited by bus bandwidth
+</p>
+</div>
+</div>
+<div id="outline-container-org5317c51" class="outline-4">
+<h4 id="org5317c51"><span class="section-number-4">3.1.3.</span> Interconnection Network</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+Initially developed to connect processors in multiprocessor.
+</p>
+
+<p>
+<b>Multistage switch</b>: \(n \times n\) switch from multiple stages of smaller switches
+</p>
+
+<p>
+With parallelism:
+</p>
+<ul class="org-ul">
+<li>fragment datagram into fixed length cells on entry</li>
+<li>switch cells through the fabric and reassemble datagram at exit</li>
+</ul>
+
+<p>
+Can scale by using multiple switching planes in parallel.
+</p>
+
+<p>
+Cisco CRS router:
+</p>
+<ul class="org-ul">
+<li>basic unit has 8 switching planes</li>
+<li>each plane has a 3 stage interconnection network</li>
+<li>up to 100s of Tbps switching capacity</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org98f4001" class="outline-3">
+<h3 id="org98f4001"><span class="section-number-3">3.2.</span> Port Queuing</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org4f4ced2" class="outline-4">
+<h4 id="org4f4ced2"><span class="section-number-4">3.2.1.</span> Input Port Queuing</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+If switch fabric slower than input ports combined, queuing may occur at input queues.
+This can lead to queuing delay and loss due to input buffer overflow.
+</p>
+
+<p>
+<b>Head of the Line (HOL) blocking</b>: queued datagram at front of queue prevents others
+in queue from moving forward
+</p>
+</div>
+</div>
+<div id="outline-container-org56a5dfb" class="outline-4">
+<h4 id="org56a5dfb"><span class="section-number-4">3.2.2.</span> Output Port Queuing</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+Buffering occurs when arrival rate via switch exceeds output line speed.
+</p>
+
+<p>
+Queuing delay (and loss) due to output port buffer congestion (overflow).
+</p>
+
+<p>
+<b>Buffering</b> is required when datagrams arrive from fabric faster than the link
+transmission rate.
+Must have <b>drop policy</b> to decide which datagrams to drop if no free buffers.
+</p>
+
+<p>
+<b>Scheduling discipline</b> chooses among queued datagrams for transmission.
+With priority scheduling, this decides who gets best performance.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org64a698f" class="outline-2">
+<h2 id="org64a698f"><span class="section-number-2">4.</span> Control Plane: ICMP, Routing</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-10-24 Thu 22:35</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+% Created 2024-10-24 Thu 22:35
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Network Layer}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Network Layer},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Overview}
+\label{sec:orga8120ec}
+Network layer protocols transport segments from sending to receiving hosts.
+The \uline{sender} encapsulates segments into datagrams and passes them to the link
+layer. The \uline{receiver} delivers segments to the transport layer protocol.
+
+Every Internet device uses network layer protocols.
+
+\textbf{Routers} examine header fields in all IP datagrams passing through them
+and move datagrams from input interfaces to output inferfaces to
+transfer datagrams along end-to-end paths.
+
+Key network-layer functions:
+\begin{itemize}
+\item \textbf{forwarding}: move packets from a router's input link to appropriate
+router output links (done for all datagrams very fast)
+\item \textbf{routing}: network-wide process that determines route taken by packets
+from source to destination to fill forwarding tables (done in the background,
+takes longer), uses routing algorithms
+\end{itemize}
+
+The \textbf{data plane} is a local, per-router function and determines how a datagram
+arriving on router input interface is forwarded to router output interface.
+
+The \textbf{control plane} uses network-wide logic to determine how a datagram is routed
+among routers along end-to-end paths from source host to destination host.
+
+Control plane approaches:
+\begin{itemize}
+\item \textbf{traditional routing algorithms}: implemented in routers (both planes implemented
+monolithically within a router)
+\begin{itemize}
+\item individual routing algorithm components in every router interact in the control
+plane
+\end{itemize}
+\item \textbf{software-defined networking}: explicitly separate the two planes by implementing
+the control plane as a service in remote servers
+\begin{itemize}
+\item remote controller computes and installs forwarding tables in routers
+\end{itemize}
+\end{itemize}
+\subsection{Best Effort Service}
+\label{sec:org919607d}
+The Internet runs on a ``best effort'' service model, so there are no guarantees on:
+\begin{itemize}
+\item successful datagram delivery to the destination
+\item timing or order of delivery
+\item bandwidth available for end-to-end flow
+\end{itemize}
+
+Best effort is simple and has allowed Internet to be widely adopted.
+Successful provisioning of bandwidth allows performance of real-time
+applications to be good enough for most of the time.
+
+Replicated, application-layer distributed services connect close to client networks
+which allows services to be provided from multiple locations.
+\section{Data Plane: The Internet Protocol}
+\label{sec:org28e2ebc}
+Data plane is:
+\begin{itemize}
+\item connectionless (datagram-based)
+\item best-effort delivery
+\begin{itemize}
+\item packets can be lost, delivered out of order, or delayed
+\end{itemize}
+\item a common packet format for IPv4 and new packet format for IPv6
+\item global addressing for identifying all hosts (ARP)
+\item sister protocol that performs error reporting and enables signaling between
+routers: ICMP (v4, v6)
+\end{itemize}
+
+IPv4 datagram has
+\begin{itemize}
+\item IP version number
+\item header length (bytes)
+\item type of service
+\item total datagram length (bytes)
+\item 16-bit identifier
+\item flag
+\item fragmentation/reassembly and offset info
+\item time to live: remaining max hops
+\item upper layer protocol (TCP or UDP)
+\item header checksum
+\item 32-bit source IP address
+\item 32-bit destination IP address
+\item options (timestamp, record route taken, etc)
+\item payload data
+\end{itemize}
+
+When no options, overhead is 20 bytes.
+Upper layer protocol can be:
+\begin{itemize}
+\item ICMP: 1
+\item TCP: 6
+\item UDP: 17
+\item IPv4: 4
+\item IPv6: 41
+\end{itemize}
+
+If header checksum detects an error, datagram is dropped.
+Must be recomputed at every hop because of TTL and options.
+\subsection{Fragmentation and Assembly}
+\label{sec:orgb5bc666}
+Link layer protocols have maximum transfer unit size, which is the largest
+possible data size in a frame.
+
+Large IP datagrams can be divided (fragmented) within a network, and then
+reassembled at the final destination.
+IP header bits are used to identify and order related fragments.
+
+A receiver cannot hold fragments forever and fragments can arrive out of order,
+so loss of fragments can mean loss of entire datagram.
+The receiver starts a timer when the first fragment of a datagram arrives.
+If the timer expires before all the fragments are received, those already
+received are discarded.
+
+Fragmentation complicated routers and end-systems, which is used by attackers.
+\subsection{IPv4 Addressing}
+\label{sec:org4612f06}
+\textbf{IP address}: 32-bit identifier associated with each host or router interface
+(about 4 billion total)
+
+\textbf{Interface}: connection between host/router and physical link
+\begin{itemize}
+\item routers typically have multiple interfaces
+\item hosts typically have 1 or 2 interfaces
+\end{itemize}
+\subsection{IPv6 Addressing}
+\label{sec:org1fd18f7}
+Possibly not enough 32-bit IPv4 addresses. Also, IPv4 is slow (variable length header).
+IPv6 allows different network-layer treatment of flows and better mobility management.
+
+IPv6 datagram has:
+\begin{itemize}
+\item IP version
+\item priority among datagrams in flow
+\item flow label: identify datagrams in same flow
+\item payload length
+\item next header
+\item hop limit
+\item 128-bit source address
+\item 128-bit destination address
+\item data payload
+\end{itemize}
+
+Compared to IPv4, has no checksum, fragmentation/reassembly, and options.
+
+Not all routers can be upgraded simultaneously so must operate with mixed IPv4
+and IPv6.
+
+\textbf{Tunneling}: IPv6 datagram is carried as payload in IPv4 datagram among IPv4
+routers (packet within a packet)
+
+44.5\% of clients access services via IPv6, so takes time to deploy.
+\section{What's Inside a Router}
+\label{sec:org6df41e9}
+High-level view of generic router architecture has \textbf{routing processor} (control plane) and
+\textbf{high-speed switching fabric} (data plane).
+
+Input ports have a physical layer, link layer, and decentralized switching (using header
+field values, lookup output port using forwarding table in input port memory).
+
+\textbf{Destination-based forwarding}: forward based only on destination IP address
+
+\textbf{Generalized forwarding}: forward based on any set of header field values
+\subsection{Switching Fabrics}
+\label{sec:org50a226b}
+Transfer packets from input link to appropriate output link.
+
+\textbf{Switching rate}: rate at which packets can be transferred from inputs to outputs,
+measured as multiple of input/output line rate
+
+For \(N\) inputs, switching rate of \(N\) times the line rate is desirable.
+
+Major types of switching fabrics are:
+\begin{itemize}
+\item memory
+\item bus
+\item interconnection network
+\end{itemize}
+\subsubsection{Switching via Memory}
+\label{sec:orgf022c12}
+Used traditionally, with switching under direct control of CPU.
+
+The packet is copied into system memory and speed is limited by memory bandwidth
+(2 bus crossings per datagram).
+\subsubsection{Switching via Bus}
+\label{sec:orgd758274}
+Datagram from input port memory to output port memory via shared bus.
+
+\textbf{Bus contention}: switching speed is limited by bus bandwidth
+\subsubsection{Interconnection Network}
+\label{sec:org5963d74}
+Initially developed to connect processors in multiprocessor.
+
+\textbf{Multistage switch}: \(n \times n\) switch from multiple stages of smaller switches
+
+With parallelism:
+\begin{itemize}
+\item fragment datagram into fixed length cells on entry
+\item switch cells through the fabric and reassemble datagram at exit
+\end{itemize}
+
+Can scale by using multiple switching planes in parallel.
+
+Cisco CRS router:
+\begin{itemize}
+\item basic unit has 8 switching planes
+\item each plane has a 3 stage interconnection network
+\item up to 100s of Tbps switching capacity
+\end{itemize}
+\subsection{Port Queuing}
+\label{sec:org0e30395}
+\subsubsection{Input Port Queuing}
+\label{sec:orge34b70b}
+If switch fabric slower than input ports combined, queuing may occur at input queues.
+This can lead to queuing delay and loss due to input buffer overflow.
+
+\textbf{Head of the Line (HOL) blocking}: queued datagram at front of queue prevents others
+in queue from moving forward
+\subsubsection{Output Port Queuing}
+\label{sec:org1834fa9}
+Buffering occurs when arrival rate via switch exceeds output line speed.
+
+Queuing delay (and loss) due to output port buffer congestion (overflow).
+
+\textbf{Buffering} is required when datagrams arrive from fabric faster than the link
+transmission rate.
+Must have \textbf{drop policy} to decide which datagrams to drop if no free buffers.
+
+\textbf{Scheduling discipline} chooses among queued datagrams for transmission.
+With priority scheduling, this decides who gets best performance.
+\section{Control Plane: ICMP, Routing}
+\label{sec:org472fb45}
+\end{document}
