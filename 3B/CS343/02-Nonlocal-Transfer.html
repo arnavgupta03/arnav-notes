@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-09-05 Thu 00:19 -->
+<!-- 2024-10-26 Sat 16:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nonlocal Transfer</title>
@@ -202,13 +202,29 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0a85279">1. Nonlocal Transfer</a></li>
-<li><a href="#orgd3c9a33">2. Traditional Approaches</a></li>
+<li><a href="#org9ed9ec1">1. Nonlocal Transfer</a></li>
+<li><a href="#org0612bc7">2. Traditional Approaches</a></li>
+<li><a href="#org70d948f">3. Dynamic Multi-Level Exit</a></li>
+<li><a href="#org697bb20">4. Exception Handling</a></li>
+<li><a href="#org13a2638">5. Terminology</a></li>
+<li><a href="#org1f8b048">6. Execution Environment</a></li>
+<li><a href="#org463e6d7">7. Implementation</a></li>
+<li><a href="#orgbb0e3b5">8. Static/Dynamic Call/Return</a>
+<ul>
+<li><a href="#orgf4ceed2">8.1. Static Propagation (Sequel)</a></li>
+<li><a href="#org994d174">8.2. Dynamic Propagation</a>
+<ul>
+<li><a href="#org152af87">8.2.1. Termination</a></li>
+<li><a href="#org6ac33d5">8.2.2. Resumption</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0a85279" class="outline-2">
-<h2 id="org0a85279"><span class="section-number-2">1.</span> Nonlocal Transfer</h2>
+<div id="outline-container-org9ed9ec1" class="outline-2">
+<h2 id="org9ed9ec1"><span class="section-number-2">1.</span> Nonlocal Transfer</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Routine <b>activation</b> (call/invocation) introduces complex control flow.
@@ -253,8 +269,8 @@ This pattern does not handle multiple levels of nested modularization.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd3c9a33" class="outline-2">
-<h2 id="orgd3c9a33"><span class="section-number-2">2.</span> Traditional Approaches</h2>
+<div id="outline-container-org0612bc7" class="outline-2">
+<h2 id="org0612bc7"><span class="section-number-2">2.</span> Traditional Approaches</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <b>Return code</b>: returns value indicating normal or exceptional execution
@@ -318,10 +334,345 @@ status flags.
 </p>
 </div>
 </div>
+<div id="outline-container-org70d948f" class="outline-2">
+<h2 id="org70d948f"><span class="section-number-2">3.</span> Dynamic Multi-Level Exit</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Better than returning one level at a time and allows transfer of control directly to original caller.
+</p>
+
+<p>
+<b>Dynamic Multi-level Exit</b>: extends call/return semantics to transfer in the reverse direction to
+normal routine calls, requiring nonlocal transfer.
+</p>
+
+<p>
+A <b>label variable</b> contains:
+</p>
+<ul class="org-ul">
+<li>a pointer to a block activation on the stack</li>
+<li>a transfer point within the block</li>
+</ul>
+
+<p>
+Nonlocal transfer is a 2 step operation:
+</p>
+<ol class="org-ol">
+<li>direct control flow to the specified activation on the stack</li>
+<li>go to the transfer point (label constant) within that routine</li>
+</ol>
+
+<p>
+Label value is not statically determined (hence dynamic MLE).
+With recursion, the distance between activations on the stack is unknown and labels can be set
+and reset through recursive calls.
+</p>
+
+<p>
+Transfer between <code>goto</code> and label causes termination of a stack block.
+Termination is implicit for direct transfer of control or requires stack unwinding if activations
+contain objects with destructors or finalizers.
+</p>
+
+<p>
+DME is possible in C using:
+</p>
+<ul class="org-ul">
+<li><code>jmp_buf</code> to declare a label variable</li>
+<li><code>setjmp</code> to initialize a label variable</li>
+<li><code>longjmp</code> to go to a label variable</li>
+</ul>
+
+<p>
+DME allows multiple forms of returns to any level:
+</p>
+<ul class="org-ul">
+<li>normal return transfers to statement after the call, implying completion of routine&rsquo;s algorithm</li>
+<li>exceptional return transfers to statement not after the call, indicating an ancillary completion</li>
+</ul>
+
+<p>
+Nonlocal transfer can be problematic since it is too general.
+</p>
+</div>
+</div>
+<div id="outline-container-org697bb20" class="outline-2">
+<h2 id="org697bb20"><span class="section-number-2">4.</span> Exception Handling</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Refers to DME and nonlocal transfer among routines, and is more than just error handling.
+</p>
+
+<p>
+<b>Exceptional event</b>: event that is usually known to exist but is ancillary to an algorithm (occurs
+with low frequency)
+</p>
+
+<p>
+<b>Exception Handling Mechanism</b> (EHM): provides alternate kinds of control flow
+</p>
+
+<p>
+EHM allows for more robustness since exceptions are active, forcing programs to react immediately when
+an exceptional event occurs.
+</p>
+</div>
+</div>
+<div id="outline-container-org13a2638" class="outline-2">
+<h2 id="org13a2638"><span class="section-number-2">5.</span> Terminology</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<b>Execution</b>: language unit in which an exception can be raised, usually any entity with its own
+runtime stack
+</p>
+
+<p>
+<b>Exception</b>: instance of an exception type, generated by executing an operation indicating an
+ancillary (exceptional) situation in execution
+</p>
+
+<p>
+<b>Raise/Throw</b>: special operation that creates an exception
+</p>
+
+<p>
+<b>Source Execution</b>: execution that raises an exception
+</p>
+
+<p>
+<b>Faulting Execution</b>: execution changing control flow due to a raised exception
+</p>
+
+<p>
+<b>Local Exception</b>: when an exception is raised and handled by the same execution (source and faulting are
+the same)
+</p>
+
+<p>
+<b>Nonlocal Exception</b>: when an exception is raised by a source execution but delivered to a different
+faulting execution
+</p>
+
+<p>
+<b>Concurrent Exception</b>: nonlocal exception where the source and faulting executions are executing
+concurrently
+</p>
+
+<p>
+<b>Propagation</b>: directs control from a raise in the source execution to a handler in the faulting
+execution
+</p>
+
+<p>
+<b>Propagation Mechanism</b>: rules used to locate a handler
+</p>
+<ul class="org-ul">
+<li>most commonly gives precedence to handlers higher in the call stack and specific handlers, through
+linear search during propagation</li>
+</ul>
+
+<p>
+<b>Handler</b>: inline routine responsible for handling raised exception
+</p>
+<ul class="org-ul">
+<li>catches exception by matching exception type</li>
+<li>executes like a normal subroutine and can return (exception handled) or raise exceptions</li>
+<li>re-raising the current exception continues propagation of caught exception</li>
+</ul>
+
+<p>
+<b>Guarded Block</b>: language block with associated handlers
+</p>
+
+<p>
+<b>Unguarded Block</b>: block with no handlers
+</p>
+
+<p>
+<b>Termination</b>: control cannot return to the raise point, since <b>stack unwinding</b> occurs
+</p>
+
+<p>
+<b>Resumption</b>: control returns to the raise point (no stack unwinding)
+</p>
+</div>
+</div>
+<div id="outline-container-org1f8b048" class="outline-2">
+<h2 id="org1f8b048"><span class="section-number-2">6.</span> Execution Environment</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+An object-oriented concurrent environment requires a more complex EHM than a non object-oriented sequential
+environment.
+</p>
+
+<p>
+Objects may have destructors that must be executed no matter if the object ends by normal or exceptional
+termination. (ex. <code>finally</code> clause)
+</p>
+
+<p>
+C++ does not allow direct nonlocal transfer, continuation, coroutine, and tasks with their own execution
+stack.
+</p>
+
+<p>
+With multiple stacks, an EHM can be more sophisticated (more complex).
+</p>
+</div>
+</div>
+<div id="outline-container-org463e6d7" class="outline-2">
+<h2 id="org463e6d7"><span class="section-number-2">7.</span> Implementation</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+In most programming languages, DME is limited with exception handling.
+</p>
+
+<p>
+To implement throw/catch, the <code>throw</code> must know the last guarded block with handler for the raised
+exception type. The approach for this is:
+</p>
+<ul class="org-ul">
+<li>associate a label variable with each exception type</li>
+<li>set label variable on entry to each guarded block with handler for the type</li>
+<li>reset label variable on exit to previous value</li>
+</ul>
+
+<p>
+Setting/resetting label on each <code>try</code> block can have unnecessary cost, so instead <code>catch</code> data is
+stored once externally for each block and handler is found by linear search during a stack walk.
+This makes <code>try</code> cheap but <code>throw</code> expensive.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbb0e3b5" class="outline-2">
+<h2 id="orgbb0e3b5"><span class="section-number-2">8.</span> Static/Dynamic Call/Return</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+All routine/exceptional control flow can be characterized as:
+</p>
+<ol class="org-ol">
+<li><b>static/dynamic call</b>: routine/exception name at the call/raise is looked up statically (compile-time)
+or dynamically (runtime)</li>
+<li><b>static/dynamic return</b>: after a routine/handler completes, it returns to its static (definition) or
+dynamic (call) context</li>
+</ol>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">return/handled</td>
+<td class="org-left">static call</td>
+<td class="org-left">dynamic call</td>
+</tr>
+
+<tr>
+<td class="org-left">static</td>
+<td class="org-left">sequel</td>
+<td class="org-left">termination exception</td>
+</tr>
+
+<tr>
+<td class="org-left">dynamic</td>
+<td class="org-left">routine</td>
+<td class="org-left">routine pointer, virtual routine, resumption</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-orgf4ceed2" class="outline-3">
+<h3 id="orgf4ceed2"><span class="section-number-3">8.1.</span> Static Propagation (Sequel)</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+A routine with no return value, where
+</p>
+<ul class="org-ul">
+<li>the sequel name is looked up lexically at the call site</li>
+<li>control returns to the end of the block in which the sequel is declared</li>
+</ul>
+
+<p>
+Allows modularization of code with static exits, and propagation is along the lexical structure.
+</p>
+
+<p>
+Sequels help handle termination for non-recoverable events.
+</p>
+
+<p>
+<span class="underline">Advantage</span>: handler is statically known and can be as efficient as a direct transfer
+</p>
+
+<p>
+<span class="underline">Disadvantage</span>: sequel only works for monolithic programs since it must be statically nested at
+the point of use
+</p>
+</div>
+</div>
+<div id="outline-container-org994d174" class="outline-3">
+<h3 id="org994d174"><span class="section-number-3">8.2.</span> Dynamic Propagation</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+Dynamic propagation/static return is just dynamic MLE.
+</p>
+
+<p>
+<span class="underline">Advantage</span>: dynamic propagation works for separately compiled programs
+</p>
+
+<p>
+<span class="underline">Disadvantage</span>: handler is not statically known
+</p>
+</div>
+<div id="outline-container-org152af87" class="outline-4">
+<h4 id="org152af87"><span class="section-number-4">8.2.1.</span> Termination</h4>
+<div class="outline-text-4" id="text-8-2-1">
+<p>
+Control transfers from the start of propagation to a dynamically defined handler and then
+performs a static return (like a sequel).
+</p>
+
+<p>
+Basic termination forms for a non-recoverable operation:
+</p>
+<ul class="org-ul">
+<li><b>terminate</b>: provides limited mechanism for block transfer on the call stack, like labelled break
+and no need to forward alternative outcomes
+<ul class="org-ul">
+<li>catch can also depend on the object raising the exception (exception object from object used)</li>
+</ul></li>
+<li><b>retry</b>: combination of termination with special handler semantics, restart the guarded block
+handling the exception</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6ac33d5" class="outline-4">
+<h4 id="org6ac33d5"><span class="section-number-4">8.2.2.</span> Resumption</h4>
+<div class="outline-text-4" id="text-8-2-2">
+<p>
+Control transfers from the start of propagation to a dynamically defined handler and then
+performs a dynamic return (stack not unwound).
+</p>
+
+<p>
+Resumption handler is a corrective action so a computation can continue.
+</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-09-05 Thu 00:19</p>
+<p class="date">Created: 2024-10-26 Sat 16:51</p>
 </div>
 </body>
 </html>
