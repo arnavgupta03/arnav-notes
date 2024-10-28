@@ -1,0 +1,434 @@
+% Created 2024-10-28 Mon 01:35
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Locks}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Locks},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Lock Taxonomy}
+\label{sec:org1fc6b33}
+Locks can be either spinning or blocking.
+
+\textbf{Spinning locks} busy wait until an event occurs, so the task oscillates between ready and running
+due to time slicing (can also optionally yield).
+
+\textbf{Blocking locks} do not busy wait but block until an event occurs, so some other mechanism must
+unblock the waiting task when the event happens.
+\section{Spin Lock}
+\label{sec:org1fd94d6}
+When a task is busy waiting, it usually loops until the critical section is unlocked or
+it is preempted and placed on the ready queue.
+
+To increase uniprocessor efficiency, a task can:
+\begin{itemize}
+\item explicitly terminate its time slice
+\item move back to the ready state after only one event check fails
+\end{itemize}
+
+\texttt{yield} relinquishes the time-slice by rescheduling the running task back onto the ready
+queue.
+To increase multiprocessor efficiency, a task can yield after \(N\) event checks fail.
+
+\textbf{Adaptive Spin Lock}: allow adjustment of spin duration
+
+Most spin-lock implementations can cause starvation of 1+ tasks.
+
+Spin lock is appropriate and necessary in situations where this is no other work to do.
+\subsection{Implementation}
+\label{sec:org2c64b84}
+\(\mu\)C++ provides \texttt{uSpinLock} (non-yielding) and \texttt{uLock} (yielding)
+\begin{verbatim}
+class uSpinLock {
+    public:
+        uSpinLock(); // open
+        void acquire();
+        bool tryacquire(); // makes only 1 attempt to acquire lock
+        void release();
+}
+
+class uLock {
+    public:
+        uLock( unsigned int value = 1 );
+        void acquire();
+        bool tryacquire(); // makes only 1 attempt to acquire lock
+        void release();
+}
+\end{verbatim}
+
+Locks built from atomic hardware instructions.
+Locks start closed (0) or opened (1).
+
+Starvation can occur in theory, but rare in practice.
+
+Cannot assign to or copy a lock, must use as reference/pointer.
+Can be used for synchronization or mutual exclusion.
+\section{Blocking Locks}
+\label{sec:org16569a3}
+For blocking locks, the acquiring task is not the only one responsible for detecting an
+open lock:
+\begin{itemize}
+\item acquiring task makes 1 check for open lock and then blocks
+\item releasing task is responsible for detecting a blocked acquirer and transferring or
+releasing the lock
+\end{itemize}
+
+Blocking locks reduce busy waiting through \textbf{cooperation}.
+
+All blocking locks have
+\begin{itemize}
+\item state to facilitate lock semantics
+\item list of blocked acquirers
+\end{itemize}
+\subsection{Mutex Lock}
+\label{sec:org658ebfc}
+Used solely to provide mutual exclusion:
+\begin{itemize}
+\item separates lock usage between synchronization and mutual exclusion
+\item permits optimizations and checks as the lock only provides one specialized function
+\end{itemize}
+
+Mutex locks can be \textbf{single acquisition} (acquirer cannot acquire again) or
+\textbf{multiple acquisition} (acquirer can acquire multiple times).
+Multiple acquisition locks are called \textbf{owner locks}.
+
+Owner locks can handle looping/recursion and may require 1 release or as many
+as it requires.
+\subsubsection{Implementation}
+\label{sec:org6a117ef}
+\begin{verbatim}
+class MutexLock {
+        bool avail;
+        Task * owner;
+        queue<Task> blocked;
+        SpinLock lock;
+    public:
+        MutexLock() : avail { true }, owner{ nullptr } {}
+        void acquire() {
+            lock.acquire();
+            while ( !avail && owner != currThread() ) {
+                yieldNoSchedule( lock );
+                lock.acquire();
+            }
+            avail = false;
+            owner = currThread();
+            lock.release();
+        }
+
+        void release() {
+            lock.acquire();
+            if ( owner != currThread() ) {
+                // error check
+            }
+            owner = nullptr;
+            if ( !blocked.empty() ) {
+                // remove task from blocked list and make ready
+            }
+            avail = true;
+            lock.release();
+        }
+}
+\end{verbatim}
+
+\texttt{yieldNoSchedule} yields the processor time slice but does not reschedule thread to
+the ready queue.
+
+This code allows for barging since \texttt{avail} and the lock reset.
+
+For \textbf{barging avoidance}, must hold \texttt{avail} between releasing and unblocking task
+(protects against bounded overtaking):
+\begin{verbatim}
+class MutexLock {
+        bool avail;
+        Task * owner;
+        queue<Task> blocked;
+        SpinLock lock;
+    public:
+        MutexLock() : avail { true }, owner{ nullptr } {}
+        void acquire() {
+            lock.acquire();
+            if ( !avail && owner != currThread() ) {
+                yieldNoSchedule( lock );
+                // do not reacquire lock since avail == false
+            } else {
+                avail = false;
+                lock.release();
+            }
+            owner = currThread();
+        }
+
+        void release() {
+            lock.acquire();
+            owner = nullptr;
+            if ( !blocked.empty() ) {
+                // remove task from blocked list and make ready
+            } else {
+                avail = true;
+            }
+            lock.release();
+        }
+}
+\end{verbatim}
+
+With these changes, bargers enter mutual exclusion protocol but block so the released
+task does not busy wait.
+This means mutual exclusion conceptually passed from releasing to unblocking tasks.
+
+For \textbf{barging prevention}, must hold \texttt{lock} between releasing and unblocking task
+(protects against unbounded overtaking):
+\begin{verbatim}
+class MutexLock {
+        bool avail;
+        Task * owner;
+        queue<Task> blocked;
+        SpinLock lock;
+    public:
+        MutexLock() : avail { true }, owner{ nullptr } {}
+        void acquire() {
+            lock.acquire();
+            if ( !avail && owner != currThread() ) {
+                yieldNoSchedule( lock );
+                // do not reacquire lock
+            } else {
+                avail = false;
+            }
+            owner = currThread();
+            lock.release();
+        }
+
+        void release() {
+            lock.acquire();
+            owner = nullptr;
+            if ( !blocked.empty() ) {
+                // remove task from blocked list and make ready
+                // do not release lock
+            } else {
+                avail = true;
+                lock.release();
+            }
+        }
+}
+\end{verbatim}
+
+The critical section is not bracketed by the spin lock when the lock is passed,
+so this works.
+
+An alternative would be to leave the lock owner at the front of the blocked list
+to act as availability and owner variable.
+If the critical section is acquired, the blocked list must have a node on it to check
+if it is in use.
+\subsubsection{uOwnerLock}
+\label{sec:orgba551c5}
+\begin{verbatim}
+class uOwnerLock {
+    public:
+        uOwnerLock();
+        uBaseTask * owner(); // nullptr if no owner, else owner address
+        unsigned int times(); // number of times lock has been acquired by owner
+        void acquire();
+        bool tryacquire();
+        void release();
+}
+\end{verbatim}
+
+Must release as many times as acquired.
+
+Can use \texttt{\_Finally} or RAII to ensure lock is always released.
+However, this cannot be used for barging prevention.
+\subsubsection{Stream Locks}
+\label{sec:org778e830}
+Can use \texttt{osacquire} for output streams and \texttt{isacquire} for input streams
+to ensure predictable streams.
+\subsection{Synchronization Lock}
+\label{sec:orgc7637ab}
+Used solely to block tasks waiting for synchronization.
+
+Only state is a list of blocked tasks, so:
+\begin{itemize}
+\item acquiring task always blocks (no state to make it conditional)
+\item release is lost when no waiting task (no state to remember it)
+\end{itemize}
+
+Uses wait for acquire and signal for release.
+\subsubsection{Implementation}
+\label{sec:orgbd5ffdf}
+Needs mutual exclusion for safe implementation.
+
+Location of mutual exclusion classifies synchronization lock:
+\begin{itemize}
+\item \textbf{external lock}: use an external lock to protect task list
+\item \textbf{internal lock}: use an internal lock to protect state
+\end{itemize}
+
+With external locking:
+\begin{verbatim}
+class SyncLock {
+        Task * list;
+    public:
+        SyncLock() : list{ nullptr } {}
+        void acquire( MutexLock & m ) {
+            // add self to task list
+            yieldNoSchedule( m );
+            // possibly reacquire mutex lock
+        }
+        void release() {
+            if ( list != nullptr ) {
+                // remove task from blocked list and make it ready
+            }
+        }
+}
+\end{verbatim}
+
+Uses external task to avoid lost release and need mutual exclusion
+to protect task list (and possible external state).
+The releasing task detects a blocked task and performs necessary
+cooperation.
+
+To use with barging avoidance:
+\begin{verbatim}
+m.acquire();
+if ( !s.empty() ) {
+    s.release();
+} else {
+    occupied = false;
+}
+m.release();
+\end{verbatim}
+
+To use with barging prevention:
+\begin{verbatim}
+m.acquire();
+if ( !s.empty() ) {
+    s.release();
+} else {
+    occupied = false;
+    m.release();
+}
+\end{verbatim}
+
+With internal locking:
+\begin{verbatim}
+class SyncLock {
+        Task * list;
+        SpinLock lock;
+    public:
+        SyncLock() : list{ nullptr } {}
+        void acquire( MutexLock & m ) {
+            lock.acquire();
+            // add self to task list
+            m.release();
+            // can be interrupted here, but fine since spin lock
+            yieldNoSchedule( lock );
+            m.acquire(); // possibly reacquire mutex lock
+        }
+        void release() {
+            lock.acquire();
+            if ( list != nullptr ) {
+                // remove task from blocked list and make it ready
+            }
+            lock.release();
+        }
+}
+\end{verbatim}
+
+This still takes an external lock for barging avoidance/prevention.
+\subsubsection{uCondLock}
+\label{sec:orgfbe7d93}
+\begin{verbatim}
+class uCondLock {
+    public:
+        uCondLock();
+        void wait( uOwnerLock & lock );
+        bool signal(); // unblocks in FIFO order
+        bool broadcast(); // unblocks all waiting tasks
+        bool empty(); // are blocked tasks on the queue?
+}
+\end{verbatim}
+
+\texttt{wait} atomically blocks the calling task and releases the argument owner lock,
+and reacquires it before returning.
+
+\texttt{signal} and \texttt{broadcast} do nothing for an empty conditional and return false,
+otherwise return true.
+\subsubsection{Programming Pattern}
+\label{sec:orga160e02}
+Must provide external mutual exclusion and protect against lost signal (release).
+
+Should surround conditional lock with mutex lock.
+\subsection{Barrier}
+\label{sec:org9684358}
+Coordinates a group of tasks performing a concurrent operation surrounded by sequential
+operations.
+Meant for synchronization, not mutual exclusion.
+
+Two kinds of barriers:
+\begin{itemize}
+\item threads == group size
+\item threads > group size
+\end{itemize}
+
+Barrier retains state about the events it manages (num tasks blocked on the barrier).
+Most barriers use internal locking.
+
+Barrier blocks each task at call to \texttt{block} until all tasks have called \texttt{block}.
+Last task to call \texttt{block} does not block, instead it releases all other tasks.
+
+Must specify in advance number of \texttt{block} operations before tasks released.
+
+Barriers are commonly used for synchronized one-shot and for synchronized start
+and end in a cycle.
+
+Using a barrier is cheaper than creating and deleting tasks for each computation.
+\subsubsection{Fetch Increment Barrier}
+\label{sec:org8ae4f6e}
+A spinning, T == G barrier can be implemented with the fetch-increment instruction
+and a flag that waiters wait on.
+\subsubsection{uBarrier}
+\label{sec:orgbb2bac6}
+\(\mu\)C++ barrier is a blocking, T > G, barging-prevention coroutine, where \texttt{main}
+can be resumed by the last task arriving at the barrier:
+\begin{verbatim}
+#include <uBarrier.h>
+_Cormonitor uBarrier {
+    protected:
+        void main() { for ( ;; ) suspend(); }
+        virtual void last() { resume(); } // called by last task to barier
+    public:
+        uBarrier( unsigned int total );
+        unsigned int total() const; // # of tasks synchronizing
+        unsigned int waiters() const; // # of waiting tasks
+        void reset( unsigned int total ); // reset # of tasks synchronizing
+        virtual void block(); //wait for Nth thread
+}
+\end{verbatim}
+
+\texttt{uBarrier} has implicit mutual exclusion so no barging.
+
+Can build a barrier by inheriting from \texttt{uBarrier}, redefining \texttt{last}, \texttt{block},
+and possibly \texttt{main}.
+
+Coroutine barrier can be reused many times.
+\end{document}

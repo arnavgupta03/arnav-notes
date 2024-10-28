@@ -1,0 +1,393 @@
+#+title: Locks
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Lock Taxonomy
+Locks can be either spinning or blocking.
+
+*Spinning locks* busy wait until an event occurs, so the task oscillates between ready and running
+due to time slicing (can also optionally yield).
+
+*Blocking locks* do not busy wait but block until an event occurs, so some other mechanism must
+unblock the waiting task when the event happens.
+
+* Spin Lock
+When a task is busy waiting, it usually loops until the critical section is unlocked or
+it is preempted and placed on the ready queue.
+
+To increase uniprocessor efficiency, a task can:
+- explicitly terminate its time slice
+- move back to the ready state after only one event check fails
+
+~yield~ relinquishes the time-slice by rescheduling the running task back onto the ready
+queue.
+To increase multiprocessor efficiency, a task can yield after $N$ event checks fail.
+
+*Adaptive Spin Lock*: allow adjustment of spin duration
+
+Most spin-lock implementations can cause starvation of 1+ tasks.
+
+Spin lock is appropriate and necessary in situations where this is no other work to do.
+
+** Implementation
+\mu{}C++ provides ~uSpinLock~ (non-yielding) and ~uLock~ (yielding)
+#+BEGIN_SRC cpp
+class uSpinLock {
+    public:
+        uSpinLock(); // open
+        void acquire();
+        bool tryacquire(); // makes only 1 attempt to acquire lock
+        void release();
+}
+
+class uLock {
+    public:
+        uLock( unsigned int value = 1 );
+        void acquire();
+        bool tryacquire(); // makes only 1 attempt to acquire lock
+        void release();
+}
+#+END_SRC
+
+Locks built from atomic hardware instructions.
+Locks start closed (0) or opened (1).
+
+Starvation can occur in theory, but rare in practice.
+
+Cannot assign to or copy a lock, must use as reference/pointer.
+Can be used for synchronization or mutual exclusion.
+
+* Blocking Locks
+For blocking locks, the acquiring task is not the only one responsible for detecting an
+open lock:
+- acquiring task makes 1 check for open lock and then blocks
+- releasing task is responsible for detecting a blocked acquirer and transferring or
+  releasing the lock
+
+Blocking locks reduce busy waiting through *cooperation*.
+
+All blocking locks have
+- state to facilitate lock semantics
+- list of blocked acquirers
+
+** Mutex Lock
+Used solely to provide mutual exclusion:
+- separates lock usage between synchronization and mutual exclusion
+- permits optimizations and checks as the lock only provides one specialized function
+
+Mutex locks can be *single acquisition* (acquirer cannot acquire again) or
+*multiple acquisition* (acquirer can acquire multiple times).
+Multiple acquisition locks are called *owner locks*.
+
+Owner locks can handle looping/recursion and may require 1 release or as many
+as it requires.
+
+*** Implementation
+#+BEGIN_SRC cpp
+class MutexLock {
+        bool avail;
+        Task * owner;
+        queue<Task> blocked;
+        SpinLock lock;
+    public:
+        MutexLock() : avail { true }, owner{ nullptr } {}
+        void acquire() {
+            lock.acquire();
+            while ( !avail && owner != currThread() ) {
+                yieldNoSchedule( lock );
+                lock.acquire();
+            }
+            avail = false;
+            owner = currThread();
+            lock.release();
+        }
+
+        void release() {
+            lock.acquire();
+            if ( owner != currThread() ) {
+                // error check
+            }
+            owner = nullptr;
+            if ( !blocked.empty() ) {
+                // remove task from blocked list and make ready
+            }
+            avail = true;
+            lock.release();
+        }
+}
+#+END_SRC
+
+~yieldNoSchedule~ yields the processor time slice but does not reschedule thread to
+the ready queue.
+
+This code allows for barging since ~avail~ and the lock reset.
+
+For *barging avoidance*, must hold ~avail~ between releasing and unblocking task
+(protects against bounded overtaking):
+#+BEGIN_SRC cpp
+class MutexLock {
+        bool avail;
+        Task * owner;
+        queue<Task> blocked;
+        SpinLock lock;
+    public:
+        MutexLock() : avail { true }, owner{ nullptr } {}
+        void acquire() {
+            lock.acquire();
+            if ( !avail && owner != currThread() ) {
+                yieldNoSchedule( lock );
+                // do not reacquire lock since avail == false
+            } else {
+                avail = false;
+                lock.release();
+            }
+            owner = currThread();
+        }
+
+        void release() {
+            lock.acquire();
+            owner = nullptr;
+            if ( !blocked.empty() ) {
+                // remove task from blocked list and make ready
+            } else {
+                avail = true;
+            }
+            lock.release();
+        }
+}
+#+END_SRC
+
+With these changes, bargers enter mutual exclusion protocol but block so the released
+task does not busy wait.
+This means mutual exclusion conceptually passed from releasing to unblocking tasks.
+
+For *barging prevention*, must hold ~lock~ between releasing and unblocking task
+(protects against unbounded overtaking):
+#+BEGIN_SRC cpp
+class MutexLock {
+        bool avail;
+        Task * owner;
+        queue<Task> blocked;
+        SpinLock lock;
+    public:
+        MutexLock() : avail { true }, owner{ nullptr } {}
+        void acquire() {
+            lock.acquire();
+            if ( !avail && owner != currThread() ) {
+                yieldNoSchedule( lock );
+                // do not reacquire lock
+            } else {
+                avail = false;
+            }
+            owner = currThread();
+            lock.release();
+        }
+
+        void release() {
+            lock.acquire();
+            owner = nullptr;
+            if ( !blocked.empty() ) {
+                // remove task from blocked list and make ready
+                // do not release lock
+            } else {
+                avail = true;
+                lock.release();
+            }
+        }
+}
+#+END_SRC
+
+The critical section is not bracketed by the spin lock when the lock is passed,
+so this works.
+
+An alternative would be to leave the lock owner at the front of the blocked list
+to act as availability and owner variable.
+If the critical section is acquired, the blocked list must have a node on it to check
+if it is in use.
+
+*** uOwnerLock
+#+BEGIN_SRC cpp
+class uOwnerLock {
+    public:
+        uOwnerLock();
+        uBaseTask * owner(); // nullptr if no owner, else owner address
+        unsigned int times(); // number of times lock has been acquired by owner
+        void acquire();
+        bool tryacquire();
+        void release();
+}
+#+END_SRC
+
+Must release as many times as acquired.
+
+Can use ~_Finally~ or RAII to ensure lock is always released.
+However, this cannot be used for barging prevention.
+
+*** Stream Locks
+Can use ~osacquire~ for output streams and ~isacquire~ for input streams
+to ensure predictable streams.
+
+** Synchronization Lock
+Used solely to block tasks waiting for synchronization.
+
+Only state is a list of blocked tasks, so:
+- acquiring task always blocks (no state to make it conditional)
+- release is lost when no waiting task (no state to remember it)
+
+Uses wait for acquire and signal for release.
+
+*** Implementation
+Needs mutual exclusion for safe implementation.
+
+Location of mutual exclusion classifies synchronization lock:
+- *external lock*: use an external lock to protect task list
+- *internal lock*: use an internal lock to protect state
+
+With external locking:
+#+BEGIN_SRC cpp
+class SyncLock {
+        Task * list;
+    public:
+        SyncLock() : list{ nullptr } {}
+        void acquire( MutexLock & m ) {
+            // add self to task list
+            yieldNoSchedule( m );
+            // possibly reacquire mutex lock
+        }
+        void release() {
+            if ( list != nullptr ) {
+                // remove task from blocked list and make it ready
+            }
+        }
+}
+#+END_SRC
+
+Uses external task to avoid lost release and need mutual exclusion
+to protect task list (and possible external state).
+The releasing task detects a blocked task and performs necessary
+cooperation.
+
+To use with barging avoidance:
+#+BEGIN_SRC cpp
+m.acquire();
+if ( !s.empty() ) {
+    s.release();
+} else {
+    occupied = false;
+}
+m.release();
+#+END_SRC
+
+To use with barging prevention:
+#+BEGIN_SRC cpp
+m.acquire();
+if ( !s.empty() ) {
+    s.release();
+} else {
+    occupied = false;
+    m.release();
+}
+#+END_SRC
+
+With internal locking:
+#+BEGIN_SRC cpp
+class SyncLock {
+        Task * list;
+        SpinLock lock;
+    public:
+        SyncLock() : list{ nullptr } {}
+        void acquire( MutexLock & m ) {
+            lock.acquire();
+            // add self to task list
+            m.release();
+            // can be interrupted here, but fine since spin lock
+            yieldNoSchedule( lock );
+            m.acquire(); // possibly reacquire mutex lock
+        }
+        void release() {
+            lock.acquire();
+            if ( list != nullptr ) {
+                // remove task from blocked list and make it ready
+            }
+            lock.release();
+        }
+}
+#+END_SRC
+
+This still takes an external lock for barging avoidance/prevention.
+
+*** uCondLock
+#+BEGIN_SRC cpp
+class uCondLock {
+    public:
+        uCondLock();
+        void wait( uOwnerLock & lock );
+        bool signal(); // unblocks in FIFO order
+        bool broadcast(); // unblocks all waiting tasks
+        bool empty(); // are blocked tasks on the queue?
+}
+#+END_SRC
+
+~wait~ atomically blocks the calling task and releases the argument owner lock,
+and reacquires it before returning.
+
+~signal~ and ~broadcast~ do nothing for an empty conditional and return false,
+otherwise return true.
+
+*** Programming Pattern
+Must provide external mutual exclusion and protect against lost signal (release).
+
+Should surround conditional lock with mutex lock.
+
+** Barrier
+Coordinates a group of tasks performing a concurrent operation surrounded by sequential
+operations.
+Meant for synchronization, not mutual exclusion.
+
+Two kinds of barriers:
+- threads == group size
+- threads > group size
+
+Barrier retains state about the events it manages (num tasks blocked on the barrier).
+Most barriers use internal locking.
+
+Barrier blocks each task at call to ~block~ until all tasks have called ~block~.
+Last task to call ~block~ does not block, instead it releases all other tasks.
+
+Must specify in advance number of ~block~ operations before tasks released.
+
+Barriers are commonly used for synchronized one-shot and for synchronized start
+and end in a cycle.
+
+Using a barrier is cheaper than creating and deleting tasks for each computation.
+
+*** Fetch Increment Barrier
+A spinning, T == G barrier can be implemented with the fetch-increment instruction
+and a flag that waiters wait on.
+
+*** uBarrier
+\mu{}C++ barrier is a blocking, T > G, barging-prevention coroutine, where ~main~
+can be resumed by the last task arriving at the barrier:
+#+BEGIN_SRC cpp
+#include <uBarrier.h>
+_Cormonitor uBarrier {
+    protected:
+        void main() { for ( ;; ) suspend(); }
+        virtual void last() { resume(); } // called by last task to barier
+    public:
+        uBarrier( unsigned int total );
+        unsigned int total() const; // # of tasks synchronizing
+        unsigned int waiters() const; // # of waiting tasks
+        void reset( unsigned int total ); // reset # of tasks synchronizing
+        virtual void block(); //wait for Nth thread
+}
+#+END_SRC
+
+~uBarrier~ has implicit mutual exclusion so no barging.
+
+Can build a barrier by inheriting from ~uBarrier~, redefining ~last~, ~block~,
+and possibly ~main~.
+
+Coroutine barrier can be reused many times.
