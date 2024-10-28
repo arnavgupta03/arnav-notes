@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-27 Sun 21:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Concurrency</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Concurrency</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org02cea44">1. Concurrency</a></li>
+<li><a href="#orge7bea6d">2. Why Write Concurrent Programs</a></li>
+<li><a href="#org6aa4baf">3. Why Concurrency is Difficult</a></li>
+<li><a href="#org40d0b4c">4. Concurrent Hardware</a></li>
+<li><a href="#org3b579cd">5. Execution State</a></li>
+<li><a href="#org85126b9">6. Threading Model</a></li>
+<li><a href="#orgc9b284b">7. Concurrent Systems</a></li>
+<li><a href="#org31149e2">8. Speedup</a></li>
+<li><a href="#org4c1c96f">9. Thread Creation</a>
+<ul>
+<li><a href="#orgb0fc33a">9.1. COBEGIN/COEND</a></li>
+<li><a href="#org3909d64">9.2. START/WAIT</a></li>
+<li><a href="#orgf098514">9.3. Actor</a></li>
+<li><a href="#org85a48a9">9.4. Thread Object</a></li>
+</ul>
+</li>
+<li><a href="#orgc6c8108">10. Termination Synchronization</a></li>
+<li><a href="#org39f206b">11. Divide and Conquer</a></li>
+<li><a href="#orgb10a04e">12. Exceptions</a></li>
+<li><a href="#org0730533">13. Synchronization and Communication During Execution</a></li>
+<li><a href="#orgc408f16">14. Communication</a></li>
+<li><a href="#org54d0a91">15. Critical Section</a></li>
+<li><a href="#org4442810">16. Static Variables</a></li>
+<li><a href="#org07a5c72">17. Mutual Exclusion Game</a></li>
+<li><a href="#orgfa36181">18. Software Solutions</a>
+<ul>
+<li><a href="#orgc54cd0d">18.1. Dekker&rsquo;s Algorithm</a></li>
+<li><a href="#org744d09a">18.2. Peterson&rsquo;s Algorithm</a></li>
+<li><a href="#org6dcb31a">18.3. N-Thread Prioritized Entry</a></li>
+<li><a href="#orge4bef21">18.4. N-Thread Bakery (Tickets)</a></li>
+<li><a href="#org7a7adf7">18.5. Tournament</a></li>
+<li><a href="#orgae8e3e7">18.6. Arbiter</a></li>
+</ul>
+</li>
+<li><a href="#orgc60e4dd">19. Hardware Solutions</a>
+<ul>
+<li><a href="#org76e0518">19.1. Test/Set Instruction</a></li>
+<li><a href="#org3f5a119">19.2. Swap Instruction</a></li>
+<li><a href="#org7783649">19.3. Fetch and Increment Instruction</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org02cea44" class="outline-2">
+<h2 id="org02cea44"><span class="section-number-2">1.</span> Concurrency</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Thread</b>: independent sequential execution path through a program, scheduled for execution separately
+and independently of other threads
+</p>
+
+<p>
+<b>Process</b>: program component that has its own thread and has the same state information as a coroutine
+</p>
+
+<p>
+<b>Task</b>: similar to process but is reduced along some particular dimension and shares common memory
+(lightweight process)
+</p>
+
+<p>
+<b>Parallel Execution</b>: when 2+ operations occur simultaneously (requires multiple processors)
+</p>
+
+<p>
+<b>Concurrent Execution</b>: any situation in which execution of multiple threads appears to be performed in
+parallel, caused by threads of control rather than processors
+</p>
+</div>
+</div>
+<div id="outline-container-orge7bea6d" class="outline-2">
+<h2 id="orge7bea6d"><span class="section-number-2">2.</span> Why Write Concurrent Programs</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Dividing a problem into threads is a programming technique and may be natural to expressing a problem.
+Can also enhance execution time efficiency by taking advantage of concurrency in an algorithm.
+</p>
+</div>
+</div>
+<div id="outline-container-org6aa4baf" class="outline-2">
+<h2 id="org6aa4baf"><span class="section-number-2">3.</span> Why Concurrency is Difficult</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Difficult to:
+</p>
+<ul class="org-ul">
+<li>coordinate</li>
+<li>specify how a problem should be broken up</li>
+<li>specify if and how parts interact</li>
+<li>specify how info is communicated during interaction</li>
+<li>debug due to non-deterministic order</li>
+<li>reason about</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org40d0b4c" class="outline-2">
+<h2 id="org40d0b4c"><span class="section-number-2">4.</span> Concurrent Hardware</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Concurrent execution is possible with one CPU, but <b>multitasking</b> requires <b>multiprocessing</b>.
+</p>
+
+<p>
+Parallelism occurs by context switching between threads on the CPU.
+Most issues in concurrency can be illustrated without parallelism.
+</p>
+
+<p>
+Task switching may occur at non-deterministic program locations, between any two machine instructions.
+</p>
+
+<p>
+Switching happens explicitly but conditionally when calling routines, since they may not context
+switch depending on hidden internal state.
+</p>
+
+<p>
+Switching can happen implicitly because of an external <b>interrupt</b> independent of program execution.
+</p>
+
+<p>
+If an interrupt affects <b>scheduling</b>, it is <b>preemptive</b>, otherwise it is <b>non-preemptive</b>.
+Context switching is instruction level for preemptive and routine level for non-preemptive.
+</p>
+
+<p>
+Pointers among tasks work because memory is shared.
+Thought, concurrent execution of threads is possible with 1+ CPUs on different computers with separate
+memories, in a <b>distributed system</b>. For a distributed system, pointers among tasks do not work.
+</p>
+</div>
+</div>
+<div id="outline-container-org3b579cd" class="outline-2">
+<h2 id="org3b579cd"><span class="section-number-2">5.</span> Execution State</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Thread states can be <span class="underline">new</span>, <span class="underline">ready</span>, <span class="underline">running</span>, <span class="underline">blocked</span>, and <span class="underline">halted</span>.
+</p>
+
+<p>
+*State transitions are initiated in response to events:
+</p>
+<ul class="org-ul">
+<li>entering the system (new &rarr; ready)</li>
+<li>assigning thread to computing resource (ready &rarr; running)</li>
+<li>timer alarm for preemption (running &rarr; ready)</li>
+<li>long-term delay vs spinning (running &rarr; blocked)</li>
+<li>completion of delay (blocked &rarr; ready)</li>
+<li>normal completion or error (running &rarr; halted)</li>
+</ul>
+
+<p>
+Thread cannot bypass the ready state during a transition so the scheduler maintains complete control
+of the system.
+</p>
+
+<p>
+Sequential operations, however small, are unsafe in a concurrent program.
+</p>
+</div>
+</div>
+<div id="outline-container-org85126b9" class="outline-2">
+<h2 id="org85126b9"><span class="section-number-2">6.</span> Threading Model</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+For multiprocessor systems, a <b>threading model</b> defines the relationship between threads and CPUs.
+</p>
+
+<p>
+OS manages CPUs by providing logical access via <b>kernel threads</b> (virtual processors) scheduled
+across the CPUs.
+</p>
+
+<p>
+Can have more kernel threads than CPUs to provide multiprocessing.
+</p>
+
+<p>
+A process may have multiple kernel threads to provide parallelism.
+A program may have 1+ user threads scheduled on each of its process&rsquo;s kernel threads.
+</p>
+
+<p>
+User threads are low cost, kernel threads are high cost.
+</p>
+
+<p>
+<b>Kernel threading</b> uses exactly the same number of user and kernel threads, <b>user threading</b>
+uses different numbers of user and kernel threads.
+</p>
+
+<p>
+Can recursively add stackless <b>nano threads</b> on top of stackful user threads and a virtual machine below
+the OS.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc9b284b" class="outline-2">
+<h2 id="orgc9b284b"><span class="section-number-2">7.</span> Concurrent Systems</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Major types of concurrent systems:
+</p>
+<ol class="org-ol">
+<li>attempt to discover implicit concurrency in an otherwise sequential program
+<ol class="org-ol">
+<li>limit to how much concurrency can be found</li>
+<li>only works on certain problems</li>
+</ol></li>
+<li>provide concurrency through <span class="underline">implicit</span> constructs
+<ol class="org-ol">
+<li>concurrency accessed indirectly via specialized mechanisms</li>
+<li>threads implicitly managed</li>
+</ol></li>
+<li>provide concurrency through <span class="underline">explicit</span> constructs
+<ol class="org-ol">
+<li>concurrency accessed directly</li>
+<li>threads explicitly managed</li>
+</ol></li>
+</ol>
+
+<p>
+Discovery and implicit are built from explicit, since explicit threads are required at some level.
+</p>
+
+<p>
+Implicit and explicit mechanisms are complementary.
+Implicit is limited, so maximum concurrency requires explicit.
+</p>
+
+<p>
+As concurrency increases, so does the complexity to express and manage it.
+</p>
+</div>
+</div>
+<div id="outline-container-org31149e2" class="outline-2">
+<h2 id="org31149e2"><span class="section-number-2">8.</span> Speedup</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Speedup is defined as
+\[ S_{C} = T_{1}/T_{C} \]
+where \(C\) is the number of CPUs and \(T_{1}\) is sequential execution.
+</p>
+
+<p>
+Types of speedup:
+</p>
+<ul class="org-ul">
+<li><b>non-linear</b> is the most common</li>
+<li><b>sub-linear</b> is less common, defined as \(S_{C} < C\)</li>
+<li><b>linear</b> is ideal, defined as \(S_{C} = C\)</li>
+<li><b>super linear</b> is unlikely, defined as \(S_{C} > C\)</li>
+</ul>
+
+<p>
+Aspects affecting speedup (assuming sufficient parallelism):
+</p>
+<ol class="org-ol">
+<li>amount of concurrency</li>
+<li>critical path among concurrency</li>
+<li>scheduler efficiency</li>
+</ol>
+
+<p>
+An algorithm/program is composed on sequential and concurrent sections.
+</p>
+
+<p>
+<b>Amdahl&rsquo;s Law</b>: concurrent section of a program \(P\), gives that the sequential section is
+\(1-P\), so the maximum achievable speedup using \(C\) CPUs is
+\[ S_{C} = \frac{1}{(1-P) + P/C} \]
+As \(C \to \infty\), \(P/C \to 0\), so the maximum speedup is \(\frac{1}{1-P}\), which is the time for the
+sequential section.
+</p>
+
+<p>
+Concurrent programming consists of minimizing sequential section \(1-P\).
+</p>
+
+<p>
+This law ignores any administrative costs of concurrency.
+</p>
+
+<p>
+While sequential sections bound speedup, concurrent sections bound speedup by the <b>critical path</b>
+of computation:
+</p>
+<ul class="org-ul">
+<li><b>independent execution</b>: all threads created together and do not interact</li>
+<li><b>dependent execution</b>: threads created at different times and interact (critical path exists)</li>
+</ul>
+
+<p>
+Longest path bounds speedup. Speedup can also be affected by scheduler efficiency/ordering, but no
+control over this.
+Greedy scheduling is less concurrent and LIFO scheduling gives priority to newly waiting tasks (starvation).
+</p>
+
+<p>
+In general, benefit comes when many programs achieve some speedup so there is an overall improvement
+on a multiprocessor computer.
+</p>
+</div>
+</div>
+<div id="outline-container-org4c1c96f" class="outline-2">
+<h2 id="org4c1c96f"><span class="section-number-2">9.</span> Thread Creation</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Concurrency requires:
+</p>
+<ol class="org-ol">
+<li><span class="underline">creation</span>: cause another thread of control to come into existence</li>
+<li><span class="underline">synchronization</span>: establish timing relationships among threads</li>
+<li><span class="underline">communication</span>: transmit data among threads</li>
+</ol>
+
+<p>
+Thread creation must be a primitive operation.
+</p>
+</div>
+<div id="outline-container-orgb0fc33a" class="outline-3">
+<h3 id="orgb0fc33a"><span class="section-number-3">9.1.</span> COBEGIN/COEND</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+Compound statement with statements run by multiple threads.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #51afef;">&lt;</span><span style="color: #98be65;">uCobegin.h</span><span style="color: #51afef;">&gt;</span>
+<span style="color: #a9a1e1;">COBEGIN</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">threads execute statement in block</span>
+    <span style="color: #ECBE7B;">BEGIN</span> <span style="color: #dcaeea;">p0</span><span style="color: #51afef;">(</span> <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #51afef;">)</span>; <span style="color: #a9a1e1;">END</span>
+    <span style="color: #ECBE7B;">BEGIN</span> <span style="color: #dcaeea;">p1</span><span style="color: #51afef;">(</span> <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #51afef;">)</span>; <span style="color: #a9a1e1;">END</span>
+    <span style="color: #ECBE7B;">BEGIN</span> <span style="color: #dcaeea;">p2</span><span style="color: #51afef;">(</span> <span style="color: #da8548; font-weight: bold;">2</span> <span style="color: #51afef;">)</span>; <span style="color: #a9a1e1;">END</span>
+    <span style="color: #ECBE7B;">BEGIN</span> <span style="color: #dcaeea;">p3</span><span style="color: #51afef;">(</span> <span style="color: #da8548; font-weight: bold;">3</span> <span style="color: #51afef;">)</span>; <span style="color: #a9a1e1;">END</span>
+<span style="color: #a9a1e1;">COEND</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">initial thread waits for all internal threads to finish (synchronize) before control continues</span>
+</pre>
+</div>
+
+<p>
+Order and speed of internal thread execution is unknown, so it is implicit concurrency.
+</p>
+
+<p>
+<b>Thread graph</b> represents thread creation.
+This construct is restricted to creating trees of threads.
+</p>
+</div>
+</div>
+<div id="outline-container-org3909d64" class="outline-3">
+<h3 id="org3909d64"><span class="section-number-3">9.2.</span> START/WAIT</h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+Start thread in routine and wait (join) at thread termination, allowing arbitrary thread graph.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #51afef;">&lt;</span><span style="color: #98be65;">uCobegin.h</span><span style="color: #51afef;">&gt;</span>
+<span style="color: #51afef;">decltype</span><span style="color: #51afef;">(</span><span style="color: #a9a1e1;">START</span><span style="color: #c678dd;">(</span> p, <span style="color: #da8548; font-weight: bold;">5</span> <span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> <span style="color: #dcaeea;">tp</span> = <span style="color: #a9a1e1;">START</span><span style="color: #51afef;">(</span> p, <span style="color: #da8548; font-weight: bold;">5</span> <span style="color: #51afef;">)</span>;
+<span style="color: #51afef;">{</span>
+    s1; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">continue execution, without waiting for tp</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #51afef;">decltype</span><span style="color: #51afef;">(</span><span style="color: #a9a1e1;">START</span><span style="color: #c678dd;">(</span> f, <span style="color: #da8548; font-weight: bold;">8</span> <span style="color: #c678dd;">)</span><span style="color: #51afef;">)</span> <span style="color: #dcaeea;">tf</span> = <span style="color: #a9a1e1;">START</span><span style="color: #51afef;">(</span> f, <span style="color: #da8548; font-weight: bold;">8</span> <span style="color: #51afef;">)</span>;
+<span style="color: #51afef;">{</span>
+    s2; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">continue execution, without waiting for tf</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #a9a1e1;">WAIT</span><span style="color: #51afef;">(</span> tp <span style="color: #51afef;">)</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">wait for tp to finish</span>
+<span style="color: #51afef;">{</span>
+    s3; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">continue execution, without waiting for tf</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #a9a1e1;">WAIT</span><span style="color: #51afef;">(</span> tf <span style="color: #51afef;">)</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">wait for tf to finish</span>
+</pre>
+</div>
+
+<p>
+Allows same routine to be started multiple times with different arguments.
+Explicit concurrency since it is specified where threads should be started and terminated explicitly.
+</p>
+
+<p>
+START/WAIT can simulate COBEGIN/COEND.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf098514" class="outline-3">
+<h3 id="orgf098514"><span class="section-number-3">9.3.</span> Actor</h3>
+<div class="outline-text-3" id="text-9-3">
+<p>
+Unit of work without a thread, like BEGIN/END.
+</p>
+
+<p>
+An executor thread matches an actor with a message and runs the actor&rsquo;s behaviour for the message, like
+COBEGIN/COEND.
+</p>
+
+<p>
+Communication is via a polymorphic queue of messages with dynamic type checking.
+Usually no shared info among actors and no blocking is allowed.
+</p>
+
+<p>
+Must declare messages and actors.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #51afef;">&lt;</span><span style="color: #98be65;">uActor.h</span><span style="color: #51afef;">&gt;</span>
+
+<span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">StrMsg</span> : <span style="color: #51afef;">public</span> <span style="color: #a9a1e1;">uActor</span>::<span style="color: #ECBE7B;">Message</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">val</span>;
+    <span style="color: #c678dd;">StrMsg</span><span style="color: #c678dd;">(</span> <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">val</span> <span style="color: #c678dd;">)</span> : Message<span style="color: #c678dd;">(</span> <span style="color: #a9a1e1;">uActor</span>::Delete <span style="color: #c678dd;">)</span>, val<span style="color: #c678dd;">(</span> val <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{}</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">delete after use</span>
+<span style="color: #51afef;">}</span>;
+
+<span style="color: #ECBE7B;">_Actor</span> <span style="color: #dcaeea;">Hello</span> <span style="color: #51afef;">{</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">derived from public uActor</span>
+    Allocation receive<span style="color: #c678dd;">(</span> <span style="color: #ECBE7B;">Message</span> &amp; <span style="color: #dcaeea;">msg</span> <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+        Case<span style="color: #98be65;">(</span> StrMsg, msg <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #c678dd;">...</span>;
+            msg_d-&gt;val; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">access derived message</span>
+            <span style="color: #c678dd;">...</span>;
+        <span style="color: #98be65;">}</span> <span style="color: #51afef;">else</span> Case<span style="color: #98be65;">(</span> StopMsg, msg <span style="color: #98be65;">)</span> <span style="color: #51afef;">return</span> Delete; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">delete actor</span>
+        <span style="color: #51afef;">return</span> Nodelete; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">reuse actor</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+    <span style="color: #a9a1e1;">uActor</span>::start<span style="color: #c678dd;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">start actor system</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">create actors and pass messages with | operator</span>
+    <span style="color: #a9a1e1;">uActor</span>::stop<span style="color: #c678dd;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">wait for all actors to terminate</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Implicit concurrency for actors since no defined threads of control.
+</p>
+
+<p>
+Must start actor system to create thread pool and wait for actors to complete.
+Actors must receive at least 1 message to start.
+Messages are received and executed sequentially in FIFO order.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">uActor</span> <span style="color: #51afef;">{</span>
+    <span style="color: #51afef;">public</span>:
+        <span style="color: #51afef;">enum</span> <span style="color: #ECBE7B;">Allocation</span> <span style="color: #c678dd;">{</span>
+            <span style="color: #dcaeea;">Nodelete</span>, <span style="color: #5B6268;">// </span><span style="color: #5B6268;">actor/message persists after return from receive</span>
+            <span style="color: #dcaeea;">Delete</span>, <span style="color: #5B6268;">// </span><span style="color: #5B6268;">actor/message is deleted after return from receive</span>
+            <span style="color: #dcaeea;">Destroy</span>, <span style="color: #5B6268;">// </span><span style="color: #5B6268;">actor/message's dtor is called after return from receive (storage not deallocated)</span>
+            <span style="color: #dcaeea;">Finished</span>, <span style="color: #5B6268;">// </span><span style="color: #5B6268;">actor/message marked finished but neither dtor not delete called</span>
+        <span style="color: #c678dd;">}</span>;
+        <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">Message</span> <span style="color: #c678dd;">{</span>
+            <span style="color: #ECBE7B;">Allocation</span> <span style="color: #dcaeea;">allocation</span>;
+            <span style="color: #c678dd;">...</span>;
+        <span style="color: #c678dd;">}</span>
+        <span style="color: #51afef;">static</span> <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">StartMsg</span> : <span style="color: #51afef;">public</span> <span style="color: #a9a1e1;">uActor</span>::<span style="color: #ECBE7B;">SenderMsg</span> <span style="color: #c678dd;">{}</span> startMsg;
+        <span style="color: #51afef;">static</span> <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">StopMsg</span> : <span style="color: #51afef;">public</span> <span style="color: #a9a1e1;">uActor</span>::<span style="color: #ECBE7B;">SenderMsg</span> <span style="color: #c678dd;">{}</span> stopMsg;
+        <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">start</span><span style="color: #c678dd;">()</span>;
+        <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">stop</span><span style="color: #c678dd;">()</span>;
+    <span style="color: #51afef;">private</span>:
+        <span style="color: #ECBE7B;">Allocation</span> <span style="color: #dcaeea;">allocation</span>;
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+Executor finds an actor with messages and passes the first message to the actor to process.
+After actor returns, the executor checks what to do with the message and actor.
+</p>
+</div>
+</div>
+<div id="outline-container-org85a48a9" class="outline-3">
+<h3 id="org85a48a9"><span class="section-number-3">9.4.</span> Thread Object</h3>
+<div class="outline-text-3" id="text-9-4">
+<p>
+Thread is an object to leverage class features and uses allocation/deallocation to define
+thread lifetime.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">T</span> <span style="color: #51afef;">{</span> <span style="color: #c678dd;">...</span> <span style="color: #51afef;">}</span>
+<span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">T</span> <span style="color: #dcaeea;">t</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">like COBEGIN/COEND</span>
+<span style="color: #51afef;">}</span>
+<span style="color: #ECBE7B;">T</span> * <span style="color: #dcaeea;">t</span> = <span style="color: #51afef;">new</span> <span style="color: #ECBE7B;">T</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">like START</span>
+<span style="color: #51afef;">delete</span> T; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">like WAIT</span>
+</pre>
+</div>
+
+<p>
+Explicit concurrency since the thread object is explicitly started and stopped.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc6c8108" class="outline-2">
+<h2 id="orgc6c8108"><span class="section-number-2">10.</span> Termination Synchronization</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+A thread terminates when:
+</p>
+<ul class="org-ul">
+<li>it finishes normally</li>
+<li>it finishes with an error</li>
+<li>it is killed by its parent or sibling</li>
+<li>parent terminates</li>
+</ul>
+
+<p>
+Children can continue to exist after the parent terminates (though rare).
+Synchronizing at termination possible for terminating threads and can be used to perform final
+communication.
+</p>
+</div>
+</div>
+<div id="outline-container-org39f206b" class="outline-2">
+<h2 id="org39f206b"><span class="section-number-2">11.</span> Divide and Conquer</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+Ability to subdivide work across data, so the work performed on each data group is identical to the work
+performed on data as a whole.
+</p>
+
+<p>
+Must ensure that administration of concurrency does not exceed cost of work.
+</p>
+
+<p>
+<code>COFOR</code> logically creates \(\text{end} - \text{start}\) threads, indexed from start to end - 1.
+This is implicit concurrency since these threads are logically created in an undefined manner.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb10a04e" class="outline-2">
+<h2 id="orgb10a04e"><span class="section-number-2">12.</span> Exceptions</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+Can be handled locally within a task, nonlocally among coroutines, or concurrently among tasks.
+</p>
+
+<p>
+For coroutines, <code>UnhandledException</code> goes to the last resumer.
+For tasks, <code>UnhandledException</code> goes to the task&rsquo;s joiner.
+</p>
+
+<p>
+Nonlocal exceptions between a task and a coroutine are the same as between coroutines.
+A concurrent exception provides an additional kind of communication among tasks.
+</p>
+
+<p>
+For a concurrent raise, the source execution may only block while queuing the event for delivery at
+the faulting execution.
+</p>
+
+<p>
+After an event is delivered, the faulting execution is not interrupted and it instead polls:
+</p>
+<ul class="org-ul">
+<li>when an <code>_Enable</code> statement begins and ends</li>
+<li>after a call to <code>suspend</code> or <code>resume</code></li>
+<li>after a call to <code>yield</code></li>
+<li>after a call to <code>_Accept</code> unblocks for <code>RendezvousFailure</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0730533" class="outline-2">
+<h2 id="org0730533"><span class="section-number-2">13.</span> Synchronization and Communication During Execution</h2>
+<div class="outline-text-2" id="text-13">
+<p>
+Synchronization occurs when one thread waits until another thread has reached a certain execution point.
+</p>
+
+<p>
+Synchronization is needed in transmitting data between threads, where one thread must be ready
+to transmit and another must be ready to receive simultaneously.
+</p>
+
+<p>
+<b>Busy wait</b>: a loop waiting for an event among threads
+</p>
+</div>
+</div>
+<div id="outline-container-orgc408f16" class="outline-2">
+<h2 id="orgc408f16"><span class="section-number-2">14.</span> Communication</h2>
+<div class="outline-text-2" id="text-14">
+<p>
+If threads are in the same memory, info can be transferred by value or address (reference).
+</p>
+
+<p>
+If threads are not in the same memory (distributed), transferring info by value is straightforward
+(but not by address).
+</p>
+</div>
+</div>
+<div id="outline-container-org54d0a91" class="outline-2">
+<h2 id="org54d0a91"><span class="section-number-2">15.</span> Critical Section</h2>
+<div class="outline-text-2" id="text-15">
+<p>
+Threads may access non-concurrent objects, so a problem occurs if multiple threads attempt to operate
+on the same object simultaneously.
+</p>
+
+<p>
+Atomic operations are fine, so it is often necessary to make an operation atomic.
+</p>
+
+<p>
+<b>Critical Section</b>: group of instructions on associated data that must be performed atomically
+</p>
+
+<p>
+<b>Mutual Exclusion</b>: preventing simultaneous execution of a critical section by multiple threads
+</p>
+
+<p>
+Must determine when concurrent access is allowed/prevented.
+</p>
+
+<p>
+Can detect any sharing and serialize all access, but this is wasteful for reads.
+Better to allow multiple readers or a single writer.
+</p>
+
+<p>
+Must minimize the amount of mutual exclusion to maximize concurrency.
+</p>
+</div>
+</div>
+<div id="outline-container-org4442810" class="outline-2">
+<h2 id="org4442810"><span class="section-number-2">16.</span> Static Variables</h2>
+<div class="outline-text-2" id="text-16">
+<p>
+Shared among all objects generated by that class, so they may require mutual exclusion.
+</p>
+
+<p>
+Static variables can be safely used in a task constructor if task objects are generated serially.
+This approach only works if one task creates all objects and initialization data is internal.
+</p>
+
+<p>
+Best to avoid shared static variables in a concurrent program.
+</p>
+</div>
+</div>
+<div id="outline-container-org07a5c72" class="outline-2">
+<h2 id="org07a5c72"><span class="section-number-2">17.</span> Mutual Exclusion Game</h2>
+<div class="outline-text-2" id="text-17">
+<p>
+Consider mutual exclusion as a game with the following rules:
+</p>
+<ol class="org-ol">
+<li><b>safety</b>: only one thread can be in a critical section at a time with respect to a particular object</li>
+<li>threads may run at arbitrary speed and in arbitrary order, while the underlying system guarantees
+that all threads make some progress</li>
+<li>if a thread is not in the entry or exit code controlling access to the critical section, it may not
+prevent other threads from entering the critical section</li>
+<li>in selecting a thread for entry  to a critical section, a selection cannot be postponed indefinitely,
+which is <b>liveness</b>, and not satisfying this rule is <b>indefinite postponement</b> or <b>livelock</b></li>
+<li>after a thread starts entry to the critical section, it must eventually enter, and not satisfying this
+rule is <b>starvation</b></li>
+</ol>
+
+<p>
+Indefinite postponement and starvation are related by busy waiting.
+Looping for an event in mutual exclusion must ensure eventual progress.
+</p>
+
+<p>
+If threads are not serviced in first-come first-serve order, there is a notion of <b>unfairness</b>.
+Unfairness implies waiting threads are overtaken by arriving threads, called <b>barging</b>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfa36181" class="outline-2">
+<h2 id="orgfa36181"><span class="section-number-2">18.</span> Software Solutions</h2>
+<div class="outline-text-2" id="text-18">
+<p>
+Can have a self-testing critical section.
+</p>
+
+<p>
+Using a basic permission lock with an enum breaks rule 1.
+</p>
+
+<p>
+Using alternation breaks rule 3.
+</p>
+
+<p>
+Using basic declare intent causes livelock, breaking rule 4.
+</p>
+
+<p>
+Using basic retract intent can also cause livelock, breaking rule 4.
+</p>
+
+<p>
+Using prioritized retract intent causes starvation, breaking rule 5.
+</p>
+</div>
+<div id="outline-container-orgc54cd0d" class="outline-3">
+<h3 id="orgc54cd0d"><span class="section-number-3">18.1.</span> Dekker&rsquo;s Algorithm</h3>
+<div class="outline-text-3" id="text-18-1">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">enum</span> <span style="color: #ECBE7B;">Intent</span> <span style="color: #51afef;">{</span> <span style="color: #dcaeea;">WantIn</span>, <span style="color: #dcaeea;">DontWantIn</span> <span style="color: #51afef;">}</span>;
+<span style="color: #ECBE7B;">Intent</span> * <span style="color: #dcaeea;">Last</span>;
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">Dekker</span> <span style="color: #51afef;">{</span>
+    Intent &amp; me, &amp; you;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>; i &lt;= <span style="color: #da8548; font-weight: bold;">1000</span>; i += <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #51afef;">for</span> <span style="color: #a9a1e1;">(</span> ;; <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">entry protocol, high priority</span>
+                me = WantIn;
+                <span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span> you == DontWantIn <span style="color: #51afef;">)</span> <span style="color: #51afef;">break</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">does not want in</span>
+                <span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span> ::Last == &amp;me <span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">low priority task</span>
+                    me = DontWantIn; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">retract intent</span>
+                    <span style="color: #51afef;">while</span> <span style="color: #c678dd;">(</span> ::Last == &amp;me &amp;&amp; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">this line by Hesselink</span>
+                            you == WantIn <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{}</span>
+                <span style="color: #51afef;">}</span>
+            <span style="color: #a9a1e1;">}</span>
+            CriticalSection<span style="color: #a9a1e1;">()</span>;
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">exit protocol</span>
+            <span style="color: #51afef;">if</span> <span style="color: #a9a1e1;">(</span> ::Last != &amp;me <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">this line by Hesselink</span>
+                ::Last = &amp;me;
+            <span style="color: #a9a1e1;">}</span>
+            me = DontWantIn;
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+Dekker&rsquo;s Algorithm appears to be <b>read/write-safe</b> (RW-safe):
+</p>
+<ul class="org-ul">
+<li>on cheap multi-core computers, read/write is not atomic</li>
+<li><b>RW safe</b>: a mutual exclusion algorithm works for non-atomic read/write</li>
+<li>Dekker has no simultaneous write/write since intent reset is after alternation in exit protocol</li>
+<li>Dekker has simultaneous read/write but all are equality so it works if final value never flickers
+(bits changing during write)</li>
+</ul>
+
+<p>
+In 2015, Hesselink found 2 failure cases if the values flicker, and added the two lines.
+</p>
+
+<p>
+Dekker has <b>unbounded overtaking</b> (not starvation) since race loser retracts intent, but this
+is allowed.
+</p>
+</div>
+</div>
+<div id="outline-container-org744d09a" class="outline-3">
+<h3 id="org744d09a"><span class="section-number-3">18.2.</span> Peterson&rsquo;s Algorithm</h3>
+<div class="outline-text-3" id="text-18-2">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">enum</span> <span style="color: #ECBE7B;">Intent</span> <span style="color: #51afef;">{</span> <span style="color: #dcaeea;">WantIn</span>, <span style="color: #dcaeea;">DontWantIn</span> <span style="color: #51afef;">}</span>;
+<span style="color: #ECBE7B;">Intent</span> * <span style="color: #dcaeea;">Last</span>;
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">Peterson</span> <span style="color: #51afef;">{</span>
+    Intent &amp; me, &amp; you;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>; i &lt;= <span style="color: #da8548; font-weight: bold;">1000</span>; i += <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            me = WantIn;
+            ::Last = &amp;me;
+            <span style="color: #51afef;">while</span> <span style="color: #a9a1e1;">(</span> ::Last == &amp;me &amp;&amp; you == WantIn <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{}</span>
+            CriticalSection<span style="color: #a9a1e1;">()</span>;
+            me = DontWantIn;
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+Peterson&rsquo;s Algorithm is RW-unsafe so it requires atomic read/write operations.
+Peterson also has <b>bounded overtaking</b> since the race loser does not retract intent,
+since the thread exiting critical section excludes itself for reentry.
+</p>
+</div>
+</div>
+<div id="outline-container-org6dcb31a" class="outline-3">
+<h3 id="org6dcb31a"><span class="section-number-3">18.3.</span> N-Thread Prioritized Entry</h3>
+<div class="outline-text-3" id="text-18-3">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">enum</span> <span style="color: #ECBE7B;">Intent</span> <span style="color: #51afef;">{</span> <span style="color: #dcaeea;">WantIn</span>, <span style="color: #dcaeea;">DontWantIn</span> <span style="color: #51afef;">}</span>;
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">NTask</span> <span style="color: #51afef;">{</span>
+    Intent * intents;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">N</span>, <span style="color: #dcaeea;">priority</span>, <span style="color: #dcaeea;">i</span>, <span style="color: #dcaeea;">j</span>;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span> i = <span style="color: #da8548; font-weight: bold;">1</span>; i &lt;= <span style="color: #da8548; font-weight: bold;">1000</span>; i += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #51afef;">do</span> <span style="color: #a9a1e1;">{</span>
+                intents<span style="color: #51afef;">[</span>priority<span style="color: #51afef;">]</span> = WantIn;
+                <span style="color: #51afef;">for</span> <span style="color: #51afef;">(</span> j = priority - <span style="color: #da8548; font-weight: bold;">1</span>; j &lt;= <span style="color: #da8548; font-weight: bold;">0</span>; j -= <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+                    <span style="color: #51afef;">if</span> <span style="color: #c678dd;">(</span> intents<span style="color: #98be65;">[</span>j<span style="color: #98be65;">]</span> == WantIn <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span>
+                        intents<span style="color: #98be65;">[</span>priority<span style="color: #98be65;">]</span> = DontWantIn;
+                        <span style="color: #51afef;">while</span> <span style="color: #98be65;">(</span> intents<span style="color: #a9a1e1;">[</span>j<span style="color: #a9a1e1;">]</span> == WantIn <span style="color: #98be65;">)</span> <span style="color: #98be65;">{}</span>
+                        <span style="color: #51afef;">break</span>;
+                    <span style="color: #c678dd;">}</span>
+                <span style="color: #51afef;">}</span>
+            <span style="color: #a9a1e1;">}</span> <span style="color: #51afef;">while</span> <span style="color: #a9a1e1;">(</span> intents<span style="color: #51afef;">[</span>priority<span style="color: #51afef;">]</span> == DontWantIn <span style="color: #a9a1e1;">)</span>;
+
+            <span style="color: #51afef;">for</span> <span style="color: #a9a1e1;">(</span> j = priority + <span style="color: #da8548; font-weight: bold;">1</span>; j &lt; N; j += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+                <span style="color: #51afef;">while</span> <span style="color: #51afef;">(</span> intents<span style="color: #c678dd;">[</span>j<span style="color: #c678dd;">]</span> == WantIn <span style="color: #51afef;">)</span> <span style="color: #51afef;">{}</span>
+            <span style="color: #a9a1e1;">}</span>
+            CriticalSection<span style="color: #a9a1e1;">()</span>;
+            intents<span style="color: #a9a1e1;">[</span>priority<span style="color: #a9a1e1;">]</span> = DontWantIn;
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+This algorithm can cause starvation for lower priority tasks.
+</p>
+
+<p>
+Only \(N\) bits are needed since only the want in status is needed for
+each task.
+No known solution exists for all 5 rules using only \(N\) bits.
+Other \(N\) thread solutions use more memory.
+The best solutions are 3-bit RW-unsafe and 4-bit RW-safe.
+</p>
+</div>
+</div>
+<div id="outline-container-orge4bef21" class="outline-3">
+<h3 id="orge4bef21"><span class="section-number-3">18.4.</span> N-Thread Bakery (Tickets)</h3>
+<div class="outline-text-3" id="text-18-4">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">Bakery</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">int</span> * ticket, N, priority;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">1</span>; i &lt;= <span style="color: #da8548; font-weight: bold;">1000</span>; i += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            ticket<span style="color: #a9a1e1;">[</span>priority<span style="color: #a9a1e1;">]</span> = <span style="color: #da8548; font-weight: bold;">0</span>;
+            <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">max</span> = <span style="color: #da8548; font-weight: bold;">0</span>;
+            <span style="color: #51afef;">for</span> <span style="color: #a9a1e1;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> = <span style="color: #da8548; font-weight: bold;">0</span>; j &lt; N; j += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+                <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">v</span> = ticket<span style="color: #51afef;">[</span>j<span style="color: #51afef;">]</span>;
+                <span style="color: #51afef;">if</span> <span style="color: #51afef;">(</span> v != <span style="color: #a9a1e1;">INT_MAX</span> &amp;&amp; max &lt; v <span style="color: #51afef;">)</span> max = v;
+            <span style="color: #a9a1e1;">}</span>
+            max += <span style="color: #da8548; font-weight: bold;">1</span>;
+            ticket<span style="color: #a9a1e1;">[</span>priority<span style="color: #a9a1e1;">]</span> = max;
+
+            <span style="color: #51afef;">for</span> <span style="color: #a9a1e1;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> = <span style="color: #da8548; font-weight: bold;">0</span>; j &lt; N; j += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+                <span style="color: #51afef;">while</span> <span style="color: #51afef;">(</span> ticket<span style="color: #c678dd;">[</span>j<span style="color: #c678dd;">]</span> &lt; max ||
+                    <span style="color: #c678dd;">(</span> ticket<span style="color: #98be65;">[</span>j<span style="color: #98be65;">]</span> == max &amp;&amp; j &lt; priority <span style="color: #c678dd;">)</span> <span style="color: #51afef;">)</span> <span style="color: #51afef;">{}</span>
+            <span style="color: #a9a1e1;">}</span>
+            CriticalSection<span style="color: #a9a1e1;">()</span>;
+            ticket<span style="color: #a9a1e1;">[</span>priority<span style="color: #a9a1e1;">]</span> = <span style="color: #a9a1e1;">INT_MAX</span>;
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+Ticket value of INT<sub>MAX</sub> means they don&rsquo;t want in.
+Ticket value of 0 means selecting ticket.
+</p>
+
+<p>
+Tickets are not unique, position gives secondary priority.
+Low ticket and position means high priority.
+</p>
+
+<p>
+This uses \(NM\) bits where \(M\) is the ticket size.
+</p>
+
+<p>
+Lamport version is RW-safe.
+Hehner/Shyamasundar is RW-unsafe since the <code>ticket[priority] = max</code> line
+can flicker to INT<sub>MAX</sub> which would allow other tasks to proceed.
+</p>
+</div>
+</div>
+<div id="outline-container-org7a7adf7" class="outline-3">
+<h3 id="org7a7adf7"><span class="section-number-3">18.5.</span> Tournament</h3>
+<div class="outline-text-3" id="text-18-5">
+<p>
+Consider a binary tree with \(\lceil N/2 \rceil\) start nodes and \(\lceil \log N \rceil\) levels.
+A thread is assigned to a start node, where it begins mutual exclusion.
+</p>
+
+<p>
+Each node is like a Dekker or Peterson 2 thread algorithm.
+The tree structure tries to find a compromise between fairness and performance.
+</p>
+
+<p>
+Exit protocol must retract intents in <span class="underline">reverse</span> order.
+Otherwise a race between retracting/released threads along the same tree path.
+</p>
+
+<p>
+No overall livelock or starvation since each node ensures neither occurs at the node level.
+</p>
+
+<p>
+Tournament algorithm RW safetyy depends on MX algorithm since tree traversal is local to each
+thread.
+Tournament algorithms have unbounded overtaking as no synchronization exists among the nodes
+of the tree.
+</p>
+
+<p>
+For a minimal binary tree, the tournament approach uses \((N-1)M\) bits, where \(N-1\) is the
+number of tree nodes and \(M\) is the node size.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">TournamentMax</span> <span style="color: #51afef;">{</span>
+    <span style="color: #51afef;">struct</span> Token <span style="color: #c678dd;">{</span> <span style="color: #ECBE7B;">int</span> intents<span style="color: #98be65;">[</span><span style="color: #da8548; font-weight: bold;">2</span><span style="color: #98be65;">]</span>, turn <span style="color: #c678dd;">}</span>;
+    <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">Token</span> ** <span style="color: #dcaeea;">t</span>;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">depth</span>, <span style="color: #dcaeea;">id</span>;
+
+    <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #ECBE7B;">unsigned</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">lid</span>;
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i &lt; <span style="color: #da8548; font-weight: bold;">1000</span>; i += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            lid = d;
+            <span style="color: #51afef;">for</span> <span style="color: #a9a1e1;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">lv</span> = <span style="color: #da8548; font-weight: bold;">0</span>; lv &lt; depth; lv += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+                binary_prologue<span style="color: #51afef;">(</span> lid &amp; <span style="color: #da8548; font-weight: bold;">1</span>, &amp;t<span style="color: #c678dd;">[</span>lv<span style="color: #c678dd;">][</span>lid &gt;&gt; <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">]</span> <span style="color: #51afef;">)</span>;
+                lid &gt;&gt;= <span style="color: #da8548; font-weight: bold;">1</span>;
+            <span style="color: #a9a1e1;">}</span>
+            CriticalSection<span style="color: #a9a1e1;">(</span> id <span style="color: #a9a1e1;">)</span>;
+            <span style="color: #51afef;">for</span> <span style="color: #a9a1e1;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">lv</span> = depth - <span style="color: #da8548; font-weight: bold;">1</span>; lv &gt;= <span style="color: #da8548; font-weight: bold;">0</span>; lv -= <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{</span>
+                lid = id &gt;&gt; lv;
+                binary_prologue<span style="color: #51afef;">(</span> lid &amp; <span style="color: #da8548; font-weight: bold;">1</span>, &amp;t<span style="color: #c678dd;">[</span>lv<span style="color: #c678dd;">][</span>lid &gt;&gt; <span style="color: #da8548; font-weight: bold;">1</span><span style="color: #c678dd;">]</span> <span style="color: #51afef;">)</span>;
+            <span style="color: #a9a1e1;">}</span>
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+This can be optimized to 3 shifts and XOR using Peterson 2-thread for binary.
+</p>
+
+<p>
+Path from leaf to root is fixed per thread, so table lookup is possible using max or
+min tree.
+</p>
+</div>
+</div>
+<div id="outline-container-orgae8e3e7" class="outline-3">
+<h3 id="orgae8e3e7"><span class="section-number-3">18.6.</span> Arbiter</h3>
+<div class="outline-text-3" id="text-18-6">
+<p>
+Create a full-time arbitrator task to control entry to critical section.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">intents</span><span style="color: #51afef;">[</span>N<span style="color: #51afef;">]</span>, <span style="color: #dcaeea;">serving</span><span style="color: #51afef;">[</span>N<span style="color: #51afef;">]</span>;
+
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">Client</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">int</span> me;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = <span style="color: #da8548; font-weight: bold;">0</span>; i &lt; <span style="color: #da8548; font-weight: bold;">100</span>; i += <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            intents<span style="color: #a9a1e1;">[</span>me<span style="color: #a9a1e1;">]</span> = <span style="color: #a9a1e1;">true</span>;
+            <span style="color: #51afef;">while</span> <span style="color: #a9a1e1;">(</span> <span style="color: #51afef; font-weight: bold;">!</span>serving<span style="color: #51afef;">[</span>me<span style="color: #51afef;">]</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{}</span>
+            CriticalSection<span style="color: #a9a1e1;">()</span>;
+            serving<span style="color: #a9a1e1;">[</span>me<span style="color: #a9a1e1;">]</span> = <span style="color: #a9a1e1;">false</span>;
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">Arbiter</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">void</span> main<span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        <span style="color: #ECBE7B;">int</span> i = N;
+        <span style="color: #51afef;">for</span> <span style="color: #98be65;">(</span> ;; <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #51afef;">do</span> <span style="color: #a9a1e1;">{</span>
+                i = <span style="color: #51afef;">(</span> i + <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #51afef;">)</span> % n;
+            <span style="color: #a9a1e1;">}</span> <span style="color: #51afef;">while</span> <span style="color: #a9a1e1;">(</span> <span style="color: #51afef; font-weight: bold;">!</span>intents<span style="color: #51afef;">[</span>i<span style="color: #51afef;">]</span> <span style="color: #a9a1e1;">)</span>;
+            intents<span style="color: #a9a1e1;">[</span>i<span style="color: #a9a1e1;">]</span> = <span style="color: #a9a1e1;">false</span>;
+            serving<span style="color: #a9a1e1;">[</span>i<span style="color: #a9a1e1;">]</span> = <span style="color: #a9a1e1;">false</span>;
+            <span style="color: #51afef;">while</span> <span style="color: #a9a1e1;">(</span> serving<span style="color: #51afef;">[</span>i<span style="color: #51afef;">]</span> <span style="color: #a9a1e1;">)</span> <span style="color: #a9a1e1;">{}</span>
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Mutual exclusion becomes synchronization between arbiter and clients.
+Arbiter never uses the critical section, so no indefinite postponement (livelock).
+Arbiter cycles through waiting clients so no starvation.
+</p>
+
+<p>
+This is RW unsafe due to read flicker, like when modifying <code>intents</code> and <code>serving</code>.
+</p>
+
+<p>
+Cost comes from the creation, management, and execution (busy waiting) of the arbiter
+task.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc60e4dd" class="outline-2">
+<h2 id="orgc60e4dd"><span class="section-number-2">19.</span> Hardware Solutions</h2>
+<div class="outline-text-2" id="text-19">
+<p>
+Hardware solutions occur below the software level.
+</p>
+
+<p>
+This allows the elimination of the shared info and checking of this info required
+in the software solution.
+</p>
+
+<p>
+This approach uses special instructions for atomic read/write.
+</p>
+</div>
+<div id="outline-container-org76e0518" class="outline-3">
+<h3 id="org76e0518"><span class="section-number-3">19.1.</span> Test/Set Instruction</h3>
+<div class="outline-text-3" id="text-19-1">
+<p>
+Performs an atomic read and fixed assignment.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">TestSet</span><span style="color: #51afef;">(</span> <span style="color: #ECBE7B;">int</span> &amp; <span style="color: #dcaeea;">b</span> <span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">begin atomic</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">temp</span> = b;
+    b = <span style="color: #a9a1e1;">CLOSED</span>;
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">end atomic</span>
+    <span style="color: #51afef;">return</span> temp;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+If instruction returns open, lock must have been open before, so can enter critical
+section.
+</p>
+
+<p>
+No guarantee of eventual progress, since a task can keep locking and opening.
+</p>
+
+<p>
+In the case of multiple CPUs, the bus must ensure multiple CPUs cannot interleave
+special RW instructions on the same memory location.
+</p>
+</div>
+</div>
+<div id="outline-container-org3f5a119" class="outline-3">
+<h3 id="org3f5a119"><span class="section-number-3">19.2.</span> Swap Instruction</h3>
+<div class="outline-text-3" id="text-19-2">
+<p>
+Performs an atomic interchange of two values.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">Swap</span><span style="color: #51afef;">(</span> <span style="color: #ECBE7B;">int</span> &amp; <span style="color: #dcaeea;">a</span>, &amp; b <span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">temp</span>;
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">begin atomic</span>
+    temp = a;
+    a = b;
+    b = temp;
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">end atomic</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+If variable swapped with lock becomes OPEN, then lock must have ben open, so can
+enter critical section.
+</p>
+</div>
+</div>
+<div id="outline-container-org7783649" class="outline-3">
+<h3 id="org7783649"><span class="section-number-3">19.3.</span> Fetch and Increment Instruction</h3>
+<div class="outline-text-3" id="text-19-3">
+<p>
+Performs an atomic increment between the read and write.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">FetchInc</span><span style="color: #51afef;">(</span> <span style="color: #ECBE7B;">int</span> &amp; <span style="color: #dcaeea;">val</span> <span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">begin atomic</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">temp</span> = val;
+    val += <span style="color: #da8548; font-weight: bold;">1</span>;
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">end atomic</span>
+    <span style="color: #51afef;">return</span> temp;
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+
+<p>
+Can be generalized to add or subtract any value.
+</p>
+
+<p>
+Lock counter can overflow during busy waiting and starvation, which occurs
+if a task resets the counter and then immediately re-enters.
+This can be fixed with a ticket counter, where <code>acquire</code> atomically sets the
+ticket and <code>release</code> increments the next ticket to be served.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-10-27 Sun 21:52</p>
+</div>
+</body>
+</html>

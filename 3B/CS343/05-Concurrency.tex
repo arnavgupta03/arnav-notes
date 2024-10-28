@@ -1,0 +1,730 @@
+% Created 2024-10-27 Sun 21:52
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Concurrency}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Concurrency},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Concurrency}
+\label{sec:org2d582ca}
+\textbf{Thread}: independent sequential execution path through a program, scheduled for execution separately
+and independently of other threads
+
+\textbf{Process}: program component that has its own thread and has the same state information as a coroutine
+
+\textbf{Task}: similar to process but is reduced along some particular dimension and shares common memory
+(lightweight process)
+
+\textbf{Parallel Execution}: when 2+ operations occur simultaneously (requires multiple processors)
+
+\textbf{Concurrent Execution}: any situation in which execution of multiple threads appears to be performed in
+parallel, caused by threads of control rather than processors
+\section{Why Write Concurrent Programs}
+\label{sec:orge1de106}
+Dividing a problem into threads is a programming technique and may be natural to expressing a problem.
+Can also enhance execution time efficiency by taking advantage of concurrency in an algorithm.
+\section{Why Concurrency is Difficult}
+\label{sec:org67b3933}
+Difficult to:
+\begin{itemize}
+\item coordinate
+\item specify how a problem should be broken up
+\item specify if and how parts interact
+\item specify how info is communicated during interaction
+\item debug due to non-deterministic order
+\item reason about
+\end{itemize}
+\section{Concurrent Hardware}
+\label{sec:org7e6d15c}
+Concurrent execution is possible with one CPU, but \textbf{multitasking} requires \textbf{multiprocessing}.
+
+Parallelism occurs by context switching between threads on the CPU.
+Most issues in concurrency can be illustrated without parallelism.
+
+Task switching may occur at non-deterministic program locations, between any two machine instructions.
+
+Switching happens explicitly but conditionally when calling routines, since they may not context
+switch depending on hidden internal state.
+
+Switching can happen implicitly because of an external \textbf{interrupt} independent of program execution.
+
+If an interrupt affects \textbf{scheduling}, it is \textbf{preemptive}, otherwise it is \textbf{non-preemptive}.
+Context switching is instruction level for preemptive and routine level for non-preemptive.
+
+Pointers among tasks work because memory is shared.
+Thought, concurrent execution of threads is possible with 1+ CPUs on different computers with separate
+memories, in a \textbf{distributed system}. For a distributed system, pointers among tasks do not work.
+\section{Execution State}
+\label{sec:org3981a10}
+Thread states can be \uline{new}, \uline{ready}, \uline{running}, \uline{blocked}, and \uline{halted}.
+
+*State transitions are initiated in response to events:
+\begin{itemize}
+\item entering the system (new \(\to\) ready)
+\item assigning thread to computing resource (ready \(\to\) running)
+\item timer alarm for preemption (running \(\to\) ready)
+\item long-term delay vs spinning (running \(\to\) blocked)
+\item completion of delay (blocked \(\to\) ready)
+\item normal completion or error (running \(\to\) halted)
+\end{itemize}
+
+Thread cannot bypass the ready state during a transition so the scheduler maintains complete control
+of the system.
+
+Sequential operations, however small, are unsafe in a concurrent program.
+\section{Threading Model}
+\label{sec:org35916a9}
+For multiprocessor systems, a \textbf{threading model} defines the relationship between threads and CPUs.
+
+OS manages CPUs by providing logical access via \textbf{kernel threads} (virtual processors) scheduled
+across the CPUs.
+
+Can have more kernel threads than CPUs to provide multiprocessing.
+
+A process may have multiple kernel threads to provide parallelism.
+A program may have 1+ user threads scheduled on each of its process's kernel threads.
+
+User threads are low cost, kernel threads are high cost.
+
+\textbf{Kernel threading} uses exactly the same number of user and kernel threads, \textbf{user threading}
+uses different numbers of user and kernel threads.
+
+Can recursively add stackless \textbf{nano threads} on top of stackful user threads and a virtual machine below
+the OS.
+\section{Concurrent Systems}
+\label{sec:org859bdf6}
+Major types of concurrent systems:
+\begin{enumerate}
+\item attempt to discover implicit concurrency in an otherwise sequential program
+\begin{enumerate}
+\item limit to how much concurrency can be found
+\item only works on certain problems
+\end{enumerate}
+\item provide concurrency through \uline{implicit} constructs
+\begin{enumerate}
+\item concurrency accessed indirectly via specialized mechanisms
+\item threads implicitly managed
+\end{enumerate}
+\item provide concurrency through \uline{explicit} constructs
+\begin{enumerate}
+\item concurrency accessed directly
+\item threads explicitly managed
+\end{enumerate}
+\end{enumerate}
+
+Discovery and implicit are built from explicit, since explicit threads are required at some level.
+
+Implicit and explicit mechanisms are complementary.
+Implicit is limited, so maximum concurrency requires explicit.
+
+As concurrency increases, so does the complexity to express and manage it.
+\section{Speedup}
+\label{sec:orgc8ea8bb}
+Speedup is defined as
+$$ S_{C} = T_{1}/T_{C} $$
+where \(C\) is the number of CPUs and \(T_{1}\) is sequential execution.
+
+Types of speedup:
+\begin{itemize}
+\item \textbf{non-linear} is the most common
+\item \textbf{sub-linear} is less common, defined as \(S_{C} < C\)
+\item \textbf{linear} is ideal, defined as \(S_{C} = C\)
+\item \textbf{super linear} is unlikely, defined as \(S_{C} > C\)
+\end{itemize}
+
+Aspects affecting speedup (assuming sufficient parallelism):
+\begin{enumerate}
+\item amount of concurrency
+\item critical path among concurrency
+\item scheduler efficiency
+\end{enumerate}
+
+An algorithm/program is composed on sequential and concurrent sections.
+
+\textbf{Amdahl's Law}: concurrent section of a program \(P\), gives that the sequential section is
+\(1-P\), so the maximum achievable speedup using \(C\) CPUs is
+$$ S_{C} = \frac{1}{(1-P) + P/C} $$
+As \(C \to \infty\), \(P/C \to 0\), so the maximum speedup is \(\frac{1}{1-P}\), which is the time for the
+sequential section.
+
+Concurrent programming consists of minimizing sequential section \(1-P\).
+
+This law ignores any administrative costs of concurrency.
+
+While sequential sections bound speedup, concurrent sections bound speedup by the \textbf{critical path}
+of computation:
+\begin{itemize}
+\item \textbf{independent execution}: all threads created together and do not interact
+\item \textbf{dependent execution}: threads created at different times and interact (critical path exists)
+\end{itemize}
+
+Longest path bounds speedup. Speedup can also be affected by scheduler efficiency/ordering, but no
+control over this.
+Greedy scheduling is less concurrent and LIFO scheduling gives priority to newly waiting tasks (starvation).
+
+In general, benefit comes when many programs achieve some speedup so there is an overall improvement
+on a multiprocessor computer.
+\section{Thread Creation}
+\label{sec:org3c2fe81}
+Concurrency requires:
+\begin{enumerate}
+\item \uline{creation}: cause another thread of control to come into existence
+\item \uline{synchronization}: establish timing relationships among threads
+\item \uline{communication}: transmit data among threads
+\end{enumerate}
+
+Thread creation must be a primitive operation.
+\subsection{COBEGIN/COEND}
+\label{sec:org7d706ba}
+Compound statement with statements run by multiple threads.
+\begin{verbatim}
+#include <uCobegin.h>
+COBEGIN // threads execute statement in block
+    BEGIN p0( 0 ); END
+    BEGIN p1( 1 ); END
+    BEGIN p2( 2 ); END
+    BEGIN p3( 3 ); END
+COEND // initial thread waits for all internal threads to finish (synchronize) before control continues
+\end{verbatim}
+
+Order and speed of internal thread execution is unknown, so it is implicit concurrency.
+
+\textbf{Thread graph} represents thread creation.
+This construct is restricted to creating trees of threads.
+\subsection{START/WAIT}
+\label{sec:org3b616b4}
+Start thread in routine and wait (join) at thread termination, allowing arbitrary thread graph.
+
+\begin{verbatim}
+#include <uCobegin.h>
+decltype(START( p, 5 )) tp = START( p, 5 );
+{
+    s1; // continue execution, without waiting for tp
+}
+decltype(START( f, 8 )) tf = START( f, 8 );
+{
+    s2; // continue execution, without waiting for tf
+}
+WAIT( tp ); // wait for tp to finish
+{
+    s3; // continue execution, without waiting for tf
+}
+WAIT( tf ); // wait for tf to finish
+\end{verbatim}
+
+Allows same routine to be started multiple times with different arguments.
+Explicit concurrency since it is specified where threads should be started and terminated explicitly.
+
+START/WAIT can simulate COBEGIN/COEND.
+\subsection{Actor}
+\label{sec:orgf63522a}
+Unit of work without a thread, like BEGIN/END.
+
+An executor thread matches an actor with a message and runs the actor's behaviour for the message, like
+COBEGIN/COEND.
+
+Communication is via a polymorphic queue of messages with dynamic type checking.
+Usually no shared info among actors and no blocking is allowed.
+
+Must declare messages and actors.
+\begin{verbatim}
+#include <uActor.h>
+
+struct StrMsg : public uActor::Message {
+    string val;
+    StrMsg( string val ) : Message( uActor::Delete ), val( val ) {} // delete after use
+};
+
+_Actor Hello { // derived from public uActor
+    Allocation receive( Message & msg ) {
+        Case( StrMsg, msg ) {
+            ...;
+            msg_d->val; // access derived message
+            ...;
+        } else Case( StopMsg, msg ) return Delete; // delete actor
+        return Nodelete; // reuse actor
+    }
+};
+
+int main() {
+    uActor::start(); // start actor system
+    // create actors and pass messages with | operator
+    uActor::stop(); // wait for all actors to terminate
+}
+\end{verbatim}
+
+Implicit concurrency for actors since no defined threads of control.
+
+Must start actor system to create thread pool and wait for actors to complete.
+Actors must receive at least 1 message to start.
+Messages are received and executed sequentially in FIFO order.
+
+\begin{verbatim}
+class uActor {
+    public:
+        enum Allocation {
+            Nodelete, // actor/message persists after return from receive
+            Delete, // actor/message is deleted after return from receive
+            Destroy, // actor/message's dtor is called after return from receive (storage not deallocated)
+            Finished, // actor/message marked finished but neither dtor not delete called
+        };
+        struct Message {
+            Allocation allocation;
+            ...;
+        }
+        static struct StartMsg : public uActor::SenderMsg {} startMsg;
+        static struct StopMsg : public uActor::SenderMsg {} stopMsg;
+        static void start();
+        static bool stop();
+    private:
+        Allocation allocation;
+};
+\end{verbatim}
+
+Executor finds an actor with messages and passes the first message to the actor to process.
+After actor returns, the executor checks what to do with the message and actor.
+\subsection{Thread Object}
+\label{sec:org6a2aa6d}
+Thread is an object to leverage class features and uses allocation/deallocation to define
+thread lifetime.
+
+\begin{verbatim}
+_Task T { ... }
+{
+    T t; // like COBEGIN/COEND
+}
+T * t = new T; // like START
+delete T; // like WAIT
+\end{verbatim}
+
+Explicit concurrency since the thread object is explicitly started and stopped.
+\section{Termination Synchronization}
+\label{sec:org2364157}
+A thread terminates when:
+\begin{itemize}
+\item it finishes normally
+\item it finishes with an error
+\item it is killed by its parent or sibling
+\item parent terminates
+\end{itemize}
+
+Children can continue to exist after the parent terminates (though rare).
+Synchronizing at termination possible for terminating threads and can be used to perform final
+communication.
+\section{Divide and Conquer}
+\label{sec:org77d8205}
+Ability to subdivide work across data, so the work performed on each data group is identical to the work
+performed on data as a whole.
+
+Must ensure that administration of concurrency does not exceed cost of work.
+
+\texttt{COFOR} logically creates \(\text{end} - \text{start}\) threads, indexed from start to end - 1.
+This is implicit concurrency since these threads are logically created in an undefined manner.
+\section{Exceptions}
+\label{sec:org05868a5}
+Can be handled locally within a task, nonlocally among coroutines, or concurrently among tasks.
+
+For coroutines, \texttt{UnhandledException} goes to the last resumer.
+For tasks, \texttt{UnhandledException} goes to the task's joiner.
+
+Nonlocal exceptions between a task and a coroutine are the same as between coroutines.
+A concurrent exception provides an additional kind of communication among tasks.
+
+For a concurrent raise, the source execution may only block while queuing the event for delivery at
+the faulting execution.
+
+After an event is delivered, the faulting execution is not interrupted and it instead polls:
+\begin{itemize}
+\item when an \texttt{\_Enable} statement begins and ends
+\item after a call to \texttt{suspend} or \texttt{resume}
+\item after a call to \texttt{yield}
+\item after a call to \texttt{\_Accept} unblocks for \texttt{RendezvousFailure}
+\end{itemize}
+\section{Synchronization and Communication During Execution}
+\label{sec:org939fbd1}
+Synchronization occurs when one thread waits until another thread has reached a certain execution point.
+
+Synchronization is needed in transmitting data between threads, where one thread must be ready
+to transmit and another must be ready to receive simultaneously.
+
+\textbf{Busy wait}: a loop waiting for an event among threads
+\section{Communication}
+\label{sec:org3a62f20}
+If threads are in the same memory, info can be transferred by value or address (reference).
+
+If threads are not in the same memory (distributed), transferring info by value is straightforward
+(but not by address).
+\section{Critical Section}
+\label{sec:org6c1e284}
+Threads may access non-concurrent objects, so a problem occurs if multiple threads attempt to operate
+on the same object simultaneously.
+
+Atomic operations are fine, so it is often necessary to make an operation atomic.
+
+\textbf{Critical Section}: group of instructions on associated data that must be performed atomically
+
+\textbf{Mutual Exclusion}: preventing simultaneous execution of a critical section by multiple threads
+
+Must determine when concurrent access is allowed/prevented.
+
+Can detect any sharing and serialize all access, but this is wasteful for reads.
+Better to allow multiple readers or a single writer.
+
+Must minimize the amount of mutual exclusion to maximize concurrency.
+\section{Static Variables}
+\label{sec:org3cbbe65}
+Shared among all objects generated by that class, so they may require mutual exclusion.
+
+Static variables can be safely used in a task constructor if task objects are generated serially.
+This approach only works if one task creates all objects and initialization data is internal.
+
+Best to avoid shared static variables in a concurrent program.
+\section{Mutual Exclusion Game}
+\label{sec:org71e2810}
+Consider mutual exclusion as a game with the following rules:
+\begin{enumerate}
+\item \textbf{safety}: only one thread can be in a critical section at a time with respect to a particular object
+\item threads may run at arbitrary speed and in arbitrary order, while the underlying system guarantees
+that all threads make some progress
+\item if a thread is not in the entry or exit code controlling access to the critical section, it may not
+prevent other threads from entering the critical section
+\item in selecting a thread for entry  to a critical section, a selection cannot be postponed indefinitely,
+which is \textbf{liveness}, and not satisfying this rule is \textbf{indefinite postponement} or \textbf{livelock}
+\item after a thread starts entry to the critical section, it must eventually enter, and not satisfying this
+rule is \textbf{starvation}
+\end{enumerate}
+
+Indefinite postponement and starvation are related by busy waiting.
+Looping for an event in mutual exclusion must ensure eventual progress.
+
+If threads are not serviced in first-come first-serve order, there is a notion of \textbf{unfairness}.
+Unfairness implies waiting threads are overtaken by arriving threads, called \textbf{barging}.
+\section{Software Solutions}
+\label{sec:orge32f783}
+Can have a self-testing critical section.
+
+Using a basic permission lock with an enum breaks rule 1.
+
+Using alternation breaks rule 3.
+
+Using basic declare intent causes livelock, breaking rule 4.
+
+Using basic retract intent can also cause livelock, breaking rule 4.
+
+Using prioritized retract intent causes starvation, breaking rule 5.
+\subsection{Dekker's Algorithm}
+\label{sec:org20c3729}
+\begin{verbatim}
+enum Intent { WantIn, DontWantIn };
+Intent * Last;
+_Task Dekker {
+    Intent & me, & you;
+    void main() {
+        for (int i = 1; i <= 1000; i += 1) {
+            for ( ;; ) { // entry protocol, high priority
+                me = WantIn;
+                if ( you == DontWantIn ) break; // does not want in
+                if ( ::Last == &me ) { // low priority task
+                    me = DontWantIn; // retract intent
+                    while ( ::Last == &me && // this line by Hesselink
+                            you == WantIn ) {}
+                }
+            }
+            CriticalSection();
+            // exit protocol
+            if ( ::Last != &me ) { // this line by Hesselink
+                ::Last = &me;
+            }
+            me = DontWantIn;
+        }
+    }
+};
+\end{verbatim}
+
+Dekker's Algorithm appears to be \textbf{read/write-safe} (RW-safe):
+\begin{itemize}
+\item on cheap multi-core computers, read/write is not atomic
+\item \textbf{RW safe}: a mutual exclusion algorithm works for non-atomic read/write
+\item Dekker has no simultaneous write/write since intent reset is after alternation in exit protocol
+\item Dekker has simultaneous read/write but all are equality so it works if final value never flickers
+(bits changing during write)
+\end{itemize}
+
+In 2015, Hesselink found 2 failure cases if the values flicker, and added the two lines.
+
+Dekker has \textbf{unbounded overtaking} (not starvation) since race loser retracts intent, but this
+is allowed.
+\subsection{Peterson's Algorithm}
+\label{sec:orge7afe33}
+\begin{verbatim}
+enum Intent { WantIn, DontWantIn };
+Intent * Last;
+_Task Peterson {
+    Intent & me, & you;
+    void main() {
+        for (int i = 1; i <= 1000; i += 1) {
+            me = WantIn;
+            ::Last = &me;
+            while ( ::Last == &me && you == WantIn ) {}
+            CriticalSection();
+            me = DontWantIn;
+        }
+    }
+};
+\end{verbatim}
+
+Peterson's Algorithm is RW-unsafe so it requires atomic read/write operations.
+Peterson also has \textbf{bounded overtaking} since the race loser does not retract intent,
+since the thread exiting critical section excludes itself for reentry.
+\subsection{N-Thread Prioritized Entry}
+\label{sec:orgc4e62b2}
+\begin{verbatim}
+enum Intent { WantIn, DontWantIn };
+_Task NTask {
+    Intent * intents;
+    int N, priority, i, j;
+    void main() {
+        for ( i = 1; i <= 1000; i += 1 ) {
+            do {
+                intents[priority] = WantIn;
+                for ( j = priority - 1; j <= 0; j -= 1 ) {
+                    if ( intents[j] == WantIn ) {
+                        intents[priority] = DontWantIn;
+                        while ( intents[j] == WantIn ) {}
+                        break;
+                    }
+                }
+            } while ( intents[priority] == DontWantIn );
+
+            for ( j = priority + 1; j < N; j += 1 ) {
+                while ( intents[j] == WantIn ) {}
+            }
+            CriticalSection();
+            intents[priority] = DontWantIn;
+        }
+    }
+};
+\end{verbatim}
+
+This algorithm can cause starvation for lower priority tasks.
+
+Only \(N\) bits are needed since only the want in status is needed for
+each task.
+No known solution exists for all 5 rules using only \(N\) bits.
+Other \(N\) thread solutions use more memory.
+The best solutions are 3-bit RW-unsafe and 4-bit RW-safe.
+\subsection{N-Thread Bakery (Tickets)}
+\label{sec:org15a67c1}
+\begin{verbatim}
+_Task Bakery {
+    int * ticket, N, priority;
+    void main() {
+        for ( int i = 1; i <= 1000; i += 1 ) {
+            ticket[priority] = 0;
+            int max = 0;
+            for ( int j = 0; j < N; j += 1 ) {
+                int v = ticket[j];
+                if ( v != INT_MAX && max < v ) max = v;
+            }
+            max += 1;
+            ticket[priority] = max;
+
+            for ( int j = 0; j < N; j += 1 ) {
+                while ( ticket[j] < max ||
+                    ( ticket[j] == max && j < priority ) ) {}
+            }
+            CriticalSection();
+            ticket[priority] = INT_MAX;
+        }
+    }
+};
+\end{verbatim}
+
+Ticket value of INT\textsubscript{MAX} means they don't want in.
+Ticket value of 0 means selecting ticket.
+
+Tickets are not unique, position gives secondary priority.
+Low ticket and position means high priority.
+
+This uses \(NM\) bits where \(M\) is the ticket size.
+
+Lamport version is RW-safe.
+Hehner/Shyamasundar is RW-unsafe since the \texttt{ticket[priority] = max} line
+can flicker to INT\textsubscript{MAX} which would allow other tasks to proceed.
+\subsection{Tournament}
+\label{sec:org06dcdf7}
+Consider a binary tree with \(\lceil N/2 \rceil\) start nodes and \(\lceil \log N \rceil\) levels.
+A thread is assigned to a start node, where it begins mutual exclusion.
+
+Each node is like a Dekker or Peterson 2 thread algorithm.
+The tree structure tries to find a compromise between fairness and performance.
+
+Exit protocol must retract intents in \uline{reverse} order.
+Otherwise a race between retracting/released threads along the same tree path.
+
+No overall livelock or starvation since each node ensures neither occurs at the node level.
+
+Tournament algorithm RW safetyy depends on MX algorithm since tree traversal is local to each
+thread.
+Tournament algorithms have unbounded overtaking as no synchronization exists among the nodes
+of the tree.
+
+For a minimal binary tree, the tournament approach uses \((N-1)M\) bits, where \(N-1\) is the
+number of tree nodes and \(M\) is the node size.
+\begin{verbatim}
+_Task TournamentMax {
+    struct Token { int intents[2], turn };
+    static Token ** t;
+    int depth, id;
+
+    void main() {
+        unsigned int lid;
+        for ( int i = 0; i < 1000; i += 1 ) {
+            lid = d;
+            for ( int lv = 0; lv < depth; lv += 1 ) {
+                binary_prologue( lid & 1, &t[lv][lid >> 1] );
+                lid >>= 1;
+            }
+            CriticalSection( id );
+            for ( int lv = depth - 1; lv >= 0; lv -= 1 ) {
+                lid = id >> lv;
+                binary_prologue( lid & 1, &t[lv][lid >> 1] );
+            }
+        }
+    }
+}
+\end{verbatim}
+
+This can be optimized to 3 shifts and XOR using Peterson 2-thread for binary.
+
+Path from leaf to root is fixed per thread, so table lookup is possible using max or
+min tree.
+\subsection{Arbiter}
+\label{sec:org67f086b}
+Create a full-time arbitrator task to control entry to critical section.
+\begin{verbatim}
+bool intents[N], serving[N];
+
+_Task Client {
+    int me;
+    void main() {
+        for ( int i = 0; i < 100; i += 1 ) {
+            intents[me] = true;
+            while ( !serving[me] ) {}
+            CriticalSection();
+            serving[me] = false;
+        }
+    }
+}
+
+_Task Arbiter {
+    void main() {
+        int i = N;
+        for ( ;; ) {
+            do {
+                i = ( i + 1 ) % n;
+            } while ( !intents[i] );
+            intents[i] = false;
+            serving[i] = false;
+            while ( serving[i] ) {}
+        }
+    }
+}
+\end{verbatim}
+
+Mutual exclusion becomes synchronization between arbiter and clients.
+Arbiter never uses the critical section, so no indefinite postponement (livelock).
+Arbiter cycles through waiting clients so no starvation.
+
+This is RW unsafe due to read flicker, like when modifying \texttt{intents} and \texttt{serving}.
+
+Cost comes from the creation, management, and execution (busy waiting) of the arbiter
+task.
+\section{Hardware Solutions}
+\label{sec:org1d8eb2d}
+Hardware solutions occur below the software level.
+
+This allows the elimination of the shared info and checking of this info required
+in the software solution.
+
+This approach uses special instructions for atomic read/write.
+\subsection{Test/Set Instruction}
+\label{sec:orgc3e6f6d}
+Performs an atomic read and fixed assignment.
+\begin{verbatim}
+int TestSet( int & b ) {
+    // begin atomic
+    int temp = b;
+    b = CLOSED;
+    // end atomic
+    return temp;
+}
+\end{verbatim}
+
+If instruction returns open, lock must have been open before, so can enter critical
+section.
+
+No guarantee of eventual progress, since a task can keep locking and opening.
+
+In the case of multiple CPUs, the bus must ensure multiple CPUs cannot interleave
+special RW instructions on the same memory location.
+\subsection{Swap Instruction}
+\label{sec:orgea9ba38}
+Performs an atomic interchange of two values.
+\begin{verbatim}
+void Swap( int & a, & b ) {
+    int temp;
+    // begin atomic
+    temp = a;
+    a = b;
+    b = temp;
+    // end atomic
+}
+\end{verbatim}
+
+If variable swapped with lock becomes OPEN, then lock must have ben open, so can
+enter critical section.
+\subsection{Fetch and Increment Instruction}
+\label{sec:org68cad89}
+Performs an atomic increment between the read and write.
+\begin{verbatim}
+int FetchInc( int & val ) {
+    // begin atomic
+    int temp = val;
+    val += 1;
+    // end atomic
+    return temp;
+}
+\end{verbatim}
+
+Can be generalized to add or subtract any value.
+
+Lock counter can overflow during busy waiting and starvation, which occurs
+if a task resets the counter and then immediately re-enters.
+This can be fixed with a ticket counter, where \texttt{acquire} atomically sets the
+ticket and \texttt{release} increments the next ticket to be served.
+\end{document}
