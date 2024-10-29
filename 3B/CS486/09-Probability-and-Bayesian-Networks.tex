@@ -1,0 +1,143 @@
+% Created 2024-10-29 Tue 13:37
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\usepackage{dsfont}
+\author{DESKTOP-H800RKQ}
+\date{\today}
+\title{Probability And Bayesian Networks}
+\hypersetup{
+ pdfauthor={DESKTOP-H800RKQ},
+ pdftitle={Probability And Bayesian Networks},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Uncertainty}
+\label{sec:orga966710}
+Agents don't know everything but must still make decisions,
+whether in the \uline{absence of info} or with \uline{noisy info}.
+
+An agent can know how uncertain it is.
+\section{Bayesian Probability}
+\label{sec:orgfd73723}
+Frequentist probability is \textbf{ontological}: pertaining to the world (at this time).
+
+Bayesian probability is \textbf{epistemological}: pertaining to knowledge (based on previous experience).
+
+For a \textbf{random variable} \(X\) that contains a feature and attribute,
+it can take on values \(x \in \text{Domain}(X)\).
+Assume \(x\) is discrete.
+\textbf{Joint probability} \(P(x,y)\) is the probability that \(X = x\) and \(Y = y\) at the same time.
+
+For probabilities:
+\begin{itemize}
+\item \(P(X) \ge 0\)
+\item \(\sum_{x} P(X = x) = 1.0\)
+\item \(P(a \vee b) = P(a) + P(b)\) if \(a\) and \(b\) are mutually exclusive
+\item \(P(a) = 0\) means definitely false
+\item \(P(a) = 0\) means definitely true
+\item \(0 < P(a) < 1\) means there is some belief about the truth of \(a\), though this truth value is unknown
+(not that \(a\) is true to some degree)
+\item probability is a \textbf{measure of ignorance}
+\end{itemize}
+\subsection{Independence}
+\label{sec:org1d5e241}
+Describe a system with \(n\) features, so \(2^{n} - 1\) probabilities.
+Can use independence to reduce the number of probabilities.
+
+With independence, can sum the options for each feature rather than multiplying to describe
+all probabilities.
+\subsection{Conditional Probability}
+\label{sec:org152750e}
+For random variables \(X\) and \(Y\),
+\(P(x \mid y)\) is the probability that \(X = x\) given \(Y = y\).
+
+\(X\) and \(Y\) are \textbf{independent} if and only if \(P(X) = P(X \mid Y), P(Y) = P(Y \mid X), P(X,Y) = P(X)P(Y)\),
+so learning about \(Y\) does not influence beliefs about \(X\).
+
+\(X\) and \(Y\) are \textbf{conditionally independent} given \(Z\) if and only if
+\(P(X \mid Z) = P(X \mid Y, Z), P(Y \mid Z) = P(Y \mid X, Z), P(X, Y \mid Z) = P(X \mid Z) P(Y \mid Z)\)
+so learning about \(Y\) does not influence beliefs about \(X\) if \(Z\) is already known.
+But this does not mean \(X\) and \(Y\) are independent.
+
+\textbf{Incorporate Independence}
+$$ P(X \mid Y, Z) = P(X \mid Y) $$
+if \(X\) and \(Z\) are independent given \(Y\)
+
+\textbf{Product Rule}
+$$ P(X,Y) = P(X \mid Y) P (Y) $$
+which leads to \textbf{Bayes' Rule}
+$$ P(X \mid Y) = \frac{P(Y \mid X) P(X)}{P(Y)} $$
+
+\textbf{Sum Rule}
+$$ \sum_{x} P(X = x, Y) = P(Y) $$
+\(P(Y)\) is the \textbf{marginal distribution} over \(Y\).
+\subsection{Expected Values}
+\label{sec:orge4358dc}
+Expected value of a function on \(X\), \(V(x)\) is
+$$ \mathds{E}(V) = \sum_{x \in \text{Dom}(X)} P(x), V(x) $$
+
+This is useful in decision making, where \(V(X)\) is the \uline{utility} of situation \(X\).
+
+\textbf{Bayesian Decision Making}
+$$ \mathds{E}(V(\text{decision})) = \sum_{\text{outcome}} P(\text{outcome} \mid \text{decision}) V(\text{outcome}) $$
+\section{Bayesian Networks}
+\label{sec:orgc6588e2}
+Complete independence reduces both representation and inference from \(O(2^{n})\) to \(O(n)\).
+
+Complete mutual independence is rare so more often use conditional independence.
+
+\textbf{Bayesian Network}
+\begin{itemize}
+\item directed acyclic graph
+\item encodes independences in a graphical format
+\item edges give \(P(X_{i} \mid \text{parents}(X_{i}))\)
+\end{itemize}
+
+A Bayesian Network over variables \(\{ X_{1}, \dots, X_{n} \}\) consists of:
+\begin{itemize}
+\item a DAG whose nodes are the variables
+\item a set of conditional probability tables (CPTs) giving \(P(X_{i} \mid \text{parents}(X_{i}))\)
+for each \(X_{i}\)
+\end{itemize}
+
+The structure of a BN means that
+every \(X_{i}\) is conditionally independent of all its nondescendants given its parents
+$$ P(X_{i} \mid S, \text{parents}(X_{i})) = P(X_{i} \mid \text{parents}(X_{i})) $$
+for any subset \(S \subseteq \text{nondescendants}(X_{i})\).
+
+The BN defines a factorization of the joint probability distribution.
+The joint distribution is formed by multiplying the conditional probability tables together
+$$ P(X_{1}, \dots, X_{n}) = \prod_{i} P(X_{i} \mid \text{parents}(X_{i})) $$
+\subsection{Correlation and Causality}
+\label{sec:orgc25c1a1}
+Directed links in a Bayes' network approximately causality, but this is not always the case.
+
+In a Bayes network, this does not matter, though some structures will be easier to specify.
+\subsection{Conditional Independence}
+\label{sec:org2039f4c}
+When no information is given, a later node in a Bayes network is not independent of its
+ancestors.
+
+When info is given, a later node is conditionally independent of the ancestors of the given info.
+
+The full joint probability can be specified using the local conditional probabilities.
+\end{document}
