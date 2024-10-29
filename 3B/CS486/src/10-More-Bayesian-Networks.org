@@ -1,0 +1,157 @@
+#+title: More Bayesian Networks
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Bayesian/Belief Networks
+To represent a domain in a belief network, consider:
+- what the relevant variables are
+  - what might be observed \to *evidence*
+  - what information is desired \to *query*
+  - what features make the model simpler \to other variables
+- what values the variables will take
+- what relationships exist between variables, expressed in terms of *local influence*
+- how the values of each variable depend on the parents, expressed in terms of conditional probabilities
+
+** Bayes' Rule
+Agent has a prior belief in a hypothesis $h$, $P(h)$.
+
+Agent observes some evidence $e$ that has a *likelihood* given the hypothesis $P(e \mid h)$.
+
+The agent's *posterior belief* about $h$ after observing $e$, $P(h \mid e)$
+is given by Bayes' Rule
+$$ P(h \mid e) = \frac{P(e \mid h) P(h)}{P(e)} = \frac{P(e \mid h) P(h)}{\sum_{h} P(e \mid h) P(u)} $$
+
+Often agents have *causal knowledge* but want to do *evidential reasoning*.
+
+** Simple Forward Inference (Chain)
+Computing marginal requires simple forward propagation of probabilities.
+
+Consider the following Bayesian Network:
+
+*Marginalization*
+$$ P(B) = \sum_{m, c} P(M = m, C = c, B) $$
+
+*Chain Rule*
+$$ P(B) = \sum_{m, c} P(B \mid m, c) P(m \mid c) P(c) $$
+
+*Independence*
+$$ P(B) = \sum_{m, c} P(B \mid m, c) P(m) P(c) $$
+
+*Distribution of Produce over Sum*
+$$ P(B) = \sum_{m} P(m) \sum_{c} P(c) P(B \mid m, c) $$
+
+All terms on the last line are CPTs in the Bayes' Network.
+Only ancestors of $B$ are considered.
+
+With multiple parents, the evidence can be pooled.
+This also works with upstream evidence.
+
+** Simple Backward Inference
+When evidence is downstream of query, reason backwards, which requires Bayes' rule.
+
+* Variable Elimination
+Intuitions above are the *polytree* algorithm.
+This works for simple networks without loops.
+
+A more general algorithm is *Variable Elimination*:
+- applies sum-out rule repeatedly
+- distributes sums
+
+*Factor*: representation of a function from a tuple of random variables into a number
+
+Write a factor $f$ on variables $X_{1}, \dots, X_{j}$ as $f(X_{1}, \dots, X_{j})$.
+Assigning some or all of the variables of a factor is *restricting* a factor:
+- $f(X_{1} = v_{1}, X_{2}, \dots, X_{j})$ where $v_{1} \in \text{dom}(X_{1})$ is a factor on
+  $X_{2}, \dots, X_{j}$
+- $f(X_{1} = v_{1}, X_{2} = v_{2}, \dots, X_{j} = v_{j})$ is a number that is the value of $f$
+  when each $X_{i}$ has value $v_{i}$
+
+The *product* of factor $f_{1} (X,Y)$ and $f_{2} (Y,Z)$ where $Y$ are the variables in common,
+is the factor $(f_{1} \times f_{2}) (X,Y,Z)$ defined by
+$$ (f_{1} \times f_{2}) (X,Y,Z) = f_{1} (X,Y) f_{2} (Y,Z) $$
+
+To *sum out* a variable $X_{1}$ with domain $\{ v_{1}, \dots, v_{k} \}$, from factor
+$f(X_{1}, \dots, X_{j})$ resulting in a factor on $X_{2}, \dots, X_{j}$ defined by:
+$$ \left( \sum_{X_{1}} f \right) (X_{2}, \dots, X_{j}) = f(X_{1} = v_{1}, \dots, X_{j}) + \cdots + f(X_{1} = v_{k}, \dots, X_{j}) $$
+
+** Evidence
+To compute the posterior probability of $Z$ given evidence
+$Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j}$:
+$$ P(Z \mid Y_{1} = v_{1}, \dots, Y_{j} = v_{j}) = \frac{P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})}{\sum_{Z} P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})} $$
+
+This computation reduces to the joint probability of $P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})$
+normalized at the end.
+
+The query value can also be restricted, for example $Z = z$.
+
+** Probability of a Conjunction
+Suppose the variables of the belief network are $X_{1}, \dots, X_{n}$.
+To compute $P(Z, Y_{1} = v_{1}, \dots, Y{j} = v_{j})$, sum out the variables other than query $Z$
+and evidence $Y$
+$$ Z_{1}, \dots, Z_{k} = \{ X_{1}, \dots, X_{n} \} - \{ Z \} - \{ Y_{1}, \dots, Y_{j} \} $$
+
+Order $Z_{i}$ into an elimination ordering $Z_{1}, \dots, Z_{k}$
+$$ P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j}) = \sum_{Z_{k}} \cdots \sum_{Z_{1}} \prod_{i=1}^{n} P(X_{i} \mid \text{parents}(X_{i}))_{Y_{1} = v_{1}, \dots, Y_{j} = v_{j}} $$
+
+** Computing Sums of Products
+Computation in belief networks reduces to computing the sums of products:
+- to compute $ab + ac$ efficiently
+  - distribute to $a(b + c)$
+- to compute $\sum_{Z_{1}} \prod_{i=1}^{n} P(X_{i} \mid \text{parents}(X_{i}))$ efficiently
+  - distribute out the factors that don't involve $Z_{1}$
+
+** Algorithm
+To compute $P(Z \mid Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j})$:
+- construct a factor for each conditional probability
+- restrict the observed variables to their observed values
+- sum out each of the other variables according to some *elimination ordering* for
+  each $Z_{i}$ in order starting from $i = 1$
+  - collect all factors that contain $Z_{i}$
+  - multiple together and sum out $Z_{i}$
+  - add resulting new factor back to the pol
+- multiply the remaining factors
+- normalize by dividing the resulting factor $f(Z)$ by $\sum_{Z} f(Z)$
+
+** Summing out a Variable
+To sum out a variable $Z_{j}$ from a product $f_{1}, \dots, f_{k}$ of factors:
+- partition the factors into
+  - those that don't contain $Z_{j}$, let these be $f_{1}, \dots, f_{i}$
+  - those that contain $Z_{j}$, let these be $f_{i+1}, \dots, f_{k}$
+
+This gives
+$$ \sum_{Z_{j}} f_{1} \times \cdots \times f_{k} = f_{1} \times \cdots \times f_{i} \times \left( \sum_{Z_{j}} f_{i+1} \times \cdots \times f_{k} \right) $$
+
+Explicitly construct a representation of the rightmost factor and replace
+the factors by the new factor.
+
+** Elimination Ordering
+Complexity is _linear_ in the number of variables and _exponential_ in the size of the largest
+factor.
+Creating new factors blows this up, but this depends on the *elimination ordering*.
+
+For polytrees, work outside in.
+For general BNs, this can be hard.
+Specifically, finding the optimal elimination ordering is NP-hard for general BNs.
+
+In general, inference is NP-hard.
+
+*** Polytrees
+Eliminate singly connected nodes first.
+Then, no factor is ever larger than original CPTs.
+
+If the most connected nodes are eliminated first, a large factor is created with the singly
+connected nodes.
+
+*** Relevance
+Certain variables have no impact.
+
+Can restrict attention to relevant variables.
+Given query $Q$ and evidence $\mathbf{E}$, complete approximation is:
+- $Q$ is relevant
+- if any node is relevant, its parents are relevant
+- if $E \in \mathbf{E}$ is a descendent of a relevant variable, then $E$ is relevant
+
+*Irrelevant variable*: a node that is not an ancestor of a query or evidence variable
+
+This will only remove irrelevant variables, but may not remove them all.

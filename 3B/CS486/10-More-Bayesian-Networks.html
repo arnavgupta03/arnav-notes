@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-29 Tue 19:41 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>More Bayesian Networks</title>
+<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">More Bayesian Networks</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgbf98dd9">1. Bayesian/Belief Networks</a>
+<ul>
+<li><a href="#org12da9de">1.1. Bayes&rsquo; Rule</a></li>
+<li><a href="#org246f612">1.2. Simple Forward Inference (Chain)</a></li>
+<li><a href="#org1e94527">1.3. Simple Backward Inference</a></li>
+</ul>
+</li>
+<li><a href="#org5475bd6">2. Variable Elimination</a>
+<ul>
+<li><a href="#org7cdedc4">2.1. Evidence</a></li>
+<li><a href="#org830463d">2.2. Probability of a Conjunction</a></li>
+<li><a href="#org4b5cf64">2.3. Computing Sums of Products</a></li>
+<li><a href="#org5ca9c07">2.4. Algorithm</a></li>
+<li><a href="#orgaf31ec1">2.5. Summing out a Variable</a></li>
+<li><a href="#orgf5e6046">2.6. Elimination Ordering</a>
+<ul>
+<li><a href="#orgc3bbb88">2.6.1. Polytrees</a></li>
+<li><a href="#orga5c56b4">2.6.2. Relevance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgbf98dd9" class="outline-2">
+<h2 id="orgbf98dd9"><span class="section-number-2">1.</span> Bayesian/Belief Networks</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+To represent a domain in a belief network, consider:
+</p>
+<ul class="org-ul">
+<li>what the relevant variables are
+<ul class="org-ul">
+<li>what might be observed &rarr; <b>evidence</b></li>
+<li>what information is desired &rarr; <b>query</b></li>
+<li>what features make the model simpler &rarr; other variables</li>
+</ul></li>
+<li>what values the variables will take</li>
+<li>what relationships exist between variables, expressed in terms of <b>local influence</b></li>
+<li>how the values of each variable depend on the parents, expressed in terms of conditional probabilities</li>
+</ul>
+</div>
+<div id="outline-container-org12da9de" class="outline-3">
+<h3 id="org12da9de"><span class="section-number-3">1.1.</span> Bayes&rsquo; Rule</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Agent has a prior belief in a hypothesis \(h\), \(P(h)\).
+</p>
+
+<p>
+Agent observes some evidence \(e\) that has a <b>likelihood</b> given the hypothesis \(P(e \mid h)\).
+</p>
+
+<p>
+The agent&rsquo;s <b>posterior belief</b> about \(h\) after observing \(e\), \(P(h \mid e)\)
+is given by Bayes&rsquo; Rule
+\[ P(h \mid e) = \frac{P(e \mid h) P(h)}{P(e)} = \frac{P(e \mid h) P(h)}{\sum_{h} P(e \mid h) P(u)} \]
+</p>
+
+<p>
+Often agents have <b>causal knowledge</b> but want to do <b>evidential reasoning</b>.
+</p>
+</div>
+</div>
+<div id="outline-container-org246f612" class="outline-3">
+<h3 id="org246f612"><span class="section-number-3">1.2.</span> Simple Forward Inference (Chain)</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Computing marginal requires simple forward propagation of probabilities.
+</p>
+
+<p>
+Consider the following Bayesian Network:
+</p>
+
+<p>
+<b>Marginalization</b>
+\[ P(B) = \sum_{m, c} P(M = m, C = c, B) \]
+</p>
+
+<p>
+<b>Chain Rule</b>
+\[ P(B) = \sum_{m, c} P(B \mid m, c) P(m \mid c) P(c) \]
+</p>
+
+<p>
+<b>Independence</b>
+\[ P(B) = \sum_{m, c} P(B \mid m, c) P(m) P(c) \]
+</p>
+
+<p>
+<b>Distribution of Produce over Sum</b>
+\[ P(B) = \sum_{m} P(m) \sum_{c} P(c) P(B \mid m, c) \]
+</p>
+
+<p>
+All terms on the last line are CPTs in the Bayes&rsquo; Network.
+Only ancestors of \(B\) are considered.
+</p>
+
+<p>
+With multiple parents, the evidence can be pooled.
+This also works with upstream evidence.
+</p>
+</div>
+</div>
+<div id="outline-container-org1e94527" class="outline-3">
+<h3 id="org1e94527"><span class="section-number-3">1.3.</span> Simple Backward Inference</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+When evidence is downstream of query, reason backwards, which requires Bayes&rsquo; rule.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5475bd6" class="outline-2">
+<h2 id="org5475bd6"><span class="section-number-2">2.</span> Variable Elimination</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Intuitions above are the <b>polytree</b> algorithm.
+This works for simple networks without loops.
+</p>
+
+<p>
+A more general algorithm is <b>Variable Elimination</b>:
+</p>
+<ul class="org-ul">
+<li>applies sum-out rule repeatedly</li>
+<li>distributes sums</li>
+</ul>
+
+<p>
+<b>Factor</b>: representation of a function from a tuple of random variables into a number
+</p>
+
+<p>
+Write a factor \(f\) on variables \(X_{1}, \dots, X_{j}\) as \(f(X_{1}, \dots, X_{j})\).
+Assigning some or all of the variables of a factor is <b>restricting</b> a factor:
+</p>
+<ul class="org-ul">
+<li>\(f(X_{1} = v_{1}, X_{2}, \dots, X_{j})\) where \(v_{1} \in \text{dom}(X_{1})\) is a factor on
+\(X_{2}, \dots, X_{j}\)</li>
+<li>\(f(X_{1} = v_{1}, X_{2} = v_{2}, \dots, X_{j} = v_{j})\) is a number that is the value of \(f\)
+when each \(X_{i}\) has value \(v_{i}\)</li>
+</ul>
+
+<p>
+The <b>product</b> of factor \(f_{1} (X,Y)\) and \(f_{2} (Y,Z)\) where \(Y\) are the variables in common,
+is the factor \((f_{1} \times f_{2}) (X,Y,Z)\) defined by
+\[ (f_{1} \times f_{2}) (X,Y,Z) = f_{1} (X,Y) f_{2} (Y,Z) \]
+</p>
+
+<p>
+To <b>sum out</b> a variable \(X_{1}\) with domain \(\{ v_{1}, \dots, v_{k} \}\), from factor
+\(f(X_{1}, \dots, X_{j})\) resulting in a factor on \(X_{2}, \dots, X_{j}\) defined by:
+\[ \left( \sum_{X_{1}} f \right) (X_{2}, \dots, X_{j}) = f(X_{1} = v_{1}, \dots, X_{j}) + \cdots + f(X_{1} = v_{k}, \dots, X_{j}) \]
+</p>
+</div>
+<div id="outline-container-org7cdedc4" class="outline-3">
+<h3 id="org7cdedc4"><span class="section-number-3">2.1.</span> Evidence</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+To compute the posterior probability of \(Z\) given evidence
+\(Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j}\):
+\[ P(Z \mid Y_{1} = v_{1}, \dots, Y_{j} = v_{j}) = \frac{P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})}{\sum_{Z} P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})} \]
+</p>
+
+<p>
+This computation reduces to the joint probability of \(P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})\)
+normalized at the end.
+</p>
+
+<p>
+The query value can also be restricted, for example \(Z = z\).
+</p>
+</div>
+</div>
+<div id="outline-container-org830463d" class="outline-3">
+<h3 id="org830463d"><span class="section-number-3">2.2.</span> Probability of a Conjunction</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Suppose the variables of the belief network are \(X_{1}, \dots, X_{n}\).
+To compute \(P(Z, Y_{1} = v_{1}, \dots, Y{j} = v_{j})\), sum out the variables other than query \(Z\)
+and evidence \(Y\)
+\[ Z_{1}, \dots, Z_{k} = \{ X_{1}, \dots, X_{n} \} - \{ Z \} - \{ Y_{1}, \dots, Y_{j} \} \]
+</p>
+
+<p>
+Order \(Z_{i}\) into an elimination ordering \(Z_{1}, \dots, Z_{k}\)
+\[ P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j}) = \sum_{Z_{k}} \cdots \sum_{Z_{1}} \prod_{i=1}^{n} P(X_{i} \mid \text{parents}(X_{i}))_{Y_{1} = v_{1}, \dots, Y_{j} = v_{j}} \]
+</p>
+</div>
+</div>
+<div id="outline-container-org4b5cf64" class="outline-3">
+<h3 id="org4b5cf64"><span class="section-number-3">2.3.</span> Computing Sums of Products</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Computation in belief networks reduces to computing the sums of products:
+</p>
+<ul class="org-ul">
+<li>to compute \(ab + ac\) efficiently
+<ul class="org-ul">
+<li>distribute to \(a(b + c)\)</li>
+</ul></li>
+<li>to compute \(\sum_{Z_{1}} \prod_{i=1}^{n} P(X_{i} \mid \text{parents}(X_{i}))\) efficiently
+<ul class="org-ul">
+<li>distribute out the factors that don&rsquo;t involve \(Z_{1}\)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5ca9c07" class="outline-3">
+<h3 id="org5ca9c07"><span class="section-number-3">2.4.</span> Algorithm</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+To compute \(P(Z \mid Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j})\):
+</p>
+<ul class="org-ul">
+<li>construct a factor for each conditional probability</li>
+<li>restrict the observed variables to their observed values</li>
+<li>sum out each of the other variables according to some <b>elimination ordering</b> for
+each \(Z_{i}\) in order starting from \(i = 1\)
+<ul class="org-ul">
+<li>collect all factors that contain \(Z_{i}\)</li>
+<li>multiple together and sum out \(Z_{i}\)</li>
+<li>add resulting new factor back to the pol</li>
+</ul></li>
+<li>multiply the remaining factors</li>
+<li>normalize by dividing the resulting factor \(f(Z)\) by \(\sum_{Z} f(Z)\)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgaf31ec1" class="outline-3">
+<h3 id="orgaf31ec1"><span class="section-number-3">2.5.</span> Summing out a Variable</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+To sum out a variable \(Z_{j}\) from a product \(f_{1}, \dots, f_{k}\) of factors:
+</p>
+<ul class="org-ul">
+<li>partition the factors into
+<ul class="org-ul">
+<li>those that don&rsquo;t contain \(Z_{j}\), let these be \(f_{1}, \dots, f_{i}\)</li>
+<li>those that contain \(Z_{j}\), let these be \(f_{i+1}, \dots, f_{k}\)</li>
+</ul></li>
+</ul>
+
+<p>
+This gives
+\[ \sum_{Z_{j}} f_{1} \times \cdots \times f_{k} = f_{1} \times \cdots \times f_{i} \times \left( \sum_{Z_{j}} f_{i+1} \times \cdots \times f_{k} \right) \]
+</p>
+
+<p>
+Explicitly construct a representation of the rightmost factor and replace
+the factors by the new factor.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf5e6046" class="outline-3">
+<h3 id="orgf5e6046"><span class="section-number-3">2.6.</span> Elimination Ordering</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Complexity is <span class="underline">linear</span> in the number of variables and <span class="underline">exponential</span> in the size of the largest
+factor.
+Creating new factors blows this up, but this depends on the <b>elimination ordering</b>.
+</p>
+
+<p>
+For polytrees, work outside in.
+For general BNs, this can be hard.
+Specifically, finding the optimal elimination ordering is NP-hard for general BNs.
+</p>
+
+<p>
+In general, inference is NP-hard.
+</p>
+</div>
+<div id="outline-container-orgc3bbb88" class="outline-4">
+<h4 id="orgc3bbb88"><span class="section-number-4">2.6.1.</span> Polytrees</h4>
+<div class="outline-text-4" id="text-2-6-1">
+<p>
+Eliminate singly connected nodes first.
+Then, no factor is ever larger than original CPTs.
+</p>
+
+<p>
+If the most connected nodes are eliminated first, a large factor is created with the singly
+connected nodes.
+</p>
+</div>
+</div>
+<div id="outline-container-orga5c56b4" class="outline-4">
+<h4 id="orga5c56b4"><span class="section-number-4">2.6.2.</span> Relevance</h4>
+<div class="outline-text-4" id="text-2-6-2">
+<p>
+Certain variables have no impact.
+</p>
+
+<p>
+Can restrict attention to relevant variables.
+Given query \(Q\) and evidence \(\mathbf{E}\), complete approximation is:
+</p>
+<ul class="org-ul">
+<li>\(Q\) is relevant</li>
+<li>if any node is relevant, its parents are relevant</li>
+<li>if \(E \in \mathbf{E}\) is a descendent of a relevant variable, then \(E\) is relevant</li>
+</ul>
+
+<p>
+<b>Irrelevant variable</b>: a node that is not an ancestor of a query or evidence variable
+</p>
+
+<p>
+This will only remove irrelevant variables, but may not remove them all.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: DESKTOP-H800RKQ</p>
+<p class="date">Created: 2024-10-29 Tue 19:41</p>
+</div>
+</body>
+</html>
