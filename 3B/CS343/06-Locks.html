@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-28 Mon 01:35 -->
+<!-- 2024-11-04 Mon 01:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Locks</title>
@@ -234,41 +234,63 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2d20721">1. Lock Taxonomy</a></li>
-<li><a href="#orgd911132">2. Spin Lock</a>
+<li><a href="#org5d4261c">1. Lock Taxonomy</a></li>
+<li><a href="#org1bf19e1">2. Spin Lock</a>
 <ul>
-<li><a href="#org74ec154">2.1. Implementation</a></li>
+<li><a href="#org11643a6">2.1. Implementation</a></li>
 </ul>
 </li>
-<li><a href="#orgc109ecf">3. Blocking Locks</a>
+<li><a href="#orgc008d81">3. Blocking Locks</a>
 <ul>
-<li><a href="#org8adaaff">3.1. Mutex Lock</a>
+<li><a href="#org7b1366f">3.1. Mutex Lock</a>
 <ul>
-<li><a href="#org408563d">3.1.1. Implementation</a></li>
-<li><a href="#org9e4df2c">3.1.2. uOwnerLock</a></li>
-<li><a href="#org3c0b5ff">3.1.3. Stream Locks</a></li>
+<li><a href="#org434a19f">3.1.1. Implementation</a></li>
+<li><a href="#org1dcf405">3.1.2. uOwnerLock</a></li>
+<li><a href="#org1cad003">3.1.3. Stream Locks</a></li>
 </ul>
 </li>
-<li><a href="#org6448820">3.2. Synchronization Lock</a>
+<li><a href="#org02b2ce8">3.2. Synchronization Lock</a>
 <ul>
-<li><a href="#org14ac8c3">3.2.1. Implementation</a></li>
-<li><a href="#org009535c">3.2.2. uCondLock</a></li>
-<li><a href="#org68b66f1">3.2.3. Programming Pattern</a></li>
+<li><a href="#org17ec645">3.2.1. Implementation</a></li>
+<li><a href="#orgafd98b3">3.2.2. uCondLock</a></li>
+<li><a href="#orga58f0e8">3.2.3. Programming Pattern</a></li>
 </ul>
 </li>
-<li><a href="#org9a1b45d">3.3. Barrier</a>
+<li><a href="#orga1f0b87">3.3. Barrier</a>
 <ul>
-<li><a href="#orgca4dae5">3.3.1. Fetch Increment Barrier</a></li>
-<li><a href="#org1021cfa">3.3.2. uBarrier</a></li>
+<li><a href="#org6a8966c">3.3.1. Fetch Increment Barrier</a></li>
+<li><a href="#org7ec871f">3.3.2. uBarrier</a></li>
 </ul>
 </li>
+<li><a href="#org9d1f28d">3.4. Binary Semaphore</a>
+<ul>
+<li><a href="#org1806d77">3.4.1. Implementation</a></li>
+</ul>
+</li>
+<li><a href="#org7c119d5">3.5. Counting Semaphore</a>
+<ul>
+<li><a href="#org130251d">3.5.1. Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org004a3e6">4. Lock Programming</a>
+<ul>
+<li><a href="#orgbd12839">4.1. Precedence Graph</a></li>
+<li><a href="#orgf2d016b">4.2. Buffering</a>
+<ul>
+<li><a href="#orgc751fbb">4.2.1. Unbounded Buffer</a></li>
+<li><a href="#org3b117b6">4.2.2. Bounded Buffer</a></li>
+</ul>
+</li>
+<li><a href="#org692d264">4.3. Lock Techniques</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org2d20721" class="outline-2">
-<h2 id="org2d20721"><span class="section-number-2">1.</span> Lock Taxonomy</h2>
+<div id="outline-container-org5d4261c" class="outline-2">
+<h2 id="org5d4261c"><span class="section-number-2">1.</span> Lock Taxonomy</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Locks can be either spinning or blocking.
@@ -285,8 +307,8 @@ unblock the waiting task when the event happens.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd911132" class="outline-2">
-<h2 id="orgd911132"><span class="section-number-2">2.</span> Spin Lock</h2>
+<div id="outline-container-org1bf19e1" class="outline-2">
+<h2 id="org1bf19e1"><span class="section-number-2">2.</span> Spin Lock</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 When a task is busy waiting, it usually loops until the critical section is unlocked or
@@ -319,8 +341,8 @@ Most spin-lock implementations can cause starvation of 1+ tasks.
 Spin lock is appropriate and necessary in situations where this is no other work to do.
 </p>
 </div>
-<div id="outline-container-org74ec154" class="outline-3">
-<h3 id="org74ec154"><span class="section-number-3">2.1.</span> Implementation</h3>
+<div id="outline-container-org11643a6" class="outline-3">
+<h3 id="org11643a6"><span class="section-number-3">2.1.</span> Implementation</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 &mu;C++ provides <code>uSpinLock</code> (non-yielding) and <code>uLock</code> (yielding)
@@ -360,8 +382,8 @@ Can be used for synchronization or mutual exclusion.
 </div>
 </div>
 </div>
-<div id="outline-container-orgc109ecf" class="outline-2">
-<h2 id="orgc109ecf"><span class="section-number-2">3.</span> Blocking Locks</h2>
+<div id="outline-container-orgc008d81" class="outline-2">
+<h2 id="orgc008d81"><span class="section-number-2">3.</span> Blocking Locks</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For blocking locks, the acquiring task is not the only one responsible for detecting an
@@ -385,8 +407,8 @@ All blocking locks have
 <li>list of blocked acquirers</li>
 </ul>
 </div>
-<div id="outline-container-org8adaaff" class="outline-3">
-<h3 id="org8adaaff"><span class="section-number-3">3.1.</span> Mutex Lock</h3>
+<div id="outline-container-org7b1366f" class="outline-3">
+<h3 id="org7b1366f"><span class="section-number-3">3.1.</span> Mutex Lock</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Used solely to provide mutual exclusion:
@@ -407,8 +429,8 @@ Owner locks can handle looping/recursion and may require 1 release or as many
 as it requires.
 </p>
 </div>
-<div id="outline-container-org408563d" class="outline-4">
-<h4 id="org408563d"><span class="section-number-4">3.1.1.</span> Implementation</h4>
+<div id="outline-container-org434a19f" class="outline-4">
+<h4 id="org434a19f"><span class="section-number-4">3.1.1.</span> Implementation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">MutexLock</span> <span style="color: #51afef;">{</span>
@@ -550,8 +572,8 @@ if it is in use.
 </p>
 </div>
 </div>
-<div id="outline-container-org9e4df2c" class="outline-4">
-<h4 id="org9e4df2c"><span class="section-number-4">3.1.2.</span> uOwnerLock</h4>
+<div id="outline-container-org1dcf405" class="outline-4">
+<h4 id="org1dcf405"><span class="section-number-4">3.1.2.</span> uOwnerLock</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">uOwnerLock</span> <span style="color: #51afef;">{</span>
@@ -576,8 +598,8 @@ However, this cannot be used for barging prevention.
 </p>
 </div>
 </div>
-<div id="outline-container-org3c0b5ff" class="outline-4">
-<h4 id="org3c0b5ff"><span class="section-number-4">3.1.3.</span> Stream Locks</h4>
+<div id="outline-container-org1cad003" class="outline-4">
+<h4 id="org1cad003"><span class="section-number-4">3.1.3.</span> Stream Locks</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 Can use <code>osacquire</code> for output streams and <code>isacquire</code> for input streams
@@ -586,8 +608,8 @@ to ensure predictable streams.
 </div>
 </div>
 </div>
-<div id="outline-container-org6448820" class="outline-3">
-<h3 id="org6448820"><span class="section-number-3">3.2.</span> Synchronization Lock</h3>
+<div id="outline-container-org02b2ce8" class="outline-3">
+<h3 id="org02b2ce8"><span class="section-number-3">3.2.</span> Synchronization Lock</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Used solely to block tasks waiting for synchronization.
@@ -605,8 +627,8 @@ Only state is a list of blocked tasks, so:
 Uses wait for acquire and signal for release.
 </p>
 </div>
-<div id="outline-container-org14ac8c3" class="outline-4">
-<h4 id="org14ac8c3"><span class="section-number-4">3.2.1.</span> Implementation</h4>
+<div id="outline-container-org17ec645" class="outline-4">
+<h4 id="org17ec645"><span class="section-number-4">3.2.1.</span> Implementation</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 Needs mutual exclusion for safe implementation.
@@ -710,8 +732,8 @@ This still takes an external lock for barging avoidance/prevention.
 </p>
 </div>
 </div>
-<div id="outline-container-org009535c" class="outline-4">
-<h4 id="org009535c"><span class="section-number-4">3.2.2.</span> uCondLock</h4>
+<div id="outline-container-orgafd98b3" class="outline-4">
+<h4 id="orgafd98b3"><span class="section-number-4">3.2.2.</span> uCondLock</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">uCondLock</span> <span style="color: #51afef;">{</span>
@@ -736,8 +758,8 @@ otherwise return true.
 </p>
 </div>
 </div>
-<div id="outline-container-org68b66f1" class="outline-4">
-<h4 id="org68b66f1"><span class="section-number-4">3.2.3.</span> Programming Pattern</h4>
+<div id="outline-container-orga58f0e8" class="outline-4">
+<h4 id="orga58f0e8"><span class="section-number-4">3.2.3.</span> Programming Pattern</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <p>
 Must provide external mutual exclusion and protect against lost signal (release).
@@ -749,8 +771,8 @@ Should surround conditional lock with mutex lock.
 </div>
 </div>
 </div>
-<div id="outline-container-org9a1b45d" class="outline-3">
-<h3 id="org9a1b45d"><span class="section-number-3">3.3.</span> Barrier</h3>
+<div id="outline-container-orga1f0b87" class="outline-3">
+<h3 id="orga1f0b87"><span class="section-number-3">3.3.</span> Barrier</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Coordinates a group of tasks performing a concurrent operation surrounded by sequential
@@ -789,8 +811,8 @@ and end in a cycle.
 Using a barrier is cheaper than creating and deleting tasks for each computation.
 </p>
 </div>
-<div id="outline-container-orgca4dae5" class="outline-4">
-<h4 id="orgca4dae5"><span class="section-number-4">3.3.1.</span> Fetch Increment Barrier</h4>
+<div id="outline-container-org6a8966c" class="outline-4">
+<h4 id="org6a8966c"><span class="section-number-4">3.3.1.</span> Fetch Increment Barrier</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <p>
 A spinning, T == G barrier can be implemented with the fetch-increment instruction
@@ -798,8 +820,8 @@ and a flag that waiters wait on.
 </p>
 </div>
 </div>
-<div id="outline-container-org1021cfa" class="outline-4">
-<h4 id="org1021cfa"><span class="section-number-4">3.3.2.</span> uBarrier</h4>
+<div id="outline-container-org7ec871f" class="outline-4">
+<h4 id="org7ec871f"><span class="section-number-4">3.3.2.</span> uBarrier</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <p>
 &mu;C++ barrier is a blocking, T &gt; G, barging-prevention coroutine, where <code>main</code>
@@ -836,11 +858,252 @@ Coroutine barrier can be reused many times.
 </div>
 </div>
 </div>
+<div id="outline-container-org9d1f28d" class="outline-3">
+<h3 id="org9d1f28d"><span class="section-number-3">3.4.</span> Binary Semaphore</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Blocking equivalent to a yielding spin-lock, providing synchronization and mutual exclusion.
+</p>
+
+<p>
+Acquire is <code>P</code> (waits if counter is 0, then decrements).
+Release is <code>V</code> (increases counter and unblocks waiting task if present).
+</p>
+
+<p>
+Binary semaphore has only 2 states, open and closed.
+</p>
+</div>
+<div id="outline-container-org1806d77" class="outline-4">
+<h4 id="org1806d77"><span class="section-number-4">3.4.1.</span> Implementation</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<p>
+Has a:
+</p>
+<ul class="org-ul">
+<li>blocking task list</li>
+<li><code>avail</code> &rarr; if event has occurred (state)</li>
+<li>spin lock to protect state</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">BinSem</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">queue</span><span style="color: #c678dd;">&lt;</span>Task<span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">blocked</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">blocked tasks</span>
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">avail</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">resource available</span>
+    <span style="color: #ECBE7B;">SpinLock</span> <span style="color: #dcaeea;">lock</span>;
+<span style="color: #51afef;">public</span>:
+    <span style="color: #c678dd;">BinSem</span><span style="color: #c678dd;">(</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">start</span> = <span style="color: #a9a1e1;">true</span> <span style="color: #c678dd;">)</span> : avail<span style="color: #c678dd;">(</span> start <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{}</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        lock.acquire<span style="color: #98be65;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">prevention barging</span>
+        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span> <span style="color: #51afef; font-weight: bold;">!</span>avail <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">add self to blocked list</span>
+            yieldNoSchedule<span style="color: #a9a1e1;">(</span> lock <span style="color: #a9a1e1;">)</span>;
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do not reacquire lock</span>
+        <span style="color: #98be65;">}</span>
+        avail = <span style="color: #a9a1e1;">false</span>;
+        lock.release<span style="color: #98be65;">()</span>;
+    <span style="color: #c678dd;">}</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">V</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        lock.acquire<span style="color: #98be65;">()</span>;
+        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span> <span style="color: #51afef; font-weight: bold;">!</span>blocked.empty<span style="color: #a9a1e1;">()</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">remove task from blocked list and make ready</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do not release lock</span>
+        <span style="color: #98be65;">}</span> <span style="color: #51afef;">else</span> <span style="color: #98be65;">{</span>
+            avail = <span style="color: #a9a1e1;">true</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">conditional reset</span>
+            lock.release<span style="color: #a9a1e1;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">no race</span>
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+Higher cost for synchronization if external lock already acquired.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org7c119d5" class="outline-3">
+<h3 id="org7c119d5"><span class="section-number-3">3.5.</span> Counting Semaphore</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Allow a multi-valued semaphore, which allows for critical sections allowing \(N\) simultaneous tasks.
+</p>
+
+<p>
+Done by augmenting <code>V</code> to allow increasing the counter an arbitrary amount.
+</p>
+</div>
+<div id="outline-container-org130251d" class="outline-4">
+<h4 id="org130251d"><span class="section-number-4">3.5.1.</span> Implementation</h4>
+<div class="outline-text-4" id="text-3-5-1">
+<p>
+Change availability into a counter, set to some maximum on creation.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">CntSem</span> <span style="color: #51afef;">{</span>
+    <span style="color: #ECBE7B;">queue</span><span style="color: #c678dd;">&lt;</span>Task<span style="color: #c678dd;">&gt;</span> <span style="color: #dcaeea;">blocked</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">blocked tasks</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">cnt</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">resource being used</span>
+    <span style="color: #ECBE7B;">SpinLock</span> <span style="color: #dcaeea;">lock</span>;
+<span style="color: #51afef;">public</span>:
+    <span style="color: #c678dd;">CntSem</span><span style="color: #c678dd;">(</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">start</span> = <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #c678dd;">)</span> : cnt<span style="color: #c678dd;">(</span> start <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{}</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        lock.acquire<span style="color: #98be65;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">prevention barging</span>
+        cnt -= <span style="color: #da8548; font-weight: bold;">1</span>;
+        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span> cnt &lt; <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">add self to blocked list</span>
+            yieldNoSchedule<span style="color: #a9a1e1;">(</span> lock <span style="color: #a9a1e1;">)</span>;
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do not reacquire lock</span>
+        <span style="color: #98be65;">}</span>
+        lock.release<span style="color: #98be65;">()</span>;
+    <span style="color: #c678dd;">}</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">V</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+        lock.acquire<span style="color: #98be65;">()</span>;
+        cnt += <span style="color: #da8548; font-weight: bold;">1</span>;
+        <span style="color: #51afef;">if</span> <span style="color: #98be65;">(</span> cnt &lt;= <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">remove task from blocked list and make ready</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do not release lock</span>
+        <span style="color: #98be65;">}</span> <span style="color: #51afef;">else</span> <span style="color: #98be65;">{</span>
+            lock.release<span style="color: #a9a1e1;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">no race</span>
+        <span style="color: #98be65;">}</span>
+    <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+To use a semaphore:
+</p>
+<ul class="org-ul">
+<li>for synchronization, semaphore at 0 &rarr; waiting for an event</li>
+<li>for mutual exclusion, semaphore at \(N\) &rarr; controls a critical section</li>
+</ul>
+
+<p>
+&mu;C++ has a counting semaphore, which subsumes a binary semaphore
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #51afef;">&lt;</span><span style="color: #98be65;">uSemaphore.h</span><span style="color: #51afef;">&gt;</span>
+<span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">uSemaphore</span> <span style="color: #51afef;">{</span>
+<span style="color: #51afef;">public</span>:
+    <span style="color: #c678dd;">uSemaphore</span><span style="color: #c678dd;">(</span> <span style="color: #ECBE7B;">unsigned</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">count</span> = <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #c678dd;">)</span>;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">P</span><span style="color: #c678dd;">()</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">TryP</span><span style="color: #c678dd;">()</span>;
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">V</span><span style="color: #c678dd;">(</span> <span style="color: #ECBE7B;">unsigned</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">times</span> = <span style="color: #da8548; font-weight: bold;">1</span> <span style="color: #c678dd;">)</span>;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">counter</span><span style="color: #c678dd;">()</span> <span style="color: #51afef;">const</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">empty</span><span style="color: #c678dd;">()</span> <span style="color: #51afef;">const</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">threads blocked?</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+<code>P</code> decrements the counter, if the counter is &ge; 0, the calling task continues, else it blocks.
+</p>
+
+<p>
+<code>TryP</code> returns true if the semaphore is acquired and false otherwise (never blocks).
+</p>
+
+<p>
+<code>V</code> wakes up the task blocked for the longest time and increments the counter, can occur \(N\) times.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org004a3e6" class="outline-2">
+<h2 id="org004a3e6"><span class="section-number-2">4.</span> Lock Programming</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgbd12839" class="outline-3">
+<h3 id="orgbd12839"><span class="section-number-3">4.1.</span> Precedence Graph</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Binary semaphore with <code>COBEGIN</code> are as powerful as <code>START</code> and <code>WAIT</code>.
+</p>
+
+<p>
+Analyze which data and code depend on each other and display dependencies graphically
+in a <b>precedence graph</b>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf2d016b" class="outline-3">
+<h3 id="orgf2d016b"><span class="section-number-3">4.2.</span> Buffering</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Tasks communicate unidirectionally through a queue, with the producer adding items to the back
+of the queue and the consumer removing items from the front of the queue.
+</p>
+</div>
+<div id="outline-container-orgc751fbb" class="outline-4">
+<h4 id="orgc751fbb"><span class="section-number-4">4.2.1.</span> Unbounded Buffer</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+Two tasks communicate through a queue of unbounded length.
+</p>
+
+<p>
+Since tasks work at different speeds, the producer may get ahead of the consumer.
+Producer never has to wait (infinite length) but the consumer may have to wait for the producer to add.
+</p>
+
+<p>
+This can be solved with a counting semaphore controlling access to the shared queue.
+</p>
+</div>
+</div>
+<div id="outline-container-org3b117b6" class="outline-4">
+<h4 id="org3b117b6"><span class="section-number-4">4.2.2.</span> Bounded Buffer</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+Two tasks communicate through a queue of bounded length.
+</p>
+
+<p>
+Producer has to wait if buffer full, consumer has to wait if buffer empty.
+</p>
+
+<p>
+This can be solved with an additional counting semaphore to keep track of if the buffer is empty.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org692d264" class="outline-3">
+<h3 id="org692d264"><span class="section-number-3">4.3.</span> Lock Techniques</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+<b>Split binary semaphore</b>: collection of semaphores where at most 1 of the collection has the value 1
+</p>
+<ul class="org-ul">
+<li>used when different kinds of tasks have to block separately</li>
+<li>cannot differentiate tasks blocked on the same semaphore</li>
+</ul>
+
+<p>
+Split binary semaphores can be used for <b>baton passing</b>:
+</p>
+<ul class="org-ul">
+<li>there is exactly one conceptual baton</li>
+<li>nobody moves in the entry/exit code unless they have the baton</li>
+<li>once the baton is release, cannot read/write variables in entry/exit</li>
+</ul>
+
+<p>
+Mutex/condition lock cannot perform baton passing to prevent barging if the signaled task
+must implicitly reacquire the mutex lock before continuing, since the signaler must release
+the mutex lock.
+This causes a race between the signalled and calling tasks, resulting in barging.
+</p>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-10-28 Mon 01:35</p>
+<p class="date">Created: 2024-11-04 Mon 01:29</p>
 </div>
 </body>
 </html>

@@ -391,3 +391,153 @@ Can build a barrier by inheriting from ~uBarrier~, redefining ~last~, ~block~,
 and possibly ~main~.
 
 Coroutine barrier can be reused many times.
+
+** Binary Semaphore
+Blocking equivalent to a yielding spin-lock, providing synchronization and mutual exclusion.
+
+Acquire is ~P~ (waits if counter is 0, then decrements).
+Release is ~V~ (increases counter and unblocks waiting task if present).
+
+Binary semaphore has only 2 states, open and closed.
+
+*** Implementation
+Has a:
+- blocking task list
+- ~avail~ \to if event has occurred (state)
+- spin lock to protect state
+
+#+BEGIN_SRC cpp
+class BinSem {
+    queue<Task> blocked; // blocked tasks
+    bool avail; // resource available
+    SpinLock lock;
+public:
+    BinSem( bool start = true ) : avail( start ) {}
+    void P() {
+        lock.acquire(); // prevention barging
+        if ( !avail ) {
+            // add self to blocked list
+            yieldNoSchedule( lock );
+            // do not reacquire lock
+        }
+        avail = false;
+        lock.release();
+    }
+    void V() {
+        lock.acquire();
+        if ( !blocked.empty() ) {
+            // remove task from blocked list and make ready
+            // do not release lock
+        } else {
+            avail = true; // conditional reset
+            lock.release(); // no race
+        }
+    }
+};
+#+END_SRC
+
+Higher cost for synchronization if external lock already acquired.
+
+** Counting Semaphore
+Allow a multi-valued semaphore, which allows for critical sections allowing $N$ simultaneous tasks.
+
+Done by augmenting ~V~ to allow increasing the counter an arbitrary amount.
+
+*** Implementation
+Change availability into a counter, set to some maximum on creation.
+
+#+BEGIN_SRC cpp
+class CntSem {
+    queue<Task> blocked; // blocked tasks
+    int cnt; // resource being used
+    SpinLock lock;
+public:
+    CntSem( int start = 1 ) : cnt( start ) {}
+    void P() {
+        lock.acquire(); // prevention barging
+        cnt -= 1;
+        if ( cnt < 0 ) {
+            // add self to blocked list
+            yieldNoSchedule( lock );
+            // do not reacquire lock
+        }
+        lock.release();
+    }
+    void V() {
+        lock.acquire();
+        cnt += 1;
+        if ( cnt <= 0 ) {
+            // remove task from blocked list and make ready
+            // do not release lock
+        } else {
+            lock.release(); // no race
+        }
+    }
+};
+#+END_SRC
+
+To use a semaphore:
+- for synchronization, semaphore at 0 \to waiting for an event
+- for mutual exclusion, semaphore at $N$ \to controls a critical section
+
+\mu{}C++ has a counting semaphore, which subsumes a binary semaphore
+#+BEGIN_SRC cpp
+#include <uSemaphore.h>
+class uSemaphore {
+public:
+    uSemaphore( unsigned int count = 1 );
+    void P();
+    bool TryP();
+    void V( unsigned int times = 1 );
+    int counter() const;
+    bool empty() const; // threads blocked?
+};
+#+END_SRC
+
+~P~ decrements the counter, if the counter is \ge 0, the calling task continues, else it blocks.
+
+~TryP~ returns true if the semaphore is acquired and false otherwise (never blocks).
+
+~V~ wakes up the task blocked for the longest time and increments the counter, can occur $N$ times.
+
+
+* Lock Programming
+** Precedence Graph
+Binary semaphore with ~COBEGIN~ are as powerful as ~START~ and ~WAIT~.
+
+Analyze which data and code depend on each other and display dependencies graphically
+in a *precedence graph*.
+
+** Buffering
+Tasks communicate unidirectionally through a queue, with the producer adding items to the back
+of the queue and the consumer removing items from the front of the queue.
+
+*** Unbounded Buffer
+Two tasks communicate through a queue of unbounded length.
+
+Since tasks work at different speeds, the producer may get ahead of the consumer.
+Producer never has to wait (infinite length) but the consumer may have to wait for the producer to add.
+
+This can be solved with a counting semaphore controlling access to the shared queue.
+
+*** Bounded Buffer
+Two tasks communicate through a queue of bounded length.
+
+Producer has to wait if buffer full, consumer has to wait if buffer empty.
+
+This can be solved with an additional counting semaphore to keep track of if the buffer is empty.
+
+** Lock Techniques
+*Split binary semaphore*: collection of semaphores where at most 1 of the collection has the value 1
+- used when different kinds of tasks have to block separately
+- cannot differentiate tasks blocked on the same semaphore
+
+Split binary semaphores can be used for *baton passing*:
+- there is exactly one conceptual baton
+- nobody moves in the entry/exit code unless they have the baton
+- once the baton is release, cannot read/write variables in entry/exit
+
+Mutex/condition lock cannot perform baton passing to prevent barging if the signaled task
+must implicitly reacquire the mutex lock before continuing, since the signaler must release
+the mutex lock.
+This causes a race between the signalled and calling tasks, resulting in barging.

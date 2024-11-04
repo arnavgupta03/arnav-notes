@@ -1,4 +1,4 @@
-% Created 2024-10-28 Mon 01:35
+% Created 2024-11-04 Mon 01:29
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -30,7 +30,7 @@
 \tableofcontents
 
 \section{Lock Taxonomy}
-\label{sec:org1fc6b33}
+\label{sec:orga14a26d}
 Locks can be either spinning or blocking.
 
 \textbf{Spinning locks} busy wait until an event occurs, so the task oscillates between ready and running
@@ -39,7 +39,7 @@ due to time slicing (can also optionally yield).
 \textbf{Blocking locks} do not busy wait but block until an event occurs, so some other mechanism must
 unblock the waiting task when the event happens.
 \section{Spin Lock}
-\label{sec:org1fd94d6}
+\label{sec:org615195f}
 When a task is busy waiting, it usually loops until the critical section is unlocked or
 it is preempted and placed on the ready queue.
 
@@ -59,7 +59,7 @@ Most spin-lock implementations can cause starvation of 1+ tasks.
 
 Spin lock is appropriate and necessary in situations where this is no other work to do.
 \subsection{Implementation}
-\label{sec:org2c64b84}
+\label{sec:org1941222}
 \(\mu\)C++ provides \texttt{uSpinLock} (non-yielding) and \texttt{uLock} (yielding)
 \begin{verbatim}
 class uSpinLock {
@@ -87,7 +87,7 @@ Starvation can occur in theory, but rare in practice.
 Cannot assign to or copy a lock, must use as reference/pointer.
 Can be used for synchronization or mutual exclusion.
 \section{Blocking Locks}
-\label{sec:org16569a3}
+\label{sec:org444b7c2}
 For blocking locks, the acquiring task is not the only one responsible for detecting an
 open lock:
 \begin{itemize}
@@ -104,7 +104,7 @@ All blocking locks have
 \item list of blocked acquirers
 \end{itemize}
 \subsection{Mutex Lock}
-\label{sec:org658ebfc}
+\label{sec:orga6535f2}
 Used solely to provide mutual exclusion:
 \begin{itemize}
 \item separates lock usage between synchronization and mutual exclusion
@@ -118,7 +118,7 @@ Multiple acquisition locks are called \textbf{owner locks}.
 Owner locks can handle looping/recursion and may require 1 release or as many
 as it requires.
 \subsubsection{Implementation}
-\label{sec:org6a117ef}
+\label{sec:org54a7400}
 \begin{verbatim}
 class MutexLock {
         bool avail;
@@ -241,7 +241,7 @@ to act as availability and owner variable.
 If the critical section is acquired, the blocked list must have a node on it to check
 if it is in use.
 \subsubsection{uOwnerLock}
-\label{sec:orgba551c5}
+\label{sec:orgbe4152f}
 \begin{verbatim}
 class uOwnerLock {
     public:
@@ -259,11 +259,11 @@ Must release as many times as acquired.
 Can use \texttt{\_Finally} or RAII to ensure lock is always released.
 However, this cannot be used for barging prevention.
 \subsubsection{Stream Locks}
-\label{sec:org778e830}
+\label{sec:org5ea4972}
 Can use \texttt{osacquire} for output streams and \texttt{isacquire} for input streams
 to ensure predictable streams.
 \subsection{Synchronization Lock}
-\label{sec:orgc7637ab}
+\label{sec:orgc2ec4ad}
 Used solely to block tasks waiting for synchronization.
 
 Only state is a list of blocked tasks, so:
@@ -274,7 +274,7 @@ Only state is a list of blocked tasks, so:
 
 Uses wait for acquire and signal for release.
 \subsubsection{Implementation}
-\label{sec:orgbd5ffdf}
+\label{sec:org1a51a6c}
 Needs mutual exclusion for safe implementation.
 
 Location of mutual exclusion classifies synchronization lock:
@@ -356,7 +356,7 @@ class SyncLock {
 
 This still takes an external lock for barging avoidance/prevention.
 \subsubsection{uCondLock}
-\label{sec:orgfbe7d93}
+\label{sec:org6685db9}
 \begin{verbatim}
 class uCondLock {
     public:
@@ -374,12 +374,12 @@ and reacquires it before returning.
 \texttt{signal} and \texttt{broadcast} do nothing for an empty conditional and return false,
 otherwise return true.
 \subsubsection{Programming Pattern}
-\label{sec:orga160e02}
+\label{sec:org212f7e3}
 Must provide external mutual exclusion and protect against lost signal (release).
 
 Should surround conditional lock with mutex lock.
 \subsection{Barrier}
-\label{sec:org9684358}
+\label{sec:org9ced8b3}
 Coordinates a group of tasks performing a concurrent operation surrounded by sequential
 operations.
 Meant for synchronization, not mutual exclusion.
@@ -403,11 +403,11 @@ and end in a cycle.
 
 Using a barrier is cheaper than creating and deleting tasks for each computation.
 \subsubsection{Fetch Increment Barrier}
-\label{sec:org8ae4f6e}
+\label{sec:orgf7fc1a8}
 A spinning, T == G barrier can be implemented with the fetch-increment instruction
 and a flag that waiters wait on.
 \subsubsection{uBarrier}
-\label{sec:orgbb2bac6}
+\label{sec:orgb7685ae}
 \(\mu\)C++ barrier is a blocking, T > G, barging-prevention coroutine, where \texttt{main}
 can be resumed by the last task arriving at the barrier:
 \begin{verbatim}
@@ -431,4 +431,162 @@ Can build a barrier by inheriting from \texttt{uBarrier}, redefining \texttt{las
 and possibly \texttt{main}.
 
 Coroutine barrier can be reused many times.
+\subsection{Binary Semaphore}
+\label{sec:orgf6f719d}
+Blocking equivalent to a yielding spin-lock, providing synchronization and mutual exclusion.
+
+Acquire is \texttt{P} (waits if counter is 0, then decrements).
+Release is \texttt{V} (increases counter and unblocks waiting task if present).
+
+Binary semaphore has only 2 states, open and closed.
+\subsubsection{Implementation}
+\label{sec:org5b2bdf4}
+Has a:
+\begin{itemize}
+\item blocking task list
+\item \texttt{avail} \(\to\) if event has occurred (state)
+\item spin lock to protect state
+\end{itemize}
+
+\begin{verbatim}
+class BinSem {
+    queue<Task> blocked; // blocked tasks
+    bool avail; // resource available
+    SpinLock lock;
+public:
+    BinSem( bool start = true ) : avail( start ) {}
+    void P() {
+        lock.acquire(); // prevention barging
+        if ( !avail ) {
+            // add self to blocked list
+            yieldNoSchedule( lock );
+            // do not reacquire lock
+        }
+        avail = false;
+        lock.release();
+    }
+    void V() {
+        lock.acquire();
+        if ( !blocked.empty() ) {
+            // remove task from blocked list and make ready
+            // do not release lock
+        } else {
+            avail = true; // conditional reset
+            lock.release(); // no race
+        }
+    }
+};
+\end{verbatim}
+
+Higher cost for synchronization if external lock already acquired.
+\subsection{Counting Semaphore}
+\label{sec:org8cf7cac}
+Allow a multi-valued semaphore, which allows for critical sections allowing \(N\) simultaneous tasks.
+
+Done by augmenting \texttt{V} to allow increasing the counter an arbitrary amount.
+\subsubsection{Implementation}
+\label{sec:orgdff726f}
+Change availability into a counter, set to some maximum on creation.
+
+\begin{verbatim}
+class CntSem {
+    queue<Task> blocked; // blocked tasks
+    int cnt; // resource being used
+    SpinLock lock;
+public:
+    CntSem( int start = 1 ) : cnt( start ) {}
+    void P() {
+        lock.acquire(); // prevention barging
+        cnt -= 1;
+        if ( cnt < 0 ) {
+            // add self to blocked list
+            yieldNoSchedule( lock );
+            // do not reacquire lock
+        }
+        lock.release();
+    }
+    void V() {
+        lock.acquire();
+        cnt += 1;
+        if ( cnt <= 0 ) {
+            // remove task from blocked list and make ready
+            // do not release lock
+        } else {
+            lock.release(); // no race
+        }
+    }
+};
+\end{verbatim}
+
+To use a semaphore:
+\begin{itemize}
+\item for synchronization, semaphore at 0 \(\to\) waiting for an event
+\item for mutual exclusion, semaphore at \(N\) \(\to\) controls a critical section
+\end{itemize}
+
+\(\mu\)C++ has a counting semaphore, which subsumes a binary semaphore
+\begin{verbatim}
+#include <uSemaphore.h>
+class uSemaphore {
+public:
+    uSemaphore( unsigned int count = 1 );
+    void P();
+    bool TryP();
+    void V( unsigned int times = 1 );
+    int counter() const;
+    bool empty() const; // threads blocked?
+};
+\end{verbatim}
+
+\texttt{P} decrements the counter, if the counter is \(\ge\) 0, the calling task continues, else it blocks.
+
+\texttt{TryP} returns true if the semaphore is acquired and false otherwise (never blocks).
+
+\texttt{V} wakes up the task blocked for the longest time and increments the counter, can occur \(N\) times.
+\section{Lock Programming}
+\label{sec:org3d35094}
+\subsection{Precedence Graph}
+\label{sec:orgfbbdd43}
+Binary semaphore with \texttt{COBEGIN} are as powerful as \texttt{START} and \texttt{WAIT}.
+
+Analyze which data and code depend on each other and display dependencies graphically
+in a \textbf{precedence graph}.
+\subsection{Buffering}
+\label{sec:org56ca408}
+Tasks communicate unidirectionally through a queue, with the producer adding items to the back
+of the queue and the consumer removing items from the front of the queue.
+\subsubsection{Unbounded Buffer}
+\label{sec:org4fe8982}
+Two tasks communicate through a queue of unbounded length.
+
+Since tasks work at different speeds, the producer may get ahead of the consumer.
+Producer never has to wait (infinite length) but the consumer may have to wait for the producer to add.
+
+This can be solved with a counting semaphore controlling access to the shared queue.
+\subsubsection{Bounded Buffer}
+\label{sec:orgc896b2b}
+Two tasks communicate through a queue of bounded length.
+
+Producer has to wait if buffer full, consumer has to wait if buffer empty.
+
+This can be solved with an additional counting semaphore to keep track of if the buffer is empty.
+\subsection{Lock Techniques}
+\label{sec:org69f8e57}
+\textbf{Split binary semaphore}: collection of semaphores where at most 1 of the collection has the value 1
+\begin{itemize}
+\item used when different kinds of tasks have to block separately
+\item cannot differentiate tasks blocked on the same semaphore
+\end{itemize}
+
+Split binary semaphores can be used for \textbf{baton passing}:
+\begin{itemize}
+\item there is exactly one conceptual baton
+\item nobody moves in the entry/exit code unless they have the baton
+\item once the baton is release, cannot read/write variables in entry/exit
+\end{itemize}
+
+Mutex/condition lock cannot perform baton passing to prevent barging if the signaled task
+must implicitly reacquire the mutex lock before continuing, since the signaler must release
+the mutex lock.
+This causes a race between the signalled and calling tasks, resulting in barging.
 \end{document}
