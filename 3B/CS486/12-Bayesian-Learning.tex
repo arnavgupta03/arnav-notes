@@ -1,0 +1,128 @@
+% Created 2024-11-11 Mon 01:20
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{DESKTOP-H800RKQ}
+\date{\today}
+\title{Bayesian Learning}
+\hypersetup{
+ pdfauthor={DESKTOP-H800RKQ},
+ pdftitle={Bayesian Learning},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Bayesian Learning}
+\label{sec:orga6cdddc}
+Premise:
+\begin{itemize}
+\item have a number of hypotheses or models
+\item assume all are correct to some degree
+\item have a distribution over the models
+\item compute expected prediction given this average
+\end{itemize}
+
+For input features \(X\), target feature \(Y\), and evidence
+\(d = \{ x_{1}, y_{1}, \dots, x_{N}, y_{N} \}\), with new input \(x\)
+to find the corresponding output \(y\) sum over all models
+$$ P(Y \mid x, d) = \sum_{m \in M} P(Y \mid m, x) P(m \mid d) $$
+
+For a hypothesis \(H\), the \textbf{prior} is \(P(H)\) and the \textbf{likelihood} is
+\(P(d \mid H)\).
+With \textbf{Bayesian Learning}, update the posterior (Bayes theorem)
+$$ P(H \mid d) \propto P(d \mid H) P(H) $$
+To predict \(X\)
+$$ P(X \mid d) = \sum_{i} P(X \mid h_{i}) P(h_{i} \mid d) $$
+Predictions are weighted averages of the predictions of the individual hypotheses.
+The hypotheses serve as intermediaries between raw data and predictions.
+
+Properties of Bayesian learning:
+\begin{itemize}
+\item \textbf{optional}: given the prior, no other prediction is correct more often than
+the Bayesian one
+\item \textbf{no overfitting}: the prior and likelihood both penalize complex hypotheses
+\end{itemize}
+
+Bayesian learning may be unmanageable when the hypothesis space is large.
+Further, the sum over hypotheses space may be unmanageable.
+The solution is to approximate Bayesian learning with other strategies.
+\section{Maximum a Posteriori (MAP)}
+\label{sec:org500001b}
+Make predictions based on the most probable hypothesis \(h_{MAP}\)
+where
+$$ h_{MAP} = \text{argmax}_{h_{i}} P(h_{i} \mid d) $$
+Note that
+$$ P(X \mid d) \approx P(X \mid h_{MAP}) $$
+
+Less accurate than full Bayesian, but converges as data increases.
+No overfitting like Bayesian.
+Finding \(h_{MAP}\) may be unmanageable since the following induces nonlinear
+optimization
+$$ h_{MAP} = \text{argmax}_{h} P(h) \prod_{i} P(d_{i} \mid h) $$
+Taking the log can linearize this.
+\section{Maximum Likelihood (ML)}
+\label{sec:org23a9f1a}
+Simplify MAP by assuming uniform prior:
+$$ h_{ML} = \text{argmax}_{h} P(d \mid h) $$
+so make prediction based solely on \(h_{ML}\):
+$$ P(X \mid d) \approx P(X \mid h_{ML}) $$
+
+Less accurate than full Bayesian or MAP, but converges as data increases.
+More susceptible to overfitting since no prior.
+\(h_{ML}\) is easier to find than \(h_{MAP}\), especially taking the log.
+\subsection{Binomial Distribution}
+\label{sec:org6be4428}
+Generalize the hypothesis space to a continuous quantity using the
+binomial distribution.
+
+For priors on binomials, the \textbf{Beta distribution} is
+$$ B(\theta ; a, b) \propto \theta^{a-1}(1-\theta)^{b-1} $$
+\section{Classifiers}
+\label{sec:org70bd048}
+If the classification is known, the feature values could be predicted
+$$ P(\text{Class} \mid X_{1} \dots X_{n}) \propto P(X_{1}, \dots, X_{n} \mid \text{Class}) P(\text{Class}) $$
+
+With a \textbf{Naive Bayesian classifier} \(X_{i}\) are independent of each other given the class,
+though this requires \(P(\text{Class})\) and \(P(X_{i} \mid \text{Class})\) for each \(X_{i}\).
+\subsection{Laplace Correction}
+\label{sec:org3aed38e}
+If a feature never occurs in the training set, but it does in the test set, ML
+assigns 0 probability to a high likelihood class.
+
+To correct for this, add 1 to the numerator and \(d\) to the denominator, where \(d\)
+is the arity of the variable.
+\subsection{Bayesian Network Parameter Learning}
+\label{sec:orgf94c92e}
+For fully observed data with:
+\begin{itemize}
+\item parameters \(\theta_{V, pa(V) = v^{i}}\)
+\item CPTs \(\theta_{V, pa(V) = v} = P(V \mid pa(V) = v)\)
+\item data \(d\) where
+$$ d_{i} = \left< V_{1} = v_{1, i}, \dots, V_{n} = v_{n, i} \right> $$
+\end{itemize}
+
+To get the maximum likelihood, set \(\theta_{V, pa(V) = v}\) to the relative frequency of
+values of \(V\) given the values \(v\) of the parents of \(V\).
+\subsection{Occam's Razor}
+\label{sec:orgcbad707}
+Simplicity is encouraged in the likelihood function.
+A hypothesis that is more complex (lower bias) can explain more datasets but it
+can only explain each with lower probability (higher variance).
+\end{document}

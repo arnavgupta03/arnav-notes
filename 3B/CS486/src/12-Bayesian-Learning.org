@@ -1,0 +1,94 @@
+#+title: Bayesian Learning
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Bayesian Learning
+Premise:
+- have a number of hypotheses or models
+- assume all are correct to some degree
+- have a distribution over the models
+- compute expected prediction given this average
+
+For input features $X$, target feature $Y$, and evidence
+$d = \{ x_{1}, y_{1}, \dots, x_{N}, y_{N} \}$, with new input $x$
+to find the corresponding output $y$ sum over all models
+$$ P(Y \mid x, d) = \sum_{m \in M} P(Y \mid m, x) P(m \mid d) $$
+
+For a hypothesis $H$, the *prior* is $P(H)$ and the *likelihood* is
+$P(d \mid H)$.
+With *Bayesian Learning*, update the posterior (Bayes theorem)
+$$ P(H \mid d) \propto P(d \mid H) P(H) $$
+To predict $X$
+$$ P(X \mid d) = \sum_{i} P(X \mid h_{i}) P(h_{i} \mid d) $$
+Predictions are weighted averages of the predictions of the individual hypotheses.
+The hypotheses serve as intermediaries between raw data and predictions.
+
+Properties of Bayesian learning:
+- *optional*: given the prior, no other prediction is correct more often than
+  the Bayesian one
+- *no overfitting*: the prior and likelihood both penalize complex hypotheses
+
+Bayesian learning may be unmanageable when the hypothesis space is large.
+Further, the sum over hypotheses space may be unmanageable.
+The solution is to approximate Bayesian learning with other strategies.
+
+* Maximum a Posteriori (MAP)
+Make predictions based on the most probable hypothesis $h_{MAP}$
+where
+$$ h_{MAP} = \text{argmax}_{h_{i}} P(h_{i} \mid d) $$
+Note that
+$$ P(X \mid d) \approx P(X \mid h_{MAP}) $$
+
+Less accurate than full Bayesian, but converges as data increases.
+No overfitting like Bayesian.
+Finding $h_{MAP}$ may be unmanageable since the following induces nonlinear
+optimization
+$$ h_{MAP} = \text{argmax}_{h} P(h) \prod_{i} P(d_{i} \mid h) $$
+Taking the log can linearize this.
+
+* Maximum Likelihood (ML)
+Simplify MAP by assuming uniform prior:
+$$ h_{ML} = \text{argmax}_{h} P(d \mid h) $$
+so make prediction based solely on $h_{ML}$:
+$$ P(X \mid d) \approx P(X \mid h_{ML}) $$
+
+Less accurate than full Bayesian or MAP, but converges as data increases.
+More susceptible to overfitting since no prior.
+$h_{ML}$ is easier to find than $h_{MAP}$, especially taking the log.
+
+** Binomial Distribution
+Generalize the hypothesis space to a continuous quantity using the
+binomial distribution.
+
+For priors on binomials, the *Beta distribution* is
+$$ B(\theta ; a, b) \propto \theta^{a-1}(1-\theta)^{b-1} $$
+
+* Classifiers
+If the classification is known, the feature values could be predicted
+$$ P(\text{Class} \mid X_{1} \dots X_{n}) \propto P(X_{1}, \dots, X_{n} \mid \text{Class}) P(\text{Class}) $$
+
+With a *Naive Bayesian classifier* $X_{i}$ are independent of each other given the class,
+though this requires $P(\text{Class})$ and $P(X_{i} \mid \text{Class})$ for each $X_{i}$.
+
+** Laplace Correction
+If a feature never occurs in the training set, but it does in the test set, ML
+assigns 0 probability to a high likelihood class.
+
+To correct for this, add 1 to the numerator and $d$ to the denominator, where $d$
+is the arity of the variable.
+
+** Bayesian Network Parameter Learning
+For fully observed data with:
+- parameters $\theta_{V, pa(V) = v^{i}}$
+- CPTs $\theta_{V, pa(V) = v} = P(V \mid pa(V) = v)$
+- data $d$ where
+  $$ d_{i} = \left< V_{1} = v_{1, i}, \dots, V_{n} = v_{n, i} \right> $$
+
+To get the maximum likelihood, set $\theta_{V, pa(V) = v}$ to the relative frequency of
+values of $V$ given the values $v$ of the parents of $V$.
+
+** Occam's Razor
+Simplicity is encouraged in the likelihood function.
+A hypothesis that is more complex (lower bias) can explain more datasets but it
+can only explain each with lower probability (higher variance).
