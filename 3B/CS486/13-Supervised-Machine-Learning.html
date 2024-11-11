@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-11 Mon 03:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Supervised Machine Learning</title>
+<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Supervised Machine Learning</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8069b66">1. Linear Regression</a></li>
+<li><a href="#org6b876b3">2. Linear Classifier</a></li>
+<li><a href="#org98e9574">3. Neural Networks</a>
+<ul>
+<li><a href="#org026e2e6">3.1. Activation Functions</a>
+<ul>
+<li><a href="#org5ec42ac">3.1.1. Step Function</a></li>
+<li><a href="#org6fc2ca0">3.1.2. Sigmoid Function</a></li>
+<li><a href="#orgb4a19a2">3.1.3. Rectified Linear Unit (ReLU)</a></li>
+<li><a href="#org093298c">3.1.4. Leaky ReLU</a></li>
+</ul>
+</li>
+<li><a href="#org6f35dae">3.2. Backpropagation</a></li>
+<li><a href="#org73bb8fc">3.3. Generalization and Optimization</a></li>
+<li><a href="#org409b866">3.4. Modeling</a>
+<ul>
+<li><a href="#org211fb1a">3.4.1. Sequence Modeling</a></li>
+<li><a href="#org8b12a38">3.4.2. Composite Models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org8069b66" class="outline-2">
+<h2 id="org8069b66"><span class="section-number-2">1.</span> Linear Regression</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A model in which the output is a linear function of the input features:
+\[ \hat{Y}_{\vec{w}}(e) = \sum_{i=0}^{n} w_{i}X_{i}(e) \]
+where \(\vec{w} = \left< w_{0}, \dots, w_{n} \right>\) and \(X_{0} = 1\).
+</p>
+
+<p>
+The <b>sum of squares error</b> on examples \(E\) for output \(Y\) is
+\[ \text{Error}(E, \vec{w}) = \sum_{e \in E} (Y(e) - \hat{Y}_{\vec{w}}(e))^{2} \]
+</p>
+
+<p>
+The goal is to find weights that minimize the sum of squares error.
+</p>
+
+<p>
+The minimum error can be found analytically.
+For output features of \(M\) examples \(\vec{y}\), \(X\) being a matrix with column \(j\)
+holding the values of the input features for example \(j\), and weights \(\vec{w}\),
+\[ \vec{y} = \vec{w} X \implies \vec{y} X^{T} (XX^{T})^{-1} = \vec{w} \]
+</p>
+
+<p>
+The minimum error can also be found iteratively, which works for more problems.
+This uses <b>gradient descent</b>:
+\[ w_{i} \gets w_{i} - \eta \frac{\partial \text{Error}(E, \vec{w})}{\partial w_{i}} \]
+where &eta; is the gradient descent step size, called the <b>learning rate</b>.
+Using sum of squares error here gives the rule
+\[ w_{i} \gets w_{i} + \eta \sum_{e \in E} \left( Y(e) - \sum_{i=0}^{n} w_{i} X_{i}(e) \right) X_{i}(e) \]
+where \(\eta \to 2\eta\) is an arbitrary scale.
+</p>
+
+<p>
+With this algorithm, if examples are chosen at random on line 7, this becomes
+<b>stochastic gradient descent</b>.
+</p>
+
+<p>
+With <b>batched gradient descent</b>:
+</p>
+<ol class="org-ol">
+<li>process a batch of size \(n\) before updating weights</li>
+<li>if \(n\) is all the data, this is gradient descent</li>
+<li>if \(n=1\), this is incremental gradient descent</li>
+</ol>
+
+<p>
+Incremental can be more efficient than batch, but it is not guaranteed to
+converge.
+This is because weight updates are done immediately but this might undo the
+work of other weight updates, creating an oscillation.
+</p>
+</div>
+</div>
+<div id="outline-container-org6b876b3" class="outline-2">
+<h2 id="org6b876b3"><span class="section-number-2">2.</span> Linear Classifier</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+For binary classification between 0 and 1, the <b>squashed linear function</b> is of the form:
+\[ \hat{Y}_{\vec{w}}(e) = f \left( \sum_{i=0}^{n} w_{i}X_{i}(e) \right) \]
+where \(f\) is an <b>activation function</b>.
+</p>
+
+<p>
+If the activation function is differentiable, gradient descent can be used to update
+the weights.
+The partial derivative of the sum of squares error for an example \(e\) becomes
+\[ \frac{\partial \text{Error}(e, \vec{w})}{\partial w_{i}} = -2 \delta f' \left( \sum_{i} w_{i} X_{i}(e) \right) X_{i}(e) \]
+where \(\delta\) is the square root of the sum of squares error.
+Thus, each example \(e\) updates each weight \(w_{i}\) by
+\[ w_{i} \gets w_{i} + \eta \delta f' \left( \sum_{i} w_{i}X_{i}(e) \right) X_{i}(e) \]
+</p>
+
+<p>
+The logistical activation function is
+\[ f(x) = \frac{1}{1 + e^{-x}}, \; f'(x) = f(x)(1 - f(x)) \]
+</p>
+</div>
+</div>
+<div id="outline-container-org98e9574" class="outline-2">
+<h2 id="org98e9574"><span class="section-number-2">3.</span> Neural Networks</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Inspired by networks in the brain.
+Idea is to connect simple units that have a threshold and fire.
+</p>
+
+<p>
+Neural networks can learn the same things as a decision tree but imposes
+different learning bias.
+Linear and sigmoid layers are treated as a single layer.
+</p>
+
+<p>
+<b>Backpropagation learning</b>: errors made are propagated backwards to change the weights
+</p>
+
+<p>
+Each node \(j\):
+</p>
+<ul class="org-ul">
+<li>has a set of weights \(w_{j} = [w_{j0}, \dots, w_{jN}]\)</li>
+<li>receives inputs \(v = [v_{0}, \dots, v_{N}]\) which are either example features
+\([x_{0}, \dots, x_{N}]\) or the output of a previous layer &ell;
+\([z^{(\ell)}_{0}, \dots, z^{(\ell)}_{N}]\).</li>
+</ul>
+
+<p>
+The number of weights is one more than the number of parents.
+The output is the activation function output
+\[ z_{j} = f \left( \sum_{i} w_{ij} v_{i} \right) \]
+which is necessarily non-linear.
+</p>
+
+<p>
+When connecting neurons into a network:
+</p>
+<ul class="org-ul">
+<li><b>feedforward network</b>
+<ul class="org-ul">
+<li>forms a directed acyclic graph</li>
+<li>have connections only in one direction</li>
+<li>represents a function of its inputs</li>
+</ul></li>
+<li><b>recurrent network</b>
+<ul class="org-ul">
+<li>feeds outputs back into inputs</li>
+<li>supports short-term memory, so for given inputs, the behaviour of the network
+depends on the initial state, which may depend on previous inputs</li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-org026e2e6" class="outline-3">
+<h3 id="org026e2e6"><span class="section-number-3">3.1.</span> Activation Functions</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="outline-container-org5ec42ac" class="outline-4">
+<h4 id="org5ec42ac"><span class="section-number-4">3.1.1.</span> Step Function</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+\(f(x) = 1\) if \(x > 0\) else \(f(x) = 0\).
+Simple to use but not differentiable so not used in practice.
+</p>
+</div>
+</div>
+<div id="outline-container-org6fc2ca0" class="outline-4">
+<h4 id="org6fc2ca0"><span class="section-number-4">3.1.2.</span> Sigmoid Function</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+\[ f(x) = \frac{1}{1 + e^{-kx}} \]
+For very large or small \(x\), \(f(x)\) approaches 1 or 0.
+Tuning \(k\) approximates the step function, with higher values of \(k\)
+leading to a steeper sigmoid.
+Sigmoid is differentiable but computationally expensive.
+</p>
+
+<p>
+<b>Vanishing gradient problem</b>: when \(x\) is very large/small, \(f(x)\)
+responds very little to changes in \(x\), so the network does not learn
+further or learns very slowly.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb4a19a2" class="outline-4">
+<h4 id="orgb4a19a2"><span class="section-number-4">3.1.3.</span> Rectified Linear Unit (ReLU)</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+\[ f(x) = \max (0, x) \]
+Computationally efficient and network converges quickly.
+ReLU is differentiable.
+</p>
+
+<p>
+<b>Dying ReLU problem</b>: when inputs approach 0 or are negative,
+the gradient becomes 0 and the network cannot learn.
+</p>
+</div>
+</div>
+<div id="outline-container-org093298c" class="outline-4">
+<h4 id="org093298c"><span class="section-number-4">3.1.4.</span> Leaky ReLU</h4>
+<div class="outline-text-4" id="text-3-1-4">
+<p>
+\[ f(x) = \max(0, x) + k \cdot \min(0, x) \]
+Small positive slope \(k\) in the negative area enables learning for
+negative input values.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org6f35dae" class="outline-3">
+<h3 id="org6f35dae"><span class="section-number-3">3.2.</span> Backpropagation</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+<b>Backpropagation</b> implements stochastic gradient descent.
+</p>
+
+<p>
+The <b>backpropagation algorithm</b> is an efficient method of calculating the gradients
+in a multi-layer neural network.
+Given training examples \((\vec{x}_{n}, \vec{y}_{n})\) and an error/loss function
+\(\text{Error}(\hat{Y}, Y)\), perform 2 passes:
+</p>
+<ul class="org-ul">
+<li><b>forward pass</b>: compute the error given the inputs and weights</li>
+<li><b>backward pass</b>: compute the gradients \(\frac{\partial \text{Error}}{\partial W_{j, k}^{(2)}}\)
+and \(\frac{\partial \text{Error}}{\partial W_{i, j}^{(1)}}\)</li>
+</ul>
+
+<p>
+Update each weight by the sum of the partial derivatives for all the training examples.
+</p>
+</div>
+</div>
+<div id="outline-container-org73bb8fc" class="outline-3">
+<h3 id="org73bb8fc"><span class="section-number-3">3.3.</span> Generalization and Optimization</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+For unit \(j\) of layer &ell;
+\[ \delta_{j}^{(\ell)} = \begin{cases} \frac{\partial \text{Error}}{\partial z_{j}^{(\ell)}} \times f'(a_{j}^{(\ell)}) & \text{base case, $j$ is an output unit} \\ \left( \sum_{k} \delta_{k}^{(\ell + 1)} W_{j, k}^{(\ell + 1)} \right) \times f'(a_{j}^{(\ell)}) & \text{recursive case, $j$ is a hidden unit} \end{cases} \]
+</p>
+
+<p>
+Using this, update weights using
+\[ W_{j, k}^{(\ell)} \gets W_{j, k}^{(\ell)} - \eta \frac{\partial \text{Error}}{\partial W_{j, k}^{(\ell)}} \]
+where \(\eta\) is the learning rate
+\[ \frac{\partial \text{Error}}{\partial W_{j, k}^{(\ell)}} = \delta_{k}^{(\ell)} z_{j}^{(\ell - 1)} \]
+for all layers beyond the input layer, or
+\[ \frac{\partial \text{Error}}{\partial W_{j, k}^{(\ell)}} = \delta_{k}^{(1)} x_{j} \]
+at the input layer.
+</p>
+
+<p>
+To improve optimization:
+</p>
+<ul class="org-ul">
+<li><b>momentum</b>: weight changes accumulate over iterations</li>
+<li><b>RMS-prop</b>: rolling average of square of gradient</li>
+<li><b>Adam</b>: combination of momentum and RMS-prop</li>
+<li><b>initialization</b>: randomly set params to start</li>
+</ul>
+
+<p>
+<b>Regularized Neural nets</b> prevent overfitting, increased bias for reduced variance through:
+</p>
+<ul class="org-ul">
+<li>param norm penalties added to the objective function</li>
+<li>dataset augmentation</li>
+<li>early stopping</li>
+<li>dropout</li>
+<li>param tying
+<ul class="org-ul">
+<li><b>convolutional</b> neural nets: used for images, params tied across space</li>
+<li><b>recurrent</b> neural nets: used for sequences, params tied across time</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org409b866" class="outline-3">
+<h3 id="org409b866"><span class="section-number-3">3.4.</span> Modeling</h3>
+<div class="outline-text-3" id="text-3-4">
+</div>
+<div id="outline-container-org211fb1a" class="outline-4">
+<h4 id="org211fb1a"><span class="section-number-4">3.4.1.</span> Sequence Modeling</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<p>
+<b>Word Embedding</b>: latent vector spaces that represent the meaning of words in context
+</p>
+
+<p>
+<b>RNNs</b>: neural net repeats over time and has inputs from previous time step
+</p>
+
+<p>
+<b>LSTM</b>: RNN with longer-term memory
+</p>
+
+<p>
+<b>Attention</b>: uses expected embeddings to focus updates on relevant parts of the network
+</p>
+
+<p>
+<b>Transformers</b>: multiple attention mechanisms
+</p>
+
+<p>
+<b>LLMs</b>: very large transformers for language
+</p>
+</div>
+</div>
+<div id="outline-container-org8b12a38" class="outline-4">
+<h4 id="org8b12a38"><span class="section-number-4">3.4.2.</span> Composite Models</h4>
+<div class="outline-text-4" id="text-3-4-2">
+<p>
+In <b>random forests</b>, each decision tree in the forest is different, with different features,
+splitting criteria, and training sets.
+The average or majority vote determines the output.
+</p>
+
+<p>
+In <b>support vector machines</b>, find the classification boundary with the widest margin.
+Combine this with the kernel trick.
+</p>
+
+<p>
+<b>Ensemble learning</b> is a combination of base-level algorithms.
+</p>
+
+<p>
+In <b>boosting</b>, a sequence of learners fit the examples the previous learner did not fit well.
+This way, learners are progressively biased towards higher precision.
+Early learners have many false positives but reject all clear negatives.
+Late learners have a more difficult problem, but the set of examples is more focused.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: DESKTOP-H800RKQ</p>
+<p class="date">Created: 2024-11-11 Mon 03:54</p>
+</div>
+</body>
+</html>
