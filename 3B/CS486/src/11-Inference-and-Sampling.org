@@ -1,0 +1,111 @@
+#+title: Inference And Sampling
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+LATEX_HEADER: \usepackage{tikz,xcolor}
+#+LATEX_HEADER: \usetikzlibrary{shapes.geometric, arrows, positioning}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Hidden Markov Models
+A node may repeat over time, so this requires an explicit encoding of time.
+A chain has a length equal to the amount of time modeled.
+Times can be *event-driven* or *clock-driven*.
+
+The *Markov assumption*
+$$ P(S_{t+1} \mid S_{1}, \dots, S_{t}) = P(S_{t+1} \mid S_{t}) $$
+gives the dynamics of the Markov chain.
+
+In a *Hidden Markov Model (HMM)* observations $O_{t}$ and observation
+functions $P(O_{t} \mid S_{t})$ are added to the states.
+The observations are always observed, so their nodes are square.
+
+#+BEGIN_SRC latex
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+
+\definecolor{arrowcolor}{rgb}{0.6, 0.6, 0.6}
+
+\tikzstyle{state} = [circle, draw=white, fill=red!70!black!70, very thick, minimum size=1cm]
+\tikzstyle{obs} = [rectangle, draw=white, fill=cyan!40!black!80, very thick, minimum size=1cm]
+\tikzstyle{arrow} = [->, thick, draw=arrowcolor, >=stealth]
+
+\node[state] (S1) {$S_{1}$};
+\node[state, right of=S1] (S2) {$S_{2}$};
+\node[state, right of=S2] (S3) {$S_{3}$};
+\node[state, right of=S3] (S4) {$S_{4}$};
+
+\node[obs, below of=S1] (O1) {$O_{1}$};
+\node[obs, below of=S2] (O2) {$O_{2}$};
+\node[obs, below of=S3] (O3) {$O_{3}$};
+\node[obs, below of=S4] (O4) {$O_{4}$};
+
+\draw[arrow] (S1) -- (S2) node[midway, right] {};
+\draw[arrow] (S2) -- (S3) node[midway, right] {};
+\draw[arrow] (S3) -- (S4) node[midway, right] {};
+
+\draw[arrow] (S1) -- (O1) node[midway, above] {};
+\draw[arrow] (S2) -- (O2) node[midway, above] {};
+\draw[arrow] (S3) -- (O3) node[midway, above] {};
+\draw[arrow] (S4) -- (O4) node[midway, above] {};
+
+\end{tikzpicture}
+\end{center}
+#+END_SRC
+
+Given a sequence of observations $O_{1}, \dots, O_{t}$, the following
+can be estimated:
+$$ P(S_{t} \mid O_{1}, \dots, O_{t}) $$
+and
+$$ P(S_{k} \mid O_{1}, \dots, O_{k}) \; \text{for $k < t$} $$
+
+The most well-known application of HMMs is in speech recognition.
+These can be built in a hierarchical model, with higher-level models
+having words as states to built sentences as HMMs and lower-level
+models having phonemes as states to have words as HMMs.
+Observations are generally audio features, with different
+levels of granularity of audio features being present in different
+levels of models.
+
+** Belief Monitoring
+*** Forward
+$$ \alpha_{t} (i) = P(O_{1 \dots t}, S_{t} = i) = P(O_{t} \mid S_{t} = i) \sum_{S_{t-1}} P(S_{t} = i \mid s_{t-1}) \alpha_{t-1}(s_{t-1}) $$
+
+*** Backward
+$$ \beta_{t}(i) = P(O_{t+1 \dots T} \mid S_{t} = i) = \sum_{s_{t+1}} \beta_{t+1} (s_{t+1}) P(O_{t+1} \mid s_{t+1}) P(s_{t+1} \mid S_{t} = i) $$
+
+*** Forward-Backward
+$$ \alpha_{t}(i) \beta_{t}(i) = P(O_{1 \dots T}, S_{t} = i) \propto P(S_{t} = i \mid O) $$
+
+* Dynamic Bayesian Networks
+Any Bayesian network can repeat over time, which is a *Dynamic Bayesian Network*.
+Many examples can be solved with variable elimination though they can become too complex with
+enough variables.
+
+Bayesian probability ensures that evidence is integrated proportionally to its precision,
+so sensors are *precision weighted*.
+
+Variable elimination is an exact algorithm, and sometimes these calculations can be difficult
+or probability distributions are unknown.
+This requires resorting to stochastic sampling, since sampling from a distribution allows
+for estimation.
+
+* Sampling
+With *stochastic simulation*, get probabilities from samples.
+Specifically, sample from a variable's posterior probability to estimate its posterior
+probability.
+
+To generate samples from a distribution for a variable $X$ with a discrete domain or a real
+domain:
+- totally order values of the domain of $X$
+- generate the cumulative probability distribution $f(x) = P(X \le x)$
+- select a value $y$ uniformly in the range $[0, 1]$
+- select the $x$ such that $f(x) = y$
+
+** Forward Sampling
+Sample variables one at a time, specifically sampling parents before sampling a node.
+Given values for the parents of $X$, sample from the probability of $X$ given its parents.
+
+For samples $s_{i}$, $i = 1 \dots N$
+$$ P(X = x_{i}) \propto \sum_{s_{i}} \delta (x_{i}) = N_{X=x_{i}} $$
+where $\delta(x_{i})$ is 1 if $X = x_{i}$ in $s_{i}$ and 0 otherwise.
+
+Inference via sampling approaches the probability as the number of samples increases.
