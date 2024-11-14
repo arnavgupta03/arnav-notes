@@ -1,0 +1,106 @@
+#+title: Controller Synthesis
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Loop Shaping
+Translating control specifications of the closed loop system into constraints of the
+Bode plots of the open loop system is loop shaping.
+
+The steps involved in loop shaping are:
+1. turn specifications from the time domain behaviour of $F(s)$ to the frequency domain
+   behaviour of $L(s)$
+2. design the transfer function of the controller $C(s)$ so that $L(s) = C(s)G(s)$ has the desired
+   frequency domain behaviour
+
+For robust stability, a high $K_{m}$ and high $\phi_{m}$ are desirable.
+
+*Delay* is negative phase shift, which can decrease the phase margin and so
+$\phi_{m} > 0$ may no longer hold.
+
+Integral action in a controller, that is some $L(s)$ where
+$$ L(s) = \frac{\mu}{s^{\rho}} $$
+gives a steady state gain of 1 in the closed-loop system.
+
+Low bandwidth gives a slow response, high bandwidth gives a fast response.
+
+The crossover frequency $\omega_{c}$ helps find which frequencies pass through and which get attenuated.
+Frequencies within the crossover frequency are within the bandwidth and frequencies above the crossover
+frequency are not within the bandwidth.
+This is because the bandwidth of $F(s)$ (the closed-loop transfer function) is approximated by
+the crossover frequency of $L(s)$ (the open-loop transfer function).
+
+The closed-loop transfer function $F(s)$ is approximated by 1 for $\omega \ll \omega_{c}$ of $L(s)$
+and $L(s)$ for $\omega \gg \omega_{c}$ of $L(s)$.
+
+The *lower bound* on $\omega_{c}$ of $L(s)$ is used to filter out noise, not the reference.
+The disturbance signals contain low frequencies and noise signals contain high frequencies.
+
+Consider a system with open-loop transfer function $L(s) = C(s)G(s)$ and corresponding closed loop
+transfer function $F(s)$.
+To _reject disturbance_:
+$$ \left| \frac{G(j \omega)}{1 + C(j\omega)G(j \omega)} \right| $$
+which is the lower bound on $\omega_{c}$ for $L(s)$, should be kept low for $\omega$ contained in $D$,
+specifically low frequencies.
+
+To _attenuate noise_:
+$$ \left| \frac{C(j\omega)G(j \omega)}{1 + C(j\omega)G(j\omega)} \right| $$
+which is the upper bound on $\omega_{c}$ for $L(s)$, should be kept low for $\omega$ contained in $N$,
+specifically high frequencies.
+
+For $L(s) = C(s)G(s)$, where $C(s)$ is proper (in order to be realizable in state-space form),
+the slope of $|L(j\omega)|$ should be at most the slope of $|G(j\omega)|$ as $\omega \to \infty$.
+
+* Integral Control
+For a closed-loop system with open loop transfer function $L(s) = C(s)G(s)$,
+for $C(s) = \frac{\mu}{s^{\rho}}$:
+- if $\rho > 0$, there is an integrator in the loop, so the closed-loop transfer function $F(s)$ has
+  $F(0) = 1$
+- if $\rho = 0$, there is no integrator in the loop, so $\mu$ must be high for $F(0)$ to approach 1
+
+* Lead-Lag Compensators
+** Lead Controller
+Consider a controller with transfer function
+$$ C(s) = \mu\frac{1 + Ts}{1 + \alpha Ts} $$
+for $\mu > 0, T > 0, 0 < \alpha < 1$.
+This controller has a zero at $-\frac{1}{T}$ and a pole at $-\frac{1}{\alpha T}$,
+which adds a phase lead between the zero and the pole, which is an increase in the phase margin.
+
+This controller has high frequency gain $\frac{\mu}{\alpha}$.
+A good value of $\alpha$ is 0.1, since this gives a $55^{\circ}$ phase lead.
+
+As $\alpha \to 0$, $C(s)$ becomes $\mu(1 + Ts)$.
+When $C(s) = \frac{E(s)}{U(s)}$, then this gives that the control action $u(t)$ is made of 2 terms:
+$$ u(t) = \mu e(t) + \mu T \frac{de}{dt}(t) $$
+where one term is proportional to the error and the other is proportional to the time derivative of the
+error, so this is a PD controller.
+For a non-continuous space, the control action can be written as
+$$ u(t_{k}) = \mu e(t_{k}) + \mu T \frac{e(t_{k}) - e(t_{k-1})}{t_{k} - t_{k-1}} $$
+Adding poles/zeros makes the controller realizable to get this approximation of the derivative until
+the frequency of the pole of error.
+
+** Lag Controller
+Consider a controller with transfer function
+$$ C(s) = \mu\frac{1 + Ts}{1 + \alpha Ts} $$
+for $\mu > 0, T > 0, \alpha > 1$.
+This controller has a zero at $-\frac{1}{T}$ and a pole at $-\frac{1}{\alpha T}$,
+which adds a phase lag between the zero and the pole, which is an decrease in the phase margin.
+The lag controller helps to improve static performance without losing stability.
+
+A good value of $\alpha$ is $10$.
+For $\frac{10}{T} < \omega_{c}$, this gives $-6^{\circ}$ at $\omega_{c}$.
+At $\mu = \alpha$, the high frequency behaviour is unchanged.
+For $\mu = 1$, there is a lower $\omega_{c}$ and which increases $\phi_{m}$.
+As $\alpha \to \infty$, the corresponding increase of the steady-state gain $\mu$ such that
+$\frac{\mu}{\alpha} = c$ is constant, gives the lag controller
+$$ C(s) = c + \frac{c}{Ts} $$
+which is a PI controller.
+
+* PID Controller
+Placing the zero and pole of a lead controller $1/\alpha$ decade away from $\omega_{c}$ requires
+$$ \omega_{c} = \frac{1}{\sqrt{\alpha} T} $$
+
+$$ \zeta \approx \frac{\phi_{m}}{100} $$
+so if $\phi_{m}$ increases, there are less oscillations and less overshoot for the closed loop system.
+
+For a lag controller, as $\alpha \to \infty$, the pole $-\frac{1}{\alpha T} \to 0$.

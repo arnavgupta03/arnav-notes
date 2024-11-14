@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-14 Thu 13:59 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Controller Synthesis</title>
+<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Controller Synthesis</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org79e8d07">1. Loop Shaping</a></li>
+<li><a href="#org7692471">2. Integral Control</a></li>
+<li><a href="#org2ffe0c8">3. Lead-Lag Compensators</a>
+<ul>
+<li><a href="#org17c5d6d">3.1. Lead Controller</a></li>
+<li><a href="#org2957fda">3.2. Lag Controller</a></li>
+</ul>
+</li>
+<li><a href="#org62c4c7f">4. PID Controller</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org79e8d07" class="outline-2">
+<h2 id="org79e8d07"><span class="section-number-2">1.</span> Loop Shaping</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Translating control specifications of the closed loop system into constraints of the
+Bode plots of the open loop system is loop shaping.
+</p>
+
+<p>
+The steps involved in loop shaping are:
+</p>
+<ol class="org-ol">
+<li>turn specifications from the time domain behaviour of \(F(s)\) to the frequency domain
+behaviour of \(L(s)\)</li>
+<li>design the transfer function of the controller \(C(s)\) so that \(L(s) = C(s)G(s)\) has the desired
+frequency domain behaviour</li>
+</ol>
+
+<p>
+For robust stability, a high \(K_{m}\) and high \(\phi_{m}\) are desirable.
+</p>
+
+<p>
+<b>Delay</b> is negative phase shift, which can decrease the phase margin and so
+\(\phi_{m} > 0\) may no longer hold.
+</p>
+
+<p>
+Integral action in a controller, that is some \(L(s)\) where
+\[ L(s) = \frac{\mu}{s^{\rho}} \]
+gives a steady state gain of 1 in the closed-loop system.
+</p>
+
+<p>
+Low bandwidth gives a slow response, high bandwidth gives a fast response.
+</p>
+
+<p>
+The crossover frequency \(\omega_{c}\) helps find which frequencies pass through and which get attenuated.
+Frequencies within the crossover frequency are within the bandwidth and frequencies above the crossover
+frequency are not within the bandwidth.
+This is because the bandwidth of \(F(s)\) (the closed-loop transfer function) is approximated by
+the crossover frequency of \(L(s)\) (the open-loop transfer function).
+</p>
+
+<p>
+The closed-loop transfer function \(F(s)\) is approximated by 1 for \(\omega \ll \omega_{c}\) of \(L(s)\)
+and \(L(s)\) for \(\omega \gg \omega_{c}\) of \(L(s)\).
+</p>
+
+<p>
+The <b>lower bound</b> on \(\omega_{c}\) of \(L(s)\) is used to filter out noise, not the reference.
+The disturbance signals contain low frequencies and noise signals contain high frequencies.
+</p>
+
+<p>
+Consider a system with open-loop transfer function \(L(s) = C(s)G(s)\) and corresponding closed loop
+transfer function \(F(s)\).
+To <span class="underline">reject disturbance</span>:
+\[ \left| \frac{G(j \omega)}{1 + C(j\omega)G(j \omega)} \right| \]
+which is the lower bound on \(\omega_{c}\) for \(L(s)\), should be kept low for \(\omega\) contained in \(D\),
+specifically low frequencies.
+</p>
+
+<p>
+To <span class="underline">attenuate noise</span>:
+\[ \left| \frac{C(j\omega)G(j \omega)}{1 + C(j\omega)G(j\omega)} \right| \]
+which is the upper bound on \(\omega_{c}\) for \(L(s)\), should be kept low for \(\omega\) contained in \(N\),
+specifically high frequencies.
+</p>
+
+<p>
+For \(L(s) = C(s)G(s)\), where \(C(s)\) is proper (in order to be realizable in state-space form),
+the slope of \(|L(j\omega)|\) should be at most the slope of \(|G(j\omega)|\) as \(\omega \to \infty\).
+</p>
+</div>
+</div>
+<div id="outline-container-org7692471" class="outline-2">
+<h2 id="org7692471"><span class="section-number-2">2.</span> Integral Control</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+For a closed-loop system with open loop transfer function \(L(s) = C(s)G(s)\),
+for \(C(s) = \frac{\mu}{s^{\rho}}\):
+</p>
+<ul class="org-ul">
+<li>if \(\rho > 0\), there is an integrator in the loop, so the closed-loop transfer function \(F(s)\) has
+\(F(0) = 1\)</li>
+<li>if \(\rho = 0\), there is no integrator in the loop, so \(\mu\) must be high for \(F(0)\) to approach 1</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2ffe0c8" class="outline-2">
+<h2 id="org2ffe0c8"><span class="section-number-2">3.</span> Lead-Lag Compensators</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org17c5d6d" class="outline-3">
+<h3 id="org17c5d6d"><span class="section-number-3">3.1.</span> Lead Controller</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Consider a controller with transfer function
+\[ C(s) = \mu\frac{1 + Ts}{1 + \alpha Ts} \]
+for \(\mu > 0, T > 0, 0 < \alpha < 1\).
+This controller has a zero at \(-\frac{1}{T}\) and a pole at \(-\frac{1}{\alpha T}\),
+which adds a phase lead between the zero and the pole, which is an increase in the phase margin.
+</p>
+
+<p>
+This controller has high frequency gain \(\frac{\mu}{\alpha}\).
+A good value of \(\alpha\) is 0.1, since this gives a \(55^{\circ}\) phase lead.
+</p>
+
+<p>
+As \(\alpha \to 0\), \(C(s)\) becomes \(\mu(1 + Ts)\).
+When \(C(s) = \frac{E(s)}{U(s)}\), then this gives that the control action \(u(t)\) is made of 2 terms:
+\[ u(t) = \mu e(t) + \mu T \frac{de}{dt}(t) \]
+where one term is proportional to the error and the other is proportional to the time derivative of the
+error, so this is a PD controller.
+For a non-continuous space, the control action can be written as
+\[ u(t_{k}) = \mu e(t_{k}) + \mu T \frac{e(t_{k}) - e(t_{k-1})}{t_{k} - t_{k-1}} \]
+Adding poles/zeros makes the controller realizable to get this approximation of the derivative until
+the frequency of the pole of error.
+</p>
+</div>
+</div>
+<div id="outline-container-org2957fda" class="outline-3">
+<h3 id="org2957fda"><span class="section-number-3">3.2.</span> Lag Controller</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Consider a controller with transfer function
+\[ C(s) = \mu\frac{1 + Ts}{1 + \alpha Ts} \]
+for \(\mu > 0, T > 0, \alpha > 1\).
+This controller has a zero at \(-\frac{1}{T}\) and a pole at \(-\frac{1}{\alpha T}\),
+which adds a phase lag between the zero and the pole, which is an decrease in the phase margin.
+The lag controller helps to improve static performance without losing stability.
+</p>
+
+<p>
+A good value of \(\alpha\) is \(10\).
+For \(\frac{10}{T} < \omega_{c}\), this gives \(-6^{\circ}\) at \(\omega_{c}\).
+At \(\mu = \alpha\), the high frequency behaviour is unchanged.
+For \(\mu = 1\), there is a lower \(\omega_{c}\) and which increases \(\phi_{m}\).
+As \(\alpha \to \infty\), the corresponding increase of the steady-state gain \(\mu\) such that
+\(\frac{\mu}{\alpha} = c\) is constant, gives the lag controller
+\[ C(s) = c + \frac{c}{Ts} \]
+which is a PI controller.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org62c4c7f" class="outline-2">
+<h2 id="org62c4c7f"><span class="section-number-2">4.</span> PID Controller</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Placing the zero and pole of a lead controller \(1/\alpha\) decade away from \(\omega_{c}\) requires
+\[ \omega_{c} = \frac{1}{\sqrt{\alpha} T} \]
+</p>
+
+<p>
+\[ \zeta \approx \frac{\phi_{m}}{100} \]
+so if \(\phi_{m}\) increases, there are less oscillations and less overshoot for the closed loop system.
+</p>
+
+<p>
+For a lag controller, as \(\alpha \to \infty\), the pole \(-\frac{1}{\alpha T} \to 0\).
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: DESKTOP-H800RKQ</p>
+<p class="date">Created: 2024-11-14 Thu 13:59</p>
+</div>
+</body>
+</html>
