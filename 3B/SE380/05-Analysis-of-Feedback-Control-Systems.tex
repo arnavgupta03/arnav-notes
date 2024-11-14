@@ -1,0 +1,153 @@
+% Created 2024-11-14 Thu 01:24
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\usepackage{tikz}
+\usepackage{pgfplots}
+\author{DESKTOP-H800RKQ}
+\date{\today}
+\title{Analysis Of Feedback Control Systems}
+\hypersetup{
+ pdfauthor={DESKTOP-H800RKQ},
+ pdftitle={Analysis Of Feedback Control Systems},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Block Diagrams}
+\label{sec:org279d2db}
+
+\section{Stability of Interconnected Systems}
+\label{sec:orgc36cdd0}
+
+\section{Routh-Hurwitz Criterion}
+\label{sec:orgf7c1ec0}
+For a closed-loop system, the transfer function tends to be of the form
+$$ F(s) = \frac{L(s)}{1 + L(s)} $$
+To determine if such a system is stable, it must be known whether
+the roots of \(1+L(s)\) are in the left half of the complex plane
+\(\mathbb{C}^{-}\) (preferably without direct computation).
+
+For any polynomial \(\pi(s) = s^{n} + \cdots + a_{1}s + a_{0}\) for
+\(a_{i} \in \mathbb{R}\),
+\(\pi(s)\) is \textbf{Hurwitz} if all its roots are in \(\mathbb{C}^{-}\).
+
+A closed loop system is stable if \(1 + L(s)\) is Hurwitz.
+
+Note that a polynomial \(\pi(s)\) can be factored into
+$$ \pi(s) = (s - \lambda_{1})\cdots (s - \lambda_{r}) (s - \mu_{1})(s - \bar{\mu}_{1}) \cdots (s - \mu_{p})(s - \bar{\mu}_{p}) $$
+where \(\lambda_{1}, \dots, \lambda_{r}\) are real roots and \(\mu_{1}, \bar{\mu}_{1}, \cdots \mu_{p}, \bar{\mu}_{p}\) are complex conjugate pairs of roots.
+
+If \(\pi(s)\) is Hurwitz, \(\pi(s)\) has strictly positive coefficients.
+\subsection{Routh's Algorithm}
+\label{sec:org42918be}
+The first step is to build the following table:
+$$ \begin{tabular}{c|c|c|c|c}
+$s^{n}$ & 1 & $a_{n-2}$ & $a_{n-4}$ & $\cdots$ \\
+$s^{n - 1}$ & $a_{n-1}$ & $a_{n-3}$ & $a_{n-5}$ & $\cdots$ \\
+$s^{n - 2}$ & $r_{2,0}$ & $r_{2,1}$ & $r_{2,2}$ & $\cdots$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ \\
+$s^{2}$ & $r_{n-2,0}$ & $r_{n-2,1}$ & $r_{n-2,2}$ & $\cdots$ \\
+$s^{1}$ & $r_{n-1,0}$ & $r_{n-1,1}$ & $r_{n-1,2}$ & $\cdots$ \\
+$s^{0}$ & $r_{n,0}$ & & &
+\end{tabular} $$
+where each \(r\) is the negative inverse of the value above it, multiplied by the determinant of the
+\(2 \times 2\) square above it.
+For examples,
+$$ r_{2, 0} = -\frac{1}{a_{n-1}} \begin{vmatrix} 1 & a_{n-2} \\ a_{n-1} & a_{n-3} \end{vmatrix} $$
+This table stops along each row once 0 is reached.
+The process is terminated when a 0 is reached in the first column.
+
+The next step is the use the \textbf{Routh-Hurwitz Criterion}:
+\begin{enumerate}
+\item \(\pi(s)\) is Hurwitz \(\iff\) all elements in the Routh array (first column of table) have the same sign
+\item If the Routh array has no zeros, then
+\begin{enumerate}
+\item the number of sign changes is the number of bad roots (non-negative real parts)
+\item no roots exist on the imaginary axis
+\end{enumerate}
+\end{enumerate}
+\section{Nyquist Criterion}
+\label{sec:org718a74c}
+The transfer function \(G(s)\) is a mapping from \(s\) to \(G(s)\), which is \(\mathbb{C} \to \mathbb{C}\).
+
+The \textbf{Nyquist contour} goes along the real axis and then in a circular fashion on the postive real side.
+The \textbf{Nyquist plot} is the image of the Nyquist contour through \(L(s)\), the open loop transfer function
+of the closed loop system.
+
+If \(L(s)\) has poles with 0 real, part, the Nyquist plot goes around them.
+
+The Nyquist plot has symmetry with the real line, that is
+$$ L(-j\omega) = \overline{L(j \omega)} $$
+
+If \(L(s)\) is strictly proper \(L(j\omega) \to 0\) as \(| \omega | \to \infty\).
+
+Let \(p\) be the number of poles of \(L(s)\) with positive real part.
+Let \(N\) be the number of loops the Nyquist plot makes around the point \(-1 \in \mathbb{C}\),
+with \(>0\) if counter-clockwise and \(<0\) if clockwise.
+\(N\) is undefined if the Nyquist plot goes through -1.
+
+By the \textbf{Nyquist Criterion}, the closed loop system is stable if and only if \(N = P\).
+
+If \(N\) is undefined, the closed loop system may be stable or unstable.
+
+If \(N\) is well defined and \(N \ne P\), the closed loop system is unstable.
+
+\(P - N\) is the number of poles of the closed loop system with positive real part.
+
+\(L(s)\) is stable for \(P = 0\).
+Further, if:
+\begin{itemize}
+\item \(|L(j\omega) < 1 \; \forall \omega \implies\) the closed loop system is stable
+\item \(|\angle L(j\omega) < 1 \; \forall \omega \implies\) the closed loop system is stable
+\end{itemize}
+\section{Bode Criterion}
+\label{sec:org8060e12}
+Let \(L(s)\) be the open loop transfer function of a closed-loop system.
+Assume \(L(s)\) is stable and the Nyquist plot of \(L(s)\) intersects the negative real axis
+only once.
+The distance from -1 to \(L(j \omega \pi)\) gives the gain margin.
+
+On a Bode plot, the \textbf{gain margin} \(K_{m}\) occurs when the phase hits \(-180^{\circ}\) and is the
+distance from the frequency axis to \(|L(j \omega \pi)|\).
+The gain margin is positive if \(|L(j \omega \pi)|_{dB} < 0_{dB}\) (which indicates a stable
+system) and is otherwise negative.
+The gain margin represents the maximum multiplicative factor on the gain of \(L(s)\) at
+\(\omega_{\pi}\) that the system can tolerate before becoming unstable.
+$$ K_{m} = \frac{1}{|L(j \omega_{\pi})|} $$
+where \(\omega_{\pi}\) is the frequency such that \(\angle L (j \omega_{\pi}) = -180^{\circ}\).
+
+Let \(L(s)\) be the open loop transfer function of a closed-loop system.
+Assume \(L(s)\) is stable and the Nyquist plot of \(L(s)\) intersects the unit circle once once
+from outside to inside.
+The frequency at which \(|L(j \omega)| = 1, |L(j \omega)|_{dB} = 0_{dB}\) is
+the \textbf{crossover frequency}.
+
+The \textbf{phase margin} \(\phi_{m}\) is the distance between \(\angle L(j \omega)\) and \(-180^{\circ}\).
+Specifically, this is the frequency at which the magnitude \(|L(j\omega)|\) goes to 0.
+The phase margin is positive if \(180^{\circ} - | \angle L(j \omega_{c}) | > 0\) and
+negative otherwise.
+
+The \textbf{Bode Criterion} states that if \(L(s)\) has no poles with positive real parts and
+\(|L(j \omega)|_{dB}\) crosses the \(0_{dB}\) axis only once from above to below, then
+$$ \mu > 0, \phi_{m} > 0 \iff F(s) = \frac{L(s)}{1 + L(s)} \text{ stable} $$
+
+The closed loop system \(F(s)\) is stable for \(K_{m} > 0, \phi_{m} > 0\).
+\end{document}
