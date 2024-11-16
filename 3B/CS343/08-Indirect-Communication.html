@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-16 Sat 16:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Indirect Communication</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Indirect Communication</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc66ecfa">1. Indirect Communication</a></li>
+<li><a href="#orgc947a04">2. Critical Regions</a></li>
+<li><a href="#org9c67511">3. Conditional Critical Regions</a></li>
+<li><a href="#orga99dafb">4. Monitor</a></li>
+<li><a href="#org45d204e">5. Scheduling (Synchronization)</a>
+<ul>
+<li><a href="#org3e7a50c">5.1. External Scheduling</a></li>
+<li><a href="#org9e20847">5.2. Internal Scheduling</a></li>
+</ul>
+</li>
+<li><a href="#org9fea466">6. Readers/Writers</a></li>
+<li><a href="#org0bfd0ce">7. Exceptions</a></li>
+<li><a href="#org99f4f14">8. Nested Monitor Calls</a></li>
+<li><a href="#orgeb3c5b9">9. Intrusive Lists</a></li>
+<li><a href="#org2c1ac35">10. Counting Semaphore vs Condition</a></li>
+<li><a href="#org458be0f">11. Monitor Types</a></li>
+<li><a href="#org9d66381">12. Java Monitor</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc66ecfa" class="outline-2">
+<h2 id="orgc66ecfa"><span class="section-number-2">1.</span> Indirect Communication</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>P</code> and <code>V</code> are low-level primitives for protecting critical sections and establishing
+synchronization between tasks.
+</p>
+
+<p>
+Higher level facilities can perform info communication and mutual exclusion automatically
+using help from the programming language and compiler.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc947a04" class="outline-2">
+<h2 id="orgc947a04"><span class="section-number-2">2.</span> Critical Regions</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Declare which variables are shared with syntax like <code>VAR v : SHARED INTEGER</code>.
+</p>
+
+<p>
+Access to shared variables is restricted to within a region statement, and within
+the region, mutual exclusion is guaranteed:
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #a9a1e1;">REGION</span> v DO
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">critical section</span>
+<span style="color: #a9a1e1;">END</span> <span style="color: #a9a1e1;">REGION</span>
+</pre>
+</div>
+<p>
+This does not allow simultaneous reads.
+</p>
+
+<p>
+Can modify to allow reading of shared variables outside the critical region, but this
+could bring issues with reading partially updated information that another task is
+updating inside the critical region.
+</p>
+
+<p>
+Using nesting to attempt to fix this can result in deadlock.
+</p>
+</div>
+</div>
+<div id="outline-container-org9c67511" class="outline-2">
+<h2 id="org9c67511"><span class="section-number-2">3.</span> Conditional Critical Regions</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Can fix issues with critical regions using a condition that must be true as well as having
+mutual exclusion:
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #a9a1e1;">REGION</span> v DO
+    <span style="color: #a9a1e1;">AWAIT</span> conditional-expresson
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">critical section</span>
+<span style="color: #a9a1e1;">END</span> <span style="color: #a9a1e1;">REGION</span>
+</pre>
+</div>
+
+<p>
+If the condition is false, the region lock is released and entry is started again (busy waiting).
+To prevent busy waiting, block on the queue for the shared variable, and on region exit, search
+for true conditional-expression and unblock.
+</p>
+</div>
+</div>
+<div id="outline-container-orga99dafb" class="outline-2">
+<h2 id="orga99dafb"><span class="section-number-2">4.</span> Monitor</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<b>Monitor</b>: abstract data type that combines shared data with serialization of its modification
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">_Monitor</span> <span style="color: #dcaeea;">name</span> <span style="color: #51afef;">{</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">shared data</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">members that see and modify the data</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+
+<p>
+<b>Mutex Member</b>: a member that does not begin execution if there is another active mutex member
+</p>
+
+<p>
+A call to a mutex member may become blocked while awaiting entry, and queues of waiting tasks
+may form.
+Public member routines of a monitor are implicitly mutex. Others can be made mutex with <code>_Mutex</code>.
+</p>
+
+<p>
+This works like if the monitor had a lock <code>P</code>&rsquo;d on entry to a monitor member and <code>V</code>&rsquo;d on exit.
+</p>
+
+<p>
+Recursive entry is allowed, one mutex member can call another or itself.
+</p>
+
+<p>
+Unhandled exceptions raised within a monitor should always release the implicit monitor locks
+so the monitor can continue to function.
+</p>
+
+<p>
+The destructor must be mutex so that closing a monitor blocks if a thread is in the monitor.
+</p>
+</div>
+</div>
+<div id="outline-container-org45d204e" class="outline-2">
+<h2 id="org45d204e"><span class="section-number-2">5.</span> Scheduling (Synchronization)</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+A monitor may want to schedule tasks in an order different than arrival.
+</p>
+
+<p>
+The two techniques are:
+</p>
+<ul class="org-ul">
+<li><b>external</b>: scheduling tasks outside the monitor and is accomplished with the accept
+statement</li>
+<li><b>internal</b>: scheduling tasks inside the monitor and is accomplished using condition
+variables with signal and wait</li>
+</ul>
+
+<p>
+External scheduling is easier to specify and explain over internal with condition variables.
+</p>
+
+<p>
+External scheduling cannot be used if:
+</p>
+<ul class="org-ul">
+<li>scheduling depends on member param values</li>
+<li>scheduling must block in the monitor but cannot guarantee the next call fulfills cooperation</li>
+</ul>
+</div>
+<div id="outline-container-org3e7a50c" class="outline-3">
+<h3 id="org3e7a50c"><span class="section-number-3">5.1.</span> External Scheduling</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+<code>_Accept</code> controls which mutex members can accept calls.
+By preventing members from accepting calls at times, it is possible to control task scheduling.
+</p>
+
+<p>
+Each <code>_Accept</code> defines what cooperation must occur for the accepting task to proceed.
+Queues of tasks form outside the monitor, waiting to be accepted.
+</p>
+
+<p>
+An acceptor blocks all calls except a call to the specified mutex member(s).
+The accepted call is executed like the usual member call.
+When the accepted task exits the mutex member, the acceptor continues.
+</p>
+
+<p>
+Can satisfy acceptor&rsquo;s requirements with multiple calls.
+</p>
+
+<p>
+With external scheduling, unblocking is implicit.
+</p>
+</div>
+</div>
+<div id="outline-container-org9e20847" class="outline-3">
+<h3 id="org9e20847"><span class="section-number-3">5.2.</span> Internal Scheduling</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Scheduling among tasks inside the monitor.
+</p>
+
+<p>
+<b>Condition</b>: external synchronization lock
+</p>
+<ul class="org-ul">
+<li><code>empty</code> returns false if there are tasks blocked on the queue and true otherwise</li>
+<li><code>front</code> returns an integer value stored with the waiting task at the front of the condition queue</li>
+<li><code>wait</code> blocks the current thread and restarts a signalled task or implicitly releases the monitor lock</li>
+<li><code>signal</code> unblocks the thread on the front of the condition queue after the signaller thread blocks or
+exits</li>
+<li><code>signalBlock</code> unblocks the thread on the front of the condition queue and blocks the signaller thread</li>
+</ul>
+
+<p>
+A task waits by placing itself on a condition, which atomically places the executing task at the back
+of the condition queue and allows another task into the monitor by releasing the monitor lock.
+</p>
+
+<p>
+A task is made ready by signalling the condition, which removes and makes ready the blocked task
+at the front of the condition queue.
+</p>
+
+<p>
+The signaller does not block, so the signalled task must continue waiting until the signaller exits
+or waits.
+</p>
+
+<p>
+<b>Entry queue</b>: FIFO lst of calling tasks to the monitor
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9fea466" class="outline-2">
+<h2 id="org9fea466"><span class="section-number-2">6.</span> Readers/Writers</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Can write similar to <code>P</code> and <code>V</code>, but can also simplify protocol to have a single read and a single
+write action.
+</p>
+
+<p>
+Can simplify further by having writers use <code>_Mutex</code> in monitor (let monitor handle mutual exclusion).
+</p>
+
+<p>
+Can solve with condition shadow queue or with external scheduling.
+</p>
+</div>
+</div>
+<div id="outline-container-org0bfd0ce" class="outline-2">
+<h2 id="org0bfd0ce"><span class="section-number-2">7.</span> Exceptions</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+An exception raised in a monitor member propagates to the caller&rsquo;s thread.
+</p>
+
+<p>
+On exiting a method that raised an exception, a caller implicitly raises a nonlocal <code>RendezvousFailure</code>
+exception at monitor acceptor&rsquo;s thread to identify failed cooperation.
+</p>
+
+<p>
+For multiple <code>_Accept</code> clauses, a flag variable is required to know which member failed.
+</p>
+</div>
+</div>
+<div id="outline-container-org99f4f14" class="outline-2">
+<h2 id="org99f4f14"><span class="section-number-2">8.</span> Nested Monitor Calls</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+<b>Nested monitor problem</b>: acquire monitor (lock), call to another monitor, and wait on condition in the
+other monitor, so potential deadlock
+</p>
+
+<p>
+Releasing all locks can inadvertently release a lock.
+This is called the <b>lock composition</b> problem.
+</p>
+</div>
+</div>
+<div id="outline-container-orgeb3c5b9" class="outline-2">
+<h2 id="orgeb3c5b9"><span class="section-number-2">9.</span> Intrusive Lists</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Non-contiguous variable-length data structures normally require dynamic allocation as the structure
+increases/decreases as the structure increases/decreases when adding/deleting nodes.
+</p>
+
+<p>
+The types of collections are copy data, copy pointer, and intrusive pointers.
+</p>
+
+<p>
+<b>Copy</b> creates a collection node with link fields, with dynamic allocation for links and possibly data,
+copying data and/or data pointer into nodes, and then linking the node into collection.
+</p>
+
+<p>
+<b>Intrusive</b> assumes a node with data and link fields, so no dynamic allocation for collection links or
+copying.
+</p>
+
+<p>
+A programmer usually manages node lifetime for copy pointer and intrusive.
+</p>
+
+<p>
+&mu;C++ provides <b>intrusive data structures</b> allowing global/stack/heap nodes and no copying.
+This implementation uses private intrusive links for non-copyable objects like a coroutine or task.
+</p>
+
+<p>
+Intrusive links can have:
+</p>
+<ul class="org-ul">
+<li>one link field, <code>uColable</code>, for a collection</li>
+<li>two link fields, <code>uSeqable</code>, for a sequence</li>
+</ul>
+
+<p>
+Template classes <code>uStack</code> and <code>uQueue</code> are singly linked, so collections.
+Template class <code>uSequence</code> is doubly linked, so sequence.
+</p>
+
+<p>
+Each intrusive list has associated iterators, <code>uStackIter</code>, <code>uQueueIter</code>, and <code>uSeqIter</code>.
+</p>
+
+<p>
+Lifetime of node is duration of blocked thread.
+</p>
+</div>
+</div>
+<div id="outline-container-org2c1ac35" class="outline-2">
+<h2 id="org2c1ac35"><span class="section-number-2">10.</span> Counting Semaphore vs Condition</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+<code>P</code> only blocks if semaphore is 0, <code>wait</code> always blocks.
+</p>
+
+<p>
+<code>V</code> before <code>P</code> affects <code>P</code>, <code>signal</code> before <code>wait</code> is lost.
+</p>
+
+<p>
+Multiple <code>V</code> can start multiple tasks simultaneously, while multiple signals only start one task at a
+time because each task must exit serially through the monitor.
+</p>
+
+<p>
+Can simulate <code>P</code> and <code>V</code> using a monitor.
+</p>
+</div>
+</div>
+<div id="outline-container-org458be0f" class="outline-2">
+<h2 id="org458be0f"><span class="section-number-2">11.</span> Monitor Types</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+<b>Explicit scheduling</b> occurs when:
+</p>
+<ul class="org-ul">
+<li>an accept statement blocks the active task on the acceptor stack and makes a task ready from the
+specified mutex member queue</li>
+<li>a signal moves a task from the specified condition to the specified stack</li>
+</ul>
+
+<p>
+<b>Implicit scheduling</b> occurs when a task waits in or exits from a mutex member, and a new task is
+selected first from the acceptor/signalled stack, then the entry queue.
+</p>
+
+<p>
+Monitors are classified by the implicit scheduling (who gets control) of the monitor when a task waits
+or signals or exits.
+</p>
+
+<p>
+Implicit scheduling can select from the calling (C), signalled (W), and signaller (S) queues.
+</p>
+
+<p>
+Assigning different relative priorities to these queues creates different monitors.
+</p>
+
+<p>
+For \(C < W < S\) and \(C < S < W\), this creates a useful monitor with prevention and no barging.
+</p>
+
+<p>
+For \(C = W < S\) and \(C = S < W\), this creates a useable monitor that needs avoidance and barging, starvation
+without avoidance.
+</p>
+
+<p>
+The remaining monitors are rejected, either for being confusing or unsound.
+</p>
+
+<p>
+Monitors either have an explicit signal or an implicit signal (automatic).
+The implicit signal monitor has no condition variables or explicit signal statement.
+Instead, there is a <code>waitUntil</code> statement.
+</p>
+
+<p>
+<b>Immediate-return signal</b>: additional restricted monitor-type requiring the signaller exit immediately
+from the monitor (not powerful enough for all cases, but optimizes common cases)
+</p>
+
+<p>
+A no-priority blocking monitor requires the <span class="underline">signaller task</span> to recheck the waiting condition in case of
+a barging task (use while loop around signal).
+</p>
+
+<p>
+A no-priority non-blocking monitor requires the <span class="underline">signalled task</span> to recheck the waiting condition in case of
+a barging task (use while loop around wait).
+</p>
+
+<p>
+A monitor with implicit signalling is good for <span class="underline">prototyping</span> but has poor performance.
+</p>
+
+<p>
+A priority non-blocking monitor has no barging and optimizes signal before return (supply cooperation).
+</p>
+
+<p>
+A priority blocking monitor has no barging and handles internal cooperation within the monitor (wait for
+cooperation).
+</p>
+
+<p>
+A <code>_Cormonitor</code> is a coroutine with implicit mutual exclusion on calls to specified member routines.
+This means the coroutine can be used my multiple threads.
+</p>
+</div>
+</div>
+<div id="outline-container-org9d66381" class="outline-2">
+<h2 id="org9d66381"><span class="section-number-2">12.</span> Java Monitor</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+Java has <code>synchronized</code> class members and a <code>synchronized</code> statement.
+</p>
+
+<p>
+All classes have one implicit condition variable and <code>wait</code>, <code>notify</code>, and <code>notifyAll</code> to manipulate.
+</p>
+
+<p>
+Internal scheduling is no-priority unblocking, so barging: wait statements must be in while loops
+to recheck conditions.
+</p>
+
+<p>
+One condition queue makes certain solutions difficult or impossible.
+</p>
+
+<p>
+<b>Spurious wakeup</b>: wakeup when a task is not supposed to wake up
+</p>
+
+<p>
+Problems related to spurious wakeup can be solved using generations.
+</p>
+
+<p>
+Cannot build condition variables in Java with nested monitors since issues with deadlocks arise
+from monitor locks not being released.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-16 Sat 16:55</p>
+</div>
+</body>
+</html>

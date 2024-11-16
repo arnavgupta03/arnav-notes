@@ -1,0 +1,281 @@
+% Created 2024-11-16 Sat 16:55
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Indirect Communication}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Indirect Communication},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Indirect Communication}
+\label{sec:org03fe623}
+\texttt{P} and \texttt{V} are low-level primitives for protecting critical sections and establishing
+synchronization between tasks.
+
+Higher level facilities can perform info communication and mutual exclusion automatically
+using help from the programming language and compiler.
+\section{Critical Regions}
+\label{sec:org99911fc}
+Declare which variables are shared with syntax like \texttt{VAR v : SHARED INTEGER}.
+
+Access to shared variables is restricted to within a region statement, and within
+the region, mutual exclusion is guaranteed:
+\begin{verbatim}
+REGION v DO
+// critical section
+END REGION
+\end{verbatim}
+This does not allow simultaneous reads.
+
+Can modify to allow reading of shared variables outside the critical region, but this
+could bring issues with reading partially updated information that another task is
+updating inside the critical region.
+
+Using nesting to attempt to fix this can result in deadlock.
+\section{Conditional Critical Regions}
+\label{sec:orgd5ebf47}
+Can fix issues with critical regions using a condition that must be true as well as having
+mutual exclusion:
+\begin{verbatim}
+REGION v DO
+    AWAIT conditional-expresson
+// critical section
+END REGION
+\end{verbatim}
+
+If the condition is false, the region lock is released and entry is started again (busy waiting).
+To prevent busy waiting, block on the queue for the shared variable, and on region exit, search
+for true conditional-expression and unblock.
+\section{Monitor}
+\label{sec:orgbf01056}
+\textbf{Monitor}: abstract data type that combines shared data with serialization of its modification
+\begin{verbatim}
+_Monitor name {
+    // shared data
+    // members that see and modify the data
+};
+\end{verbatim}
+
+\textbf{Mutex Member}: a member that does not begin execution if there is another active mutex member
+
+A call to a mutex member may become blocked while awaiting entry, and queues of waiting tasks
+may form.
+Public member routines of a monitor are implicitly mutex. Others can be made mutex with \texttt{\_Mutex}.
+
+This works like if the monitor had a lock \texttt{P}'d on entry to a monitor member and \texttt{V}'d on exit.
+
+Recursive entry is allowed, one mutex member can call another or itself.
+
+Unhandled exceptions raised within a monitor should always release the implicit monitor locks
+so the monitor can continue to function.
+
+The destructor must be mutex so that closing a monitor blocks if a thread is in the monitor.
+\section{Scheduling (Synchronization)}
+\label{sec:org1591b68}
+A monitor may want to schedule tasks in an order different than arrival.
+
+The two techniques are:
+\begin{itemize}
+\item \textbf{external}: scheduling tasks outside the monitor and is accomplished with the accept
+statement
+\item \textbf{internal}: scheduling tasks inside the monitor and is accomplished using condition
+variables with signal and wait
+\end{itemize}
+
+External scheduling is easier to specify and explain over internal with condition variables.
+
+External scheduling cannot be used if:
+\begin{itemize}
+\item scheduling depends on member param values
+\item scheduling must block in the monitor but cannot guarantee the next call fulfills cooperation
+\end{itemize}
+\subsection{External Scheduling}
+\label{sec:orgcd33c94}
+\texttt{\_Accept} controls which mutex members can accept calls.
+By preventing members from accepting calls at times, it is possible to control task scheduling.
+
+Each \texttt{\_Accept} defines what cooperation must occur for the accepting task to proceed.
+Queues of tasks form outside the monitor, waiting to be accepted.
+
+An acceptor blocks all calls except a call to the specified mutex member(s).
+The accepted call is executed like the usual member call.
+When the accepted task exits the mutex member, the acceptor continues.
+
+Can satisfy acceptor's requirements with multiple calls.
+
+With external scheduling, unblocking is implicit.
+\subsection{Internal Scheduling}
+\label{sec:orgdfb23c8}
+Scheduling among tasks inside the monitor.
+
+\textbf{Condition}: external synchronization lock
+\begin{itemize}
+\item \texttt{empty} returns false if there are tasks blocked on the queue and true otherwise
+\item \texttt{front} returns an integer value stored with the waiting task at the front of the condition queue
+\item \texttt{wait} blocks the current thread and restarts a signalled task or implicitly releases the monitor lock
+\item \texttt{signal} unblocks the thread on the front of the condition queue after the signaller thread blocks or
+exits
+\item \texttt{signalBlock} unblocks the thread on the front of the condition queue and blocks the signaller thread
+\end{itemize}
+
+A task waits by placing itself on a condition, which atomically places the executing task at the back
+of the condition queue and allows another task into the monitor by releasing the monitor lock.
+
+A task is made ready by signalling the condition, which removes and makes ready the blocked task
+at the front of the condition queue.
+
+The signaller does not block, so the signalled task must continue waiting until the signaller exits
+or waits.
+
+\textbf{Entry queue}: FIFO lst of calling tasks to the monitor
+\section{Readers/Writers}
+\label{sec:org3067474}
+Can write similar to \texttt{P} and \texttt{V}, but can also simplify protocol to have a single read and a single
+write action.
+
+Can simplify further by having writers use \texttt{\_Mutex} in monitor (let monitor handle mutual exclusion).
+
+Can solve with condition shadow queue or with external scheduling.
+\section{Exceptions}
+\label{sec:org08255fd}
+An exception raised in a monitor member propagates to the caller's thread.
+
+On exiting a method that raised an exception, a caller implicitly raises a nonlocal \texttt{RendezvousFailure}
+exception at monitor acceptor's thread to identify failed cooperation.
+
+For multiple \texttt{\_Accept} clauses, a flag variable is required to know which member failed.
+\section{Nested Monitor Calls}
+\label{sec:orgcc246d1}
+\textbf{Nested monitor problem}: acquire monitor (lock), call to another monitor, and wait on condition in the
+other monitor, so potential deadlock
+
+Releasing all locks can inadvertently release a lock.
+This is called the \textbf{lock composition} problem.
+\section{Intrusive Lists}
+\label{sec:orgf66ecc8}
+Non-contiguous variable-length data structures normally require dynamic allocation as the structure
+increases/decreases as the structure increases/decreases when adding/deleting nodes.
+
+The types of collections are copy data, copy pointer, and intrusive pointers.
+
+\textbf{Copy} creates a collection node with link fields, with dynamic allocation for links and possibly data,
+copying data and/or data pointer into nodes, and then linking the node into collection.
+
+\textbf{Intrusive} assumes a node with data and link fields, so no dynamic allocation for collection links or
+copying.
+
+A programmer usually manages node lifetime for copy pointer and intrusive.
+
+\(\mu\)C++ provides \textbf{intrusive data structures} allowing global/stack/heap nodes and no copying.
+This implementation uses private intrusive links for non-copyable objects like a coroutine or task.
+
+Intrusive links can have:
+\begin{itemize}
+\item one link field, \texttt{uColable}, for a collection
+\item two link fields, \texttt{uSeqable}, for a sequence
+\end{itemize}
+
+Template classes \texttt{uStack} and \texttt{uQueue} are singly linked, so collections.
+Template class \texttt{uSequence} is doubly linked, so sequence.
+
+Each intrusive list has associated iterators, \texttt{uStackIter}, \texttt{uQueueIter}, and \texttt{uSeqIter}.
+
+Lifetime of node is duration of blocked thread.
+\section{Counting Semaphore vs Condition}
+\label{sec:org4d68047}
+\texttt{P} only blocks if semaphore is 0, \texttt{wait} always blocks.
+
+\texttt{V} before \texttt{P} affects \texttt{P}, \texttt{signal} before \texttt{wait} is lost.
+
+Multiple \texttt{V} can start multiple tasks simultaneously, while multiple signals only start one task at a
+time because each task must exit serially through the monitor.
+
+Can simulate \texttt{P} and \texttt{V} using a monitor.
+\section{Monitor Types}
+\label{sec:org2bba54b}
+\textbf{Explicit scheduling} occurs when:
+\begin{itemize}
+\item an accept statement blocks the active task on the acceptor stack and makes a task ready from the
+specified mutex member queue
+\item a signal moves a task from the specified condition to the specified stack
+\end{itemize}
+
+\textbf{Implicit scheduling} occurs when a task waits in or exits from a mutex member, and a new task is
+selected first from the acceptor/signalled stack, then the entry queue.
+
+Monitors are classified by the implicit scheduling (who gets control) of the monitor when a task waits
+or signals or exits.
+
+Implicit scheduling can select from the calling (C), signalled (W), and signaller (S) queues.
+
+Assigning different relative priorities to these queues creates different monitors.
+
+For \(C < W < S\) and \(C < S < W\), this creates a useful monitor with prevention and no barging.
+
+For \(C = W < S\) and \(C = S < W\), this creates a useable monitor that needs avoidance and barging, starvation
+without avoidance.
+
+The remaining monitors are rejected, either for being confusing or unsound.
+
+Monitors either have an explicit signal or an implicit signal (automatic).
+The implicit signal monitor has no condition variables or explicit signal statement.
+Instead, there is a \texttt{waitUntil} statement.
+
+\textbf{Immediate-return signal}: additional restricted monitor-type requiring the signaller exit immediately
+from the monitor (not powerful enough for all cases, but optimizes common cases)
+
+A no-priority blocking monitor requires the \uline{signaller task} to recheck the waiting condition in case of
+a barging task (use while loop around signal).
+
+A no-priority non-blocking monitor requires the \uline{signalled task} to recheck the waiting condition in case of
+a barging task (use while loop around wait).
+
+A monitor with implicit signalling is good for \uline{prototyping} but has poor performance.
+
+A priority non-blocking monitor has no barging and optimizes signal before return (supply cooperation).
+
+A priority blocking monitor has no barging and handles internal cooperation within the monitor (wait for
+cooperation).
+
+A \texttt{\_Cormonitor} is a coroutine with implicit mutual exclusion on calls to specified member routines.
+This means the coroutine can be used my multiple threads.
+\section{Java Monitor}
+\label{sec:org127b22d}
+Java has \texttt{synchronized} class members and a \texttt{synchronized} statement.
+
+All classes have one implicit condition variable and \texttt{wait}, \texttt{notify}, and \texttt{notifyAll} to manipulate.
+
+Internal scheduling is no-priority unblocking, so barging: wait statements must be in while loops
+to recheck conditions.
+
+One condition queue makes certain solutions difficult or impossible.
+
+\textbf{Spurious wakeup}: wakeup when a task is not supposed to wake up
+
+Problems related to spurious wakeup can be solved using generations.
+
+Cannot build condition variables in Java with nested monitors since issues with deadlocks arise
+from monitor locks not being released.
+\end{document}
