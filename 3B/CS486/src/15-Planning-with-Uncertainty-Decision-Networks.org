@@ -1,0 +1,144 @@
+#+title: Planning With Uncertainty Decision Networks
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \usepackage{upgreek}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Preferences
+Let $V(x)$ be the *utility* of the situation $X$.
+*Bayesian decision making* is
+$$ \mathbb{E}(V(\text{decision})) = \sum_{\text{outcome}} P(\text{outcome} \mid \text{decision}) V(\text{outcome}) $$
+Context can also be added to $V$ so the utility is the value of the decision in the situation context.
+$$ \mathbb{E}(V(\text{decision})) = \sum_{\text{outcome}} P(\text{outcome} \mid \text{decision, context}) V(\text{outcome}) $$
+
+Actions result in outcomes and agents have *preferences* over outcomes.
+A decision-theoretic *rational* agent will do the action that has the best outcome for them.
+Agents have to act (even if doing nothing) and compare actions without knowing the
+outcomes of actions.
+
+If $o_{1}$ and $o_{2}$ are outcomes
+- _weak preference_: $o_{1} \succeq o_{2}$ means $o_{1}$ is at least as desirable as $o_{2}$
+- _indifference_: $o_{1} \sim o_{2}$ means $o_{1} \succeq o_{2}$ and $o_{2} \succeq o_{1}$
+- _strong preference_: $o_{1} \succ o_{2}$ means $o_{1} \succeq o_{2}$ and $o_{2} \not\succeq o_{1}$
+
+
+*Lottery*: probability distribution over outcomes, denoted
+$$ [p_{1} : o_{1}, \dots, p_{k} : o_{k}] $$
+where $o_{i}$ are outcomes and $p_{i} > 0$ such that
+$$ \sum_{i} p_{i} = 1 $$
+
+** Properties of Preferences
+*Completeness*: agents have to act so they must have preferences
+$$ \forall o_{1} \forall o_{2} \; o_{1} \succeq o_{2} \text{ or } o_{2} \succeq o_{1} $$
+
+*Transitivity*: if $o_{1} \succeq o_{2}$ and $o_{2} \succeq o_{3}$, then $o_{1} \succeq o_{3}$
+
+*Monotonicity*: an agent prefers a larger chance of getting a better outcome than a smaller
+chance, so if $o_{1} \succ o_{2}$ and $p > q$ then
+$$ [p : o_{1}, 1 - p : o_{2}] \succ [q : o_{1}, 1 - q : o_{2}] $$
+
+*Continuity*: suppose $o_{1} \succ o_{2}$ and $o_{2} \succ o_{3}$, there then exists a
+$p \in [0,1]$ such that
+$$ o_{2} \sim [1 - p : o_{1}, p : o_{3}] $$
+
+*Decomposibility*: an agent is indifferent between lotteries that have same probabilities and
+outcomes
+
+*Substitutability*: if $o_{1} \sim o_{2}$ then the agent is indifferent between lotteries that
+only differ by $o_{1}$ and $o_{2}$
+
+If preferences follow these properties, they can be measured by the function
+$$ \text{utility} : \text{outcome} \to [0,1] $$
+such that
+- $o_{1} \succeq o_{2}$ if and only if $\text{utility}(o_{1}) \ge \text{utility}(o_{2})$
+- utilities are linear with probabilities
+  $$ \text{utility}([p_{1} : o_{1}, \dots, p_{k} : o_{k}]) = \sum_{i=1}^{k} p_{i} \times \text{utility}(o_{i}) $$
+
+* Rationality and Irrationality
+Rational agents act to maximize expected utility.
+
+Humans are not rational and weight value differently for gains and losses (prospect theory).
+
+* Decisions
+Making a decision on what an agent should do depends on
+- agent's *ability*: options available to it
+- agent's *beliefs*: how the world could be given the agent's knowledge, updating by sensing
+  world
+- agent's *preferences*: what the agent actually wants and tradeoffs present when
+  there are risks
+
+Decision theory specifies how to trade off desirability and probabilities of the possible
+outcomes for competing actions.
+
+*Decision variables*: random variables that an agent gets to choose the values of, specifically
+it can choose any value in the domain
+
+*Expected utility* of a decision leads to outcomes $\omega$ for utility function $u$ is
+$$ \mathcal{E}(u \mid D = d_{i}) = \sum P(\omega \mid D = d_{i})u(\omega) $$
+
+*Optimal single decision*: decision $D = d_{\max}$ whose expected utility is maximal:
+$$ \mathcal{E}(u \mid D = d_{\max}) = \max_{d_{i} \in \text{dom}(D)} \mathcal{E}(u \mid D = d_{i}) $$
+
+* Decision Networks
+Graphical representation of a finite sequential decision problem.
+Extension of belief networks to include decision variables and utility.
+
+A decision network specifies
+- what info is available when the agent has to act
+- which variables the utility depends on
+
+A _random variable_ is drawn as an ellipse, with arcs into the node representing
+probabilistic dependence.
+A _decision variable_  is drawn as a rectangle, with arcs into the node representing info
+available when the decision is made.
+A _utility node_ is drawn as a diamond, with arcs into the node representing variables that
+the utility depends on.
+
+Assume random variables $X_{1}, \dots, X_{n}$, decision
+variables $D$, and utility dependent on $X_{i_{1}}, \dots, X_{i_{k}}$ and $D$:
+$$ \mathcal{E}(u \mid D) = \sum_{X_{1}, \dots, X_{n}} \prod_{j=1}^{n} P(X_{j} \mid \text{parents}(X_{j})) \times u(X_{i_{1}}, \dots, X_{i_{k}}, D) $$
+where $\text{parents}(X_{j})$ may include $D$.
+To find the optimal decision:
+- create a factor for each conditional probability and for the utility
+- multiply these together and sum out all random variables, creating a factor on $D$
+  that gives the expected utility for each $D$
+- choose the $D$ with the maximum value in the factor
+
+* Sequential Decisions
+An intelligent agent observes and acts iteratively, where subsequent
+actions can depend on what is observed, which depends on previous actions.
+
+Often an action is carried out to provide info for future actions.
+
+*Sequential decision problem*: consists of a sequence of decision variables
+$D_{1}, \dots, D_{n}$ where each $D_{i}$ has an info set of variables
+$\text{parents}(D_{i})$ whose value will be known when decision $D_{i}$
+is made
+
+* Policies
+Specifies what an agent should do under each circumstance.
+
+A *policy* is a sequence $\delta_{1}, \dots, \delta_{n}$ of decision functions
+$$ \delta_{i} : \text{dom}(\text{parents}(D_{i})) \to \text{dom}(D_{i}) $$
+which means that when the agent has observed $O \in \text{dom}(\text{parents}(D_{i}))$
+it will do $\delta_{i}(O)$.
+
+A world $\omega$ satisfies a policy $\delta$, denoted $\omega \models \delta$ if the
+decisions of the policy are those the world assigns to the decision variables.
+
+The *expected utility* of a policy $\delta$ is
+$$ \mathcal{E} ( u \mid \delta ) = \sum_{\omega \models \delta} u(\omega) \times P(\omega) $$
+*Optimal policy* comes from maximizing expected utility.
+
+To find an optimal policy:
+1. create a factor for each conditional probability table and a factor for the utility
+2. set remaining decision nodes to all decision nodes
+3. multiply factors and sum out variables that are not parents of a remaining decision node
+4. select and remove a decision variable $D$ from the list of remaining decision nodes,
+   picking one that is in a factor with only itself and some of its parents (no children)
+5. eliminate $D$ by maximizing, which returns the optimal decision function for $D$,
+   $\text{arg} \max_{D} f$, and a new factor to use $\max_{D} f$
+6. repeat steps 3 to 5 until there are no more remaining decision nodes
+7. eliminate the remaining random variables by multiplying th factors, which is the
+   expected utility of the optimal policy
+8. if any nodes were in evidence, divide by the $P(\text{evidence})$
