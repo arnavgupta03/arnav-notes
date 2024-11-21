@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-20 Wed 22:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unsupervised Machine Learning</title>
+<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Unsupervised Machine Learning</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org51ad120">1. Motivation: Missing/Incomplete Data</a></li>
+<li><a href="#orgc352595">2. Expectation Maximization</a>
+<ul>
+<li><a href="#org6bb50c5">2.1. E Step</a></li>
+<li><a href="#orgf3643ef">2.2. M Step</a></li>
+<li><a href="#orgb1c87a5">2.3. EM Formal</a></li>
+<li><a href="#org6a45e89">2.4. General Bayes Network EM</a></li>
+</ul>
+</li>
+<li><a href="#org2e0cfb8">3. Belief Network Structure Learning</a></li>
+<li><a href="#org23333c9">4. Autoencoders</a></li>
+<li><a href="#org706c9ce">5. Generative Adversarial Networks</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org51ad120" class="outline-2">
+<h2 id="org51ad120"><span class="section-number-2">1.</span> Motivation: Missing/Incomplete Data</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Many real-world problems have <b>hidden (latent) variables</b> which have incomplete data
+or values of some attributes missing.
+This requires <b>unsupervised learning</b>.
+</p>
+
+<p>
+To deal with missing data:
+</p>
+<ol class="org-ol">
+<li>ignore hidden variables, instead drawing connections between other variables directly</li>
+<li>ignore records with missing values (does not work with variables always missing)
+<ol class="org-ol">
+<li>cannot ignore missing data unless it is missing at random (but it is often correlated
+with a variable of interest) &rarr; must model why data is missing</li>
+</ol></li>
+<li>maximize likelihood directly: suppose \(Z\) is hidden and \(E\) is observable with values \(e\)
+\[ h_{ML} = \text{arg} \max_{h} P(e \mid h) = \text{arg} \max_{h} \left[ \log \sum_{Z} \prod_{i=1}^{n} P(X_{i} \mid \text{parents}(X_{i}), h)_{E = e} \right] \]
+<ol class="org-ol">
+<li>the issue here is that the logarithm cannot be pushed into the sum to linearize</li>
+</ol></li>
+<li>if the missing values are known, \(h_{ML}\) would be easy
+<ol class="org-ol">
+<li>this can be done with <b>Expectation Maximization</b>: guess \(h_{ML}\) and iterate</li>
+<li><b>expectation</b>: based on \(h_{ML}\), compute expectation of missing values \(P(Z \mid h_{ML}, e)\)</li>
+<li><b>maximization</b>: based on expected missing values, compute new estimate of \(h_{ML}\)</li>
+</ol></li>
+<li>simple version (K-means algorithm)
+<ol class="org-ol">
+<li><b>expectation</b>: based on \(h_{ML}\), compute most likely missing values
+\(\text{arg} \max_{Z} P(Z \mid h_{ML}, e)\)</li>
+<li><b>maximization</b>: based on expected missing values, using complete data, compute new
+estimate of \(h_{ML}\) using ML learning as before</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgc352595" class="outline-2">
+<h2 id="orgc352595"><span class="section-number-2">2.</span> Expectation Maximization</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>k-means algorithm</b> can be used for clustering: dataset of observables with input
+features \(X\) generated by one of a set of classes \(C\)
+</p>
+
+<p>
+Inputs:
+</p>
+<ul class="org-ul">
+<li>training examples</li>
+<li>number of classes \(k\)</li>
+</ul>
+
+<p>
+Outputs:
+</p>
+<ul class="org-ul">
+<li>a representative value for each input feature for each class</li>
+<li>an assignment of examples to classes</li>
+</ul>
+
+<p>
+<span class="underline">Algorithm</span>:
+</p>
+<ol class="org-ol">
+<li>pick \(k\) means in \(X\), one per class \(C\)</li>
+<li>do the following until means stop changing
+<ol class="org-ol">
+<li>assign examples to \(k\) classes (closest to current means)</li>
+<li>re-estimate \(k\) means based on assignment</li>
+</ol></li>
+</ol>
+</div>
+<div id="outline-container-org6bb50c5" class="outline-3">
+<h3 id="org6bb50c5"><span class="section-number-3">2.1.</span> E Step</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Take the missing data, like the class, and fill in the data with probabilities from
+maximum likelihood.
+This should have data like the class and the probablity for that class, and let
+this be \(A[X_{1}, \dots, X_{n}, C]\).
+</p>
+</div>
+</div>
+<div id="outline-container-orgf3643ef" class="outline-3">
+<h3 id="orgf3643ef"><span class="section-number-3">2.2.</span> M Step</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Compute the statistics for each feature and class:
+\[ M_{i}[X_{i}, C] = \sum_{X_{1}, \dots, X_{i-1},X_{i+1}, \dots, X_{n}} A[X_{1}, \dots, X_{n}, C] \]
+\[ M[C] = \sum_{X_{i}} M_{i} [X_{i}, C] \]
+Here, \(M[C]\) is an unnormalized marginal, so this should be normalized by:
+\[ P(X_{i} \mid C) = M_{i}[X_{i}, C] / M[C] \]
+\[ P(C) = M[C] / s \]
+where \(s\) is the corresponding sum.
+Pseudo-counts can also be added here when normalizing.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb1c87a5" class="outline-3">
+<h3 id="orgb1c87a5"><span class="section-number-3">2.3.</span> EM Formal</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Approximate the maximum likelihood, by starting with a guess \(h_{0}\).
+Then iteratively compute
+\[ h_{i+1} = \text{arg} \max_{h} \sum_{Z} P(Z \mid h_{i}, e) \log P(e, Z \mid h) \]
+</p>
+
+<p>
+Here, the <b>expectation</b> step is to compute \(P(Z \mid h_{i}, e)\) (fill in missing data).
+Then, the <b>maximization</b> step is to find a new \(h\) that maximizes the above sum.
+</p>
+
+<p>
+Note that
+\[ \log P(e \mid h) \ge \sum_{Z} P(Z \mid e, h) \log P(e, Z \mid h) \]
+Since EM finds a local maximum of the right side, this is a lower bound of the left side.
+Further, the log inside the sum can linearize the product:
+\[ h_{i+1} = \text{arg} \max_{h} \sum_{Z} P(Z \mid h_{i}, e) \sum_{j=1}^{n} \log P(X_{i} \mid \text{parents}(X_{i}), h)_{E = e} \]
+</p>
+
+<p>
+EM monotonically improves the likelihood, so \(P(e \mid h_{i+1}) \ge P(e \mid h_{i})\).
+</p>
+</div>
+</div>
+<div id="outline-container-org6a45e89" class="outline-3">
+<h3 id="org6a45e89"><span class="section-number-3">2.4.</span> General Bayes Network EM</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+With complete data, use Bayes Net Maximum Likelihood:
+</p>
+
+<p>
+With incomplete data, use Bayes Net Expectation Maximization.
+With observed variables \(X\) and missing variables \(Z\),
+start with some guess for \(\theta\).
+</p>
+
+<p>
+In the <span class="underline">E step</span>: compute weights for each data \(x_{i}\) and latent variables \(z_{j}\)
+(using variable elimination)
+\[ w_{ij} = P(z_{j} \mid \theta, x_{i}) \]
+</p>
+
+<p>
+In the <span class="underline">M step</span>: update parameters
+\[ \theta_{V = j, \text{parents}(V) = v} = \frac{\sum_{i} w_{ij} \mid V = j \wedge \text{parents}(V) = v \text{ in } \{x_{i}, z_{j}\}}{\sum_{ij} w_{ij} \mid \text{parents}(V) = v \text{ in } \{x_{i}, z_{j}\}} \]
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2e0cfb8" class="outline-2">
+<h2 id="org2e0cfb8"><span class="section-number-2">3.</span> Belief Network Structure Learning</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+\[ P(\text{model} \mid \text{data}) = \frac{P(\text{data} \mid \text{model}) \times P(\text{model})}{P(\text{data})} \]
+A model here is a belief network.
+A bigger network can always fit data better.
+\(P(\text{model})\) allows encoding of a preference for smaller networks.
+Can search over network structure, looking for the most likely model.
+</p>
+
+<p>
+Can do <b>independence tests</b> to determine which features should be the parents.
+Just because features do not give information individually does not mean they will not give info
+in combination.
+</p>
+
+<p>
+The ideal method is to search over total orderings of variables.
+</p>
+</div>
+</div>
+<div id="outline-container-org23333c9" class="outline-2">
+<h2 id="org23333c9"><span class="section-number-2">4.</span> Autoencoders</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+A representation learning algorithm that learns to map examples to low-dimensional representation.
+</p>
+
+<p>
+An autoencoder has two main components:
+</p>
+<ol class="org-ol">
+<li><b>encoder</b> \(e(x)\): maps \(x\) to low-dimensional representation \(\hat{z}\)</li>
+<li><b>decoder</b> \(d(\hat{z})\): maps \(\hat{z}\) to its original representation \(x\)</li>
+</ol>
+
+<p>
+The autoencoder implements \(\hat{x} = d(e(x))\), so \(\hat{x}\) is the reconstruction of the original
+input \(x\).
+The encode and decoder learn such that \(\hat{z}\) contains as much info about \(x\) as is needed
+to reconstruct it.
+</p>
+
+<p>
+The goal is the minimize the sum of squares of differences between the input and prediction:
+\[ E = \sum_{i} (x_{i} - d(e(x_{i})))^{2} \]
+</p>
+
+<p>
+Deep neural network autoencoders are good for complex inputs,
+where \(e\) and \(d\) are feedforward neural networks, joined in series.
+The network is then trained with backpropagation.
+</p>
+</div>
+</div>
+<div id="outline-container-org706c9ce" class="outline-2">
+<h2 id="org706c9ce"><span class="section-number-2">5.</span> Generative Adversarial Networks</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+A generative unsupervised learning algorithm that learns to generate unseen examples that
+look like training examples.
+</p>
+
+<p>
+GANs are a pair of neural networks:
+</p>
+<ol class="org-ol">
+<li><b>generator</b> \(g(z)\): given vector \(z\) in latent space, produce an example \(x\) drawn from a
+distribution that approximates the true distribution of training examples, where \(z\)
+is usually sampled from a Gaussian distribution</li>
+<li><b>discriminator</b> \(d(x)\): a classifier that predicts whether \(x\) is real (from training set)
+or fake (made by \(g\))</li>
+</ol>
+
+<p>
+GANs are trained with a minimax error:
+\[ E = \mathbb{E}_{x} [ \log( d(x) )] + \mathbb{E}_{z}[ \log(1 - d(g(z)))] \]
+where the discriminator tries to maximize \(E\) and the generator tries to minimize \(E\).
+Once they converge, \(g\) should be producing realistic examples and \(d\) should output
+\(\frac{1}{2}\) to indicate maximal uncertainty.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: DESKTOP-H800RKQ</p>
+<p class="date">Created: 2024-11-20 Wed 22:49</p>
+</div>
+</body>
+</html>
