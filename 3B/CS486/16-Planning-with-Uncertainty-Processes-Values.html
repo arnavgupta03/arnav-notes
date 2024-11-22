@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-22 Fri 00:40 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Planning With Uncertainty: Processes and Values</title>
+<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Planning With Uncertainty: Processes and Values</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgbe7a194">1. Worlds and Planning</a>
+<ul>
+<li><a href="#org7826864">1.1. World State</a></li>
+</ul>
+</li>
+<li><a href="#orgef92212">2. Markov Decision Processes</a>
+<ul>
+<li><a href="#orgb9830a0">2.1. Rewards and Values</a></li>
+<li><a href="#orgd91bf12">2.2. Policies</a>
+<ul>
+<li><a href="#org2d82ea5">2.2.1. Policy Value</a></li>
+<li><a href="#orga7d1ef8">2.2.2. Optimal Policy Value</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org0443691">3. Value Iteration</a>
+<ul>
+<li><a href="#org5462530">3.1. Steps</a></li>
+<li><a href="#org5a68f88">3.2. Asynchronous Value Iteration</a></li>
+</ul>
+</li>
+<li><a href="#org11782b4">4. Markov Decision Processes and State</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgbe7a194" class="outline-2">
+<h2 id="orgbe7a194"><span class="section-number-2">1.</span> Worlds and Planning</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Agents carry out actions according to the <b>horizon</b>:
+</p>
+<ul class="org-ul">
+<li><span class="underline">infinite horizon</span>: forever</li>
+<li><span class="underline">indefinite horizon</span>: until stopping criteria is met</li>
+<li><span class="underline">finite horizon</span>: finite and fixed number of steps</li>
+</ul>
+
+<p>
+It is helpful to know, what an agent should do when (for all planning horizons):
+</p>
+<ul class="org-ul">
+<li>it gets rewards/punishments and tries to maximize rewards</li>
+<li>actions can be noisy, so the outcome can&rsquo;t be fully predicted</li>
+<li>there is a model that specifies the probabilistic outcome of actions</li>
+<li>the world is fully observable: current state is always fully in evidence</li>
+</ul>
+</div>
+<div id="outline-container-org7826864" class="outline-3">
+<h3 id="org7826864"><span class="section-number-3">1.1.</span> World State</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The information such that if the <b>world state</b> is known, no info about
+the past is relevant to the future.
+</p>
+
+<p>
+The <b>Markovian Assumption</b> is: Let \(S_{i}, A_{i}\) be the state and action at
+time \(i\), then
+\[ P(S_{t+1} \mid S_{0}, A_{0}, \dots, S_{t}, A_{t}) = P(S_{t+1} \mid S_{t}, A_{t}) \]
+where \(P(s' \mid s, a)\) is the probability that the agent will be in state \(s'\)
+immediately after doing action \(a\) in state \(s\).
+</p>
+
+<p>
+The dynamics is <b>stationary</b> is the distribution is the same for each time point.
+</p>
+
+<p>
+If the process never halts, this has an infinite horizon.
+</p>
+
+<p>
+If the process stays in a state getting no reward, these are <b>absorbing states</b>,
+which has an indefinite horizon.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgef92212" class="outline-2">
+<h2 id="orgef92212"><span class="section-number-2">2.</span> Markov Decision Processes</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Augments a Markov chain with actions and values.
+</p>
+
+<p>
+For an MDP, specify the:
+</p>
+<ul class="org-ul">
+<li>set \(S\) of states</li>
+<li>set \(A\) of actions</li>
+<li>\(P(S_{t+1} \mid S_{t}, A_{t})\) specifies the dynamics</li>
+<li>\(R(S_{t}, A_{t}, S_{t+1})\) specifies the <b>reward</b>, which the agent gets at
+each time step, specifically when it ends up in \(S_{t+1}\) after doing \(A_{t}\)
+from \(S_{t}\)</li>
+</ul>
+
+<p>
+<b>Fully-observable MDP</b>: agent gets to observe \(S_{t}\) when deciding on action \(A_{t}\)
+</p>
+
+<p>
+<b>Partially-observable MDP (POMDP)</b>: agent has some noisy sensor of the state, so it
+must remember sensing and acting history by maintaining a sufficiently complex
+<b>belief state</b>
+</p>
+</div>
+<div id="outline-container-orgb9830a0" class="outline-3">
+<h3 id="orgb9830a0"><span class="section-number-3">2.1.</span> Rewards and Values</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Suppose the agent receives the sequence of rewards \(r_{1}, r_{2}, \dots\).
+The value that should be assigned could be:
+</p>
+<ul class="org-ul">
+<li><span class="underline">total reward</span>
+\[ V = \sum_{i=1}^{\infty} r_{i} \]</li>
+<li><span class="underline">average reward</span>
+\[V = \lim_{n \to \infty} (r_{1} + \cdots + r_{n}) / n\]</li>
+<li><span class="underline">discounted reward</span>
+\[V = r_{1} + \gamma r_{2} + \gamma^{2} r_{3} + \cdots\]
+where \(0 \le \gamma \le 1\) is the <b>discount factor</b></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd91bf12" class="outline-3">
+<h3 id="orgd91bf12"><span class="section-number-3">2.2.</span> Policies</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+A <b>stationary policy</b> is a function \(\pi : S \to A\) where for a given state \(s\),
+\(\pi(s)\) specifies what action the agent who is following \(\pi\) will do.
+</p>
+
+<p>
+<b>Optimal policy</b>: one with maximum expected discounted reward
+</p>
+
+<p>
+For a fully-observable MDP with stationary dynamics and rewards with infinite
+or indefinite horizon, there is always an optimal stationary policy.
+</p>
+</div>
+<div id="outline-container-org2d82ea5" class="outline-4">
+<h4 id="org2d82ea5"><span class="section-number-4">2.2.1.</span> Policy Value</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+\(Q^{\pi}(s, a)\) for some action \(a\) and state \(s\), is the expected value of
+doing \(a\) in state \(s\), then following policy \(\pi\).
+</p>
+
+<p>
+\(V^{\pi}(s)\) for some state \(s\), is the expected value of following policy
+\(\pi\) in state \(s\).
+</p>
+
+<p>
+\(Q^{\pi}\) and \(V^{\pi}\) are <b>mutually recursive</b>:
+\[ Q^{\pi}(s,a) = \sum_{s'} P(s' \mid a, s) ( r(s, a, s') + \gamma V^{\pi}(s') ) \]
+\[ V^{\pi}(s) = Q^{\pi}(s, \pi(s)) \]
+</p>
+</div>
+</div>
+<div id="outline-container-orga7d1ef8" class="outline-4">
+<h4 id="orga7d1ef8"><span class="section-number-4">2.2.2.</span> Optimal Policy Value</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+\(Q^{*}(s, a)\) for some action \(a\) and state \(s\), is the expected value of
+doing \(a\) in state \(s\), then following the optimal policy.
+</p>
+
+<p>
+\(\pi^{*}(s)\) is the optimal action to take in state \(s\).
+</p>
+
+<p>
+\(V^{*}(s)\) for some state \(s\), is the expected value of following the optimal
+policy in state \(s\).
+</p>
+
+<p>
+\(Q^{\*}\) and \(V^{\*}\) are <b>mutually recursive</b>.
+Further:
+\[ \pi^{\*}(s) = \text{arg} \max_{a} Q^{\*}(s,a) \]
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0443691" class="outline-2">
+<h2 id="org0443691"><span class="section-number-2">3.</span> Value Iteration</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>t-step lookahead value function</b> \(V^{t}\): expected value with \(t\) steps to go
+</p>
+
+<p>
+The goal, given an estimate of the \(t\) step lookahead value function, is to
+determine the \(t+1\) step lookahead value function.
+</p>
+</div>
+<div id="outline-container-org5462530" class="outline-3">
+<h3 id="org5462530"><span class="section-number-3">3.1.</span> Steps</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Set \(V^{0}\) arbitrarily and \(t = 1\).
+Compute \(Q^{t}\) and \(V^{t}\) from \(V^{t-1}\):
+\[ Q^{t}(s,a) = \left[ R(s) + \gamma \sum_{s'} \text{Pr}(s' \mid s, a) V^{t-1} (s') \right] \]
+\[ V^{t}(s) = \max_{a} Q^{t} (s,a) \]
+</p>
+
+<p>
+The policy with \(t\) stages to go is simply the action that maximizes the following
+\[ \pi^{t}(s) = \text{arg} \max_{a} [R(s) + \gamma \sum_{s'} \text{Pr}(s' \mid s, a) V^{t-1}(s')] \]
+This converges exponentially fast over \(t\) to the optimal value function.
+</p>
+
+<p>
+Let \(\| X \| = \max \{ |x|, x \in X \}\).
+Convergence when \(\| V^{t}(s) - V^{t-1}(s) \| < \epsilon \frac{(1-\gamma)}{\gamma}\) ensures
+\(V^{t}\) is within \(\epsilon\) of the optimal.
+</p>
+</div>
+</div>
+<div id="outline-container-org5a68f88" class="outline-3">
+<h3 id="org5a68f88"><span class="section-number-3">3.2.</span> Asynchronous Value Iteration</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Can update value function for each state individually rather than sweeping through all states.
+This converges to the optimal value function if each state and action are visited
+infinitely often in the limit.
+Either \(V[s]\) or \(Q[s, a]\) can be stored.
+</p>
+
+<p>
+To store \(V[s]\), repeat the following forever:
+</p>
+<ol class="org-ol">
+<li>select state \(s\)</li>
+<li>\(V[s]\) becomes
+\[ \max_{a} \sum_{s'} P(s' \mid s, a) (R(s, a, s') + \gamma V[s']) \]</li>
+<li>select action \(a\) (using an exploration policy)</li>
+</ol>
+
+<p>
+To store \(Q[s,a]\), repeat the following forever:
+</p>
+<ol class="org-ol">
+<li>select state \(s\) and action \(a\)</li>
+<li>\(Q[s, a]\) becomes
+\[\sum_{s'} P(s' \mid s, a) \left( R(s, a, s') + \gamma \max_{a'} Q[s', a'] \right) \]</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org11782b4" class="outline-2">
+<h2 id="org11782b4"><span class="section-number-2">4.</span> Markov Decision Processes and State</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Represent \(S = \{X_{1}, \dots, X_{n}\}\) where \(X_{i}\) are random variables.
+For each \(X_{i}\) and each action \(a \in A\), there is \(P(X_{i}' \mid S, A)\).
+</p>
+
+<p>
+The reward may be additive:
+\[ R(X_{1}, \dots, X_{N}) = \sum_{i} R(X_{i}) \]
+</p>
+
+<p>
+Value iteration proceeds as usual but can do one variable at a time, like
+variable elimination.
+</p>
+
+<p>
+A <b>Partially Observable Markov Decision Process (POMDP)</b> is like an MDP but
+some variables are not observed.
+It is a tuple \(\left< S, A, T, R, O, \Omega \right>\):
+</p>
+<ul class="org-ul">
+<li>\(S\) is a finite set of unobservable states</li>
+<li>\(A\) is a finite set of agent actions</li>
+<li>\(T : S \times A \to S\) is a transition function</li>
+<li>\(R : S \times A \to \mathcal{R}\) is a reward function</li>
+<li>\(O\) is a set of observations</li>
+<li>\(\Omega : S \times A \to O\) is an observation function</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: DESKTOP-H800RKQ</p>
+<p class="date">Created: 2024-11-22 Fri 00:40</p>
+</div>
+</body>
+</html>
