@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-14 Thu 13:59 -->
+<!-- 2024-11-23 Sat 01:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Controller Synthesis</title>
@@ -234,20 +234,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org79e8d07">1. Loop Shaping</a></li>
-<li><a href="#org7692471">2. Integral Control</a></li>
-<li><a href="#org2ffe0c8">3. Lead-Lag Compensators</a>
+<li><a href="#orgdf71db7">1. Loop Shaping</a></li>
+<li><a href="#org25f548d">2. Integral Control</a></li>
+<li><a href="#org887dcec">3. Lead-Lag Compensators</a>
 <ul>
-<li><a href="#org17c5d6d">3.1. Lead Controller</a></li>
-<li><a href="#org2957fda">3.2. Lag Controller</a></li>
+<li><a href="#org5ac73b2">3.1. Lead Controller</a></li>
+<li><a href="#org311c807">3.2. Lag Controller</a></li>
 </ul>
 </li>
-<li><a href="#org62c4c7f">4. PID Controller</a></li>
+<li><a href="#orgd0e83c0">4. PID Controller</a></li>
+<li><a href="#org6b4a1cd">5. Root Locus</a></li>
+<li><a href="#org343b333">6. Pole Placement</a></li>
+<li><a href="#org7ead45c">7. State Feedback Control</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org79e8d07" class="outline-2">
-<h2 id="org79e8d07"><span class="section-number-2">1.</span> Loop Shaping</h2>
+<div id="outline-container-orgdf71db7" class="outline-2">
+<h2 id="orgdf71db7"><span class="section-number-2">1.</span> Loop Shaping</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Translating control specifications of the closed loop system into constraints of the
@@ -323,8 +326,8 @@ the slope of \(|L(j\omega)|\) should be at most the slope of \(|G(j\omega)|\) as
 </p>
 </div>
 </div>
-<div id="outline-container-org7692471" class="outline-2">
-<h2 id="org7692471"><span class="section-number-2">2.</span> Integral Control</h2>
+<div id="outline-container-org25f548d" class="outline-2">
+<h2 id="org25f548d"><span class="section-number-2">2.</span> Integral Control</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 For a closed-loop system with open loop transfer function \(L(s) = C(s)G(s)\),
@@ -337,12 +340,12 @@ for \(C(s) = \frac{\mu}{s^{\rho}}\):
 </ul>
 </div>
 </div>
-<div id="outline-container-org2ffe0c8" class="outline-2">
-<h2 id="org2ffe0c8"><span class="section-number-2">3.</span> Lead-Lag Compensators</h2>
+<div id="outline-container-org887dcec" class="outline-2">
+<h2 id="org887dcec"><span class="section-number-2">3.</span> Lead-Lag Compensators</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org17c5d6d" class="outline-3">
-<h3 id="org17c5d6d"><span class="section-number-3">3.1.</span> Lead Controller</h3>
+<div id="outline-container-org5ac73b2" class="outline-3">
+<h3 id="org5ac73b2"><span class="section-number-3">3.1.</span> Lead Controller</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Consider a controller with transfer function
@@ -370,8 +373,8 @@ the frequency of the pole of error.
 </p>
 </div>
 </div>
-<div id="outline-container-org2957fda" class="outline-3">
-<h3 id="org2957fda"><span class="section-number-3">3.2.</span> Lag Controller</h3>
+<div id="outline-container-org311c807" class="outline-3">
+<h3 id="org311c807"><span class="section-number-3">3.2.</span> Lag Controller</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Consider a controller with transfer function
@@ -395,8 +398,8 @@ which is a PI controller.
 </div>
 </div>
 </div>
-<div id="outline-container-org62c4c7f" class="outline-2">
-<h2 id="org62c4c7f"><span class="section-number-2">4.</span> PID Controller</h2>
+<div id="outline-container-orgd0e83c0" class="outline-2">
+<h2 id="orgd0e83c0"><span class="section-number-2">4.</span> PID Controller</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Placing the zero and pole of a lead controller \(1/\alpha\) decade away from \(\omega_{c}\) requires
@@ -411,12 +414,195 @@ so if \(\phi_{m}\) increases, there are less oscillations and less overshoot for
 <p>
 For a lag controller, as \(\alpha \to \infty\), the pole \(-\frac{1}{\alpha T} \to 0\).
 </p>
+
+<p>
+A <b>Proportional-Integral-Derivative (PID)</b> controller produces a control action \(u(t)\) proportional
+to the error \(e(t)\), as well as to its integral and derivative:
+\[ u(t) = K_{P}e(t) + K_{I} \int_{0}^{t}e(\tau) d \tau + K_{D} \frac{de}{dt} \]
+where \(K_{P}, K_{I}, K_{D} > 0\).
+</p>
+
+<p>
+This has transfer function
+\[ C_{PID}(s) = K_{P} + \frac{K_{I}}{s} + K_{D} s = K_{P} \left( 1 + \frac{1}{T_{I}s} + T_{D}s \right) \]
+where \(T_{I} = \frac{K_{P}}{K_{I}}\) is the <b>integration time</b>
+and \(T_{D} = \frac{K_{D}}{K_{P}}\) is the <b>derivative time</b>.
+</p>
+
+<p>
+The integral action gives 0 steady-state error and perfect disturbance rejection
+since infinite gain for \(\omega \to 0\).
+The derivative action gives faster response due to phase lead, since infinite gain for \(\omega \to \infty\).
+</p>
+
+<p>
+With derivative action, \(C_{PID}(s)\) is not realizable since it is improper.
+To make this realizable, add a pole at high frequency:
+\[ C_{PID}(s) = K_{P} \left( 1 + \frac{1}{T_{I}s} + \frac{T_{D}s}{1 + \frac{T_{D}}{N}s} \right) \]
+where \(N\) is chosen so that high-frequency pole at \(-N/T_{D}\) is beyond the bandwidth of the
+control task.
+</p>
+
+<p>
+Practical considerations of PID controllers include:
+</p>
+<ul class="org-ul">
+<li>limitation of derivative action (avoid spiking response to step reference)</li>
+<li>anti-windup of integral action for input saturation</li>
+</ul>
+
+<p>
+A realizable controller is one that has a state-space representation.
+</p>
+
+<p>
+A lead controller is a realizable PD and a lag controller is a realizable PI, which makes
+a lead-lag controller a realizable PID (pole at high frequency on lag).
+</p>
+</div>
+</div>
+<div id="outline-container-org6b4a1cd" class="outline-2">
+<h2 id="org6b4a1cd"><span class="section-number-2">5.</span> Root Locus</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Root refers to the roots of the denominator of the closed loop \(F(s)\) and the locus is of the
+geometric roots.
+</p>
+
+<p>
+The goal is to find the poles of \(F(s)\) as a function of \(K_{P} \in (0, \infty)\),
+which gives the root locus for positive controller gain.
+</p>
+
+<p>
+Consider the open loop transfer function
+\[ L(s) = \mu \frac{N_{0}(s)}{D(s)} \]
+The <b>root locus</b> for loop gain is the set of all points of the complex plane which are roots of
+\(1 + L(s)\) for some \(\mu \in (-\infty, 0) \cup (0, \infty)\).
+</p>
+
+<p>
+Using a proportionally controlled simple system, it can be found that using the phase
+\[ \sum_{i}^{m} \angle (s - z_{i}) - \sum_{i}^{n} \angle (s - p_{i}) = (2k + 1) \pi \]
+where there are \(m\) open loop zeros and \(n\) open loop poles.
+</p>
+
+<p>
+The rules to plot a root locus for \(\mu > 0\) are:
+</p>
+<ol class="org-ol">
+<li>the locus has \(n\) branches, one per pole</li>
+<li>the locus is symmetric with respect to the real axis</li>
+<li>the branches of the locus start at the poles of \(L(s)\)</li>
+<li>for \(\mu \to \infty\)
+\[ \begin{cases} m \text{ branches } &\to \text{ zeros of } L(s) \\ n - m \text{ branches } &\to \infty \end{cases} \]</li>
+<li>the asymptotes of the root locus meet on the real axis at
+\[ x_{a} = \frac{1}{n-m} \left( \sum_{i=1}^{n} p_{i} - \sum_{i=1}^{m} z_{i} \right) \]
+and have slope
+\[ \psi_{a} = \frac{2k+1}{n-m} \pi, k = 0, \dots, n-m-1 \]</li>
+<li>the locus includes all points of the real axis on the left of an odd number of poles/zeros</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org343b333" class="outline-2">
+<h2 id="org343b333"><span class="section-number-2">6.</span> Pole Placement</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The root locus for loop gain shows how the poles of the closed-loop system move on the complex plane as
+a function of the gain of the open-loop transfer function.
+The position of the dominant poles determine performance:
+</p>
+<ul class="org-ul">
+<li>OS% = \(100e^{-\xi \pi / \sqrt{1 - \xi^{2}}}\)</li>
+<li>\(T_{p} = \frac{1}{\omega_{n} \sqrt{1 - \xi^{2}}}\)</li>
+<li>Oscillation frequency = \(\omega_{n} \sqrt{1 - \xi^{2}}\)</li>
+<li>Settling time = \(\frac{\ln(0.01 \varepsilon)}{\xi \omega_{n}} = \frac{\ln(0.01 \varepsilon)}{\sigma}\)</li>
+<li>Phase margin \(\approx 100 \xi\)</li>
+<li>Crossover frequency \(\approx \omega_{n}\)</li>
+</ul>
+<p>
+where \(\xi, \omega_{n}, \sigma = -\xi\omega_{n}\) are the damping, natural frequency, and real part of the
+pair of complex conjugate poles.
+</p>
+
+<p>
+The damping of dominant poles \(\xi\) controls the overshoot, peak time, frequency of oscillations, settling
+time, and phase margin.
+This creates a cone on the complex plane at the angle \(\omega \cos(\bar{\xi})\) from the negative
+real axis.
+</p>
+
+<p>
+The natural frequency of the dominant poles \(\omega_{n}\) controls the peak time, frequency of
+oscillations, settling time, and crossover frequency.
+This occurs on the left side of the complex plane, with a hole going through $j&omega;<sub>n</sub>, -&omega;<sub>n</sub>,$
+and \(-j\omega_{n}\).
+</p>
+
+<p>
+The real part of the dominant poles \(\sigma\) controls the settling time.
+This occurs to the left of \(\sigma\) on the complex plane.
+</p>
+
+<p>
+Using the root locus, try to keep the parameters in the regions specified by the preferred
+performance metrics.
+</p>
+</div>
+</div>
+<div id="outline-container-org7ead45c" class="outline-2">
+<h2 id="org7ead45c"><span class="section-number-2">7.</span> State Feedback Control</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Sometimes the static feedback of the output is not sufficient to stabilize a system.
+For such cases, static state feedback might be better to stabilize a system.
+</p>
+
+<p>
+Consider a transfer function
+\[ G(s) = \frac{b_{n-1}s^{n-1} + \cdots + b_{1}s + b_{0}}{s^{n} + a_{n-1}s^{n-1} + \cdots + a_{1} s + a_{0}} \]
+This has <b>controllable canonical state space form</b>
+\[ \dot{x} = \begin{bmatrix} 0 & 1 & 0 & \cdots & 0 \\ \vdots & 0 & 1 & & \vdots \\ \vdots & & \ddots & \ddots & 0 \\ 0 & \cdots & \cdots & 0 & 1 \\ -a_{0} & -a_{1} & -a_{2} & \cdots & a_{n-1} \end{bmatrix} \]
+\[ y = \begin{bmatrix} b_{0} & b_{1} & \cdots & b_{n-1} \end{bmatrix} x \]
+</p>
+
+<p>
+A static state feedback controller is
+\[ u = -Kx \]
+for \(K^{T} \in \mathbb{R}^{n}\).
+Controlling a system
+\[ \dot{x} = Ax + Bu \]
+\[y = Cx \]
+with the controller yields
+\[ \dot{x} = (A - BK) x \]
+\[y = Cx \]
+so the state-feedback controlled closed-loop system behaves according to the eigenvalues of
+the matrix \(A - BK\).
+</p>
+
+<p>
+<span class="underline">Pole placement via state feedback</span>: Given a system in controllable canonical form and \(n\) complex
+numbers \(\lambda^{\*}_{1}, \dots, \lambda^{\*}_{n}\) (either real or pairs of complex conjugate
+numbers), there exists \(K^{T} \in \mathbb{R}^{n}\) such that the eigenvalues of \(A - BK\) are
+\(\lambda^{\*}_{1}, \dots, \lambda_{n}^{\*}\).
+</p>
+
+<p>
+For some \(\lambda_{1}^{\*}, \dots, \lambda_{n}^{\*}\), the desired characteristic polynomial of \(A-BK\) is
+\[ P(\lambda) = \lambda^{n} + c_{n-1} \lambda^{n-1} + \cdots + c_{1} \lambda + c_{0} \]
+for some \(c_{0}, c_{1} ,\dots, c_{n-1}\).
+</p>
+
+<p>
+\(K\) should be chosen so that \(a_{i-1} + K_{i} = c_{i-1}\) for \(i \in [1, n]\)
+to result in a closed-loop system with eigenvalues at \(\lambda_{1}^{\*}, \dots, \lambda_{n}^{\*}\).
+</p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-11-14 Thu 13:59</p>
+<p class="date">Created: 2024-11-23 Sat 01:02</p>
 </div>
 </body>
 </html>

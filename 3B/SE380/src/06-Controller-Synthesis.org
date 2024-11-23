@@ -104,3 +104,123 @@ $$ \zeta \approx \frac{\phi_{m}}{100} $$
 so if $\phi_{m}$ increases, there are less oscillations and less overshoot for the closed loop system.
 
 For a lag controller, as $\alpha \to \infty$, the pole $-\frac{1}{\alpha T} \to 0$.
+
+A *Proportional-Integral-Derivative (PID)* controller produces a control action $u(t)$ proportional
+to the error $e(t)$, as well as to its integral and derivative:
+$$ u(t) = K_{P}e(t) + K_{I} \int_{0}^{t}e(\tau) d \tau + K_{D} \frac{de}{dt} $$
+where $K_{P}, K_{I}, K_{D} > 0$.
+
+This has transfer function
+$$ C_{PID}(s) = K_{P} + \frac{K_{I}}{s} + K_{D} s = K_{P} \left( 1 + \frac{1}{T_{I}s} + T_{D}s \right) $$
+where $T_{I} = \frac{K_{P}}{K_{I}}$ is the *integration time*
+and $T_{D} = \frac{K_{D}}{K_{P}}$ is the *derivative time*.
+
+The integral action gives 0 steady-state error and perfect disturbance rejection
+since infinite gain for $\omega \to 0$.
+The derivative action gives faster response due to phase lead, since infinite gain for $\omega \to \infty$.
+
+With derivative action, $C_{PID}(s)$ is not realizable since it is improper.
+To make this realizable, add a pole at high frequency:
+$$ C_{PID}(s) = K_{P} \left( 1 + \frac{1}{T_{I}s} + \frac{T_{D}s}{1 + \frac{T_{D}}{N}s} \right) $$
+where $N$ is chosen so that high-frequency pole at $-N/T_{D}$ is beyond the bandwidth of the
+control task.
+
+Practical considerations of PID controllers include:
+- limitation of derivative action (avoid spiking response to step reference)
+- anti-windup of integral action for input saturation
+
+A realizable controller is one that has a state-space representation.
+
+A lead controller is a realizable PD and a lag controller is a realizable PI, which makes
+a lead-lag controller a realizable PID (pole at high frequency on lag).
+
+* Root Locus
+Root refers to the roots of the denominator of the closed loop $F(s)$ and the locus is of the
+geometric roots.
+
+The goal is to find the poles of $F(s)$ as a function of $K_{P} \in (0, \infty)$,
+which gives the root locus for positive controller gain.
+
+Consider the open loop transfer function
+$$ L(s) = \mu \frac{N_{0}(s)}{D(s)} $$
+The *root locus* for loop gain is the set of all points of the complex plane which are roots of
+$1 + L(s)$ for some $\mu \in (-\infty, 0) \cup (0, \infty)$.
+
+Using a proportionally controlled simple system, it can be found that using the phase
+$$ \sum_{i}^{m} \angle (s - z_{i}) - \sum_{i}^{n} \angle (s - p_{i}) = (2k + 1) \pi $$
+where there are $m$ open loop zeros and $n$ open loop poles.
+
+The rules to plot a root locus for $\mu > 0$ are:
+1. the locus has $n$ branches, one per pole
+2. the locus is symmetric with respect to the real axis
+3. the branches of the locus start at the poles of $L(s)$
+4. for $\mu \to \infty$
+   $$ \begin{cases} m \text{ branches } &\to \text{ zeros of } L(s) \\ n - m \text{ branches } &\to \infty \end{cases} $$
+5. the asymptotes of the root locus meet on the real axis at
+   $$ x_{a} = \frac{1}{n-m} \left( \sum_{i=1}^{n} p_{i} - \sum_{i=1}^{m} z_{i} \right) $$
+   and have slope
+   $$ \psi_{a} = \frac{2k+1}{n-m} \pi, k = 0, \dots, n-m-1 $$
+6. the locus includes all points of the real axis on the left of an odd number of poles/zeros
+
+* Pole Placement
+The root locus for loop gain shows how the poles of the closed-loop system move on the complex plane as
+a function of the gain of the open-loop transfer function.
+The position of the dominant poles determine performance:
+- OS% = $100e^{-\xi \pi / \sqrt{1 - \xi^{2}}}$
+- $T_{p} = \frac{1}{\omega_{n} \sqrt{1 - \xi^{2}}}$
+- Oscillation frequency = $\omega_{n} \sqrt{1 - \xi^{2}}$
+- Settling time = $\frac{\ln(0.01 \varepsilon)}{\xi \omega_{n}} = \frac{\ln(0.01 \varepsilon)}{\sigma}$
+- Phase margin $\approx 100 \xi$
+- Crossover frequency $\approx \omega_{n}$
+where $\xi, \omega_{n}, \sigma = -\xi\omega_{n}$ are the damping, natural frequency, and real part of the
+pair of complex conjugate poles.
+
+The damping of dominant poles $\xi$ controls the overshoot, peak time, frequency of oscillations, settling
+time, and phase margin.
+This creates a cone on the complex plane at the angle $\omega \cos(\bar{\xi})$ from the negative
+real axis.
+
+The natural frequency of the dominant poles $\omega_{n}$ controls the peak time, frequency of
+oscillations, settling time, and crossover frequency.
+This occurs on the left side of the complex plane, with a hole going through $j\omega_{n}, -\omega_{n},$
+and $-j\omega_{n}$.
+
+The real part of the dominant poles $\sigma$ controls the settling time.
+This occurs to the left of $\sigma$ on the complex plane.
+
+Using the root locus, try to keep the parameters in the regions specified by the preferred
+performance metrics.
+
+* State Feedback Control
+Sometimes the static feedback of the output is not sufficient to stabilize a system.
+For such cases, static state feedback might be better to stabilize a system.
+
+Consider a transfer function
+$$ G(s) = \frac{b_{n-1}s^{n-1} + \cdots + b_{1}s + b_{0}}{s^{n} + a_{n-1}s^{n-1} + \cdots + a_{1} s + a_{0}} $$
+This has *controllable canonical state space form*
+$$ \dot{x} = \begin{bmatrix} 0 & 1 & 0 & \cdots & 0 \\ \vdots & 0 & 1 & & \vdots \\ \vdots & & \ddots & \ddots & 0 \\ 0 & \cdots & \cdots & 0 & 1 \\ -a_{0} & -a_{1} & -a_{2} & \cdots & a_{n-1} \end{bmatrix} $$
+$$ y = \begin{bmatrix} b_{0} & b_{1} & \cdots & b_{n-1} \end{bmatrix} x $$
+
+A static state feedback controller is
+$$ u = -Kx $$
+for $K^{T} \in \mathbb{R}^{n}$.
+Controlling a system
+$$ \dot{x} = Ax + Bu $$
+$$y = Cx $$
+with the controller yields
+$$ \dot{x} = (A - BK) x $$
+$$y = Cx $$
+so the state-feedback controlled closed-loop system behaves according to the eigenvalues of
+the matrix $A - BK$.
+
+_Pole placement via state feedback_: Given a system in controllable canonical form and $n$ complex
+numbers $\lambda^{\*}_{1}, \dots, \lambda^{\*}_{n}$ (either real or pairs of complex conjugate
+numbers), there exists $K^{T} \in \mathbb{R}^{n}$ such that the eigenvalues of $A - BK$ are
+$\lambda^{\*}_{1}, \dots, \lambda_{n}^{\*}$.
+
+For some $\lambda_{1}^{\*}, \dots, \lambda_{n}^{\*}$, the desired characteristic polynomial of $A-BK$ is
+$$ P(\lambda) = \lambda^{n} + c_{n-1} \lambda^{n-1} + \cdots + c_{1} \lambda + c_{0} $$
+for some $c_{0}, c_{1} ,\dots, c_{n-1}$.
+
+$K$ should be chosen so that $a_{i-1} + K_{i} = c_{i-1}$ for $i \in [1, n]$
+to result in a closed-loop system with eigenvalues at $\lambda_{1}^{\*}, \dots, \lambda_{n}^{\*}$.
