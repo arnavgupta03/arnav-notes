@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-25 Mon 11:06 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Direct Communication</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Direct Communication</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge9e8c99">1. Direct Communication</a></li>
+<li><a href="#org5b83781">2. Task</a></li>
+<li><a href="#orge993ed4">3. Scheduling</a>
+<ul>
+<li><a href="#orgb22d5da">3.1. External Scheduling</a></li>
+<li><a href="#org66874f8">3.2. Internal Scheduling</a></li>
+<li><a href="#org631ef42">3.3. Accepting the Destructor</a></li>
+</ul>
+</li>
+<li><a href="#org773b96c">4. Increasing Concurrency</a>
+<ul>
+<li><a href="#org0f7ab31">4.1. Server Side</a>
+<ul>
+<li><a href="#orgb9f992c">4.1.1. Internal Buffer</a></li>
+<li><a href="#org5983aea">4.1.2. Administrator</a></li>
+</ul>
+</li>
+<li><a href="#org7422f79">4.2. Client Side</a>
+<ul>
+<li><a href="#org984885a">4.2.1. Returning Values</a></li>
+<li><a href="#org7c8767f">4.2.2. Tickets</a></li>
+<li><a href="#org470a248">4.2.3. Call-Back Routine</a></li>
+<li><a href="#orgd99c04f">4.2.4. Futures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge9e8c99" class="outline-2">
+<h2 id="orge9e8c99"><span class="section-number-2">1.</span> Direct Communication</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Monitors work well for passive objects that require mutual exclusion because of sharing, but have
+indirect communication.
+</p>
+
+<p>
+Tasks can communicate directly by calling each other&rsquo;s member routines.
+</p>
+</div>
+</div>
+<div id="outline-container-org5b83781" class="outline-2">
+<h2 id="org5b83781"><span class="section-number-2">2.</span> Task</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+A task is like a coroutine since it has a distinguished member, <code>main</code>, which has its own execution state.
+</p>
+
+<p>
+Tasks are unique from their thread of control, which begins execution when the task is created.
+Tasks provide mutual exclusion and synchronization so only one thread is active in the object:
+</p>
+<ul class="org-ul">
+<li>public members of a task are implicitly mutex and other members can be made mutex</li>
+<li>external scheduling allows direct calls to mutex members (task&rsquo;s thread blocks while caller executes)</li>
+<li>without external scheduling, tasks must call out to communicate (third party or emulate external
+scheduling with internal)</li>
+</ul>
+
+<p>
+In general, basic execution properties produce different abstractions:
+</p>
+<ul class="org-ul">
+<li>no thread or stack is either a class or a monitor</li>
+<li>no thread but has stack is either coroutine or coroutine-monitor</li>
+<li>thread but no stack does not occur</li>
+<li>thread and stack can only be a task</li>
+</ul>
+
+<p>
+When the thread or stack are missing, comes from calling object.
+</p>
+
+<p>
+Abstractions are derived from basic properties and each abstraction has a set of problems it can solve.
+</p>
+</div>
+</div>
+<div id="outline-container-orge993ed4" class="outline-2">
+<h2 id="orge993ed4"><span class="section-number-2">3.</span> Scheduling</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+A task may wants to schedule access to itself by other tasks in an order different from the order in which
+requests arrive.
+</p>
+</div>
+<div id="outline-container-orgb22d5da" class="outline-3">
+<h3 id="orgb22d5da"><span class="section-number-3">3.1.</span> External Scheduling</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The <code>_Accept</code> statement can be used to control which mutex members of a task can accept calls.
+</p>
+
+<p>
+<code>_When</code> clause is like the condition of conditional critical region:
+the condition must be true and a call to the specified member must exist before a member is accepted.
+</p>
+
+<p>
+If all accepts are conditional and false, the statement does nothing.
+</p>
+
+<p>
+If some conditionals are true, but no outstanding calls, the acceptor is blocked until a call to an
+appropriate member is made.
+</p>
+
+<p>
+If several members are accepted and outstanding calls exist to them, a call is selected based on the order
+of the <code>_Accept</code> clauses (so order indicates priority).
+There is potential starvation here.
+</p>
+
+<p>
+Must ensure that for every true conditional, only corresponding members are accepted.
+</p>
+
+<p>
+The acceptor is pushed on top of the acceptor/signaled stack and normal implicit scheduling
+occurs (C &lt; W &lt; S).
+</p>
+
+<p>
+Once the accepted call completes or the caller <code>wait</code>, the statement after the accepting <code>_Accept</code>
+clause is executed and the accept statement completes.
+</p>
+
+<p>
+If there is a terminating <code>_Else</code> clause and no <code>_Accept</code> can be executed immediately, the terminating
+<code>_Else</code> clause is executed, so it allows the call to accepted without the acceptor blocking.
+</p>
+</div>
+</div>
+<div id="outline-container-org66874f8" class="outline-3">
+<h3 id="org66874f8"><span class="section-number-3">3.2.</span> Internal Scheduling</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Scheduling among tasks inside the monitor, condition with <code>signal</code> and <code>wait</code> are used.
+</p>
+
+<p>
+Requires a combination of internal and external scheduling.
+</p>
+
+<p>
+Rendezvous is logically pending when <code>wait</code> restarts <code>_Accept</code> task, but post <code>_Accept</code> statement
+is still executed (no RendezvousFailure).
+The acceptor must eventually complete rendezvous for waiting caller.
+</p>
+
+<p>
+Signalled tasks cannot leave because the task continues in the monitor.
+Signal-blocked tasks leave immediately because the task blocks.
+</p>
+</div>
+</div>
+<div id="outline-container-org631ef42" class="outline-3">
+<h3 id="org631ef42"><span class="section-number-3">3.3.</span> Accepting the Destructor</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+A common way to terminate a task is to have a stop member that is called when the task must stop.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">for</span> <span style="color: #51afef;">(</span> ;; <span style="color: #51afef;">)</span> <span style="color: #51afef;">{</span>
+    _Accept<span style="color: #c678dd;">(</span> stop <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> <span style="color: #51afef;">break</span>; <span style="color: #c678dd;">}</span> <span style="color: #5B6268;">// </span><span style="color: #5B6268;">terminate</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+<p>
+However, if termination and deallocaton follow one another, it may be better just to
+accept the destructor.
+</p>
+
+<p>
+The semantics for accepting a destructor are different from accepting a normal mutex
+member:
+</p>
+<ul class="org-ul">
+<li>when the call ot the destructor occurs, the caller blocks immediately if there
+is a thread active in the task, since a task&rsquo;s storage cannot be deallocated while
+in use</li>
+<li>when the destructor is accepted, the caller is blocked and pushed onto the A/S stack
+instead of the acceptor
+<ul class="org-ul">
+<li>control restarts at the accept statement without executing the destructor member
+to allow the mutex object to clean up before termination.</li>
+</ul></li>
+<li>the task now behaves like a monitor since its thread is halted</li>
+<li>only when the caller to the destructor is popped off the A/S stack by the implicit
+scheduling is the destructor executed</li>
+<li>the destructor can then reactivate any blocked tasks on condition variables and/or
+the A/S stack</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org773b96c" class="outline-2">
+<h2 id="org773b96c"><span class="section-number-2">4.</span> Increasing Concurrency</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Two tasks are involved in direct communication: the client (caller) and server (callee).
+Concurrency can be increased on both sides.
+</p>
+</div>
+<div id="outline-container-org0f7ab31" class="outline-3">
+<h3 id="org0f7ab31"><span class="section-number-3">4.1.</span> Server Side</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+The server manages a resource, and the server thread should introduce additional
+concurrency (assuming no return value).
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">NO CONCURRENCY</span>
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">server</span> <span style="color: #51afef;">{</span>
+    <span style="color: #51afef;">public</span>:
+        <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">mem1</span><span style="color: #c678dd;">(</span> <span style="color: #c678dd;">...</span> <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> S1 <span style="color: #c678dd;">}</span>
+        <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">mem2</span><span style="color: #c678dd;">(</span> <span style="color: #c678dd;">...</span> <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> S2 <span style="color: #c678dd;">}</span>
+        <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+            <span style="color: #c678dd;">...</span>
+            _Accept<span style="color: #98be65;">(</span> mem1 <span style="color: #98be65;">)</span>;
+            <span style="color: #51afef;">or</span> _Accept<span style="color: #98be65;">(</span> mem2 <span style="color: #98be65;">)</span>;
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">server blocked while</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">client does work</span>
+        <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">SOME CONCURRENCY</span>
+<span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">server</span> <span style="color: #51afef;">{</span>
+    <span style="color: #51afef;">public</span>:
+        <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">mem1</span><span style="color: #c678dd;">(</span> <span style="color: #c678dd;">...</span> <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> S1.copy_in <span style="color: #c678dd;">}</span>
+        <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">mem2</span><span style="color: #c678dd;">(</span> <span style="color: #c678dd;">...</span> <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{</span> S2.copy_out <span style="color: #c678dd;">}</span>
+        <span style="color: #ECBE7B;">void</span> <span style="color: #dcaeea;">main</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+            <span style="color: #c678dd;">...</span>
+            _Accept<span style="color: #98be65;">(</span> mem1 <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span> S1.work <span style="color: #98be65;">}</span>
+            <span style="color: #51afef;">or</span> _Accept<span style="color: #98be65;">(</span> mem2 <span style="color: #98be65;">)</span> <span style="color: #98be65;">{</span> S2.work <span style="color: #98be65;">}</span>;
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">client blocks in member, then</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">server does work and unblocks</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">client</span>
+        <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>
+</pre>
+</div>
+<p>
+Concurrency is possible here if the service can be factored
+into administrative and work code, so moving code from the member to the
+statement executed after member is accepted.
+</p>
+
+<p>
+There is a small overlap between the client and server since the client
+gets away earlier, increasing concurrency.
+</p>
+</div>
+<div id="outline-container-orgb9f992c" class="outline-4">
+<h4 id="orgb9f992c"><span class="section-number-4">4.1.1.</span> Internal Buffer</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+Use a larger internal buffer to allow clients to get in and out of the
+server faster, where the internal buffer is used to store the arguments
+of multiple clients until the server processes them.
+</p>
+
+<p>
+Issues:
+</p>
+<ul class="org-ul">
+<li>unless the average time for production and consumption is approx. equal
+with only small variance, the buffer is either always full or empty</li>
+<li>because of the mutex property of a task, no calls can occur while the
+server is working, so clients cannot drop off their arguments
+<ul class="org-ul">
+<li>server could periodically accept calls while processing requests
+(but this is awkward)</li>
+</ul></li>
+<li>clients may need to wait for replies, in which case a buffer does not
+help unless there is some advantage to processing requests in non-FIFO
+order</li>
+</ul>
+
+<p>
+Only way to free server&rsquo;s thread to receive new requests and return finished
+results to clients is by adding another thread &rarr; <b>worker thread</b>.
+</p>
+
+<p>
+The worker thread calls the server to get work from the buffer and return
+results from the buffer.
+</p>
+
+<p>
+Number of workers has to balance with the number of clients to maximize
+concurrency (bounded-buffer problem).
+</p>
+</div>
+</div>
+<div id="outline-container-org5983aea" class="outline-4">
+<h4 id="org5983aea"><span class="section-number-4">4.1.2.</span> Administrator</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+A server managing multiple clients and worker tasks.
+Administrator only manages: delegating work to others, receiving and checking
+completed work, passing completed work on.
+</p>
+
+<p>
+Administrator only called by others, so it is always accepting calls.
+</p>
+
+<p>
+Administrator makes no call to another task (otherwise, this will block
+administrator).
+</p>
+
+<p>
+Administrator maintains a list of work to pass to worker tasks.
+</p>
+
+<p>
+Some typical workers include:
+</p>
+<ul class="org-ul">
+<li><b>timer</b>: prompt administrator at time intervals</li>
+<li><b>notifier</b>: perform a potentially blocking wait for an external event</li>
+<li><b>simple worker</b>: do work and return result to administrator</li>
+<li><b>complex worker</b>: do work and interact directly with client</li>
+<li><b>courier</b>: perform blocking call on behalf of administrator</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org7422f79" class="outline-3">
+<h3 id="org7422f79"><span class="section-number-3">4.2.</span> Client Side</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Not all servers attempt to shorten client delay.
+</p>
+
+<p>
+In some cases, a client may not have to wait for a server to process a
+request, since it can be accomplished with an asynchronous call.
+</p>
+
+<p>
+Asynchronous call requires implicit buffering between client and
+server to store the client&rsquo;s arguments from the call.
+</p>
+
+<p>
+It is possible to build asynchronous facilities out of the
+synchronous ones and vice versa.
+</p>
+</div>
+<div id="outline-container-org984885a" class="outline-4">
+<h4 id="org984885a"><span class="section-number-4">4.2.1.</span> Returning Values</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+If a client only drops off data to be processed by the server, the
+asynchronous call is simple.
+</p>
+
+<p>
+If a result is returned from the call, the call must be divided into
+two calls:
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp">callee.start<span style="color: #51afef;">(</span> arg <span style="color: #51afef;">)</span>;
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">callee performs other</span>
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">work simultaneously</span>
+result = callee.wait<span style="color: #51afef;">()</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">obtain result</span>
+</pre>
+</div>
+<p>
+Not the same as START/WAIT since server thread exists (many-to-one vs
+one-to-one).
+</p>
+
+<p>
+Time between calls allows calling task to execute asynchronously with
+task performing operation on the caller&rsquo;s behalf.
+</p>
+
+<p>
+If the result is not ready in time, the caller either blocks or must
+poll.
+This requires a protocol so when the client makes the second call, the
+correct result can be found and returned.
+</p>
+</div>
+</div>
+<div id="outline-container-org7c8767f" class="outline-4">
+<h4 id="org7c8767f"><span class="section-number-4">4.2.2.</span> Tickets</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+First part of the protocol transmits the arguments specifying the
+desired work and a ticket is returned immediately.
+</p>
+
+<p>
+The second call pulls the result by passing the ticket.
+The ticket is matched with a result that is returned if available or
+the caller is blocked or polls until the result is available.
+</p>
+
+<p>
+Error prone since the caller may not obey protocol (never retrieve result,
+use same ticket twice, forged ticket).
+</p>
+</div>
+</div>
+<div id="outline-container-org470a248" class="outline-4">
+<h4 id="org470a248"><span class="section-number-4">4.2.3.</span> Call-Back Routine</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<p>
+Transmit (register) a routine on the initial call.
+</p>
+
+<p>
+When the result is ready, the routine is called by the task generating the
+result, passing it the result.
+</p>
+
+<p>
+The call-back routine cannot block the server, only store the result and
+set an indicator known to the client (like a semaphore).
+</p>
+
+<p>
+The original client must poll th indicator or block until the indicator
+is set.
+</p>
+
+<p>
+Allows the server to push the result back to the client faster (nagging
+client to pickup).
+</p>
+
+<p>
+Client can write the call-back routine, so they can decide to poll or
+block or do both.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd99c04f" class="outline-4">
+<h4 id="orgd99c04f"><span class="section-number-4">4.2.4.</span> Futures</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<p>
+Provides the same asynchrony, but without an explicit protocol.
+This removes the problem of when the caller should try to retrieve the result.
+</p>
+
+<p>
+A future is an object that is a subtype of the result type expected by the caller.
+A single call is made that returns the future, which is empty.
+</p>
+
+<p>
+The caller continues execution and at some time in the future, the result is calculated and
+the future is filled.
+</p>
+
+<p>
+If the caller tries to use the future before its value is filled in, the caller is
+implicitly blocked.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Future</span> : <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">ResultType</span> <span style="color: #51afef;">{</span>
+        <span style="color: #51afef;">friend</span> <span style="color: #ECBE7B;">_Task</span> <span style="color: #dcaeea;">server</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">allow server to access</span>
+                             <span style="color: #5B6268;">// </span><span style="color: #5B6268;">internal state</span>
+        <span style="color: #ECBE7B;">ResultType</span> <span style="color: #dcaeea;">result</span>;   <span style="color: #5B6268;">// </span><span style="color: #5B6268;">place result here</span>
+        <span style="color: #ECBE7B;">uSemaphore</span> <span style="color: #dcaeea;">avail</span>;    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">wait here if no result</span>
+        <span style="color: #ECBE7B;">Future</span> * <span style="color: #dcaeea;">link</span>;       <span style="color: #5B6268;">// </span><span style="color: #5B6268;">intrusive data structure</span>
+    <span style="color: #51afef;">public</span>:
+        <span style="color: #c678dd;">Future</span><span style="color: #c678dd;">()</span> : avail<span style="color: #c678dd;">(</span> <span style="color: #da8548; font-weight: bold;">0</span> <span style="color: #c678dd;">)</span> <span style="color: #c678dd;">{}</span>
+
+        <span style="color: #ECBE7B;">ResultType</span> <span style="color: #c678dd;">get</span><span style="color: #c678dd;">()</span> <span style="color: #c678dd;">{</span>
+            avail.P<span style="color: #98be65;">()</span>;       <span style="color: #5B6268;">// </span><span style="color: #5B6268;">wait for result</span>
+            <span style="color: #51afef;">return</span> result;
+        <span style="color: #c678dd;">}</span>
+<span style="color: #51afef;">}</span>;
+</pre>
+</div>
+<p>
+In languages without garbage collection, the future must be explicitly deleted.
+</p>
+
+<p>
+In &mu;C++, two types of template futures are:
+</p>
+<ul class="org-ul">
+<li><code>Future_ESM&lt;T&gt;</code> which must be allocated and deallocated explicitly by the client</li>
+<li><code>Future_ISM&lt;T&gt;</code> which automatically allocates and frees storage (GC), simpler to use but less efficient
+<ul class="org-ul">
+<li><code>available</code> returns true if asynchronous call is completed (result available, server
+raise exception, or call canceled) and false otherwise</li>
+<li><code>operator()</code> returns read-only copy of future result, blocking if the future is unavailable
+and raising an exception if one was returned by the server (can be re-retrieved)</li>
+<li><code>reset</code> marks the future as empty for reuse</li>
+<li><code>cancel</code> attempts to cancel the asynchronous call the future refers to (waiting clients
+are unblocked)</li>
+<li><code>cancelled</code> returns true if the future is canceled and false otherwise</li>
+<li><code>delivery(T result)</code> copies the client result into the future, unblocking clients waiting
+for the result</li>
+<li><code>delivery( uBaseEvent * cause )</code> copies an exception into the future and the exception is
+thrown at waiting clients (exception must be dynamically allocated)</li>
+</ul></li>
+</ul>
+
+<p>
+On the client:
+</p>
+<ul class="org-ul">
+<li>after the future result is retrieved, it can be retrieved again cheaply (no blocking)</li>
+<li>be careful of deadlocks like with <code>osacquire</code></li>
+</ul>
+
+<p>
+The <b>select statement</b> waits for 1+ heterogeneous futures based on logical selection criteria.
+The selector expression must be satisfied before execution continues.
+</p>
+
+<p>
+A <code>_Select</code> clause may be guarded with a logical expression and have code executed after a future
+received a value.
+Each select clause action is executed when its sub-selector expression is satisfied, but control
+does not continue until the selector expression associated with the entire statement is satisfied.
+</p>
+
+<p>
+An action statement is triggered only once for its selector expression, even if the selector
+expression is compound.
+</p>
+
+<p>
+A select statement can be non-blocking using a terminating <code>_Else</code> clause.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-25 Mon 11:06</p>
+</div>
+</body>
+</html>
