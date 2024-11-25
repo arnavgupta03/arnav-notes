@@ -1,4 +1,4 @@
-% Created 2024-11-23 Sat 01:02
+% Created 2024-11-23 Sat 14:36
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -30,7 +30,7 @@
 \tableofcontents
 
 \section{Loop Shaping}
-\label{sec:org4418614}
+\label{sec:org15fde0d}
 Translating control specifications of the closed loop system into constraints of the
 Bode plots of the open loop system is loop shaping.
 
@@ -80,7 +80,7 @@ specifically high frequencies.
 For \(L(s) = C(s)G(s)\), where \(C(s)\) is proper (in order to be realizable in state-space form),
 the slope of \(|L(j\omega)|\) should be at most the slope of \(|G(j\omega)|\) as \(\omega \to \infty\).
 \section{Integral Control}
-\label{sec:org11b4e5c}
+\label{sec:orga35399e}
 For a closed-loop system with open loop transfer function \(L(s) = C(s)G(s)\),
 for \(C(s) = \frac{\mu}{s^{\rho}}\):
 \begin{itemize}
@@ -89,9 +89,9 @@ for \(C(s) = \frac{\mu}{s^{\rho}}\):
 \item if \(\rho = 0\), there is no integrator in the loop, so \(\mu\) must be high for \(F(0)\) to approach 1
 \end{itemize}
 \section{Lead-Lag Compensators}
-\label{sec:org2996675}
+\label{sec:org1a37fc5}
 \subsection{Lead Controller}
-\label{sec:orgf327d87}
+\label{sec:org6746eb3}
 Consider a controller with transfer function
 $$ C(s) = \mu\frac{1 + Ts}{1 + \alpha Ts} $$
 for \(\mu > 0, T > 0, 0 < \alpha < 1\).
@@ -111,7 +111,7 @@ $$ u(t_{k}) = \mu e(t_{k}) + \mu T \frac{e(t_{k}) - e(t_{k-1})}{t_{k} - t_{k-1}}
 Adding poles/zeros makes the controller realizable to get this approximation of the derivative until
 the frequency of the pole of error.
 \subsection{Lag Controller}
-\label{sec:orgacf676e}
+\label{sec:orgda26428}
 Consider a controller with transfer function
 $$ C(s) = \mu\frac{1 + Ts}{1 + \alpha Ts} $$
 for \(\mu > 0, T > 0, \alpha > 1\).
@@ -128,7 +128,7 @@ As \(\alpha \to \infty\), the corresponding increase of the steady-state gain \(
 $$ C(s) = c + \frac{c}{Ts} $$
 which is a PI controller.
 \section{PID Controller}
-\label{sec:orgf3ca24a}
+\label{sec:org474a3cf}
 Placing the zero and pole of a lead controller \(1/\alpha\) decade away from \(\omega_{c}\) requires
 $$ \omega_{c} = \frac{1}{\sqrt{\alpha} T} $$
 
@@ -168,7 +168,7 @@ A realizable controller is one that has a state-space representation.
 A lead controller is a realizable PD and a lag controller is a realizable PI, which makes
 a lead-lag controller a realizable PID (pole at high frequency on lag).
 \section{Root Locus}
-\label{sec:org5144dbd}
+\label{sec:orgfae3c47}
 Root refers to the roots of the denominator of the closed loop \(F(s)\) and the locus is of the
 geometric roots.
 
@@ -198,7 +198,7 @@ $$ \psi_{a} = \frac{2k+1}{n-m} \pi, k = 0, \dots, n-m-1 $$
 \item the locus includes all points of the real axis on the left of an odd number of poles/zeros
 \end{enumerate}
 \section{Pole Placement}
-\label{sec:org0991bb5}
+\label{sec:org907009b}
 The root locus for loop gain shows how the poles of the closed-loop system move on the complex plane as
 a function of the gain of the open-loop transfer function.
 The position of the dominant poles determine performance:
@@ -229,14 +229,14 @@ This occurs to the left of \(\sigma\) on the complex plane.
 Using the root locus, try to keep the parameters in the regions specified by the preferred
 performance metrics.
 \section{State Feedback Control}
-\label{sec:orgb801b8d}
+\label{sec:orgd6bf906}
 Sometimes the static feedback of the output is not sufficient to stabilize a system.
 For such cases, static state feedback might be better to stabilize a system.
 
 Consider a transfer function
 $$ G(s) = \frac{b_{n-1}s^{n-1} + \cdots + b_{1}s + b_{0}}{s^{n} + a_{n-1}s^{n-1} + \cdots + a_{1} s + a_{0}} $$
 This has \textbf{controllable canonical state space form}
-$$ \dot{x} = \begin{bmatrix} 0 & 1 & 0 & \cdots & 0 \\ \vdots & 0 & 1 & & \vdots \\ \vdots & & \ddots & \ddots & 0 \\ 0 & \cdots & \cdots & 0 & 1 \\ -a_{0} & -a_{1} & -a_{2} & \cdots & a_{n-1} \end{bmatrix} $$
+$$ \dot{x} = \begin{bmatrix} 0 & 1 & 0 & \cdots & 0 \\ \vdots & 0 & 1 & & \vdots \\ \vdots & & \ddots & \ddots & 0 \\ 0 & \cdots & \cdots & 0 & 1 \\ -a_{0} & -a_{1} & -a_{2} & \cdots & a_{n-1} \end{bmatrix}x + \begin{bmatrix} 0 \\ 0 \\ \vdots \\ 0 \\ 1 \end{bmatrix} u $$
 $$ y = \begin{bmatrix} b_{0} & b_{1} & \cdots & b_{n-1} \end{bmatrix} x $$
 
 A static state feedback controller is
