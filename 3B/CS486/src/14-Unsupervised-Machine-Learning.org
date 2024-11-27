@@ -1,4 +1,5 @@
 #+title: Unsupervised Machine Learning
+#+author: Arnav Gupta
 #+LATEX_HEADER: \usepackage{parskip,darkmode}
 #+LATEX_HEADER: \usepackage{algpseudocode}
 #+LATEX_HEADER: \enabledarkmode

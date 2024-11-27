@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-20 Wed 22:49 -->
+<!-- 2024-11-27 Wed 10:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Unsupervised Machine Learning</title>
-<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="author" content="Arnav Gupta" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -234,23 +234,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org51ad120">1. Motivation: Missing/Incomplete Data</a></li>
-<li><a href="#orgc352595">2. Expectation Maximization</a>
+<li><a href="#orgb0a1183">1. Motivation: Missing/Incomplete Data</a></li>
+<li><a href="#orgb97a43e">2. Expectation Maximization</a>
 <ul>
-<li><a href="#org6bb50c5">2.1. E Step</a></li>
-<li><a href="#orgf3643ef">2.2. M Step</a></li>
-<li><a href="#orgb1c87a5">2.3. EM Formal</a></li>
-<li><a href="#org6a45e89">2.4. General Bayes Network EM</a></li>
+<li><a href="#orga3d6832">2.1. E Step</a></li>
+<li><a href="#org0c11de0">2.2. M Step</a></li>
+<li><a href="#orge8d5657">2.3. EM Formal</a></li>
+<li><a href="#org0fb6d0e">2.4. General Bayes Network EM</a></li>
 </ul>
 </li>
-<li><a href="#org2e0cfb8">3. Belief Network Structure Learning</a></li>
-<li><a href="#org23333c9">4. Autoencoders</a></li>
-<li><a href="#org706c9ce">5. Generative Adversarial Networks</a></li>
+<li><a href="#orgff3dddc">3. Belief Network Structure Learning</a></li>
+<li><a href="#org711482c">4. Autoencoders</a></li>
+<li><a href="#org9707e02">5. Generative Adversarial Networks</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org51ad120" class="outline-2">
-<h2 id="org51ad120"><span class="section-number-2">1.</span> Motivation: Missing/Incomplete Data</h2>
+<div id="outline-container-orgb0a1183" class="outline-2">
+<h2 id="orgb0a1183"><span class="section-number-2">1.</span> Motivation: Missing/Incomplete Data</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Many real-world problems have <b>hidden (latent) variables</b> which have incomplete data
@@ -289,8 +289,8 @@ estimate of \(h_{ML}\) using ML learning as before</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgc352595" class="outline-2">
-<h2 id="orgc352595"><span class="section-number-2">2.</span> Expectation Maximization</h2>
+<div id="outline-container-orgb97a43e" class="outline-2">
+<h2 id="orgb97a43e"><span class="section-number-2">2.</span> Expectation Maximization</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <b>k-means algorithm</b> can be used for clustering: dataset of observables with input
@@ -325,8 +325,8 @@ Outputs:
 </ol></li>
 </ol>
 </div>
-<div id="outline-container-org6bb50c5" class="outline-3">
-<h3 id="org6bb50c5"><span class="section-number-3">2.1.</span> E Step</h3>
+<div id="outline-container-orga3d6832" class="outline-3">
+<h3 id="orga3d6832"><span class="section-number-3">2.1.</span> E Step</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Take the missing data, like the class, and fill in the data with probabilities from
@@ -336,8 +336,8 @@ this be \(A[X_{1}, \dots, X_{n}, C]\).
 </p>
 </div>
 </div>
-<div id="outline-container-orgf3643ef" class="outline-3">
-<h3 id="orgf3643ef"><span class="section-number-3">2.2.</span> M Step</h3>
+<div id="outline-container-org0c11de0" class="outline-3">
+<h3 id="org0c11de0"><span class="section-number-3">2.2.</span> M Step</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Compute the statistics for each feature and class:
@@ -351,8 +351,8 @@ Pseudo-counts can also be added here when normalizing.
 </p>
 </div>
 </div>
-<div id="outline-container-orgb1c87a5" class="outline-3">
-<h3 id="orgb1c87a5"><span class="section-number-3">2.3.</span> EM Formal</h3>
+<div id="outline-container-orge8d5657" class="outline-3">
+<h3 id="orge8d5657"><span class="section-number-3">2.3.</span> EM Formal</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Approximate the maximum likelihood, by starting with a guess \(h_{0}\).
@@ -378,8 +378,8 @@ EM monotonically improves the likelihood, so \(P(e \mid h_{i+1}) \ge P(e \mid h_
 </p>
 </div>
 </div>
-<div id="outline-container-org6a45e89" class="outline-3">
-<h3 id="org6a45e89"><span class="section-number-3">2.4.</span> General Bayes Network EM</h3>
+<div id="outline-container-org0fb6d0e" class="outline-3">
+<h3 id="org0fb6d0e"><span class="section-number-3">2.4.</span> General Bayes Network EM</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 With complete data, use Bayes Net Maximum Likelihood:
@@ -404,8 +404,8 @@ In the <span class="underline">M step</span>: update parameters
 </div>
 </div>
 </div>
-<div id="outline-container-org2e0cfb8" class="outline-2">
-<h2 id="org2e0cfb8"><span class="section-number-2">3.</span> Belief Network Structure Learning</h2>
+<div id="outline-container-orgff3dddc" class="outline-2">
+<h2 id="orgff3dddc"><span class="section-number-2">3.</span> Belief Network Structure Learning</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 \[ P(\text{model} \mid \text{data}) = \frac{P(\text{data} \mid \text{model}) \times P(\text{model})}{P(\text{data})} \]
@@ -426,8 +426,8 @@ The ideal method is to search over total orderings of variables.
 </p>
 </div>
 </div>
-<div id="outline-container-org23333c9" class="outline-2">
-<h2 id="org23333c9"><span class="section-number-2">4.</span> Autoencoders</h2>
+<div id="outline-container-org711482c" class="outline-2">
+<h2 id="org711482c"><span class="section-number-2">4.</span> Autoencoders</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 A representation learning algorithm that learns to map examples to low-dimensional representation.
@@ -460,8 +460,8 @@ The network is then trained with backpropagation.
 </p>
 </div>
 </div>
-<div id="outline-container-org706c9ce" class="outline-2">
-<h2 id="org706c9ce"><span class="section-number-2">5.</span> Generative Adversarial Networks</h2>
+<div id="outline-container-org9707e02" class="outline-2">
+<h2 id="org9707e02"><span class="section-number-2">5.</span> Generative Adversarial Networks</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 A generative unsupervised learning algorithm that learns to generate unseen examples that
@@ -490,8 +490,8 @@ Once they converge, \(g\) should be producing realistic examples and \(d\) shoul
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-11-20 Wed 22:49</p>
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-27 Wed 10:20</p>
 </div>
 </body>
 </html>

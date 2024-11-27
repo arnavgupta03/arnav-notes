@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-29 Tue 19:41 -->
+<!-- 2024-11-27 Wed 10:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>More Bayesian Networks</title>
-<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="author" content="Arnav Gupta" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -234,24 +234,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbf98dd9">1. Bayesian/Belief Networks</a>
+<li><a href="#org87b86ed">1. Bayesian/Belief Networks</a>
 <ul>
-<li><a href="#org12da9de">1.1. Bayes&rsquo; Rule</a></li>
-<li><a href="#org246f612">1.2. Simple Forward Inference (Chain)</a></li>
-<li><a href="#org1e94527">1.3. Simple Backward Inference</a></li>
+<li><a href="#org707dbd6">1.1. Bayes&rsquo; Rule</a></li>
+<li><a href="#org4c94945">1.2. Simple Forward Inference (Chain)</a></li>
+<li><a href="#org37e4607">1.3. Simple Backward Inference</a></li>
 </ul>
 </li>
-<li><a href="#org5475bd6">2. Variable Elimination</a>
+<li><a href="#org334f722">2. Variable Elimination</a>
 <ul>
-<li><a href="#org7cdedc4">2.1. Evidence</a></li>
-<li><a href="#org830463d">2.2. Probability of a Conjunction</a></li>
-<li><a href="#org4b5cf64">2.3. Computing Sums of Products</a></li>
-<li><a href="#org5ca9c07">2.4. Algorithm</a></li>
-<li><a href="#orgaf31ec1">2.5. Summing out a Variable</a></li>
-<li><a href="#orgf5e6046">2.6. Elimination Ordering</a>
+<li><a href="#org652892c">2.1. Evidence</a></li>
+<li><a href="#orgc417382">2.2. Probability of a Conjunction</a></li>
+<li><a href="#org8d6689b">2.3. Computing Sums of Products</a></li>
+<li><a href="#orgcdc651c">2.4. Algorithm</a></li>
+<li><a href="#orgdc11b31">2.5. Summing out a Variable</a></li>
+<li><a href="#orgfacacb5">2.6. Elimination Ordering</a>
 <ul>
-<li><a href="#orgc3bbb88">2.6.1. Polytrees</a></li>
-<li><a href="#orga5c56b4">2.6.2. Relevance</a></li>
+<li><a href="#orga3cbd79">2.6.1. Polytrees</a></li>
+<li><a href="#org5af9dae">2.6.2. Relevance</a></li>
 </ul>
 </li>
 </ul>
@@ -259,8 +259,8 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbf98dd9" class="outline-2">
-<h2 id="orgbf98dd9"><span class="section-number-2">1.</span> Bayesian/Belief Networks</h2>
+<div id="outline-container-org87b86ed" class="outline-2">
+<h2 id="org87b86ed"><span class="section-number-2">1.</span> Bayesian/Belief Networks</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 To represent a domain in a belief network, consider:
@@ -277,8 +277,8 @@ To represent a domain in a belief network, consider:
 <li>how the values of each variable depend on the parents, expressed in terms of conditional probabilities</li>
 </ul>
 </div>
-<div id="outline-container-org12da9de" class="outline-3">
-<h3 id="org12da9de"><span class="section-number-3">1.1.</span> Bayes&rsquo; Rule</h3>
+<div id="outline-container-org707dbd6" class="outline-3">
+<h3 id="org707dbd6"><span class="section-number-3">1.1.</span> Bayes&rsquo; Rule</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Agent has a prior belief in a hypothesis \(h\), \(P(h)\).
@@ -299,8 +299,8 @@ Often agents have <b>causal knowledge</b> but want to do <b>evidential reasoning
 </p>
 </div>
 </div>
-<div id="outline-container-org246f612" class="outline-3">
-<h3 id="org246f612"><span class="section-number-3">1.2.</span> Simple Forward Inference (Chain)</h3>
+<div id="outline-container-org4c94945" class="outline-3">
+<h3 id="org4c94945"><span class="section-number-3">1.2.</span> Simple Forward Inference (Chain)</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Computing marginal requires simple forward propagation of probabilities.
@@ -341,8 +341,8 @@ This also works with upstream evidence.
 </p>
 </div>
 </div>
-<div id="outline-container-org1e94527" class="outline-3">
-<h3 id="org1e94527"><span class="section-number-3">1.3.</span> Simple Backward Inference</h3>
+<div id="outline-container-org37e4607" class="outline-3">
+<h3 id="org37e4607"><span class="section-number-3">1.3.</span> Simple Backward Inference</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 When evidence is downstream of query, reason backwards, which requires Bayes&rsquo; rule.
@@ -350,8 +350,8 @@ When evidence is downstream of query, reason backwards, which requires Bayes&rsq
 </div>
 </div>
 </div>
-<div id="outline-container-org5475bd6" class="outline-2">
-<h2 id="org5475bd6"><span class="section-number-2">2.</span> Variable Elimination</h2>
+<div id="outline-container-org334f722" class="outline-2">
+<h2 id="org334f722"><span class="section-number-2">2.</span> Variable Elimination</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Intuitions above are the <b>polytree</b> algorithm.
@@ -393,8 +393,8 @@ To <b>sum out</b> a variable \(X_{1}\) with domain \(\{ v_{1}, \dots, v_{k} \}\)
 \[ \left( \sum_{X_{1}} f \right) (X_{2}, \dots, X_{j}) = f(X_{1} = v_{1}, \dots, X_{j}) + \cdots + f(X_{1} = v_{k}, \dots, X_{j}) \]
 </p>
 </div>
-<div id="outline-container-org7cdedc4" class="outline-3">
-<h3 id="org7cdedc4"><span class="section-number-3">2.1.</span> Evidence</h3>
+<div id="outline-container-org652892c" class="outline-3">
+<h3 id="org652892c"><span class="section-number-3">2.1.</span> Evidence</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 To compute the posterior probability of \(Z\) given evidence
@@ -412,8 +412,8 @@ The query value can also be restricted, for example \(Z = z\).
 </p>
 </div>
 </div>
-<div id="outline-container-org830463d" class="outline-3">
-<h3 id="org830463d"><span class="section-number-3">2.2.</span> Probability of a Conjunction</h3>
+<div id="outline-container-orgc417382" class="outline-3">
+<h3 id="orgc417382"><span class="section-number-3">2.2.</span> Probability of a Conjunction</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Suppose the variables of the belief network are \(X_{1}, \dots, X_{n}\).
@@ -428,8 +428,8 @@ Order \(Z_{i}\) into an elimination ordering \(Z_{1}, \dots, Z_{k}\)
 </p>
 </div>
 </div>
-<div id="outline-container-org4b5cf64" class="outline-3">
-<h3 id="org4b5cf64"><span class="section-number-3">2.3.</span> Computing Sums of Products</h3>
+<div id="outline-container-org8d6689b" class="outline-3">
+<h3 id="org8d6689b"><span class="section-number-3">2.3.</span> Computing Sums of Products</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Computation in belief networks reduces to computing the sums of products:
@@ -446,8 +446,8 @@ Computation in belief networks reduces to computing the sums of products:
 </ul>
 </div>
 </div>
-<div id="outline-container-org5ca9c07" class="outline-3">
-<h3 id="org5ca9c07"><span class="section-number-3">2.4.</span> Algorithm</h3>
+<div id="outline-container-orgcdc651c" class="outline-3">
+<h3 id="orgcdc651c"><span class="section-number-3">2.4.</span> Algorithm</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 To compute \(P(Z \mid Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j})\):
@@ -467,8 +467,8 @@ each \(Z_{i}\) in order starting from \(i = 1\)
 </ul>
 </div>
 </div>
-<div id="outline-container-orgaf31ec1" class="outline-3">
-<h3 id="orgaf31ec1"><span class="section-number-3">2.5.</span> Summing out a Variable</h3>
+<div id="outline-container-orgdc11b31" class="outline-3">
+<h3 id="orgdc11b31"><span class="section-number-3">2.5.</span> Summing out a Variable</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 To sum out a variable \(Z_{j}\) from a product \(f_{1}, \dots, f_{k}\) of factors:
@@ -492,8 +492,8 @@ the factors by the new factor.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf5e6046" class="outline-3">
-<h3 id="orgf5e6046"><span class="section-number-3">2.6.</span> Elimination Ordering</h3>
+<div id="outline-container-orgfacacb5" class="outline-3">
+<h3 id="orgfacacb5"><span class="section-number-3">2.6.</span> Elimination Ordering</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Complexity is <span class="underline">linear</span> in the number of variables and <span class="underline">exponential</span> in the size of the largest
@@ -511,8 +511,8 @@ Specifically, finding the optimal elimination ordering is NP-hard for general BN
 In general, inference is NP-hard.
 </p>
 </div>
-<div id="outline-container-orgc3bbb88" class="outline-4">
-<h4 id="orgc3bbb88"><span class="section-number-4">2.6.1.</span> Polytrees</h4>
+<div id="outline-container-orga3cbd79" class="outline-4">
+<h4 id="orga3cbd79"><span class="section-number-4">2.6.1.</span> Polytrees</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 Eliminate singly connected nodes first.
@@ -525,8 +525,8 @@ connected nodes.
 </p>
 </div>
 </div>
-<div id="outline-container-orga5c56b4" class="outline-4">
-<h4 id="orga5c56b4"><span class="section-number-4">2.6.2.</span> Relevance</h4>
+<div id="outline-container-org5af9dae" class="outline-4">
+<h4 id="org5af9dae"><span class="section-number-4">2.6.2.</span> Relevance</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 Certain variables have no impact.
@@ -555,8 +555,8 @@ This will only remove irrelevant variables, but may not remove them all.
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-10-29 Tue 19:41</p>
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-27 Wed 10:19</p>
 </div>
 </body>
 </html>

@@ -1,4 +1,4 @@
-% Created 2024-11-11 Mon 01:20
+% Created 2024-11-27 Wed 10:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,11 +14,11 @@
 \usepackage{hyperref}
 \usepackage{parskip,darkmode}
 \enabledarkmode
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Bayesian Learning}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Bayesian Learning},
  pdfkeywords={},
  pdfsubject={},
@@ -30,7 +30,7 @@
 \tableofcontents
 
 \section{Bayesian Learning}
-\label{sec:orga6cdddc}
+\label{sec:org2f4851a}
 Premise:
 \begin{itemize}
 \item have a number of hypotheses or models
@@ -64,7 +64,7 @@ Bayesian learning may be unmanageable when the hypothesis space is large.
 Further, the sum over hypotheses space may be unmanageable.
 The solution is to approximate Bayesian learning with other strategies.
 \section{Maximum a Posteriori (MAP)}
-\label{sec:org500001b}
+\label{sec:org6224436}
 Make predictions based on the most probable hypothesis \(h_{MAP}\)
 where
 $$ h_{MAP} = \text{argmax}_{h_{i}} P(h_{i} \mid d) $$
@@ -78,7 +78,7 @@ optimization
 $$ h_{MAP} = \text{argmax}_{h} P(h) \prod_{i} P(d_{i} \mid h) $$
 Taking the log can linearize this.
 \section{Maximum Likelihood (ML)}
-\label{sec:org23a9f1a}
+\label{sec:org1b68a09}
 Simplify MAP by assuming uniform prior:
 $$ h_{ML} = \text{argmax}_{h} P(d \mid h) $$
 so make prediction based solely on \(h_{ML}\):
@@ -88,28 +88,28 @@ Less accurate than full Bayesian or MAP, but converges as data increases.
 More susceptible to overfitting since no prior.
 \(h_{ML}\) is easier to find than \(h_{MAP}\), especially taking the log.
 \subsection{Binomial Distribution}
-\label{sec:org6be4428}
+\label{sec:org4c480d3}
 Generalize the hypothesis space to a continuous quantity using the
 binomial distribution.
 
 For priors on binomials, the \textbf{Beta distribution} is
 $$ B(\theta ; a, b) \propto \theta^{a-1}(1-\theta)^{b-1} $$
 \section{Classifiers}
-\label{sec:org70bd048}
+\label{sec:org8f29205}
 If the classification is known, the feature values could be predicted
 $$ P(\text{Class} \mid X_{1} \dots X_{n}) \propto P(X_{1}, \dots, X_{n} \mid \text{Class}) P(\text{Class}) $$
 
 With a \textbf{Naive Bayesian classifier} \(X_{i}\) are independent of each other given the class,
 though this requires \(P(\text{Class})\) and \(P(X_{i} \mid \text{Class})\) for each \(X_{i}\).
 \subsection{Laplace Correction}
-\label{sec:org3aed38e}
+\label{sec:orge14cc00}
 If a feature never occurs in the training set, but it does in the test set, ML
 assigns 0 probability to a high likelihood class.
 
 To correct for this, add 1 to the numerator and \(d\) to the denominator, where \(d\)
 is the arity of the variable.
 \subsection{Bayesian Network Parameter Learning}
-\label{sec:orgf94c92e}
+\label{sec:orgf899c48}
 For fully observed data with:
 \begin{itemize}
 \item parameters \(\theta_{V, pa(V) = v^{i}}\)
@@ -121,7 +121,7 @@ $$ d_{i} = \left< V_{1} = v_{1, i}, \dots, V_{n} = v_{n, i} \right> $$
 To get the maximum likelihood, set \(\theta_{V, pa(V) = v}\) to the relative frequency of
 values of \(V\) given the values \(v\) of the parents of \(V\).
 \subsection{Occam's Razor}
-\label{sec:orgcbad707}
+\label{sec:org55149e7}
 Simplicity is encouraged in the likelihood function.
 A hypothesis that is more complex (lower bias) can explain more datasets but it
 can only explain each with lower probability (higher variance).

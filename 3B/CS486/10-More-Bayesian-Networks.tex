@@ -1,4 +1,4 @@
-% Created 2024-10-29 Tue 19:41
+% Created 2024-11-27 Wed 10:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,11 +14,11 @@
 \usepackage{hyperref}
 \usepackage{parskip,darkmode}
 \enabledarkmode
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{More Bayesian Networks}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={More Bayesian Networks},
  pdfkeywords={},
  pdfsubject={},
@@ -30,7 +30,7 @@
 \tableofcontents
 
 \section{Bayesian/Belief Networks}
-\label{sec:org7a2eb1f}
+\label{sec:orgc9286a6}
 To represent a domain in a belief network, consider:
 \begin{itemize}
 \item what the relevant variables are
@@ -44,7 +44,7 @@ To represent a domain in a belief network, consider:
 \item how the values of each variable depend on the parents, expressed in terms of conditional probabilities
 \end{itemize}
 \subsection{Bayes' Rule}
-\label{sec:orgb947e83}
+\label{sec:org89c4b8c}
 Agent has a prior belief in a hypothesis \(h\), \(P(h)\).
 
 Agent observes some evidence \(e\) that has a \textbf{likelihood} given the hypothesis \(P(e \mid h)\).
@@ -55,7 +55,7 @@ $$ P(h \mid e) = \frac{P(e \mid h) P(h)}{P(e)} = \frac{P(e \mid h) P(h)}{\sum_{h
 
 Often agents have \textbf{causal knowledge} but want to do \textbf{evidential reasoning}.
 \subsection{Simple Forward Inference (Chain)}
-\label{sec:orgd948140}
+\label{sec:org401d23b}
 Computing marginal requires simple forward propagation of probabilities.
 
 Consider the following Bayesian Network:
@@ -78,10 +78,10 @@ Only ancestors of \(B\) are considered.
 With multiple parents, the evidence can be pooled.
 This also works with upstream evidence.
 \subsection{Simple Backward Inference}
-\label{sec:orgb5e6e90}
+\label{sec:orgbd4d6d9}
 When evidence is downstream of query, reason backwards, which requires Bayes' rule.
 \section{Variable Elimination}
-\label{sec:org95178fb}
+\label{sec:org2f4abee}
 Intuitions above are the \textbf{polytree} algorithm.
 This works for simple networks without loops.
 
@@ -110,7 +110,7 @@ To \textbf{sum out} a variable \(X_{1}\) with domain \(\{ v_{1}, \dots, v_{k} \}
 \(f(X_{1}, \dots, X_{j})\) resulting in a factor on \(X_{2}, \dots, X_{j}\) defined by:
 $$ \left( \sum_{X_{1}} f \right) (X_{2}, \dots, X_{j}) = f(X_{1} = v_{1}, \dots, X_{j}) + \cdots + f(X_{1} = v_{k}, \dots, X_{j}) $$
 \subsection{Evidence}
-\label{sec:org2bbe6d9}
+\label{sec:org6891b59}
 To compute the posterior probability of \(Z\) given evidence
 \(Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j}\):
 $$ P(Z \mid Y_{1} = v_{1}, \dots, Y_{j} = v_{j}) = \frac{P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})}{\sum_{Z} P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j})} $$
@@ -120,7 +120,7 @@ normalized at the end.
 
 The query value can also be restricted, for example \(Z = z\).
 \subsection{Probability of a Conjunction}
-\label{sec:org77753e9}
+\label{sec:orge50ffb0}
 Suppose the variables of the belief network are \(X_{1}, \dots, X_{n}\).
 To compute \(P(Z, Y_{1} = v_{1}, \dots, Y{j} = v_{j})\), sum out the variables other than query \(Z\)
 and evidence \(Y\)
@@ -129,7 +129,7 @@ $$ Z_{1}, \dots, Z_{k} = \{ X_{1}, \dots, X_{n} \} - \{ Z \} - \{ Y_{1}, \dots, 
 Order \(Z_{i}\) into an elimination ordering \(Z_{1}, \dots, Z_{k}\)
 $$ P(Z, Y_{1} = v_{1}, \dots, Y_{j} = v_{j}) = \sum_{Z_{k}} \cdots \sum_{Z_{1}} \prod_{i=1}^{n} P(X_{i} \mid \text{parents}(X_{i}))_{Y_{1} = v_{1}, \dots, Y_{j} = v_{j}} $$
 \subsection{Computing Sums of Products}
-\label{sec:orgf98b60e}
+\label{sec:org9304f00}
 Computation in belief networks reduces to computing the sums of products:
 \begin{itemize}
 \item to compute \(ab + ac\) efficiently
@@ -142,7 +142,7 @@ Computation in belief networks reduces to computing the sums of products:
 \end{itemize}
 \end{itemize}
 \subsection{Algorithm}
-\label{sec:org8e31e25}
+\label{sec:org291b06b}
 To compute \(P(Z \mid Y_{1} = v_{1} \wedge \cdots \wedge Y_{j} = v_{j})\):
 \begin{itemize}
 \item construct a factor for each conditional probability
@@ -158,7 +158,7 @@ each \(Z_{i}\) in order starting from \(i = 1\)
 \item normalize by dividing the resulting factor \(f(Z)\) by \(\sum_{Z} f(Z)\)
 \end{itemize}
 \subsection{Summing out a Variable}
-\label{sec:org8804133}
+\label{sec:org8897709}
 To sum out a variable \(Z_{j}\) from a product \(f_{1}, \dots, f_{k}\) of factors:
 \begin{itemize}
 \item partition the factors into
@@ -174,7 +174,7 @@ $$ \sum_{Z_{j}} f_{1} \times \cdots \times f_{k} = f_{1} \times \cdots \times f_
 Explicitly construct a representation of the rightmost factor and replace
 the factors by the new factor.
 \subsection{Elimination Ordering}
-\label{sec:org74eafb8}
+\label{sec:orga2001c0}
 Complexity is \uline{linear} in the number of variables and \uline{exponential} in the size of the largest
 factor.
 Creating new factors blows this up, but this depends on the \textbf{elimination ordering}.
@@ -185,14 +185,14 @@ Specifically, finding the optimal elimination ordering is NP-hard for general BN
 
 In general, inference is NP-hard.
 \subsubsection{Polytrees}
-\label{sec:orga706720}
+\label{sec:orgcac71c2}
 Eliminate singly connected nodes first.
 Then, no factor is ever larger than original CPTs.
 
 If the most connected nodes are eliminated first, a large factor is created with the singly
 connected nodes.
 \subsubsection{Relevance}
-\label{sec:org9ea955b}
+\label{sec:org12af64b}
 Certain variables have no impact.
 
 Can restrict attention to relevant variables.

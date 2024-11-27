@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-29 Tue 13:37 -->
+<!-- 2024-11-27 Wed 10:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Probability And Bayesian Networks</title>
-<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="author" content="Arnav Gupta" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -234,25 +234,25 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9e2fffa">1. Uncertainty</a></li>
-<li><a href="#org05328cb">2. Bayesian Probability</a>
+<li><a href="#orgdd33977">1. Uncertainty</a></li>
+<li><a href="#org64e98a1">2. Bayesian Probability</a>
 <ul>
-<li><a href="#orga21cd67">2.1. Independence</a></li>
-<li><a href="#org3561237">2.2. Conditional Probability</a></li>
-<li><a href="#org61bd1e3">2.3. Expected Values</a></li>
+<li><a href="#orga734ddd">2.1. Independence</a></li>
+<li><a href="#org61657ab">2.2. Conditional Probability</a></li>
+<li><a href="#org368fd53">2.3. Expected Values</a></li>
 </ul>
 </li>
-<li><a href="#org9341170">3. Bayesian Networks</a>
+<li><a href="#org65fceb7">3. Bayesian Networks</a>
 <ul>
-<li><a href="#org1ed716d">3.1. Correlation and Causality</a></li>
-<li><a href="#orge3d3d4e">3.2. Conditional Independence</a></li>
+<li><a href="#org3be92dd">3.1. Correlation and Causality</a></li>
+<li><a href="#orge300f40">3.2. Conditional Independence</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org9e2fffa" class="outline-2">
-<h2 id="org9e2fffa"><span class="section-number-2">1.</span> Uncertainty</h2>
+<div id="outline-container-orgdd33977" class="outline-2">
+<h2 id="orgdd33977"><span class="section-number-2">1.</span> Uncertainty</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Agents don&rsquo;t know everything but must still make decisions,
@@ -264,8 +264,8 @@ An agent can know how uncertain it is.
 </p>
 </div>
 </div>
-<div id="outline-container-org05328cb" class="outline-2">
-<h2 id="org05328cb"><span class="section-number-2">2.</span> Bayesian Probability</h2>
+<div id="outline-container-org64e98a1" class="outline-2">
+<h2 id="org64e98a1"><span class="section-number-2">2.</span> Bayesian Probability</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Frequentist probability is <b>ontological</b>: pertaining to the world (at this time).
@@ -296,8 +296,8 @@ For probabilities:
 <li>probability is a <b>measure of ignorance</b></li>
 </ul>
 </div>
-<div id="outline-container-orga21cd67" class="outline-3">
-<h3 id="orga21cd67"><span class="section-number-3">2.1.</span> Independence</h3>
+<div id="outline-container-orga734ddd" class="outline-3">
+<h3 id="orga734ddd"><span class="section-number-3">2.1.</span> Independence</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Describe a system with \(n\) features, so \(2^{n} - 1\) probabilities.
@@ -310,8 +310,8 @@ all probabilities.
 </p>
 </div>
 </div>
-<div id="outline-container-org3561237" class="outline-3">
-<h3 id="org3561237"><span class="section-number-3">2.2.</span> Conditional Probability</h3>
+<div id="outline-container-org61657ab" class="outline-3">
+<h3 id="org61657ab"><span class="section-number-3">2.2.</span> Conditional Probability</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 For random variables \(X\) and \(Y\),
@@ -350,8 +350,8 @@ which leads to <b>Bayes&rsquo; Rule</b>
 </p>
 </div>
 </div>
-<div id="outline-container-org61bd1e3" class="outline-3">
-<h3 id="org61bd1e3"><span class="section-number-3">2.3.</span> Expected Values</h3>
+<div id="outline-container-org368fd53" class="outline-3">
+<h3 id="org368fd53"><span class="section-number-3">2.3.</span> Expected Values</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Expected value of a function on \(X\), \(V(x)\) is
@@ -369,8 +369,8 @@ This is useful in decision making, where \(V(X)\) is the <span class="underline"
 </div>
 </div>
 </div>
-<div id="outline-container-org9341170" class="outline-2">
-<h2 id="org9341170"><span class="section-number-2">3.</span> Bayesian Networks</h2>
+<div id="outline-container-org65fceb7" class="outline-2">
+<h2 id="org65fceb7"><span class="section-number-2">3.</span> Bayesian Networks</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Complete independence reduces both representation and inference from \(O(2^{n})\) to \(O(n)\).
@@ -411,8 +411,8 @@ The joint distribution is formed by multiplying the conditional probability tabl
 \[ P(X_{1}, \dots, X_{n}) = \prod_{i} P(X_{i} \mid \text{parents}(X_{i})) \]
 </p>
 </div>
-<div id="outline-container-org1ed716d" class="outline-3">
-<h3 id="org1ed716d"><span class="section-number-3">3.1.</span> Correlation and Causality</h3>
+<div id="outline-container-org3be92dd" class="outline-3">
+<h3 id="org3be92dd"><span class="section-number-3">3.1.</span> Correlation and Causality</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Directed links in a Bayes&rsquo; network approximately causality, but this is not always the case.
@@ -423,8 +423,8 @@ In a Bayes network, this does not matter, though some structures will be easier 
 </p>
 </div>
 </div>
-<div id="outline-container-orge3d3d4e" class="outline-3">
-<h3 id="orge3d3d4e"><span class="section-number-3">3.2.</span> Conditional Independence</h3>
+<div id="outline-container-orge300f40" class="outline-3">
+<h3 id="orge300f40"><span class="section-number-3">3.2.</span> Conditional Independence</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 When no information is given, a later node in a Bayes network is not independent of its
@@ -443,8 +443,8 @@ The full joint probability can be specified using the local conditional probabil
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-10-29 Tue 13:37</p>
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-27 Wed 10:19</p>
 </div>
 </body>
 </html>

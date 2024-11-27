@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-11 Mon 03:54 -->
+<!-- 2024-11-27 Wed 10:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Supervised Machine Learning</title>
-<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="author" content="Arnav Gupta" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -234,24 +234,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8069b66">1. Linear Regression</a></li>
-<li><a href="#org6b876b3">2. Linear Classifier</a></li>
-<li><a href="#org98e9574">3. Neural Networks</a>
+<li><a href="#orgccbb675">1. Linear Regression</a></li>
+<li><a href="#org6c45617">2. Linear Classifier</a></li>
+<li><a href="#org1a36dd9">3. Neural Networks</a>
 <ul>
-<li><a href="#org026e2e6">3.1. Activation Functions</a>
+<li><a href="#org1dba81a">3.1. Activation Functions</a>
 <ul>
-<li><a href="#org5ec42ac">3.1.1. Step Function</a></li>
-<li><a href="#org6fc2ca0">3.1.2. Sigmoid Function</a></li>
-<li><a href="#orgb4a19a2">3.1.3. Rectified Linear Unit (ReLU)</a></li>
-<li><a href="#org093298c">3.1.4. Leaky ReLU</a></li>
+<li><a href="#org861eeef">3.1.1. Step Function</a></li>
+<li><a href="#orgf2bc39d">3.1.2. Sigmoid Function</a></li>
+<li><a href="#org370b617">3.1.3. Rectified Linear Unit (ReLU)</a></li>
+<li><a href="#orgdd8944b">3.1.4. Leaky ReLU</a></li>
 </ul>
 </li>
-<li><a href="#org6f35dae">3.2. Backpropagation</a></li>
-<li><a href="#org73bb8fc">3.3. Generalization and Optimization</a></li>
-<li><a href="#org409b866">3.4. Modeling</a>
+<li><a href="#org6622b5d">3.2. Backpropagation</a></li>
+<li><a href="#org6bcb721">3.3. Generalization and Optimization</a></li>
+<li><a href="#org60b9525">3.4. Modeling</a>
 <ul>
-<li><a href="#org211fb1a">3.4.1. Sequence Modeling</a></li>
-<li><a href="#org8b12a38">3.4.2. Composite Models</a></li>
+<li><a href="#org1822c4a">3.4.1. Sequence Modeling</a></li>
+<li><a href="#orgcb224e6">3.4.2. Composite Models</a></li>
 </ul>
 </li>
 </ul>
@@ -259,8 +259,8 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org8069b66" class="outline-2">
-<h2 id="org8069b66"><span class="section-number-2">1.</span> Linear Regression</h2>
+<div id="outline-container-orgccbb675" class="outline-2">
+<h2 id="orgccbb675"><span class="section-number-2">1.</span> Linear Regression</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 A model in which the output is a linear function of the input features:
@@ -316,8 +316,8 @@ work of other weight updates, creating an oscillation.
 </p>
 </div>
 </div>
-<div id="outline-container-org6b876b3" class="outline-2">
-<h2 id="org6b876b3"><span class="section-number-2">2.</span> Linear Classifier</h2>
+<div id="outline-container-org6c45617" class="outline-2">
+<h2 id="org6c45617"><span class="section-number-2">2.</span> Linear Classifier</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 For binary classification between 0 and 1, the <b>squashed linear function</b> is of the form:
@@ -341,8 +341,8 @@ The logistical activation function is
 </p>
 </div>
 </div>
-<div id="outline-container-org98e9574" class="outline-2">
-<h2 id="org98e9574"><span class="section-number-2">3.</span> Neural Networks</h2>
+<div id="outline-container-org1a36dd9" class="outline-2">
+<h2 id="org1a36dd9"><span class="section-number-2">3.</span> Neural Networks</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Inspired by networks in the brain.
@@ -394,12 +394,12 @@ depends on the initial state, which may depend on previous inputs</li>
 </ul></li>
 </ul>
 </div>
-<div id="outline-container-org026e2e6" class="outline-3">
-<h3 id="org026e2e6"><span class="section-number-3">3.1.</span> Activation Functions</h3>
+<div id="outline-container-org1dba81a" class="outline-3">
+<h3 id="org1dba81a"><span class="section-number-3">3.1.</span> Activation Functions</h3>
 <div class="outline-text-3" id="text-3-1">
 </div>
-<div id="outline-container-org5ec42ac" class="outline-4">
-<h4 id="org5ec42ac"><span class="section-number-4">3.1.1.</span> Step Function</h4>
+<div id="outline-container-org861eeef" class="outline-4">
+<h4 id="org861eeef"><span class="section-number-4">3.1.1.</span> Step Function</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 \(f(x) = 1\) if \(x > 0\) else \(f(x) = 0\).
@@ -407,8 +407,8 @@ Simple to use but not differentiable so not used in practice.
 </p>
 </div>
 </div>
-<div id="outline-container-org6fc2ca0" class="outline-4">
-<h4 id="org6fc2ca0"><span class="section-number-4">3.1.2.</span> Sigmoid Function</h4>
+<div id="outline-container-orgf2bc39d" class="outline-4">
+<h4 id="orgf2bc39d"><span class="section-number-4">3.1.2.</span> Sigmoid Function</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 \[ f(x) = \frac{1}{1 + e^{-kx}} \]
@@ -425,8 +425,8 @@ further or learns very slowly.
 </p>
 </div>
 </div>
-<div id="outline-container-orgb4a19a2" class="outline-4">
-<h4 id="orgb4a19a2"><span class="section-number-4">3.1.3.</span> Rectified Linear Unit (ReLU)</h4>
+<div id="outline-container-org370b617" class="outline-4">
+<h4 id="org370b617"><span class="section-number-4">3.1.3.</span> Rectified Linear Unit (ReLU)</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 \[ f(x) = \max (0, x) \]
@@ -440,8 +440,8 @@ the gradient becomes 0 and the network cannot learn.
 </p>
 </div>
 </div>
-<div id="outline-container-org093298c" class="outline-4">
-<h4 id="org093298c"><span class="section-number-4">3.1.4.</span> Leaky ReLU</h4>
+<div id="outline-container-orgdd8944b" class="outline-4">
+<h4 id="orgdd8944b"><span class="section-number-4">3.1.4.</span> Leaky ReLU</h4>
 <div class="outline-text-4" id="text-3-1-4">
 <p>
 \[ f(x) = \max(0, x) + k \cdot \min(0, x) \]
@@ -451,8 +451,8 @@ negative input values.
 </div>
 </div>
 </div>
-<div id="outline-container-org6f35dae" class="outline-3">
-<h3 id="org6f35dae"><span class="section-number-3">3.2.</span> Backpropagation</h3>
+<div id="outline-container-org6622b5d" class="outline-3">
+<h3 id="org6622b5d"><span class="section-number-3">3.2.</span> Backpropagation</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 <b>Backpropagation</b> implements stochastic gradient descent.
@@ -475,8 +475,8 @@ Update each weight by the sum of the partial derivatives for all the training ex
 </p>
 </div>
 </div>
-<div id="outline-container-org73bb8fc" class="outline-3">
-<h3 id="org73bb8fc"><span class="section-number-3">3.3.</span> Generalization and Optimization</h3>
+<div id="outline-container-org6bcb721" class="outline-3">
+<h3 id="org6bcb721"><span class="section-number-3">3.3.</span> Generalization and Optimization</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 For unit \(j\) of layer &ell;
@@ -519,12 +519,12 @@ To improve optimization:
 </ul>
 </div>
 </div>
-<div id="outline-container-org409b866" class="outline-3">
-<h3 id="org409b866"><span class="section-number-3">3.4.</span> Modeling</h3>
+<div id="outline-container-org60b9525" class="outline-3">
+<h3 id="org60b9525"><span class="section-number-3">3.4.</span> Modeling</h3>
 <div class="outline-text-3" id="text-3-4">
 </div>
-<div id="outline-container-org211fb1a" class="outline-4">
-<h4 id="org211fb1a"><span class="section-number-4">3.4.1.</span> Sequence Modeling</h4>
+<div id="outline-container-org1822c4a" class="outline-4">
+<h4 id="org1822c4a"><span class="section-number-4">3.4.1.</span> Sequence Modeling</h4>
 <div class="outline-text-4" id="text-3-4-1">
 <p>
 <b>Word Embedding</b>: latent vector spaces that represent the meaning of words in context
@@ -551,8 +551,8 @@ To improve optimization:
 </p>
 </div>
 </div>
-<div id="outline-container-org8b12a38" class="outline-4">
-<h4 id="org8b12a38"><span class="section-number-4">3.4.2.</span> Composite Models</h4>
+<div id="outline-container-orgcb224e6" class="outline-4">
+<h4 id="orgcb224e6"><span class="section-number-4">3.4.2.</span> Composite Models</h4>
 <div class="outline-text-4" id="text-3-4-2">
 <p>
 In <b>random forests</b>, each decision tree in the forest is different, with different features,
@@ -581,8 +581,8 @@ Late learners have a more difficult problem, but the set of examples is more foc
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-11-11 Mon 03:54</p>
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-27 Wed 10:20</p>
 </div>
 </body>
 </html>

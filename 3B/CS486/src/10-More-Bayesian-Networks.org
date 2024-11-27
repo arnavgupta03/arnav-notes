@@ -1,4 +1,5 @@
 #+title: More Bayesian Networks
+#+author: Arnav Gupta
 #+LATEX_HEADER: \usepackage{parskip,darkmode}
 #+LATEX_HEADER: \enabledarkmode
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />

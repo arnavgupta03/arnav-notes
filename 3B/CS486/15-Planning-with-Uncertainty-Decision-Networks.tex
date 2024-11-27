@@ -1,4 +1,4 @@
-% Created 2024-11-21 Thu 00:45
+% Created 2024-11-27 Wed 10:20
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -15,11 +15,11 @@
 \usepackage{parskip,darkmode}
 \usepackage{upgreek}
 \enabledarkmode
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Planning With Uncertainty Decision Networks}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Planning With Uncertainty Decision Networks},
  pdfkeywords={},
  pdfsubject={},
@@ -31,7 +31,7 @@
 \tableofcontents
 
 \section{Preferences}
-\label{sec:org1bb6cb5}
+\label{sec:org3aeb0d4}
 Let \(V(x)\) be the \textbf{utility} of the situation \(X\).
 \textbf{Bayesian decision making} is
 $$ \mathbb{E}(V(\text{decision})) = \sum_{\text{outcome}} P(\text{outcome} \mid \text{decision}) V(\text{outcome}) $$
@@ -56,7 +56,7 @@ $$ [p_{1} : o_{1}, \dots, p_{k} : o_{k}] $$
 where \(o_{i}\) are outcomes and \(p_{i} > 0\) such that
 $$ \sum_{i} p_{i} = 1 $$
 \subsection{Properties of Preferences}
-\label{sec:org92ef946}
+\label{sec:org509f6e6}
 \textbf{Completeness}: agents have to act so they must have preferences
 $$ \forall o_{1} \forall o_{2} \; o_{1} \succeq o_{2} \text{ or } o_{2} \succeq o_{1} $$
 
@@ -85,12 +85,12 @@ such that
 $$ \text{utility}([p_{1} : o_{1}, \dots, p_{k} : o_{k}]) = \sum_{i=1}^{k} p_{i} \times \text{utility}(o_{i}) $$
 \end{itemize}
 \section{Rationality and Irrationality}
-\label{sec:org0ec58b5}
+\label{sec:org0a67300}
 Rational agents act to maximize expected utility.
 
 Humans are not rational and weight value differently for gains and losses (prospect theory).
 \section{Decisions}
-\label{sec:orgd59f5bd}
+\label{sec:orgd5994a5}
 Making a decision on what an agent should do depends on
 \begin{itemize}
 \item agent's \textbf{ability}: options available to it
@@ -112,7 +112,7 @@ $$ \mathcal{E}(u \mid D = d_{i}) = \sum P(\omega \mid D = d_{i})u(\omega) $$
 \textbf{Optimal single decision}: decision \(D = d_{\max}\) whose expected utility is maximal:
 $$ \mathcal{E}(u \mid D = d_{\max}) = \max_{d_{i} \in \text{dom}(D)} \mathcal{E}(u \mid D = d_{i}) $$
 \section{Decision Networks}
-\label{sec:org5c4e6df}
+\label{sec:org9b85840}
 Graphical representation of a finite sequential decision problem.
 Extension of belief networks to include decision variables and utility.
 
@@ -141,7 +141,7 @@ that gives the expected utility for each \(D\)
 \item choose the \(D\) with the maximum value in the factor
 \end{itemize}
 \section{Sequential Decisions}
-\label{sec:orgffaa563}
+\label{sec:org5021458}
 An intelligent agent observes and acts iteratively, where subsequent
 actions can depend on what is observed, which depends on previous actions.
 
@@ -152,7 +152,7 @@ Often an action is carried out to provide info for future actions.
 \(\text{parents}(D_{i})\) whose value will be known when decision \(D_{i}\)
 is made
 \section{Policies}
-\label{sec:org689708e}
+\label{sec:org7a87369}
 Specifies what an agent should do under each circumstance.
 
 A \textbf{policy} is a sequence \(\delta_{1}, \dots, \delta_{n}\) of decision functions

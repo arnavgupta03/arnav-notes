@@ -1,4 +1,4 @@
-% Created 2024-10-29 Tue 13:37
+% Created 2024-11-27 Wed 10:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -15,11 +15,11 @@
 \usepackage{parskip,darkmode}
 \enabledarkmode
 \usepackage{dsfont}
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Probability And Bayesian Networks}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Probability And Bayesian Networks},
  pdfkeywords={},
  pdfsubject={},
@@ -31,13 +31,13 @@
 \tableofcontents
 
 \section{Uncertainty}
-\label{sec:orga966710}
+\label{sec:org719e06f}
 Agents don't know everything but must still make decisions,
 whether in the \uline{absence of info} or with \uline{noisy info}.
 
 An agent can know how uncertain it is.
 \section{Bayesian Probability}
-\label{sec:orgfd73723}
+\label{sec:org1ace1b9}
 Frequentist probability is \textbf{ontological}: pertaining to the world (at this time).
 
 Bayesian probability is \textbf{epistemological}: pertaining to knowledge (based on previous experience).
@@ -59,14 +59,14 @@ For probabilities:
 \item probability is a \textbf{measure of ignorance}
 \end{itemize}
 \subsection{Independence}
-\label{sec:org1d5e241}
+\label{sec:orgf4b10b0}
 Describe a system with \(n\) features, so \(2^{n} - 1\) probabilities.
 Can use independence to reduce the number of probabilities.
 
 With independence, can sum the options for each feature rather than multiplying to describe
 all probabilities.
 \subsection{Conditional Probability}
-\label{sec:org152750e}
+\label{sec:org67f84aa}
 For random variables \(X\) and \(Y\),
 \(P(x \mid y)\) is the probability that \(X = x\) given \(Y = y\).
 
@@ -91,7 +91,7 @@ $$ P(X \mid Y) = \frac{P(Y \mid X) P(X)}{P(Y)} $$
 $$ \sum_{x} P(X = x, Y) = P(Y) $$
 \(P(Y)\) is the \textbf{marginal distribution} over \(Y\).
 \subsection{Expected Values}
-\label{sec:orge4358dc}
+\label{sec:org42ec887}
 Expected value of a function on \(X\), \(V(x)\) is
 $$ \mathds{E}(V) = \sum_{x \in \text{Dom}(X)} P(x), V(x) $$
 
@@ -100,7 +100,7 @@ This is useful in decision making, where \(V(X)\) is the \uline{utility} of situ
 \textbf{Bayesian Decision Making}
 $$ \mathds{E}(V(\text{decision})) = \sum_{\text{outcome}} P(\text{outcome} \mid \text{decision}) V(\text{outcome}) $$
 \section{Bayesian Networks}
-\label{sec:orgc6588e2}
+\label{sec:orgee20d6d}
 Complete independence reduces both representation and inference from \(O(2^{n})\) to \(O(n)\).
 
 Complete mutual independence is rare so more often use conditional independence.
@@ -128,12 +128,12 @@ The BN defines a factorization of the joint probability distribution.
 The joint distribution is formed by multiplying the conditional probability tables together
 $$ P(X_{1}, \dots, X_{n}) = \prod_{i} P(X_{i} \mid \text{parents}(X_{i})) $$
 \subsection{Correlation and Causality}
-\label{sec:orgc25c1a1}
+\label{sec:orge5d0bfa}
 Directed links in a Bayes' network approximately causality, but this is not always the case.
 
 In a Bayes network, this does not matter, though some structures will be easier to specify.
 \subsection{Conditional Independence}
-\label{sec:org2039f4c}
+\label{sec:org83b2b89}
 When no information is given, a later node in a Bayes network is not independent of its
 ancestors.
 

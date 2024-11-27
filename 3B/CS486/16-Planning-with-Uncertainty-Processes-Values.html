@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-22 Fri 00:40 -->
+<!-- 2024-11-27 Wed 10:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Planning With Uncertainty: Processes and Values</title>
-<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="author" content="Arnav Gupta" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -234,34 +234,34 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbe7a194">1. Worlds and Planning</a>
+<li><a href="#org56b1d45">1. Worlds and Planning</a>
 <ul>
-<li><a href="#org7826864">1.1. World State</a></li>
+<li><a href="#orgc273672">1.1. World State</a></li>
 </ul>
 </li>
-<li><a href="#orgef92212">2. Markov Decision Processes</a>
+<li><a href="#org13b554b">2. Markov Decision Processes</a>
 <ul>
-<li><a href="#orgb9830a0">2.1. Rewards and Values</a></li>
-<li><a href="#orgd91bf12">2.2. Policies</a>
+<li><a href="#org5df93dc">2.1. Rewards and Values</a></li>
+<li><a href="#orga3cae90">2.2. Policies</a>
 <ul>
-<li><a href="#org2d82ea5">2.2.1. Policy Value</a></li>
-<li><a href="#orga7d1ef8">2.2.2. Optimal Policy Value</a></li>
+<li><a href="#orga5618a2">2.2.1. Policy Value</a></li>
+<li><a href="#org17d6ffc">2.2.2. Optimal Policy Value</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org0443691">3. Value Iteration</a>
+<li><a href="#org77148df">3. Value Iteration</a>
 <ul>
-<li><a href="#org5462530">3.1. Steps</a></li>
-<li><a href="#org5a68f88">3.2. Asynchronous Value Iteration</a></li>
+<li><a href="#orgf678fe4">3.1. Steps</a></li>
+<li><a href="#orgdc5b482">3.2. Asynchronous Value Iteration</a></li>
 </ul>
 </li>
-<li><a href="#org11782b4">4. Markov Decision Processes and State</a></li>
+<li><a href="#org89d1ccd">4. Markov Decision Processes and State</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbe7a194" class="outline-2">
-<h2 id="orgbe7a194"><span class="section-number-2">1.</span> Worlds and Planning</h2>
+<div id="outline-container-org56b1d45" class="outline-2">
+<h2 id="org56b1d45"><span class="section-number-2">1.</span> Worlds and Planning</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Agents carry out actions according to the <b>horizon</b>:
@@ -282,8 +282,8 @@ It is helpful to know, what an agent should do when (for all planning horizons):
 <li>the world is fully observable: current state is always fully in evidence</li>
 </ul>
 </div>
-<div id="outline-container-org7826864" class="outline-3">
-<h3 id="org7826864"><span class="section-number-3">1.1.</span> World State</h3>
+<div id="outline-container-orgc273672" class="outline-3">
+<h3 id="orgc273672"><span class="section-number-3">1.1.</span> World State</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The information such that if the <b>world state</b> is known, no info about
@@ -313,8 +313,8 @@ which has an indefinite horizon.
 </div>
 </div>
 </div>
-<div id="outline-container-orgef92212" class="outline-2">
-<h2 id="orgef92212"><span class="section-number-2">2.</span> Markov Decision Processes</h2>
+<div id="outline-container-org13b554b" class="outline-2">
+<h2 id="org13b554b"><span class="section-number-2">2.</span> Markov Decision Processes</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Augments a Markov chain with actions and values.
@@ -342,8 +342,8 @@ must remember sensing and acting history by maintaining a sufficiently complex
 <b>belief state</b>
 </p>
 </div>
-<div id="outline-container-orgb9830a0" class="outline-3">
-<h3 id="orgb9830a0"><span class="section-number-3">2.1.</span> Rewards and Values</h3>
+<div id="outline-container-org5df93dc" class="outline-3">
+<h3 id="org5df93dc"><span class="section-number-3">2.1.</span> Rewards and Values</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Suppose the agent receives the sequence of rewards \(r_{1}, r_{2}, \dots\).
@@ -360,8 +360,8 @@ where \(0 \le \gamma \le 1\) is the <b>discount factor</b></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd91bf12" class="outline-3">
-<h3 id="orgd91bf12"><span class="section-number-3">2.2.</span> Policies</h3>
+<div id="outline-container-orga3cae90" class="outline-3">
+<h3 id="orga3cae90"><span class="section-number-3">2.2.</span> Policies</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 A <b>stationary policy</b> is a function \(\pi : S \to A\) where for a given state \(s\),
@@ -377,8 +377,8 @@ For a fully-observable MDP with stationary dynamics and rewards with infinite
 or indefinite horizon, there is always an optimal stationary policy.
 </p>
 </div>
-<div id="outline-container-org2d82ea5" class="outline-4">
-<h4 id="org2d82ea5"><span class="section-number-4">2.2.1.</span> Policy Value</h4>
+<div id="outline-container-orga5618a2" class="outline-4">
+<h4 id="orga5618a2"><span class="section-number-4">2.2.1.</span> Policy Value</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 \(Q^{\pi}(s, a)\) for some action \(a\) and state \(s\), is the expected value of
@@ -397,8 +397,8 @@ doing \(a\) in state \(s\), then following policy \(\pi\).
 </p>
 </div>
 </div>
-<div id="outline-container-orga7d1ef8" class="outline-4">
-<h4 id="orga7d1ef8"><span class="section-number-4">2.2.2.</span> Optimal Policy Value</h4>
+<div id="outline-container-org17d6ffc" class="outline-4">
+<h4 id="org17d6ffc"><span class="section-number-4">2.2.2.</span> Optimal Policy Value</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 \(Q^{*}(s, a)\) for some action \(a\) and state \(s\), is the expected value of
@@ -423,8 +423,8 @@ Further:
 </div>
 </div>
 </div>
-<div id="outline-container-org0443691" class="outline-2">
-<h2 id="org0443691"><span class="section-number-2">3.</span> Value Iteration</h2>
+<div id="outline-container-org77148df" class="outline-2">
+<h2 id="org77148df"><span class="section-number-2">3.</span> Value Iteration</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <b>t-step lookahead value function</b> \(V^{t}\): expected value with \(t\) steps to go
@@ -435,8 +435,8 @@ The goal, given an estimate of the \(t\) step lookahead value function, is to
 determine the \(t+1\) step lookahead value function.
 </p>
 </div>
-<div id="outline-container-org5462530" class="outline-3">
-<h3 id="org5462530"><span class="section-number-3">3.1.</span> Steps</h3>
+<div id="outline-container-orgf678fe4" class="outline-3">
+<h3 id="orgf678fe4"><span class="section-number-3">3.1.</span> Steps</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Set \(V^{0}\) arbitrarily and \(t = 1\).
@@ -458,8 +458,8 @@ Convergence when \(\| V^{t}(s) - V^{t-1}(s) \| < \epsilon \frac{(1-\gamma)}{\gam
 </p>
 </div>
 </div>
-<div id="outline-container-org5a68f88" class="outline-3">
-<h3 id="org5a68f88"><span class="section-number-3">3.2.</span> Asynchronous Value Iteration</h3>
+<div id="outline-container-orgdc5b482" class="outline-3">
+<h3 id="orgdc5b482"><span class="section-number-3">3.2.</span> Asynchronous Value Iteration</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Can update value function for each state individually rather than sweeping through all states.
@@ -489,8 +489,8 @@ To store \(Q[s,a]\), repeat the following forever:
 </div>
 </div>
 </div>
-<div id="outline-container-org11782b4" class="outline-2">
-<h2 id="org11782b4"><span class="section-number-2">4.</span> Markov Decision Processes and State</h2>
+<div id="outline-container-org89d1ccd" class="outline-2">
+<h2 id="org89d1ccd"><span class="section-number-2">4.</span> Markov Decision Processes and State</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Represent \(S = \{X_{1}, \dots, X_{n}\}\) where \(X_{i}\) are random variables.
@@ -524,8 +524,8 @@ It is a tuple \(\left< S, A, T, R, O, \Omega \right>\):
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-11-22 Fri 00:40</p>
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-27 Wed 10:20</p>
 </div>
 </body>
 </html>

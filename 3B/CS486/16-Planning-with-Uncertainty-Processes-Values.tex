@@ -1,4 +1,4 @@
-% Created 2024-11-22 Fri 00:40
+% Created 2024-11-27 Wed 10:20
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,11 +14,11 @@
 \usepackage{hyperref}
 \usepackage{parskip,darkmode}
 \enabledarkmode
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Planning With Uncertainty: Processes and Values}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Planning With Uncertainty: Processes and Values},
  pdfkeywords={},
  pdfsubject={},
@@ -30,7 +30,7 @@
 \tableofcontents
 
 \section{Worlds and Planning}
-\label{sec:orgd614d2c}
+\label{sec:org52ea593}
 Agents carry out actions according to the \textbf{horizon}:
 \begin{itemize}
 \item \uline{infinite horizon}: forever
@@ -46,7 +46,7 @@ It is helpful to know, what an agent should do when (for all planning horizons):
 \item the world is fully observable: current state is always fully in evidence
 \end{itemize}
 \subsection{World State}
-\label{sec:org6fdfd3b}
+\label{sec:org8769aab}
 The information such that if the \textbf{world state} is known, no info about
 the past is relevant to the future.
 
@@ -63,7 +63,7 @@ If the process never halts, this has an infinite horizon.
 If the process stays in a state getting no reward, these are \textbf{absorbing states},
 which has an indefinite horizon.
 \section{Markov Decision Processes}
-\label{sec:orgef40582}
+\label{sec:orgd36fb80}
 Augments a Markov chain with actions and values.
 
 For an MDP, specify the:
@@ -82,7 +82,7 @@ from \(S_{t}\)
 must remember sensing and acting history by maintaining a sufficiently complex
 \textbf{belief state}
 \subsection{Rewards and Values}
-\label{sec:org67e17eb}
+\label{sec:org686c1f7}
 Suppose the agent receives the sequence of rewards \(r_{1}, r_{2}, \dots\).
 The value that should be assigned could be:
 \begin{itemize}
@@ -95,7 +95,7 @@ $$V = r_{1} + \gamma r_{2} + \gamma^{2} r_{3} + \cdots$$
 where \(0 \le \gamma \le 1\) is the \textbf{discount factor}
 \end{itemize}
 \subsection{Policies}
-\label{sec:orgcbf248d}
+\label{sec:org38b1d6e}
 A \textbf{stationary policy} is a function \(\pi : S \to A\) where for a given state \(s\),
 \(\pi(s)\) specifies what action the agent who is following \(\pi\) will do.
 
@@ -104,7 +104,7 @@ A \textbf{stationary policy} is a function \(\pi : S \to A\) where for a given s
 For a fully-observable MDP with stationary dynamics and rewards with infinite
 or indefinite horizon, there is always an optimal stationary policy.
 \subsubsection{Policy Value}
-\label{sec:org9675169}
+\label{sec:org3db640f}
 \(Q^{\pi}(s, a)\) for some action \(a\) and state \(s\), is the expected value of
 doing \(a\) in state \(s\), then following policy \(\pi\).
 
@@ -115,7 +115,7 @@ doing \(a\) in state \(s\), then following policy \(\pi\).
 $$ Q^{\pi}(s,a) = \sum_{s'} P(s' \mid a, s) ( r(s, a, s') + \gamma V^{\pi}(s') ) $$
 $$ V^{\pi}(s) = Q^{\pi}(s, \pi(s)) $$
 \subsubsection{Optimal Policy Value}
-\label{sec:org1261ce0}
+\label{sec:org80eef6b}
 \(Q^{*}(s, a)\) for some action \(a\) and state \(s\), is the expected value of
 doing \(a\) in state \(s\), then following the optimal policy.
 
@@ -128,13 +128,13 @@ policy in state \(s\).
 Further:
 $$ \pi^{\*}(s) = \text{arg} \max_{a} Q^{\*}(s,a) $$
 \section{Value Iteration}
-\label{sec:org7e007c3}
+\label{sec:org0d83d6f}
 \textbf{t-step lookahead value function} \(V^{t}\): expected value with \(t\) steps to go
 
 The goal, given an estimate of the \(t\) step lookahead value function, is to
 determine the \(t+1\) step lookahead value function.
 \subsection{Steps}
-\label{sec:orgeae86b2}
+\label{sec:org323e3a2}
 Set \(V^{0}\) arbitrarily and \(t = 1\).
 Compute \(Q^{t}\) and \(V^{t}\) from \(V^{t-1}\):
 $$ Q^{t}(s,a) = \left[ R(s) + \gamma \sum_{s'} \text{Pr}(s' \mid s, a) V^{t-1} (s') \right] $$
@@ -148,7 +148,7 @@ Let \(\| X \| = \max \{ |x|, x \in X \}\).
 Convergence when \(\| V^{t}(s) - V^{t-1}(s) \| < \epsilon \frac{(1-\gamma)}{\gamma}\) ensures
 \(V^{t}\) is within \(\epsilon\) of the optimal.
 \subsection{Asynchronous Value Iteration}
-\label{sec:org596942d}
+\label{sec:org2e1f15e}
 Can update value function for each state individually rather than sweeping through all states.
 This converges to the optimal value function if each state and action are visited
 infinitely often in the limit.
@@ -169,7 +169,7 @@ To store \(Q[s,a]\), repeat the following forever:
 $$\sum_{s'} P(s' \mid s, a) \left( R(s, a, s') + \gamma \max_{a'} Q[s', a'] \right) $$
 \end{enumerate}
 \section{Markov Decision Processes and State}
-\label{sec:org4e35b2f}
+\label{sec:orgeb360b0}
 Represent \(S = \{X_{1}, \dots, X_{n}\}\) where \(X_{i}\) are random variables.
 For each \(X_{i}\) and each action \(a \in A\), there is \(P(X_{i}' \mid S, A)\).
 

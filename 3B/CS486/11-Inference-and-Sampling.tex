@@ -1,4 +1,4 @@
-% Created 2024-11-10 Sun 23:01
+% Created 2024-11-27 Wed 10:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -16,11 +16,11 @@
 \enabledarkmode
 \usepackage{tikz,xcolor}
 \usetikzlibrary{shapes.geometric, arrows, positioning}
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Inference And Sampling}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Inference And Sampling},
  pdfkeywords={},
  pdfsubject={},
@@ -32,7 +32,7 @@
 \tableofcontents
 
 \section{Hidden Markov Models}
-\label{sec:org05978cf}
+\label{sec:org7b75055}
 A node may repeat over time, so this requires an explicit encoding of time.
 A chain has a length equal to the amount of time modeled.
 Times can be \textbf{event-driven} or \textbf{clock-driven}.
@@ -90,18 +90,18 @@ Observations are generally audio features, with different
 levels of granularity of audio features being present in different
 levels of models.
 \subsection{Belief Monitoring}
-\label{sec:org327feb1}
+\label{sec:org8924ad5}
 \subsubsection{Forward}
-\label{sec:orgaefdfe1}
+\label{sec:org2f7ef85}
 $$ \alpha_{t} (i) = P(O_{1 \dots t}, S_{t} = i) = P(O_{t} \mid S_{t} = i) \sum_{S_{t-1}} P(S_{t} = i \mid s_{t-1}) \alpha_{t-1}(s_{t-1}) $$
 \subsubsection{Backward}
-\label{sec:orgb9a8482}
+\label{sec:org1107c3f}
 $$ \beta_{t}(i) = P(O_{t+1 \dots T} \mid S_{t} = i) = \sum_{s_{t+1}} \beta_{t+1} (s_{t+1}) P(O_{t+1} \mid s_{t+1}) P(s_{t+1} \mid S_{t} = i) $$
 \subsubsection{Forward-Backward}
-\label{sec:org467dcf4}
+\label{sec:org0449f9c}
 $$ \alpha_{t}(i) \beta_{t}(i) = P(O_{1 \dots T}, S_{t} = i) \propto P(S_{t} = i \mid O) $$
 \section{Dynamic Bayesian Networks}
-\label{sec:org451e7f7}
+\label{sec:org1cc10ac}
 Any Bayesian network can repeat over time, which is a \textbf{Dynamic Bayesian Network}.
 Many examples can be solved with variable elimination though they can become too complex with
 enough variables.
@@ -114,7 +114,7 @@ or probability distributions are unknown.
 This requires resorting to stochastic sampling, since sampling from a distribution allows
 for estimation.
 \section{Sampling}
-\label{sec:org544a756}
+\label{sec:org13f5ba9}
 With \textbf{stochastic simulation}, get probabilities from samples.
 Specifically, sample from a variable's posterior probability to estimate its posterior
 probability.
@@ -128,7 +128,7 @@ domain:
 \item select the \(x\) such that \(f(x) = y\)
 \end{itemize}
 \subsection{Forward Sampling}
-\label{sec:org7b18bf8}
+\label{sec:org0a7a32d}
 Sample variables one at a time, specifically sampling parents before sampling a node.
 Given values for the parents of \(X\), sample from the probability of \(X\) given its parents.
 

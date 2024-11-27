@@ -1,4 +1,4 @@
-% Created 2024-11-11 Mon 03:54
+% Created 2024-11-27 Wed 10:20
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -16,11 +16,11 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \enabledarkmode
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Supervised Machine Learning}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Supervised Machine Learning},
  pdfkeywords={},
  pdfsubject={},
@@ -32,7 +32,7 @@
 \tableofcontents
 
 \section{Linear Regression}
-\label{sec:org5b6baf4}
+\label{sec:org988c30e}
 A model in which the output is a linear function of the input features:
 $$ \hat{Y}_{\vec{w}}(e) = \sum_{i=0}^{n} w_{i}X_{i}(e) $$
 where \(\vec{w} = \left< w_{0}, \dots, w_{n} \right>\) and \(X_{0} = 1\).
@@ -89,7 +89,7 @@ converge.
 This is because weight updates are done immediately but this might undo the
 work of other weight updates, creating an oscillation.
 \section{Linear Classifier}
-\label{sec:org414cccb}
+\label{sec:orgff51065}
 For binary classification between 0 and 1, the \textbf{squashed linear function} is of the form:
 $$ \hat{Y}_{\vec{w}}(e) = f \left( \sum_{i=0}^{n} w_{i}X_{i}(e) \right) $$
 where \(f\) is an \textbf{activation function}.
@@ -105,7 +105,7 @@ $$ w_{i} \gets w_{i} + \eta \delta f' \left( \sum_{i} w_{i}X_{i}(e) \right) X_{i
 The logistical activation function is
 $$ f(x) = \frac{1}{1 + e^{-x}}, \; f'(x) = f(x)(1 - f(x)) $$
 \section{Neural Networks}
-\label{sec:org8266110}
+\label{sec:org5ef0b17}
 Inspired by networks in the brain.
 Idea is to connect simple units that have a threshold and fire.
 
@@ -144,13 +144,13 @@ depends on the initial state, which may depend on previous inputs
 \end{itemize}
 \end{itemize}
 \subsection{Activation Functions}
-\label{sec:orge6ddaa5}
+\label{sec:orgf585f5a}
 \subsubsection{Step Function}
-\label{sec:org270878e}
+\label{sec:org13c26fb}
 \(f(x) = 1\) if \(x > 0\) else \(f(x) = 0\).
 Simple to use but not differentiable so not used in practice.
 \subsubsection{Sigmoid Function}
-\label{sec:org5362f8e}
+\label{sec:orge442606}
 $$ f(x) = \frac{1}{1 + e^{-kx}} $$
 For very large or small \(x\), \(f(x)\) approaches 1 or 0.
 Tuning \(k\) approximates the step function, with higher values of \(k\)
@@ -161,7 +161,7 @@ Sigmoid is differentiable but computationally expensive.
 responds very little to changes in \(x\), so the network does not learn
 further or learns very slowly.
 \subsubsection{Rectified Linear Unit (ReLU)}
-\label{sec:org405c1e0}
+\label{sec:orgcf200ea}
 $$ f(x) = \max (0, x) $$
 Computationally efficient and network converges quickly.
 ReLU is differentiable.
@@ -169,12 +169,12 @@ ReLU is differentiable.
 \textbf{Dying ReLU problem}: when inputs approach 0 or are negative,
 the gradient becomes 0 and the network cannot learn.
 \subsubsection{Leaky ReLU}
-\label{sec:org7d21f3d}
+\label{sec:org4b2da47}
 $$ f(x) = \max(0, x) + k \cdot \min(0, x) $$
 Small positive slope \(k\) in the negative area enables learning for
 negative input values.
 \subsection{Backpropagation}
-\label{sec:org47c07c3}
+\label{sec:org5613265}
 \textbf{Backpropagation} implements stochastic gradient descent.
 
 The \textbf{backpropagation algorithm} is an efficient method of calculating the gradients
@@ -189,7 +189,7 @@ and \(\frac{\partial \text{Error}}{\partial W_{i, j}^{(1)}}\)
 
 Update each weight by the sum of the partial derivatives for all the training examples.
 \subsection{Generalization and Optimization}
-\label{sec:orgaa64815}
+\label{sec:org4f3a328}
 For unit \(j\) of layer \(\ell\)
 $$ \delta_{j}^{(\ell)} = \begin{cases} \frac{\partial \text{Error}}{\partial z_{j}^{(\ell)}} \times f'(a_{j}^{(\ell)}) & \text{base case, $j$ is an output unit} \\ \left( \sum_{k} \delta_{k}^{(\ell + 1)} W_{j, k}^{(\ell + 1)} \right) \times f'(a_{j}^{(\ell)}) & \text{recursive case, $j$ is a hidden unit} \end{cases} $$
 
@@ -222,9 +222,9 @@ To improve optimization:
 \end{itemize}
 \end{itemize}
 \subsection{Modeling}
-\label{sec:org23e0d3e}
+\label{sec:orgc2cb67c}
 \subsubsection{Sequence Modeling}
-\label{sec:orgd702438}
+\label{sec:org0bc7c54}
 \textbf{Word Embedding}: latent vector spaces that represent the meaning of words in context
 
 \textbf{RNNs}: neural net repeats over time and has inputs from previous time step
@@ -237,7 +237,7 @@ To improve optimization:
 
 \textbf{LLMs}: very large transformers for language
 \subsubsection{Composite Models}
-\label{sec:org7011113}
+\label{sec:org442526d}
 In \textbf{random forests}, each decision tree in the forest is different, with different features,
 splitting criteria, and training sets.
 The average or majority vote determines the output.
