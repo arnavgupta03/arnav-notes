@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-27 Wed 15:44 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reinforcement Learning</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Reinforcement Learning</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org38f87f9">1. Reinforcement Learning</a>
+<ul>
+<li><a href="#orgb399658">1.1. Main Approaches</a></li>
+</ul>
+</li>
+<li><a href="#org77bb6e0">2. Q-Learning</a>
+<ul>
+<li><a href="#orgf703696">2.1. Temporal Differences</a></li>
+<li><a href="#org445dd63">2.2. Q-Learning</a></li>
+<li><a href="#org932db0b">2.3. Properties</a></li>
+</ul>
+</li>
+<li><a href="#orga1087ba">3. Strategies for Reinforcement Learning</a>
+<ul>
+<li><a href="#org2db8597">3.1. Exploration Strategies</a></li>
+<li><a href="#org9a15622">3.2. Off/On-Policy Learning</a></li>
+<li><a href="#org5b1e76c">3.3. SARSA</a></li>
+<li><a href="#orgdb0916f">3.4. Model-Based</a></li>
+</ul>
+</li>
+<li><a href="#org87f0bfb">4. Convergence and Divergence</a>
+<ul>
+<li><a href="#org32840f5">4.1. Experience Relay</a></li>
+<li><a href="#orgdf36b8e">4.2. Target Network</a></li>
+<li><a href="#org1b66294">4.3. Deep Q Network</a></li>
+<li><a href="#orgb1192fd">4.4. Bayesian Reinforcement Learning</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org38f87f9" class="outline-2">
+<h2 id="org38f87f9"><span class="section-number-2">1.</span> Reinforcement Learning</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+What an agent should do given some:
+</p>
+<ul class="org-ul">
+<li><span class="underline">prior knowledge</span>: possible states of the worlds and possible actions</li>
+<li><span class="underline">observations</span>: current world state and immediate reward/punishment</li>
+<li><span class="underline">goal</span>: act to maximize accumulated reward</li>
+</ul>
+
+<p>
+Assume some sequence of <b>experiences</b> with a state, action, and reward.
+For the agent to decide what to do next, it must decide whether to explore to gain more knowledge
+or exploit the knowledge it has already discovered.
+</p>
+
+<p>
+Reinforcement learning is difficult due to the <span class="underline">credit assignment problem</span>, which is what actions
+are responsible for the reward but may have occurred a long time before the reward was received
+(long-term effect of an action).
+This leads to the <span class="underline">explore-exploit dilemma</span>: when the agent should be greedy vs inquisitive.
+</p>
+</div>
+<div id="outline-container-orgb399658" class="outline-3">
+<h3 id="orgb399658"><span class="section-number-3">1.1.</span> Main Approaches</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Can search through a space of policies.
+</p>
+
+<p>
+<b>Model Based RL</b>: learn a model consisting of state transition function \(P(s' \mid a, s)\) and
+reward function \(R(s, a, s')\) and solve this as an MDP
+</p>
+
+<p>
+<b>Model-Free RL</b>: learn \(Q^{*}(s,a)\) and use to guide action
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org77bb6e0" class="outline-2">
+<h2 id="org77bb6e0"><span class="section-number-2">2.</span> Q-Learning</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgf703696" class="outline-3">
+<h3 id="orgf703696"><span class="section-number-3">2.1.</span> Temporal Differences</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Consider some sequence \(v_{1}, v_{2}, v_{3}, \dots\) and take a running estimate of the first \(k\)
+values:
+\[ A_{k} = \frac{v_{1} + \cdots + v_{k}}{k} \]
+when a new value arrives
+\[ A_{k} = \frac{k-1}{k} A_{k-1} + \frac{1}{k} v_{k} \]
+The <b>TD formula</b> is that, for \(\alpha = \frac{1}{k}\)
+\[ A_{k} = A_{k-1} + \alpha (v_{k} - A_{k-1}) \]
+</p>
+</div>
+</div>
+<div id="outline-container-org445dd63" class="outline-3">
+<h3 id="org445dd63"><span class="section-number-3">2.2.</span> Q-Learning</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Store \(Q\)[State, Action] and update this as in asynchronous value iteration, but using
+experience (empirical probabilities and rewards).
+</p>
+
+<p>
+Suppose the agent has an experience \(\left< s, a, r, s' \right>\), which provides a datum to
+update \(Q[s, a]\).
+\(\left< s, a, r, s' \right>\) provides the data point
+\[ r + \gamma \max_{a'} Q[s', a'] \]
+which can be used in the TD formula giving
+\[ Q[s, a] \gets Q[s, a] + \alpha \left( r + \gamma \max_{a'} Q[s', a'] - Q[s, a] \right) \]
+</p>
+</div>
+</div>
+<div id="outline-container-org932db0b" class="outline-3">
+<h3 id="org932db0b"><span class="section-number-3">2.3.</span> Properties</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Q-learning converges to the optimal policy, no matter what the agent does, as long as it tries
+each action in each state enough (infinitely often).
+</p>
+
+<p>
+The agent can either exploit (select the action that maximizes \(Q[s, a]\)) or
+explore (select another action).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga1087ba" class="outline-2">
+<h2 id="orga1087ba"><span class="section-number-2">3.</span> Strategies for Reinforcement Learning</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org2db8597" class="outline-3">
+<h3 id="org2db8597"><span class="section-number-3">3.1.</span> Exploration Strategies</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The <b>\(\epsilon\) greedy strategy</b> is to choose a random action with probability \(\epsilon\) and choose
+a best action with probability \(1-\epsilon\).
+</p>
+
+<p>
+In <b>softmax action selection</b>, starting from state \(s\), choose an action \(a\) with probability
+\[ \frac{e^{Q[s, a] / \tau}}{\sum_{a} e^{Q[s, a]} / \tau} \]
+where \(\tau > 0\) is the temperature.
+Good actions are chosen more often than bad actions and for \(\tau \to \infty\) all actions are
+equally probably and for \(\tau \to 0\), only the best action is chosen.
+</p>
+
+<p>
+For optimism in the face of uncertainty, initialize \(Q\) to values that encourage exploration.
+</p>
+
+<p>
+The <b>upper confidence bound (UCB)</b>, store \(N[s, a]\), which is th number of times that the
+state-action pair has been tried) and use
+\[ \text{arg} \max_{a} \left[ \right] \]
+where \(N[s] = \sum_{a} = N[s, a]\).
+</p>
+</div>
+</div>
+<div id="outline-container-org9a15622" class="outline-3">
+<h3 id="org9a15622"><span class="section-number-3">3.2.</span> Off/On-Policy Learning</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Q-learning does <b>off-policy</b> learning, where it learns the value of the optimal policy, no matter
+what it does, but this could be bad if the exploration policy is dangerous.
+</p>
+
+<p>
+<b>On-policy</b> learning learns the value of the policy being followed.
+</p>
+
+<p>
+If the agent will explore, it may be better to optimize the actual policy it is going to do.
+</p>
+</div>
+</div>
+<div id="outline-container-org5b1e76c" class="outline-3">
+<h3 id="org5b1e76c"><span class="section-number-3">3.3.</span> SARSA</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Uses the experience \(\left< s, a, r, s', a' \right>\) to update \(Q[s, a]\).
+<b>On-policy</b> since it uses empirical values for \(s'\) and \(a'\).
+</p>
+</div>
+</div>
+<div id="outline-container-orgdb0916f" class="outline-3">
+<h3 id="orgdb0916f"><span class="section-number-3">3.4.</span> Model-Based</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Uses the experiences more effectively.
+Used when collecting experiences is expensive and can do lots of computation between
+each experience.
+</p>
+
+<p>
+Idea is to learn the MDP and interleave acting and planning.
+</p>
+
+<p>
+After each experience, update probabilities and the reward, then do some steps of
+asynchronous value iteration.
+</p>
+
+<p>
+Let \(s = (x_{1}, \dots, x_{N})^{T}\) where \(x\) are features,
+the \(Q\) function can be approximated linearly as
+\[ Q_{w}(s,a) \approx \sum_{i} w_{ai}x_{i} \]
+and non-linearly as
+\[ Q_{w} (s,a) \approx g(x ; w) \]
+</p>
+
+<p>
+For experience \(\left< s, a, r, s', a' \right>\),
+the target Q-function is
+\[ R(s) + \gamma \max_{a} Q_{w}(s', a) = R(s) + \gamma Q_{w}(s', a') \]
+and the current Q-function is
+\[ Q_{\bar{w}}(s, a) \]
+</p>
+
+<p>
+The squared error is
+\[ \text{Err}(w) = \frac{1}{2} \left[ Q_{w}(s, a) - R(s) - \gamma \max_{a'} Q_{\bar{w}} (s', a') \right]^{2} \]
+</p>
+
+<p>
+The gradient is
+\[ \frac{\partial \text{Err}}{\partial w} = \left[ Q_{w}(s, a) - R(s) - \gamma \max_{a'} Q_{\bar{w}} (s', a') \right] \frac{\partial Q_{w(s, a)}}{\partial w} \]
+</p>
+
+<p>
+For SARSA with linear function approximation
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org87f0bfb" class="outline-2">
+<h2 id="org87f0bfb"><span class="section-number-2">4.</span> Convergence and Divergence</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Linear Q-learning converges under the same conditions as Q-learning
+\[ w_{i} \gets w_{i} + \alpha [Q_{w}(s, a) - R(s) - \gamma Q_{w}(s', a')] x_{i} \]
+</p>
+
+<p>
+Nonlinear Q-learning may diverge, as adjusting \(w\) to increase \(Q\) at \((s, a)\) might
+introduce errors at nearby state-action pairs.
+</p>
+
+<p>
+To mitigate divergence, can use <b>experience relay</b> or <b>two Q functions</b> (Q network or
+target network).
+</p>
+</div>
+<div id="outline-container-org32840f5" class="outline-3">
+<h3 id="org32840f5"><span class="section-number-3">4.1.</span> Experience Relay</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Store previous experiences \((s, a, r, s', a')\) in a buffer and sample a mini-batch
+of previous experiences at each step to learn by Q-learning.
+</p>
+
+<p>
+This breaks correlations between successive updates, so learning is more stable.
+</p>
+
+<p>
+A few interactions with the environment are needed to converge (greater data
+efficiency).
+</p>
+</div>
+</div>
+<div id="outline-container-orgdf36b8e" class="outline-3">
+<h3 id="orgdf36b8e"><span class="section-number-3">4.2.</span> Target Network</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Use a separate target network that is updated only periodically.
+The target network has weights \(\bar{w}\) and computes \(Q_{\bar{w}}(s, a)\).
+</p>
+
+<p>
+This should be repeated for each \((s, a, r, s', a')\) in a mini-batch:
+\[ w \gets w + \alpha [Q_{w}(s, a) - R(s) - \gamma Q_{\bar{w}}(s', a')] \frac{\partial Q_{w}(s, a)}{\partial w} \]
+Then \(\bar{w} = w\).
+</p>
+</div>
+</div>
+<div id="outline-container-org1b66294" class="outline-3">
+<h3 id="org1b66294"><span class="section-number-3">4.3.</span> Deep Q Network</h3>
+<div class="outline-text-3" id="text-4-3">
+</div>
+</div>
+<div id="outline-container-orgb1192fd" class="outline-3">
+<h3 id="orgb1192fd"><span class="section-number-3">4.4.</span> Bayesian Reinforcement Learning</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Include the parameters (transition function and observation function) in the state space.
+</p>
+
+<p>
+Model-based learning is done through inference (belief state).
+</p>
+
+<p>
+The state space becomes continuous but the belief space is a space of continuous functions.
+</p>
+
+<p>
+Can mitigate complexity by modeling reachable beliefs.
+</p>
+
+<p>
+This gives optimal exploration-exploitation tradeoff.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-11-27 Wed 15:44</p>
+</div>
+</body>
+</html>

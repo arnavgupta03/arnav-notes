@@ -1,0 +1,270 @@
+#+title: Reinforcement Learning
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage{algpseudocode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Reinforcement Learning
+What an agent should do given some:
+- _prior knowledge_: possible states of the worlds and possible actions
+- _observations_: current world state and immediate reward/punishment
+- _goal_: act to maximize accumulated reward
+
+Assume some sequence of *experiences* with a state, action, and reward.
+For the agent to decide what to do next, it must decide whether to explore to gain more knowledge
+or exploit the knowledge it has already discovered.
+
+Reinforcement learning is difficult due to the _credit assignment problem_, which is what actions
+are responsible for the reward but may have occurred a long time before the reward was received
+(long-term effect of an action).
+This leads to the _explore-exploit dilemma_: when the agent should be greedy vs inquisitive.
+
+** Main Approaches
+Can search through a space of policies.
+
+*Model Based RL*: learn a model consisting of state transition function $P(s' \mid a, s)$ and
+reward function $R(s, a, s')$ and solve this as an MDP
+
+*Model-Free RL*: learn $Q^{*}(s,a)$ and use to guide action
+
+* Q-Learning
+** Temporal Differences
+Consider some sequence $v_{1}, v_{2}, v_{3}, \dots$ and take a running estimate of the first $k$
+values:
+$$ A_{k} = \frac{v_{1} + \cdots + v_{k}}{k} $$
+when a new value arrives
+$$ A_{k} = \frac{k-1}{k} A_{k-1} + \frac{1}{k} v_{k} $$
+The *TD formula* is that, for $\alpha = \frac{1}{k}$
+$$ A_{k} = A_{k-1} + \alpha (v_{k} - A_{k-1}) $$
+
+** Q-Learning
+Store $Q$[State, Action] and update this as in asynchronous value iteration, but using
+experience (empirical probabilities and rewards).
+
+Suppose the agent has an experience $\left< s, a, r, s' \right>$, which provides a datum to
+update $Q[s, a]$.
+$\left< s, a, r, s' \right>$ provides the data point
+$$ r + \gamma \max_{a'} Q[s', a'] $$
+which can be used in the TD formula giving
+$$ Q[s, a] \gets Q[s, a] + \alpha \left( r + \gamma \max_{a'} Q[s', a'] - Q[s, a] \right) $$
+
+#+BEGIN_SRC latex
+\begin{algorithm}
+\caption{Q-learning Algorithm}
+\begin{algorithmic}[1]
+\State Initialize \( Q[S, A] \) arbitrarily
+\State Observe current state \( s \)
+\Repeat
+    \State Select and carry out an action \( a \)
+    \State Observe reward \( r \) and state \( s' \)
+    \State \( Q[s, a] \gets Q[s, a] + \alpha \left( r + \gamma \max_{a'} Q[s', a'] - Q[s, a] \right) \)
+    \State \( s \gets s' \)
+\Until{forever}
+\end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+** Properties
+Q-learning converges to the optimal policy, no matter what the agent does, as long as it tries
+each action in each state enough (infinitely often).
+
+The agent can either exploit (select the action that maximizes $Q[s, a]$) or
+explore (select another action).
+
+* Strategies for Reinforcement Learning
+** Exploration Strategies
+The *$\epsilon$ greedy strategy* is to choose a random action with probability $\epsilon$ and choose
+a best action with probability $1-\epsilon$.
+
+In *softmax action selection*, starting from state $s$, choose an action $a$ with probability
+$$ \frac{e^{Q[s, a] / \tau}}{\sum_{a} e^{Q[s, a]} / \tau} $$
+where $\tau > 0$ is the temperature.
+Good actions are chosen more often than bad actions and for $\tau \to \infty$ all actions are
+equally probably and for $\tau \to 0$, only the best action is chosen.
+
+For optimism in the face of uncertainty, initialize $Q$ to values that encourage exploration.
+
+The *upper confidence bound (UCB)*, store $N[s, a]$, which is th number of times that the
+state-action pair has been tried) and use
+$$ \text{arg} \max_{a} \left[ \right] $$
+where $N[s] = \sum_{a} = N[s, a]$.
+
+** Off/On-Policy Learning
+Q-learning does *off-policy* learning, where it learns the value of the optimal policy, no matter
+what it does, but this could be bad if the exploration policy is dangerous.
+
+*On-policy* learning learns the value of the policy being followed.
+
+If the agent will explore, it may be better to optimize the actual policy it is going to do.
+
+** SARSA
+Uses the experience $\left< s, a, r, s', a' \right>$ to update $Q[s, a]$.
+*On-policy* since it uses empirical values for $s'$ and $a'$.
+
+#+BEGIN_SRC latex
+\begin{algorithm}
+\caption{SARSA Algorithm}
+\begin{algorithmic}[1]
+\State Initialize $Q[s, a]$ arbitrarily
+\State Observe current state $s$
+\State Select action $a$ using a policy based on $Q$ (includes exploration)
+\Repeat
+    \State Carry out action $a$
+    \State Observe reward $r$ and state $s'$
+    \State Select action $a'$ using a policy based on $Q$
+    \State $Q[s,a] \gets Q[s,a] + \alpha (r + \gamma Q[s',a'] - Q[s,a])$
+    \State $s \gets s'$
+    \State $a \gets a'$
+\Until{forever}
+\end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+** Model-Based
+Uses the experiences more effectively.
+Used when collecting experiences is expensive and can do lots of computation between
+each experience.
+
+Idea is to learn the MDP and interleave acting and planning.
+
+After each experience, update probabilities and the reward, then do some steps of
+asynchronous value iteration.
+
+#+BEGIN_SRC latex
+\begin{algorithm}
+\caption{Model-based Learner}
+\begin{algorithmic}[1]
+\State \textbf{Data Structures:}
+\State \quad $Q[S,A]$  \Comment{Action-value function}
+\State \quad $T[S,A,S]$  \Comment{State transition counts}
+\State \quad $R[S,A]$  \Comment{Reward function}
+\State Assign $Q$, $R$ arbitrarily, $T \gets$ prior counts
+\State $\alpha \gets$ learning rate
+\State Observe current state $s$
+\Repeat
+    \State Select and carry out action $a$
+    \State Observe reward $r$ and state $s'$
+    \State $T[s, a, s'] \gets T[s, a, s'] + 1$
+    \State $R[s, a] \gets \alpha \times r + (1 - \alpha) \times R[s, a]$
+\Until{done}
+\State \textbf{repeat for a while (asynchronous VI):}
+\State Select state $s_1$, action $a_1$
+\State Let $P = \sum_{s_2} T[s_1, a_1, s_2]$
+\State $Q[s_1, a_1] \gets \frac{\sum_{s_2} T[s_1, a_1, s_2]}{P} \times (R[s_1, a_1] + \gamma \max_{a_2} Q[s_2, a_2])$
+\State $s \gets s'$
+\State \textbf{end repeat}
+\end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+Let $s = (x_{1}, \dots, x_{N})^{T}$ where $x$ are features,
+the $Q$ function can be approximated linearly as
+$$ Q_{w}(s,a) \approx \sum_{i} w_{ai}x_{i} $$
+and non-linearly as
+$$ Q_{w} (s,a) \approx g(x ; w) $$
+
+For experience $\left< s, a, r, s', a' \right>$,
+the target Q-function is
+$$ R(s) + \gamma \max_{a} Q_{w}(s', a) = R(s) + \gamma Q_{w}(s', a') $$
+and the current Q-function is
+$$ Q_{\bar{w}}(s, a) $$
+
+The squared error is
+$$ \text{Err}(w) = \frac{1}{2} \left[ Q_{w}(s, a) - R(s) - \gamma \max_{a'} Q_{\bar{w}} (s', a') \right]^{2} $$
+
+The gradient is
+$$ \frac{\partial \text{Err}}{\partial w} = \left[ Q_{w}(s, a) - R(s) - \gamma \max_{a'} Q_{\bar{w}} (s', a') \right] \frac{\partial Q_{w(s, a)}}{\partial w} $$
+
+For SARSA with linear function approximation
+#+BEGIN_SRC latex
+\begin{algorithm}
+\caption{SARSA with Linear Function Approximation}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Discount factor $\gamma$, Learning rate $\alpha$
+\State Assign weights $w = \langle w_0, \dots, w_n \rangle$ arbitrarily
+\State \textbf{begin}
+\State \quad Observe current state $s$
+\State \quad Select action $a$
+\Repeat
+    \State \quad Carry out action $a$
+    \State \quad Observe reward $r$ and state $s'$
+    \State \quad Select action $a'$ (using a policy based on $Q_w$)
+    \State \quad Let $\delta = r + \gamma Q_w(s', a') - Q_w(s, a)$
+    \For{$i = 0$ \textbf{to} $n$}
+        \State \quad $w_i \gets w_i + \alpha \times \delta \times \frac{\partial Q_w(s, a)}{\partial w_i}$
+    \EndFor
+    \State \quad $s \gets s'$; $a \gets a'$
+\Until{forever}
+\State \textbf{end}
+\end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+* Convergence and Divergence
+Linear Q-learning converges under the same conditions as Q-learning
+$$ w_{i} \gets w_{i} + \alpha [Q_{w}(s, a) - R(s) - \gamma Q_{w}(s', a')] x_{i} $$
+
+Nonlinear Q-learning may diverge, as adjusting $w$ to increase $Q$ at $(s, a)$ might
+introduce errors at nearby state-action pairs.
+
+To mitigate divergence, can use *experience relay* or *two Q functions* (Q network or
+target network).
+
+** Experience Relay
+Store previous experiences $(s, a, r, s', a')$ in a buffer and sample a mini-batch
+of previous experiences at each step to learn by Q-learning.
+
+This breaks correlations between successive updates, so learning is more stable.
+
+A few interactions with the environment are needed to converge (greater data
+efficiency).
+
+** Target Network
+Use a separate target network that is updated only periodically.
+The target network has weights $\bar{w}$ and computes $Q_{\bar{w}}(s, a)$.
+
+This should be repeated for each $(s, a, r, s', a')$ in a mini-batch:
+$$ w \gets w + \alpha [Q_{w}(s, a) - R(s) - \gamma Q_{\bar{w}}(s', a')] \frac{\partial Q_{w}(s, a)}{\partial w} $$
+Then $\bar{w} = w$.
+
+** Deep Q Network
+#+BEGIN_SRC latex
+\begin{algorithm}
+\caption{Q-learning with Experience Replay}
+\begin{algorithmic}[1]
+\State Assign weights \( w = \langle w_0, \dots, w_n \rangle \) at random in \([-1, 1]\)
+\State \textbf{begin}
+\State \quad Observe current state \( s \)
+\State \quad Select action \( a \)
+\Repeat
+    \State \quad Carry out action \( a \)
+    \State \quad Observe reward \( r \) and state \( s' \)
+    \State \quad Select action \( a' \) using a policy based on \( Q_w \)
+    \State \quad Add \( (s, a, r, s', a') \) to experience buffer
+    \State \quad Sample mini-batch of experiences from buffer
+    \For{each experience \( (\hat{s}, \hat{a}, \hat{r}, \hat{s'} , \hat{a'}) \) in mini-batch}
+        \State \quad Let \( \delta = \hat{r} + \gamma Q_w(\hat{s'}, \hat{a'}) - Q_w(\hat{s}, \hat{a}) \)
+        \State \quad \( w \gets w + \alpha \times \delta \times \frac{\partial Q_w(\hat{s}, \hat{a})}{\partial w} \)
+    \EndFor
+    \State \quad \( s \gets s' \); \( a \gets a' \)
+    \If{every \( c \) steps}
+        \State \quad Update target: \( w \gets w \)
+    \EndIf
+\Until{forever}
+\State \textbf{end}
+\end{algorithmic}
+\end{algorithm}
+#+END_SRC
+
+** Bayesian Reinforcement Learning
+Include the parameters (transition function and observation function) in the state space.
+
+Model-based learning is done through inference (belief state).
+
+The state space becomes continuous but the belief space is a space of continuous functions.
+
+Can mitigate complexity by modeling reachable beliefs.
+
+This gives optimal exploration-exploitation tradeoff.
