@@ -1,4 +1,4 @@
-% Created 2024-10-24 Thu 22:35
+% Created 2024-11-28 Thu 00:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -30,7 +30,7 @@
 \tableofcontents
 
 \section{Overview}
-\label{sec:orga8120ec}
+\label{sec:org61e996e}
 Network layer protocols transport segments from sending to receiving hosts.
 The \uline{sender} encapsulates segments into datagrams and passes them to the link
 layer. The \uline{receiver} delivers segments to the transport layer protocol.
@@ -71,7 +71,7 @@ the control plane as a service in remote servers
 \end{itemize}
 \end{itemize}
 \subsection{Best Effort Service}
-\label{sec:org919607d}
+\label{sec:orgd243604}
 The Internet runs on a ``best effort'' service model, so there are no guarantees on:
 \begin{itemize}
 \item successful datagram delivery to the destination
@@ -86,7 +86,7 @@ applications to be good enough for most of the time.
 Replicated, application-layer distributed services connect close to client networks
 which allows services to be provided from multiple locations.
 \section{Data Plane: The Internet Protocol}
-\label{sec:org28e2ebc}
+\label{sec:org9a3b8fb}
 Data plane is:
 \begin{itemize}
 \item connectionless (datagram-based)
@@ -131,7 +131,7 @@ Upper layer protocol can be:
 If header checksum detects an error, datagram is dropped.
 Must be recomputed at every hop because of TTL and options.
 \subsection{Fragmentation and Assembly}
-\label{sec:orgb5bc666}
+\label{sec:org2bdbd02}
 Link layer protocols have maximum transfer unit size, which is the largest
 possible data size in a frame.
 
@@ -147,7 +147,7 @@ received are discarded.
 
 Fragmentation complicated routers and end-systems, which is used by attackers.
 \subsection{IPv4 Addressing}
-\label{sec:org4612f06}
+\label{sec:orgef60354}
 \textbf{IP address}: 32-bit identifier associated with each host or router interface
 (about 4 billion total)
 
@@ -156,8 +156,168 @@ Fragmentation complicated routers and end-systems, which is used by attackers.
 \item routers typically have multiple interfaces
 \item hosts typically have 1 or 2 interfaces
 \end{itemize}
+\subsubsection{Subnets}
+\label{sec:orgea5c875}
+The addressing scheme is \textbf{Classless InterDomain Routing (CIDR)}:
+\begin{itemize}
+\item IP addresses have a subnet part and a host part
+\item the subnet portion of the address has arbitrary length
+\item the address has format a.b.c.d/x where x is the prefix, the number
+of bits in the subnet portion
+\end{itemize}
+
+\textbf{Subnet}: set of interfaces that have IP addresses with the same
+prefix and same subnet portion, and can physically reach each other
+without passing through an intervening router
+
+A subnet mask is x 1 bits followed by 0 bits, which is bitwise ANDed
+to the IP address.
+With masking, for the same subnet, can send a datagram directly to the
+destination and for a different subnet, send the datagram to the router.
+\subsubsection{DHCP}
+\label{sec:org7b337c2}
+An IP address can be hard-coded by sysadmin in the config file or using
+\textbf{DHCP (Dynamic Host Configuration Protocol)} which dynamically gets
+address from a server when the host joins the network.
+
+DHCP allows:
+\begin{itemize}
+\item addresses to be renewed on use
+\item reused since only holding addresses while host connected/on
+\end{itemize}
+
+For a client-server protocol using UDP, DHCP is a network function
+implemented as an application protocol:
+\begin{itemize}
+\item host broadcasts DHCP discover message
+\item DHCP server responds with DHCP offer message
+\item host requests IP address with a DHCP request message
+\item DHCP server sends the address with a DHCP ack message
+\end{itemize}
+
+Only last 2 steps are needed if the client remembers and wishes
+to reuse a previously allocated network address.
+
+A DHCP server is co-located in the router, serving all subnets to which
+the router is attached.
+
+DHCP also returns:
+\begin{itemize}
+\item address of first hop router for client
+\item name and IP address of DNS server
+\item address prefix (indicating network vs host portion of address)
+\end{itemize}
+
+For a network to get the subnet part of the IP address, it gets
+allocated a portion of its provider ISP's address space.
+\subsubsection{Hierarchical Addressing}
+\label{sec:orge136293}
+Allows efficient advertisement of routing info.
+
+When the router receives a datagram with some destination address:
+\begin{enumerate}
+\item mask the destination address with the mask for that row of the
+forwarding table
+\item check if the results correspond to the value in the table, if so
+then remember as candidate for forwarding, and then regardless
+continue to the next row
+\begin{enumerate}
+\item if there are no candidates, datagram sent to otherwise
+output interface
+\item if there is one candidate, datagram sent to the corresponding
+output interface
+\item if there are multiple candidates (due to multiple routes to some
+host), the most specific one is taken: \textbf{longest prefix rule}
+\end{enumerate}
+\end{enumerate}
+
+To get a block of addresses, ICANN (Internet Corportation for Assigned
+Names and Numbers) allocates IP addresses through 5 regional registries (RRs)
+and manages DNS.
+
+DHCP and NAT help with IPv4 address space exhaustion.
+IPv6 has 128-bit address space.
+\subsubsection{Network Address Translation (NAT)}
+\label{sec:org5022a77}
+Limiting the number of addresses and re-using IP addresses in a smart way.
+
+Addresses in a private address space are not routable outside it and can
+be reused as much as desired.
+
+Advantages:
+\begin{itemize}
+\item range of addresses not needed from ISP: just one IP address for all devices
+\item can change addresses of devices in local network without notifying
+outside world
+\item can change ISP without changing addresses of devices in local network
+\item devices inside local net not explicitly addressable or visible by outside
+world
+\end{itemize}
+
+Host creates IP datagrams with source and destination IP address that carries
+1 transport layer segment. Each segment has source and destination port
+numbers (Layer 4 entity).
+
+Client knows the port number at the server for the service it needs and OS
+selects a unique source port number.
+
+Receiving host uses IP addresses and port numbers to direct segment to appropriate
+process (via sockets).
+
+All devices in local network share just one IPv4 address to the outside world:
+\begin{itemize}
+\item all datagrams leaving local network share same source NAT IP address but
+different source port numbers
+\item datagrams with source or destination in local network have subnetted address
+for source and destination, as usual
+\end{itemize}
+
+The NAT router must transparently:
+\begin{itemize}
+\item for outgoing datagrams, replace source IP address and port number of every
+outgoing datagram to NAT IP address and new port number
+\begin{itemize}
+\item remote clients and servers will respond using the NAT IP address and
+new port number as destination address
+\end{itemize}
+\item remember in the NAT translation table every pair of source IP address and port
+number to NAT IP address and new port number translation mapping
+\item for incoming datagrams, replace the NAT IP address and new port number in the
+destination fields of every incoming datagram with the corresponding
+source IP address and port number stored in the NAT table
+\end{itemize}
+
+The 16-bit port number field allows 60000 simultaneous connections with a single
+public IP address.
+
+The router keeps NAT entries in the translation table for a configurable length
+of time.
+For TCP connections, default timeout is 24 hours.
+Since UDP is not connection based, default timeout is 5 minutes.
+
+NAT is controversial since:
+\begin{itemize}
+\item routers should only process up to layer 3
+\item address shortage should be solved by IPv6
+\item violates end-to-end argument since port number is manipulated by
+network-layer device
+\item can be tricky if client wants to connect to the server behind NAT
+\end{itemize}
+\subsubsection{Middleboxes}
+\label{sec:org6634835}
+Any intermediate box performing functions apart from normal, standard functions
+of an IP router on the data path between a source host and destination host.
+
+Includes NAT, application-specific, firewalls, intrusion detection systems,
+load balancers, and caches.
+
+The internet has a thin waist, since there is a single network layer protocol: IP
+that must be implemented by every Internet-connected device (compared to
+many protocols in other layers).
+
+Middleboxes give love handles that operate inside the network.
 \subsection{IPv6 Addressing}
-\label{sec:org1fd18f7}
+\label{sec:org37a52bc}
 Possibly not enough 32-bit IPv4 addresses. Also, IPv4 is slow (variable length header).
 IPv6 allows different network-layer treatment of flows and better mobility management.
 
@@ -184,7 +344,7 @@ routers (packet within a packet)
 
 44.5\% of clients access services via IPv6, so takes time to deploy.
 \section{What's Inside a Router}
-\label{sec:org6df41e9}
+\label{sec:org48e3b43}
 High-level view of generic router architecture has \textbf{routing processor} (control plane) and
 \textbf{high-speed switching fabric} (data plane).
 
@@ -195,7 +355,7 @@ field values, lookup output port using forwarding table in input port memory).
 
 \textbf{Generalized forwarding}: forward based on any set of header field values
 \subsection{Switching Fabrics}
-\label{sec:org50a226b}
+\label{sec:org79ce811}
 Transfer packets from input link to appropriate output link.
 
 \textbf{Switching rate}: rate at which packets can be transferred from inputs to outputs,
@@ -210,18 +370,18 @@ Major types of switching fabrics are:
 \item interconnection network
 \end{itemize}
 \subsubsection{Switching via Memory}
-\label{sec:orgf022c12}
+\label{sec:org84b0bc8}
 Used traditionally, with switching under direct control of CPU.
 
 The packet is copied into system memory and speed is limited by memory bandwidth
 (2 bus crossings per datagram).
 \subsubsection{Switching via Bus}
-\label{sec:orgd758274}
+\label{sec:orge2563a2}
 Datagram from input port memory to output port memory via shared bus.
 
 \textbf{Bus contention}: switching speed is limited by bus bandwidth
 \subsubsection{Interconnection Network}
-\label{sec:org5963d74}
+\label{sec:org12d4619}
 Initially developed to connect processors in multiprocessor.
 
 \textbf{Multistage switch}: \(n \times n\) switch from multiple stages of smaller switches
@@ -241,16 +401,16 @@ Cisco CRS router:
 \item up to 100s of Tbps switching capacity
 \end{itemize}
 \subsection{Port Queuing}
-\label{sec:org0e30395}
+\label{sec:orgb539286}
 \subsubsection{Input Port Queuing}
-\label{sec:orge34b70b}
+\label{sec:org0b84f97}
 If switch fabric slower than input ports combined, queuing may occur at input queues.
 This can lead to queuing delay and loss due to input buffer overflow.
 
 \textbf{Head of the Line (HOL) blocking}: queued datagram at front of queue prevents others
 in queue from moving forward
 \subsubsection{Output Port Queuing}
-\label{sec:org1834fa9}
+\label{sec:org9cff9ff}
 Buffering occurs when arrival rate via switch exceeds output line speed.
 
 Queuing delay (and loss) due to output port buffer congestion (overflow).
@@ -262,5 +422,53 @@ Must have \textbf{drop policy} to decide which datagrams to drop if no free buff
 \textbf{Scheduling discipline} chooses among queued datagrams for transmission.
 With priority scheduling, this decides who gets best performance.
 \section{Control Plane: ICMP, Routing}
-\label{sec:org472fb45}
+\label{sec:org9d8bf8d}
+Even though best effort, IP attempts to avoid errors and report problems when they
+occur.
+
+IP does introduce errors or ignore all errors.
+
+Errors detected can be:
+\begin{itemize}
+\item corrupted header bits: header checksum
+\item illegal addresses: routing tables
+\item routing loop: TTL field
+\item fragment loss: timeout
+\end{itemize}
+\subsection{ICMP}
+\label{sec:org88dd0eb}
+Internet Control Message Protocol is a separate protocol for errors reporting and
+information.
+Required part of IP (just above IP, layer 3.5) and sends error message to
+original source.
+
+Used by hosts and routers to communicate network-level info like error reporting
+(unreachable host, network, port, protocol, etc.) and uses echo request/reply (used
+by ping).
+
+Network-layer above IP so ICMP messages carried in IP datagrams.
+
+ICMP message has a type, code and first 8 bytes of IP datagram causing error.
+
+IP datagram header contains a bit to specify no fragmentation allowed, which can be
+bit 0 \(\to\) must be zero, bit 1 \(\to\) don't fragment, bit 2 \(\to\) more fragments.
+
+ICMP sends an error message when fragmentation required but not permitted.
+This is done by probing to find the largest MTU that does not generate an error
+message.
+This MTU is not guaranteed if routes change.
+
+For traceroute (provides delay measurement from source to router):
+\begin{itemize}
+\item source sends sets of UDP segments to destination with an unknown port number
+where each set has an increasing TTL starting from 1
+\item datagram in set \(n\) arrives to router \(n\) where router discards datagram
+and sends source ICMP message which possibly includes name of router
+and IP address
+\item when ICMP message arrives at source, it records RTTs
+\end{itemize}
+
+The stopping criteria for traceroute is that the UDP segment eventually arrives
+at destination host.
+The destination returns ICMP ``port unreachable'' message and so the source stops.
 \end{document}

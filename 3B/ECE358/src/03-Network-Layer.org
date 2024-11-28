@@ -111,6 +111,144 @@ Fragmentation complicated routers and end-systems, which is used by attackers.
 - routers typically have multiple interfaces
 - hosts typically have 1 or 2 interfaces
 
+*** Subnets
+The addressing scheme is *Classless InterDomain Routing (CIDR)*:
+- IP addresses have a subnet part and a host part
+- the subnet portion of the address has arbitrary length
+- the address has format a.b.c.d/x where x is the prefix, the number
+  of bits in the subnet portion
+
+*Subnet*: set of interfaces that have IP addresses with the same
+prefix and same subnet portion, and can physically reach each other
+without passing through an intervening router
+
+A subnet mask is x 1 bits followed by 0 bits, which is bitwise ANDed
+to the IP address.
+With masking, for the same subnet, can send a datagram directly to the
+destination and for a different subnet, send the datagram to the router.
+
+*** DHCP
+An IP address can be hard-coded by sysadmin in the config file or using
+*DHCP (Dynamic Host Configuration Protocol)* which dynamically gets
+address from a server when the host joins the network.
+
+DHCP allows:
+- addresses to be renewed on use
+- reused since only holding addresses while host connected/on
+
+For a client-server protocol using UDP, DHCP is a network function
+implemented as an application protocol:
+- host broadcasts DHCP discover message
+- DHCP server responds with DHCP offer message
+- host requests IP address with a DHCP request message
+- DHCP server sends the address with a DHCP ack message
+
+Only last 2 steps are needed if the client remembers and wishes
+to reuse a previously allocated network address.
+
+A DHCP server is co-located in the router, serving all subnets to which
+the router is attached.
+
+DHCP also returns:
+- address of first hop router for client
+- name and IP address of DNS server
+- address prefix (indicating network vs host portion of address)
+
+For a network to get the subnet part of the IP address, it gets
+allocated a portion of its provider ISP's address space.
+
+*** Hierarchical Addressing
+Allows efficient advertisement of routing info.
+
+When the router receives a datagram with some destination address:
+1. mask the destination address with the mask for that row of the
+   forwarding table
+2. check if the results correspond to the value in the table, if so
+   then remember as candidate for forwarding, and then regardless
+   continue to the next row
+   a. if there are no candidates, datagram sent to otherwise
+      output interface
+   b. if there is one candidate, datagram sent to the corresponding
+      output interface
+   c. if there are multiple candidates (due to multiple routes to some
+      host), the most specific one is taken: *longest prefix rule*
+
+To get a block of addresses, ICANN (Internet Corportation for Assigned
+Names and Numbers) allocates IP addresses through 5 regional registries (RRs)
+and manages DNS.
+
+DHCP and NAT help with IPv4 address space exhaustion.
+IPv6 has 128-bit address space.
+
+*** Network Address Translation (NAT)
+Limiting the number of addresses and re-using IP addresses in a smart way.
+
+Addresses in a private address space are not routable outside it and can
+be reused as much as desired.
+
+Advantages:
+- range of addresses not needed from ISP: just one IP address for all devices
+- can change addresses of devices in local network without notifying
+  outside world
+- can change ISP without changing addresses of devices in local network
+- devices inside local net not explicitly addressable or visible by outside
+  world
+
+Host creates IP datagrams with source and destination IP address that carries
+1 transport layer segment. Each segment has source and destination port
+numbers (Layer 4 entity).
+
+Client knows the port number at the server for the service it needs and OS
+selects a unique source port number.
+
+Receiving host uses IP addresses and port numbers to direct segment to appropriate
+process (via sockets).
+
+All devices in local network share just one IPv4 address to the outside world:
+- all datagrams leaving local network share same source NAT IP address but
+  different source port numbers
+- datagrams with source or destination in local network have subnetted address
+  for source and destination, as usual
+
+The NAT router must transparently:
+- for outgoing datagrams, replace source IP address and port number of every
+  outgoing datagram to NAT IP address and new port number
+  - remote clients and servers will respond using the NAT IP address and
+    new port number as destination address
+- remember in the NAT translation table every pair of source IP address and port
+  number to NAT IP address and new port number translation mapping
+- for incoming datagrams, replace the NAT IP address and new port number in the
+  destination fields of every incoming datagram with the corresponding
+  source IP address and port number stored in the NAT table
+
+The 16-bit port number field allows 60000 simultaneous connections with a single
+public IP address.
+
+The router keeps NAT entries in the translation table for a configurable length
+of time.
+For TCP connections, default timeout is 24 hours.
+Since UDP is not connection based, default timeout is 5 minutes.
+
+NAT is controversial since:
+- routers should only process up to layer 3
+- address shortage should be solved by IPv6
+- violates end-to-end argument since port number is manipulated by
+  network-layer device
+- can be tricky if client wants to connect to the server behind NAT
+
+*** Middleboxes
+Any intermediate box performing functions apart from normal, standard functions
+of an IP router on the data path between a source host and destination host.
+
+Includes NAT, application-specific, firewalls, intrusion detection systems,
+load balancers, and caches.
+
+The internet has a thin waist, since there is a single network layer protocol: IP
+that must be implemented by every Internet-connected device (compared to
+many protocols in other layers).
+
+Middleboxes give love handles that operate inside the network.
+
 ** IPv6 Addressing
 Possibly not enough 32-bit IPv4 addresses. Also, IPv4 is slow (variable length header).
 IPv6 allows different network-layer treatment of flows and better mobility management.
@@ -208,3 +346,47 @@ Must have *drop policy* to decide which datagrams to drop if no free buffers.
 With priority scheduling, this decides who gets best performance.
 
 * Control Plane: ICMP, Routing
+Even though best effort, IP attempts to avoid errors and report problems when they
+occur.
+
+IP does introduce errors or ignore all errors.
+
+Errors detected can be:
+- corrupted header bits: header checksum
+- illegal addresses: routing tables
+- routing loop: TTL field
+- fragment loss: timeout
+
+** ICMP
+Internet Control Message Protocol is a separate protocol for errors reporting and
+information.
+Required part of IP (just above IP, layer 3.5) and sends error message to
+original source.
+
+Used by hosts and routers to communicate network-level info like error reporting
+(unreachable host, network, port, protocol, etc.) and uses echo request/reply (used
+by ping).
+
+Network-layer above IP so ICMP messages carried in IP datagrams.
+
+ICMP message has a type, code and first 8 bytes of IP datagram causing error.
+
+IP datagram header contains a bit to specify no fragmentation allowed, which can be
+bit 0 \to must be zero, bit 1 \to don't fragment, bit 2 \to more fragments.
+
+ICMP sends an error message when fragmentation required but not permitted.
+This is done by probing to find the largest MTU that does not generate an error
+message.
+This MTU is not guaranteed if routes change.
+
+For traceroute (provides delay measurement from source to router):
+- source sends sets of UDP segments to destination with an unknown port number
+  where each set has an increasing TTL starting from 1
+- datagram in set $n$ arrives to router $n$ where router discards datagram
+  and sends source ICMP message which possibly includes name of router
+  and IP address
+- when ICMP message arrives at source, it records RTTs
+
+The stopping criteria for traceroute is that the UDP segment eventually arrives
+at destination host.
+The destination returns ICMP "port unreachable" message and so the source stops.

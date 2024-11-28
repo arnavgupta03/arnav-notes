@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-24 Thu 22:35 -->
+<!-- 2024-11-28 Thu 00:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Network Layer</title>
@@ -234,41 +234,53 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org3cb5131">1. Overview</a>
+<li><a href="#orgd54c3a2">1. Overview</a>
 <ul>
-<li><a href="#org7fda016">1.1. Best Effort Service</a></li>
+<li><a href="#orgd591f0c">1.1. Best Effort Service</a></li>
 </ul>
 </li>
-<li><a href="#orgd7d3a90">2. Data Plane: The Internet Protocol</a>
+<li><a href="#org647eb6f">2. Data Plane: The Internet Protocol</a>
 <ul>
-<li><a href="#org040e33d">2.1. Fragmentation and Assembly</a></li>
-<li><a href="#org27bbe72">2.2. IPv4 Addressing</a></li>
-<li><a href="#org06254cf">2.3. IPv6 Addressing</a></li>
+<li><a href="#org1facf58">2.1. Fragmentation and Assembly</a></li>
+<li><a href="#orge50f136">2.2. IPv4 Addressing</a>
+<ul>
+<li><a href="#org4120858">2.2.1. Subnets</a></li>
+<li><a href="#org8abb803">2.2.2. DHCP</a></li>
+<li><a href="#org069ec4f">2.2.3. Hierarchical Addressing</a></li>
+<li><a href="#orgf0c57a1">2.2.4. Network Address Translation (NAT)</a></li>
+<li><a href="#org89d818a">2.2.5. Middleboxes</a></li>
 </ul>
 </li>
-<li><a href="#org828892d">3. What&rsquo;s Inside a Router</a>
-<ul>
-<li><a href="#org23c0d61">3.1. Switching Fabrics</a>
-<ul>
-<li><a href="#org8ec8ae8">3.1.1. Switching via Memory</a></li>
-<li><a href="#org4fa22b7">3.1.2. Switching via Bus</a></li>
-<li><a href="#org5317c51">3.1.3. Interconnection Network</a></li>
+<li><a href="#org97dbcb5">2.3. IPv6 Addressing</a></li>
 </ul>
 </li>
-<li><a href="#org98f4001">3.2. Port Queuing</a>
+<li><a href="#orgaf266e5">3. What&rsquo;s Inside a Router</a>
 <ul>
-<li><a href="#org4f4ced2">3.2.1. Input Port Queuing</a></li>
-<li><a href="#org56a5dfb">3.2.2. Output Port Queuing</a></li>
+<li><a href="#orgfa5e0b9">3.1. Switching Fabrics</a>
+<ul>
+<li><a href="#org76d2376">3.1.1. Switching via Memory</a></li>
+<li><a href="#orgadff30a">3.1.2. Switching via Bus</a></li>
+<li><a href="#orgec98047">3.1.3. Interconnection Network</a></li>
+</ul>
+</li>
+<li><a href="#orgdb9cdad">3.2. Port Queuing</a>
+<ul>
+<li><a href="#org347f636">3.2.1. Input Port Queuing</a></li>
+<li><a href="#orge49d4a8">3.2.2. Output Port Queuing</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org64a698f">4. Control Plane: ICMP, Routing</a></li>
+<li><a href="#orga5233db">4. Control Plane: ICMP, Routing</a>
+<ul>
+<li><a href="#org82b15d5">4.1. ICMP</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org3cb5131" class="outline-2">
-<h2 id="org3cb5131"><span class="section-number-2">1.</span> Overview</h2>
+<div id="outline-container-orgd54c3a2" class="outline-2">
+<h2 id="orgd54c3a2"><span class="section-number-2">1.</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Network layer protocols transport segments from sending to receiving hosts.
@@ -324,8 +336,8 @@ the control plane as a service in remote servers
 </ul></li>
 </ul>
 </div>
-<div id="outline-container-org7fda016" class="outline-3">
-<h3 id="org7fda016"><span class="section-number-3">1.1.</span> Best Effort Service</h3>
+<div id="outline-container-orgd591f0c" class="outline-3">
+<h3 id="orgd591f0c"><span class="section-number-3">1.1.</span> Best Effort Service</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The Internet runs on a &ldquo;best effort&rdquo; service model, so there are no guarantees on:
@@ -349,8 +361,8 @@ which allows services to be provided from multiple locations.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd7d3a90" class="outline-2">
-<h2 id="orgd7d3a90"><span class="section-number-2">2.</span> Data Plane: The Internet Protocol</h2>
+<div id="outline-container-org647eb6f" class="outline-2">
+<h2 id="org647eb6f"><span class="section-number-2">2.</span> Data Plane: The Internet Protocol</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Data plane is:
@@ -404,8 +416,8 @@ If header checksum detects an error, datagram is dropped.
 Must be recomputed at every hop because of TTL and options.
 </p>
 </div>
-<div id="outline-container-org040e33d" class="outline-3">
-<h3 id="org040e33d"><span class="section-number-3">2.1.</span> Fragmentation and Assembly</h3>
+<div id="outline-container-org1facf58" class="outline-3">
+<h3 id="org1facf58"><span class="section-number-3">2.1.</span> Fragmentation and Assembly</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Link layer protocols have maximum transfer unit size, which is the largest
@@ -431,8 +443,8 @@ Fragmentation complicated routers and end-systems, which is used by attackers.
 </p>
 </div>
 </div>
-<div id="outline-container-org27bbe72" class="outline-3">
-<h3 id="org27bbe72"><span class="section-number-3">2.2.</span> IPv4 Addressing</h3>
+<div id="outline-container-orge50f136" class="outline-3">
+<h3 id="orge50f136"><span class="section-number-3">2.2.</span> IPv4 Addressing</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <b>IP address</b>: 32-bit identifier associated with each host or router interface
@@ -447,9 +459,242 @@ Fragmentation complicated routers and end-systems, which is used by attackers.
 <li>hosts typically have 1 or 2 interfaces</li>
 </ul>
 </div>
+<div id="outline-container-org4120858" class="outline-4">
+<h4 id="org4120858"><span class="section-number-4">2.2.1.</span> Subnets</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+The addressing scheme is <b>Classless InterDomain Routing (CIDR)</b>:
+</p>
+<ul class="org-ul">
+<li>IP addresses have a subnet part and a host part</li>
+<li>the subnet portion of the address has arbitrary length</li>
+<li>the address has format a.b.c.d/x where x is the prefix, the number
+of bits in the subnet portion</li>
+</ul>
+
+<p>
+<b>Subnet</b>: set of interfaces that have IP addresses with the same
+prefix and same subnet portion, and can physically reach each other
+without passing through an intervening router
+</p>
+
+<p>
+A subnet mask is x 1 bits followed by 0 bits, which is bitwise ANDed
+to the IP address.
+With masking, for the same subnet, can send a datagram directly to the
+destination and for a different subnet, send the datagram to the router.
+</p>
 </div>
-<div id="outline-container-org06254cf" class="outline-3">
-<h3 id="org06254cf"><span class="section-number-3">2.3.</span> IPv6 Addressing</h3>
+</div>
+<div id="outline-container-org8abb803" class="outline-4">
+<h4 id="org8abb803"><span class="section-number-4">2.2.2.</span> DHCP</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+An IP address can be hard-coded by sysadmin in the config file or using
+<b>DHCP (Dynamic Host Configuration Protocol)</b> which dynamically gets
+address from a server when the host joins the network.
+</p>
+
+<p>
+DHCP allows:
+</p>
+<ul class="org-ul">
+<li>addresses to be renewed on use</li>
+<li>reused since only holding addresses while host connected/on</li>
+</ul>
+
+<p>
+For a client-server protocol using UDP, DHCP is a network function
+implemented as an application protocol:
+</p>
+<ul class="org-ul">
+<li>host broadcasts DHCP discover message</li>
+<li>DHCP server responds with DHCP offer message</li>
+<li>host requests IP address with a DHCP request message</li>
+<li>DHCP server sends the address with a DHCP ack message</li>
+</ul>
+
+<p>
+Only last 2 steps are needed if the client remembers and wishes
+to reuse a previously allocated network address.
+</p>
+
+<p>
+A DHCP server is co-located in the router, serving all subnets to which
+the router is attached.
+</p>
+
+<p>
+DHCP also returns:
+</p>
+<ul class="org-ul">
+<li>address of first hop router for client</li>
+<li>name and IP address of DNS server</li>
+<li>address prefix (indicating network vs host portion of address)</li>
+</ul>
+
+<p>
+For a network to get the subnet part of the IP address, it gets
+allocated a portion of its provider ISP&rsquo;s address space.
+</p>
+</div>
+</div>
+<div id="outline-container-org069ec4f" class="outline-4">
+<h4 id="org069ec4f"><span class="section-number-4">2.2.3.</span> Hierarchical Addressing</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+Allows efficient advertisement of routing info.
+</p>
+
+<p>
+When the router receives a datagram with some destination address:
+</p>
+<ol class="org-ol">
+<li>mask the destination address with the mask for that row of the
+forwarding table</li>
+<li>check if the results correspond to the value in the table, if so
+then remember as candidate for forwarding, and then regardless
+continue to the next row
+<ol class="org-ol">
+<li>if there are no candidates, datagram sent to otherwise
+output interface</li>
+<li>if there is one candidate, datagram sent to the corresponding
+output interface</li>
+<li>if there are multiple candidates (due to multiple routes to some
+host), the most specific one is taken: <b>longest prefix rule</b></li>
+</ol></li>
+</ol>
+
+<p>
+To get a block of addresses, ICANN (Internet Corportation for Assigned
+Names and Numbers) allocates IP addresses through 5 regional registries (RRs)
+and manages DNS.
+</p>
+
+<p>
+DHCP and NAT help with IPv4 address space exhaustion.
+IPv6 has 128-bit address space.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf0c57a1" class="outline-4">
+<h4 id="orgf0c57a1"><span class="section-number-4">2.2.4.</span> Network Address Translation (NAT)</h4>
+<div class="outline-text-4" id="text-2-2-4">
+<p>
+Limiting the number of addresses and re-using IP addresses in a smart way.
+</p>
+
+<p>
+Addresses in a private address space are not routable outside it and can
+be reused as much as desired.
+</p>
+
+<p>
+Advantages:
+</p>
+<ul class="org-ul">
+<li>range of addresses not needed from ISP: just one IP address for all devices</li>
+<li>can change addresses of devices in local network without notifying
+outside world</li>
+<li>can change ISP without changing addresses of devices in local network</li>
+<li>devices inside local net not explicitly addressable or visible by outside
+world</li>
+</ul>
+
+<p>
+Host creates IP datagrams with source and destination IP address that carries
+1 transport layer segment. Each segment has source and destination port
+numbers (Layer 4 entity).
+</p>
+
+<p>
+Client knows the port number at the server for the service it needs and OS
+selects a unique source port number.
+</p>
+
+<p>
+Receiving host uses IP addresses and port numbers to direct segment to appropriate
+process (via sockets).
+</p>
+
+<p>
+All devices in local network share just one IPv4 address to the outside world:
+</p>
+<ul class="org-ul">
+<li>all datagrams leaving local network share same source NAT IP address but
+different source port numbers</li>
+<li>datagrams with source or destination in local network have subnetted address
+for source and destination, as usual</li>
+</ul>
+
+<p>
+The NAT router must transparently:
+</p>
+<ul class="org-ul">
+<li>for outgoing datagrams, replace source IP address and port number of every
+outgoing datagram to NAT IP address and new port number
+<ul class="org-ul">
+<li>remote clients and servers will respond using the NAT IP address and
+new port number as destination address</li>
+</ul></li>
+<li>remember in the NAT translation table every pair of source IP address and port
+number to NAT IP address and new port number translation mapping</li>
+<li>for incoming datagrams, replace the NAT IP address and new port number in the
+destination fields of every incoming datagram with the corresponding
+source IP address and port number stored in the NAT table</li>
+</ul>
+
+<p>
+The 16-bit port number field allows 60000 simultaneous connections with a single
+public IP address.
+</p>
+
+<p>
+The router keeps NAT entries in the translation table for a configurable length
+of time.
+For TCP connections, default timeout is 24 hours.
+Since UDP is not connection based, default timeout is 5 minutes.
+</p>
+
+<p>
+NAT is controversial since:
+</p>
+<ul class="org-ul">
+<li>routers should only process up to layer 3</li>
+<li>address shortage should be solved by IPv6</li>
+<li>violates end-to-end argument since port number is manipulated by
+network-layer device</li>
+<li>can be tricky if client wants to connect to the server behind NAT</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org89d818a" class="outline-4">
+<h4 id="org89d818a"><span class="section-number-4">2.2.5.</span> Middleboxes</h4>
+<div class="outline-text-4" id="text-2-2-5">
+<p>
+Any intermediate box performing functions apart from normal, standard functions
+of an IP router on the data path between a source host and destination host.
+</p>
+
+<p>
+Includes NAT, application-specific, firewalls, intrusion detection systems,
+load balancers, and caches.
+</p>
+
+<p>
+The internet has a thin waist, since there is a single network layer protocol: IP
+that must be implemented by every Internet-connected device (compared to
+many protocols in other layers).
+</p>
+
+<p>
+Middleboxes give love handles that operate inside the network.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org97dbcb5" class="outline-3">
+<h3 id="org97dbcb5"><span class="section-number-3">2.3.</span> IPv6 Addressing</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Possibly not enough 32-bit IPv4 addresses. Also, IPv4 is slow (variable length header).
@@ -491,8 +736,8 @@ routers (packet within a packet)
 </div>
 </div>
 </div>
-<div id="outline-container-org828892d" class="outline-2">
-<h2 id="org828892d"><span class="section-number-2">3.</span> What&rsquo;s Inside a Router</h2>
+<div id="outline-container-orgaf266e5" class="outline-2">
+<h2 id="orgaf266e5"><span class="section-number-2">3.</span> What&rsquo;s Inside a Router</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 High-level view of generic router architecture has <b>routing processor</b> (control plane) and
@@ -512,8 +757,8 @@ field values, lookup output port using forwarding table in input port memory).
 <b>Generalized forwarding</b>: forward based on any set of header field values
 </p>
 </div>
-<div id="outline-container-org23c0d61" class="outline-3">
-<h3 id="org23c0d61"><span class="section-number-3">3.1.</span> Switching Fabrics</h3>
+<div id="outline-container-orgfa5e0b9" class="outline-3">
+<h3 id="orgfa5e0b9"><span class="section-number-3">3.1.</span> Switching Fabrics</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Transfer packets from input link to appropriate output link.
@@ -537,8 +782,8 @@ Major types of switching fabrics are:
 <li>interconnection network</li>
 </ul>
 </div>
-<div id="outline-container-org8ec8ae8" class="outline-4">
-<h4 id="org8ec8ae8"><span class="section-number-4">3.1.1.</span> Switching via Memory</h4>
+<div id="outline-container-org76d2376" class="outline-4">
+<h4 id="org76d2376"><span class="section-number-4">3.1.1.</span> Switching via Memory</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Used traditionally, with switching under direct control of CPU.
@@ -550,8 +795,8 @@ The packet is copied into system memory and speed is limited by memory bandwidth
 </p>
 </div>
 </div>
-<div id="outline-container-org4fa22b7" class="outline-4">
-<h4 id="org4fa22b7"><span class="section-number-4">3.1.2.</span> Switching via Bus</h4>
+<div id="outline-container-orgadff30a" class="outline-4">
+<h4 id="orgadff30a"><span class="section-number-4">3.1.2.</span> Switching via Bus</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Datagram from input port memory to output port memory via shared bus.
@@ -562,8 +807,8 @@ Datagram from input port memory to output port memory via shared bus.
 </p>
 </div>
 </div>
-<div id="outline-container-org5317c51" class="outline-4">
-<h4 id="org5317c51"><span class="section-number-4">3.1.3.</span> Interconnection Network</h4>
+<div id="outline-container-orgec98047" class="outline-4">
+<h4 id="orgec98047"><span class="section-number-4">3.1.3.</span> Interconnection Network</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 Initially developed to connect processors in multiprocessor.
@@ -596,12 +841,12 @@ Cisco CRS router:
 </div>
 </div>
 </div>
-<div id="outline-container-org98f4001" class="outline-3">
-<h3 id="org98f4001"><span class="section-number-3">3.2.</span> Port Queuing</h3>
+<div id="outline-container-orgdb9cdad" class="outline-3">
+<h3 id="orgdb9cdad"><span class="section-number-3">3.2.</span> Port Queuing</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org4f4ced2" class="outline-4">
-<h4 id="org4f4ced2"><span class="section-number-4">3.2.1.</span> Input Port Queuing</h4>
+<div id="outline-container-org347f636" class="outline-4">
+<h4 id="org347f636"><span class="section-number-4">3.2.1.</span> Input Port Queuing</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 If switch fabric slower than input ports combined, queuing may occur at input queues.
@@ -614,8 +859,8 @@ in queue from moving forward
 </p>
 </div>
 </div>
-<div id="outline-container-org56a5dfb" class="outline-4">
-<h4 id="org56a5dfb"><span class="section-number-4">3.2.2.</span> Output Port Queuing</h4>
+<div id="outline-container-orge49d4a8" class="outline-4">
+<h4 id="orge49d4a8"><span class="section-number-4">3.2.2.</span> Output Port Queuing</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 Buffering occurs when arrival rate via switch exceeds output line speed.
@@ -639,13 +884,88 @@ With priority scheduling, this decides who gets best performance.
 </div>
 </div>
 </div>
-<div id="outline-container-org64a698f" class="outline-2">
-<h2 id="org64a698f"><span class="section-number-2">4.</span> Control Plane: ICMP, Routing</h2>
+<div id="outline-container-orga5233db" class="outline-2">
+<h2 id="orga5233db"><span class="section-number-2">4.</span> Control Plane: ICMP, Routing</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Even though best effort, IP attempts to avoid errors and report problems when they
+occur.
+</p>
+
+<p>
+IP does introduce errors or ignore all errors.
+</p>
+
+<p>
+Errors detected can be:
+</p>
+<ul class="org-ul">
+<li>corrupted header bits: header checksum</li>
+<li>illegal addresses: routing tables</li>
+<li>routing loop: TTL field</li>
+<li>fragment loss: timeout</li>
+</ul>
+</div>
+<div id="outline-container-org82b15d5" class="outline-3">
+<h3 id="org82b15d5"><span class="section-number-3">4.1.</span> ICMP</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Internet Control Message Protocol is a separate protocol for errors reporting and
+information.
+Required part of IP (just above IP, layer 3.5) and sends error message to
+original source.
+</p>
+
+<p>
+Used by hosts and routers to communicate network-level info like error reporting
+(unreachable host, network, port, protocol, etc.) and uses echo request/reply (used
+by ping).
+</p>
+
+<p>
+Network-layer above IP so ICMP messages carried in IP datagrams.
+</p>
+
+<p>
+ICMP message has a type, code and first 8 bytes of IP datagram causing error.
+</p>
+
+<p>
+IP datagram header contains a bit to specify no fragmentation allowed, which can be
+bit 0 &rarr; must be zero, bit 1 &rarr; don&rsquo;t fragment, bit 2 &rarr; more fragments.
+</p>
+
+<p>
+ICMP sends an error message when fragmentation required but not permitted.
+This is done by probing to find the largest MTU that does not generate an error
+message.
+This MTU is not guaranteed if routes change.
+</p>
+
+<p>
+For traceroute (provides delay measurement from source to router):
+</p>
+<ul class="org-ul">
+<li>source sends sets of UDP segments to destination with an unknown port number
+where each set has an increasing TTL starting from 1</li>
+<li>datagram in set \(n\) arrives to router \(n\) where router discards datagram
+and sends source ICMP message which possibly includes name of router
+and IP address</li>
+<li>when ICMP message arrives at source, it records RTTs</li>
+</ul>
+
+<p>
+The stopping criteria for traceroute is that the UDP segment eventually arrives
+at destination host.
+The destination returns ICMP &ldquo;port unreachable&rdquo; message and so the source stops.
+</p>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-10-24 Thu 22:35</p>
+<p class="date">Created: 2024-11-28 Thu 00:09</p>
 </div>
 </body>
 </html>
