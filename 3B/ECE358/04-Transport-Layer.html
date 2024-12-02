@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-01 Sun 23:45 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Transport Layer</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Transport Layer</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org9e08d8a">1. Transport Layer Services</a></li>
+<li><a href="#org63de563">2. Sockets, Multiplexing, and Demultiplexing</a>
+<ul>
+<li><a href="#org627ed30">2.1. UDP Sockets</a></li>
+<li><a href="#orgf6cd6af">2.2. TCP Sockets</a></li>
+</ul>
+</li>
+<li><a href="#orgf6205e5">3. Connectionless Transport: UDP</a></li>
+<li><a href="#org208100a">4. Connection-oriented Transport: TCP</a>
+<ul>
+<li><a href="#org0843924">4.1. Segment Structure</a></li>
+<li><a href="#org6469168">4.2. Reliable Data Transfer</a>
+<ul>
+<li><a href="#org6118859">4.2.1. Sender</a></li>
+<li><a href="#orgc01be6c">4.2.2. Receiver</a></li>
+<li><a href="#org5aaab90">4.2.3. Fast Retransmit</a></li>
+</ul>
+</li>
+<li><a href="#orgb6453c6">4.3. Flow Control</a></li>
+<li><a href="#orgec7def3">4.4. Connection Management</a>
+<ul>
+<li><a href="#org75c7b9d">4.4.1. Startup/Shutdown Solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfaf0bf7">5. Principles of Congestion Control</a>
+<ul>
+<li><a href="#org19cdaa0">5.1. Approaches</a>
+<ul>
+<li><a href="#org1a9d7aa">5.1.1. End-to-End</a></li>
+<li><a href="#org75b2e07">5.1.2. Network-Assisted</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgd07fb17">6. TCP Congestion Control</a>
+<ul>
+<li><a href="#org2c93baa">6.1. Approach</a>
+<ul>
+<li><a href="#orga84bdba">6.1.1. Slow Start (SS)</a></li>
+<li><a href="#orgfa4d26e">6.1.2. Congestion Avoidance</a></li>
+<li><a href="#org38b1f1e">6.1.3. Delay-Based</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9e08d8a" class="outline-2">
+<h2 id="org9e08d8a"><span class="section-number-2">1.</span> Transport Layer Services</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Provides logical communication between application processes running on
+different hosts.
+</p>
+
+<p>
+Transport protocols actions in end systems are:
+</p>
+<ul class="org-ul">
+<li><span class="underline">sender</span>: breaks application messages into segments and passes to network
+layer</li>
+<li><span class="underline">receiver</span>: reassembles segments into messages and passes to application layer</li>
+</ul>
+
+<p>
+Two main transport protocols are TCP and UDP.
+</p>
+
+<p>
+Network layer is logical communication between hosts, transport layer is logical
+communication between processes (relies on and enhances network layer services).
+</p>
+
+<p>
+Sender:
+</p>
+<ol class="org-ol">
+<li>passed an application layer message</li>
+<li>determines segment header fields values</li>
+<li>creates segment</li>
+<li>passes segment to IP</li>
+</ol>
+
+<p>
+Receiver:
+</p>
+<ol class="org-ol">
+<li>receives segment from IP</li>
+<li>checks header values</li>
+<li>extracts application layer message</li>
+<li>demultiplexes message up to application via socket</li>
+</ol>
+
+<p>
+TCP (Transmission Control Protocol):
+</p>
+<ul class="org-ul">
+<li>reliable, in-order unicast delivery between 2 processes</li>
+<li>congestion control (throttle sender when network overloaded)</li>
+<li>flow control (sender won&rsquo;t overwhelm receiver)</li>
+<li>connection-oriented (connection set-up, stateful)</li>
+<li>does not provide timing, minimum throughput guarantee, or security</li>
+</ul>
+
+<p>
+UDP (User Datagram Protocol):
+</p>
+<ul class="org-ul">
+<li>unreliable, unordered delivery between 2 processes</li>
+<li>transaction-oriented, stateless</li>
+<li>no-frills extension of best-effort IP</li>
+<li>does not provide reliability, flow control, congestion control,
+timing, throughput guarantee, security, or connection setup</li>
+</ul>
+
+<p>
+Sometimes UDP is better if sped is more important than reliability.
+</p>
+</div>
+</div>
+<div id="outline-container-org63de563" class="outline-2">
+<h2 id="org63de563"><span class="section-number-2">2.</span> Sockets, Multiplexing, and Demultiplexing</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Process</b>: program running within a host
+</p>
+
+<p>
+With the same host, two processes communicate using IPC.
+In different hosts, they exchange messages.
+</p>
+
+<p>
+<b>Client process</b> initiates communication while
+<b>server process</b> waits to be contacted.
+</p>
+
+<p>
+Application process sends/receives messages to/from its <b>socket</b>,
+which is where messages are sent and received from.
+</p>
+
+<p>
+There are two sockets involved in communication, one on each side.
+</p>
+
+<p>
+UDP sockets are for unreliable datagrams, TCP sockets are reliable
+and byte stream oriented.
+</p>
+
+<p>
+To receive messages, processes must have IDs that include both IP
+address and port numbers associated with process on host. (ex.
+HTTP server: 80, mail server: 25)
+</p>
+
+<p>
+Host device interface has unique 32-bit IP address.
+Since many application processes can be running on the same host,
+more than the IP address is needed to ID the process.
+</p>
+
+<p>
+Server usually has a well-known port and the client picks an
+unused temporary port.
+</p>
+
+<p>
+Port number uniquely IDs the socket, so cannot use the same port number
+twice with the same address.
+The OS enforces uniqueness by keeping track of which port numbers are in
+use (stops 2nd program from using same port number).
+</p>
+
+<p>
+<span class="underline">Multiplexing at sender</span>: transport layer handles data from multiple sockets
+and adds transport header (used for demultiplexing)
+</p>
+
+<p>
+<span class="underline">Demultiplexing at receiver</span>: transport layer uses header info to deliver
+received messages to correct socket
+</p>
+<ul class="org-ul">
+<li>host receives IP datagrams with source and destination IP addresses</li>
+<li>host uses IP addresses and port number to direct segment to appropriate
+socket (differs for UDP and TCP)</li>
+</ul>
+</div>
+<div id="outline-container-org627ed30" class="outline-3">
+<h3 id="org627ed30"><span class="section-number-3">2.1.</span> UDP Sockets</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Connectionless: each UDP segment handled independently and identified by
+a pair (IP address, port number)
+</p>
+
+<p>
+Process using UDP in a client will create a socket with its IP address
+and a temporary port number (for return) and send segment to UDP socket
+in server using server IP address and permanent port number.
+</p>
+
+<p>
+When host receives UDP segment, check destination port number in
+segment and direct UDP segment to socket with that port number.
+</p>
+
+<p>
+IP/UDP datagrams/segments with the same destination port number but
+different source IP address or port numbers are directed to the
+same socket at receiving host.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf6cd6af" class="outline-3">
+<h3 id="orgf6cd6af"><span class="section-number-3">2.2.</span> TCP Sockets</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Client must first contact server (requires server process running and server
+socket created to welcome client contact).
+</p>
+
+<p>
+Client contacts server by creating TCP socket, specifying IP address, and port
+number of server process.
+With this, client TCP establishes connection to server TCP.
+</p>
+
+<p>
+When contacted by the client, the server TCP creates a new socket for the
+server process to communicate with that particular client, which allows the server
+to talk to multiple clients.
+</p>
+
+<p>
+From an application viewpoint, TCP provides reliable, in-order byte stream
+transfer between client and server.
+</p>
+
+<p>
+A TCP socket is identified by the source and destination IP addresses and the
+source and destination port numbers.
+</p>
+
+<p>
+To demux, the receiver uses all 4 values to direct the segment to the appropriate
+socket.
+</p>
+
+<p>
+The server may support many simultaneous TCP sockets, with each socket ID&rsquo;d by
+its own tuple (associated with a different connecting client).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf6205e5" class="outline-2">
+<h2 id="orgf6205e5"><span class="section-number-2">3.</span> Connectionless Transport: UDP</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+No-frills, bare bones Internet transport protocol that is best-effort, so segments
+may be lost or delivered out of order.
+</p>
+
+<p>
+No handshaking between UDP sender and receiver, and each segment is handled
+independently.
+</p>
+
+<p>
+With UDP, no connection establishment delay.
+UDP is also simpler (no connection state), has small header size,
+and no congestion control (as fast as desired).
+</p>
+
+<p>
+UDP is used for streaming multimedia apps (loss tolerant, rate sensitive), DNS,
+SNMP (management protocol), and HTTP/3.
+</p>
+
+<p>
+If reliable transfer needed over UDP, add needed reliability and congestion control
+at application layer.
+</p>
+
+<p>
+UDP segment has source port number, destination port number, length (including header),
+checksum, and payload (application data).
+</p>
+
+<p>
+With UDP checksum, detect errors in transmitted segment.
+</p>
+
+<p>
+Sender treats contents of UDP segment (including header and IP addresses) as a sequence
+of 16-bit integers.
+The <b>checksum</b> is a one&rsquo;s complement sum of segment content (2 sequences of 16 bits
+at a time).
+Checksum is put into UDP checksum field.
+</p>
+
+<p>
+Receiver computes the sum of all 16-bit integers including checksum.
+</p>
+</div>
+</div>
+<div id="outline-container-org208100a" class="outline-2">
+<h2 id="org208100a"><span class="section-number-2">4.</span> Connection-oriented Transport: TCP</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+TCP provides a completely reliable, connection-oriented, full-duplex byte stream transport service
+that allows two application processes to form a connection, send data in either direction, and
+then terminate the connection.
+</p>
+
+<p>
+Non-trivial since IP can lose, re-order, corrupt, delay, fragment, or duplicate packets.
+</p>
+
+<p>
+TCP provides:
+</p>
+<ul class="org-ul">
+<li>reliable data transfer</li>
+<li>congestion control</li>
+<li>flow control</li>
+</ul>
+
+<p>
+TCP is:
+</p>
+<ul class="org-ul">
+<li>point-to-point (1 sender, 1 receiver)</li>
+<li>byte stream (no message boundaries)</li>
+<li>full duplex (has maximum segment size)</li>
+<li>cumulative ACKs</li>
+<li>pipelining with congestion and flow control
+setting window size</li>
+<li>connection-oriented with handshaking to initialize
+states</li>
+<li>flow controlled so sender does not overwhelm
+receiver</li>
+</ul>
+</div>
+<div id="outline-container-org0843924" class="outline-3">
+<h3 id="org0843924"><span class="section-number-3">4.1.</span> Segment Structure</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+TCP segment consists of:
+</p>
+<ul class="org-ul">
+<li><span class="underline">source and destination port numbers</span></li>
+<li><span class="underline">sequence number</span> for retransmission</li>
+<li><span class="underline">ACK number</span>: sequence number of next expected byte</li>
+<li><span class="underline">length of TCP header</span></li>
+<li><span class="underline">congestion notification bits</span></li>
+<li><span class="underline">ACK bit</span></li>
+<li><span class="underline">connection management bits</span></li>
+<li><span class="underline">receive window</span> for flow control (number of bytes receiver willing to accept)</li>
+<li><span class="underline">header checksum</span></li>
+<li><span class="underline">TCP options</span>: variable length</li>
+<li><span class="underline">application data</span>: variable length data sent by application into TCP socket</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6469168" class="outline-3">
+<h3 id="org6469168"><span class="section-number-3">4.2.</span> Reliable Data Transfer</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+TCP creates reliable data transfer service on top of IP&rsquo;s unreliable service through pipelined segments,
+cumulative ACKs, and single retransmission timer.
+</p>
+
+<p>
+Retransmissions are triggered by timeout event, duplicate ACKs, and no NACK.
+</p>
+
+<p>
+Sequence number is byte stream number of first byte in segment&rsquo;s data.
+</p>
+
+<p>
+The ACK has the sequence number of the next byte expected from the other side (cumulative ACK).
+</p>
+
+<p>
+How the receiver handles out-of-order segments is up to the implementer.
+</p>
+
+<p>
+Set TCP timeout value longer than RTT, but RTT can vary. Too short causes premature timeout or
+unnecessary retransmissions and too long causes slow reaction to segment loss.
+To estimate RTT, sample measured time from segment transmission until ACK receipt.
+Since sample can vary, better to average several measurements.
+</p>
+
+<p>
+In many TCP implementations, minimum timeout value is 500ms due to clock granularity.
+</p>
+
+<p>
+Exponential weighted moving average (EWMA) has influence of past sample decreasing exponentially
+fast:
+\[ \text{EstimatedRTT} = (1 - \alpha) \times \text{EstimatedRTT} + \alpha \times \text{SampleRTT} \]
+typically using \(\alpha = 0.125\).
+</p>
+
+<p>
+Timeout interval used is EstimatedRTT plus some safety margin like \(4 \times \text{DevRTT}\),
+where
+\[ \text{DevRTT} = (1 - \beta) \times \text{DevRTT} + \beta \times \left| \text{SampleRTT} - \text{EstimatedRTT} \right| \]
+typically using \(\beta = 0.25\).
+</p>
+</div>
+<div id="outline-container-org6118859" class="outline-4">
+<h4 id="org6118859"><span class="section-number-4">4.2.1.</span> Sender</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+Sender gets data from application, creates a segment with a sequence number (byte stream number
+of first data byte in segment) and then starts the timer if not already running (timer for oldest
+unACKed segment).
+Sender can have a timeout after some interval after which it retransmits the segment that caused
+the timeout and restarts the timer.
+Sender can receive and ACK, which can acknowledge previously unACKed segments (update what is
+known to be ACKed and start timer if there are still unACKed segments).
+</p>
+</div>
+</div>
+<div id="outline-container-orgc01be6c" class="outline-4">
+<h4 id="orgc01be6c"><span class="section-number-4">4.2.2.</span> Receiver</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+The receiver can get an in-order data segment with expected sequence number.
+The TCP receiver waits for next segment, and if none, then send ACK.
+</p>
+
+<p>
+The receiver can get an in-order segment with the expected sequence number but one other
+segment has an ACK pending.
+The receiver immediately sends a single cumulative ACK, ACKing both in-order segments.
+</p>
+
+<p>
+The receiver can get an out-of-order segment with a higher than expected sequence number.
+The receiver immediately sends a duplicate ACK indicating the sequence number of the next
+expected byte.
+</p>
+
+<p>
+The receiver can get a segment that partially or completely fills a gap.
+The receiver immediately sends an ACK provided that the segment starts at the lower end
+of the gap.
+</p>
+</div>
+</div>
+<div id="outline-container-org5aaab90" class="outline-4">
+<h4 id="org5aaab90"><span class="section-number-4">4.2.3.</span> Fast Retransmit</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<p>
+Timeout period can be relatively long, so long delay before resending lost packet.
+</p>
+
+<p>
+Can detect lost segments via duplicate ACKs, where the sender often sends many segments
+back-to-back and so if a segment is lost, there will likely be many duplicate ACKs.
+So always resend unACKed segment with smallest sequence number, since it is likely that
+the unACKed segment is lost.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb6453c6" class="outline-3">
+<h3 id="orgb6453c6"><span class="section-number-3">4.3.</span> Flow Control</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Can be issues if network layer delivers data faster than application layer removes data
+from socket buffers.
+</p>
+
+<p>
+<b>Flow control</b>: receiver controls sender so sender won&rsquo;t overflow receiver&rsquo;s buffer by transmitting
+too much, too fast
+</p>
+
+<p>
+TCP receiver advertises free buffer space in <code>rwnd</code> field in TCP header:
+</p>
+<ul class="org-ul">
+<li><code>RcvBuffer</code> size set via socket options (typical default is 4096 bytes), but autoadjusted
+by many OSs</li>
+</ul>
+
+<p>
+Sender limits amount of unACKed data to received <code>rwnd</code>.
+Under normal conditions, receive buffer will not overflow.
+</p>
+</div>
+</div>
+<div id="outline-container-orgec7def3" class="outline-3">
+<h3 id="orgec7def3"><span class="section-number-3">4.4.</span> Connection Management</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Before exchanging data, sender and receiver handshake (agree to establish connection and on
+connection params).
+</p>
+
+<p>
+Client creates socket and server accepts socket connection (both sides establish connection).
+</p>
+
+<p>
+2-way handshake does not always work in network due to :variable delays, retransmitted
+messages due to message loss, message reordering, and lack of visibility of other side.
+</p>
+
+<p>
+Can have issue with half-open connection (no client).
+</p>
+</div>
+<div id="outline-container-org75c7b9d" class="outline-4">
+<h4 id="org75c7b9d"><span class="section-number-4">4.4.1.</span> Startup/Shutdown Solution</h4>
+<div class="outline-text-4" id="text-4-4-1">
+<p>
+Uses three-message exchange, known as 3-way handshake.
+</p>
+
+<p>
+Necessary and sufficient for unambiguous, reliable startup and unambiguous, graceful shutdown.
+<code>SYN</code> for startup and <code>FIN</code> for shutdown.
+</p>
+
+<ol class="org-ol">
+<li>client chooses initial sequence number and sends TCP SYN message</li>
+<li>server receives this, chooses initial sequence number, and sends TCP SYNACK message to ACK client SYN</li>
+<li>client receives SYNACK which indicates server is live, and sends ACK for SYNACK which may contain
+client-to-server data (<span class="underline">connection established on client</span>)</li>
+<li>server receives ACK which indicates client is live (<span class="underline">connection established on server</span>)</li>
+</ol>
+
+<p>
+<code>SYN</code> has flag set to 1. <code>SYNACK</code> has both <code>SYN</code> and <code>ACK</code> flags set (with sequence number and
+ACK number).
+</p>
+
+<p>
+Client and server both each close their side of the connection by sending TCP segment with
+<code>FIN</code> bit of 1.
+On receiving <code>FIN</code>, <code>ACK</code> can be combined with own <code>FIN</code> in response.
+Simultaneous <code>FIN</code> exchanges can be handled.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfaf0bf7" class="outline-2">
+<h2 id="orgfaf0bf7"><span class="section-number-2">5.</span> Principles of Congestion Control</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Too many sources sending too much data too fast for the network to handle.
+Can manifest in long delays or packet loss.
+</p>
+
+<p>
+Long delays can occur when the maximum per-connection throughput is reached and so delay
+increases greatly as arrival rate approaches capacity (infinite buffer).
+</p>
+
+<p>
+Packet loss can occur with finite buffers. Sender then retransmits the lost, timed-out packet.
+Application layer input and output will be the same, but transport layer input includes
+retransmissions.
+</p>
+
+<p>
+Packet loss can also happen due to the sender timing out prematurely and sending two copies, both
+of which are delivered (unneeded retransmissions).
+</p>
+
+<p>
+Retransmissions cause more work for given receiver throughput.
+Unneeded retransmissions mean link carries multiple copies of a packet, decreasing maximum achievable
+throughput.
+</p>
+
+<p>
+When a packet is dropped, any upstream transmission capacity and buffering used for that packet
+was wasted.
+</p>
+
+<p>
+Congestion insights:
+</p>
+<ul class="org-ul">
+<li>throughput can never exceed capacity</li>
+<li>delay increases as capacity approached</li>
+<li>loss/retransmission decreases effective throughput</li>
+<li>unneeded duplicates further decrease effective throughput</li>
+<li>upstream transmission capacity/buffering wasted for packets lost downstream</li>
+</ul>
+</div>
+<div id="outline-container-org19cdaa0" class="outline-3">
+<h3 id="org19cdaa0"><span class="section-number-3">5.1.</span> Approaches</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="outline-container-org1a9d7aa" class="outline-4">
+<h4 id="org1a9d7aa"><span class="section-number-4">5.1.1.</span> End-to-End</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<p>
+No explicit feedback from network.
+Congestion inferred from observed loss and delay.
+</p>
+
+<p>
+This is the approach taken by classic TCP.
+</p>
+</div>
+</div>
+<div id="outline-container-org75b2e07" class="outline-4">
+<h4 id="org75b2e07"><span class="section-number-4">5.1.2.</span> Network-Assisted</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<p>
+Routers provide direct feedback to sending/receiving hosts with flows passing through congested router.
+This may indicate congestion level or explicitly set sending rate.
+</p>
+
+<p>
+Used in TCP ECN, ATM, DECbit protocols
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd07fb17" class="outline-2">
+<h2 id="orgd07fb17"><span class="section-number-2">6.</span> TCP Congestion Control</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+TCP uses its window size to perform end-to-end congestion control where <code>cwnd</code> is dynamically
+adjusted in response to observed network congestion (implementing TCP congestion control).
+</p>
+
+<p>
+Window size is the number of bytes allowed to be in flight simultaneously:
+\[ \text{LastByteSent} - \text{LastByteAcked} \le \text{cwnd} \]
+</p>
+
+<p>
+Basic idea of congestion control is for the sender to control transmission by dynamically
+changing the value of <code>cwnd</code> based on its perception of congestion.
+</p>
+
+<p>
+Due to flow control, effective window size is
+\[ \text{EW} = \min( \text{cwnd}, \text{RcvWindow} ) \]
+</p>
+</div>
+<div id="outline-container-org2c93baa" class="outline-3">
+<h3 id="org2c93baa"><span class="section-number-3">6.1.</span> Approach</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Sender increases transmission rate probing for usable bandwidth until loss event occurs,
+then decrease <code>cwnd</code>.
+By controlling the window size, TCP effectively controls rate.
+</p>
+
+<p>
+Transmission rate when using window control is at best equal to one window of bytes every
+round trip time:
+\[ \text{rate} = \approx \frac{\text{cwnd}}{\text{RTT}} \text{bytes/sec} \]
+</p>
+
+<p>
+Some schemes include: Tahoe, Reno, Vegas, Cubic, NewReno, Sack, SCTP, TFRC, and BBR.
+</p>
+
+<p>
+Phases of congestion control: <span class="underline">slow start</span> and <span class="underline">congestion avoidance</span>.
+</p>
+
+<p>
+<code>ssthresh</code> defines threshold between a slow start phase and a congestion avoidance phase.
+</p>
+</div>
+<div id="outline-container-orga84bdba" class="outline-4">
+<h4 id="orga84bdba"><span class="section-number-4">6.1.1.</span> Slow Start (SS)</h4>
+<div class="outline-text-4" id="text-6-1-1">
+<p>
+TCP starts with <code>cwnd</code> = 1 segment and increases the window size as ACKs are received.
+TCP increases the window fast (one segment for every ACK received).
+</p>
+
+<p>
+When <code>cwnd</code> = <code>ssthresh</code>, TCP goes into Congestion Avoidance.
+</p>
+
+<p>
+Typically, during slow start, <code>cwnd</code> doubles every RTT (exponential increase).
+</p>
+
+<p>
+On loss event, <code>ssthresh</code> is set to \(\frac{1}{2}\) of <code>cwnd</code> just before loss event.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfa4d26e" class="outline-4">
+<h4 id="orgfa4d26e"><span class="section-number-4">6.1.2.</span> Congestion Avoidance</h4>
+<div class="outline-text-4" id="text-6-1-2">
+<p>
+In this mode most of the time.
+</p>
+
+<p>
+TCP increases <code>cwnd</code> slower (how depends on the version).
+</p>
+
+<p>
+In Tahoe and Reno, <code>cwnd</code> is increased by one segment every RTT (linear increase).
+</p>
+
+<p>
+TCP continues to increase <code>cwnd</code> until congestion occurs.
+</p>
+
+<p>
+To indicate congestion, the types of loss events to check for are:
+</p>
+<ul class="org-ul">
+<li>3 duplicate ACKs (temporary congestion)</li>
+<li>timeout (significant congestion)</li>
+</ul>
+
+<p>
+When congestion occurs, decrease the window size <code>cwnd</code>.
+</p>
+
+<p>
+In TCP Reno:
+</p>
+<ul class="org-ul">
+<li>if timeout occurs, <code>sshthresh</code> = \(\frac{1}{2}\) <code>cwnd</code>, <code>cwnd</code> = 1, and go to
+Slow Start</li>
+<li>if 3 duplicate ACKs occur, <code>cwnd</code> = <code>ssthresh</code> = \(\frac{1}{2}\) <code>cwnd</code> and stay
+in the phase it is in (<span class="underline">fast recovery</span>)
+<ul class="org-ul">
+<li>in Tahoe, sender goes back to Slow Start</li>
+</ul></li>
+</ul>
+
+<p>
+<b>Additive Increase</b>: increase sending rate by 1 maximum segment size every RTT
+until loss detected
+</p>
+
+<p>
+<b>Multiplicative Decrease</b>: cut sending rate in half at each loss event
+</p>
+
+<p>
+AIMD sawtooth behaviour is probing for bandwidth.
+AIMD optimizes congested flow rates network-wide and has desirable stability
+properties.
+</p>
+
+<p>
+With TCP CUBIC, ramp to \(W_{max}\) (sendng rate at which congestion loss was
+detected) faster but approach \(W_{max}\) more slowly.
+This gives higher throughput for longer.
+</p>
+<ul class="org-ul">
+<li>\(K\) is when TCP window size reaches \(W_{max}\)</li>
+<li>goal is to increase \(W\) as a function of the cube of the distance between
+current time and \(K\)</li>
+<li>default in Linux, most popular on web</li>
+</ul>
+
+<p>
+TCP increases sending rate until packet lost occurs at some router&rsquo;s output,
+which is the <b>bottleneck link</b>.
+Best to focus on congested bottleneck link.
+</p>
+</div>
+</div>
+<div id="outline-container-org38b1f1e" class="outline-4">
+<h4 id="org38b1f1e"><span class="section-number-4">6.1.3.</span> Delay-Based</h4>
+<div class="outline-text-4" id="text-6-1-3">
+<p>
+Keeping sender-to-receiver pipe just full enough, by keeping bottleneck link
+busy transmitting but avoiding high delays or buffering.
+</p>
+
+<p>
+Let \(RTT_{min}\) be the minimum observed RTT (uncongested path).
+Uncongested throughput with congestion window <code>cwnd</code> is \(\frac{\text{cwnd}}{RTT_{min}}\).
+</p>
+<ul class="org-ul">
+<li>if measured throughput is close to congested throughput, increase <code>cwnd</code> linearly</li>
+<li>if measured throughput far below uncongested throughput, decrease <code>cwnd</code> linearly</li>
+</ul>
+
+<p>
+This is congestion control without inducting/forcing loss.
+Maximize throughput while keeping delay low.
+</p>
+
+<p>
+Some deployed TCPs take this approach.
+</p>
+
+<p>
+TCP deployments often implement network-assisted congestion control:
+</p>
+<ul class="org-ul">
+<li>two bits in IP header marked by network router to indicate congestion
+<ul class="org-ul">
+<li>policy to determine marking chosen by network operator</li>
+</ul></li>
+<li>congestion indication carried to destination</li>
+<li>destination sets the ECE bit on ACK segment to notify sender of congestion (E bit)</li>
+<li>involved both IP and TCP</li>
+</ul>
+
+<p>
+If \(K\) TCP sessions share same bottleneck link of bandwidth \(R\), each should have
+average rate of \(R/K\).
+</p>
+
+<p>
+TCP is fair under idealized assumptions:
+</p>
+<ul class="org-ul">
+<li>same RTT</li>
+<li>fixed number of sessions only in congestion avoidance</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-01 Sun 23:45</p>
+</div>
+</body>
+</html>

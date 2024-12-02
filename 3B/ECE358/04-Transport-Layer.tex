@@ -1,0 +1,521 @@
+% Created 2024-12-01 Sun 23:45
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Transport Layer}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Transport Layer},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Transport Layer Services}
+\label{sec:org1d83399}
+Provides logical communication between application processes running on
+different hosts.
+
+Transport protocols actions in end systems are:
+\begin{itemize}
+\item \uline{sender}: breaks application messages into segments and passes to network
+layer
+\item \uline{receiver}: reassembles segments into messages and passes to application layer
+\end{itemize}
+
+Two main transport protocols are TCP and UDP.
+
+Network layer is logical communication between hosts, transport layer is logical
+communication between processes (relies on and enhances network layer services).
+
+Sender:
+\begin{enumerate}
+\item passed an application layer message
+\item determines segment header fields values
+\item creates segment
+\item passes segment to IP
+\end{enumerate}
+
+Receiver:
+\begin{enumerate}
+\item receives segment from IP
+\item checks header values
+\item extracts application layer message
+\item demultiplexes message up to application via socket
+\end{enumerate}
+
+TCP (Transmission Control Protocol):
+\begin{itemize}
+\item reliable, in-order unicast delivery between 2 processes
+\item congestion control (throttle sender when network overloaded)
+\item flow control (sender won't overwhelm receiver)
+\item connection-oriented (connection set-up, stateful)
+\item does not provide timing, minimum throughput guarantee, or security
+\end{itemize}
+
+UDP (User Datagram Protocol):
+\begin{itemize}
+\item unreliable, unordered delivery between 2 processes
+\item transaction-oriented, stateless
+\item no-frills extension of best-effort IP
+\item does not provide reliability, flow control, congestion control,
+timing, throughput guarantee, security, or connection setup
+\end{itemize}
+
+Sometimes UDP is better if sped is more important than reliability.
+\section{Sockets, Multiplexing, and Demultiplexing}
+\label{sec:org467b60b}
+\textbf{Process}: program running within a host
+
+With the same host, two processes communicate using IPC.
+In different hosts, they exchange messages.
+
+\textbf{Client process} initiates communication while
+\textbf{server process} waits to be contacted.
+
+Application process sends/receives messages to/from its \textbf{socket},
+which is where messages are sent and received from.
+
+There are two sockets involved in communication, one on each side.
+
+UDP sockets are for unreliable datagrams, TCP sockets are reliable
+and byte stream oriented.
+
+To receive messages, processes must have IDs that include both IP
+address and port numbers associated with process on host. (ex.
+HTTP server: 80, mail server: 25)
+
+Host device interface has unique 32-bit IP address.
+Since many application processes can be running on the same host,
+more than the IP address is needed to ID the process.
+
+Server usually has a well-known port and the client picks an
+unused temporary port.
+
+Port number uniquely IDs the socket, so cannot use the same port number
+twice with the same address.
+The OS enforces uniqueness by keeping track of which port numbers are in
+use (stops 2nd program from using same port number).
+
+\uline{Multiplexing at sender}: transport layer handles data from multiple sockets
+and adds transport header (used for demultiplexing)
+
+\uline{Demultiplexing at receiver}: transport layer uses header info to deliver
+received messages to correct socket
+\begin{itemize}
+\item host receives IP datagrams with source and destination IP addresses
+\item host uses IP addresses and port number to direct segment to appropriate
+socket (differs for UDP and TCP)
+\end{itemize}
+\subsection{UDP Sockets}
+\label{sec:orgefe9823}
+Connectionless: each UDP segment handled independently and identified by
+a pair (IP address, port number)
+
+Process using UDP in a client will create a socket with its IP address
+and a temporary port number (for return) and send segment to UDP socket
+in server using server IP address and permanent port number.
+
+When host receives UDP segment, check destination port number in
+segment and direct UDP segment to socket with that port number.
+
+IP/UDP datagrams/segments with the same destination port number but
+different source IP address or port numbers are directed to the
+same socket at receiving host.
+\subsection{TCP Sockets}
+\label{sec:org93f7efc}
+Client must first contact server (requires server process running and server
+socket created to welcome client contact).
+
+Client contacts server by creating TCP socket, specifying IP address, and port
+number of server process.
+With this, client TCP establishes connection to server TCP.
+
+When contacted by the client, the server TCP creates a new socket for the
+server process to communicate with that particular client, which allows the server
+to talk to multiple clients.
+
+From an application viewpoint, TCP provides reliable, in-order byte stream
+transfer between client and server.
+
+A TCP socket is identified by the source and destination IP addresses and the
+source and destination port numbers.
+
+To demux, the receiver uses all 4 values to direct the segment to the appropriate
+socket.
+
+The server may support many simultaneous TCP sockets, with each socket ID'd by
+its own tuple (associated with a different connecting client).
+\section{Connectionless Transport: UDP}
+\label{sec:orga8ea09a}
+No-frills, bare bones Internet transport protocol that is best-effort, so segments
+may be lost or delivered out of order.
+
+No handshaking between UDP sender and receiver, and each segment is handled
+independently.
+
+With UDP, no connection establishment delay.
+UDP is also simpler (no connection state), has small header size,
+and no congestion control (as fast as desired).
+
+UDP is used for streaming multimedia apps (loss tolerant, rate sensitive), DNS,
+SNMP (management protocol), and HTTP/3.
+
+If reliable transfer needed over UDP, add needed reliability and congestion control
+at application layer.
+
+UDP segment has source port number, destination port number, length (including header),
+checksum, and payload (application data).
+
+With UDP checksum, detect errors in transmitted segment.
+
+Sender treats contents of UDP segment (including header and IP addresses) as a sequence
+of 16-bit integers.
+The \textbf{checksum} is a one's complement sum of segment content (2 sequences of 16 bits
+at a time).
+Checksum is put into UDP checksum field.
+
+Receiver computes the sum of all 16-bit integers including checksum.
+\section{Connection-oriented Transport: TCP}
+\label{sec:org1b9c9d6}
+TCP provides a completely reliable, connection-oriented, full-duplex byte stream transport service
+that allows two application processes to form a connection, send data in either direction, and
+then terminate the connection.
+
+Non-trivial since IP can lose, re-order, corrupt, delay, fragment, or duplicate packets.
+
+TCP provides:
+\begin{itemize}
+\item reliable data transfer
+\item congestion control
+\item flow control
+\end{itemize}
+
+TCP is:
+\begin{itemize}
+\item point-to-point (1 sender, 1 receiver)
+\item byte stream (no message boundaries)
+\item full duplex (has maximum segment size)
+\item cumulative ACKs
+\item pipelining with congestion and flow control
+setting window size
+\item connection-oriented with handshaking to initialize
+states
+\item flow controlled so sender does not overwhelm
+receiver
+\end{itemize}
+\subsection{Segment Structure}
+\label{sec:orga7cf77a}
+TCP segment consists of:
+\begin{itemize}
+\item \uline{source and destination port numbers}
+\item \uline{sequence number} for retransmission
+\item \uline{ACK number}: sequence number of next expected byte
+\item \uline{length of TCP header}
+\item \uline{congestion notification bits}
+\item \uline{ACK bit}
+\item \uline{connection management bits}
+\item \uline{receive window} for flow control (number of bytes receiver willing to accept)
+\item \uline{header checksum}
+\item \uline{TCP options}: variable length
+\item \uline{application data}: variable length data sent by application into TCP socket
+\end{itemize}
+\subsection{Reliable Data Transfer}
+\label{sec:org5c2b088}
+TCP creates reliable data transfer service on top of IP's unreliable service through pipelined segments,
+cumulative ACKs, and single retransmission timer.
+
+Retransmissions are triggered by timeout event, duplicate ACKs, and no NACK.
+
+Sequence number is byte stream number of first byte in segment's data.
+
+The ACK has the sequence number of the next byte expected from the other side (cumulative ACK).
+
+How the receiver handles out-of-order segments is up to the implementer.
+
+Set TCP timeout value longer than RTT, but RTT can vary. Too short causes premature timeout or
+unnecessary retransmissions and too long causes slow reaction to segment loss.
+To estimate RTT, sample measured time from segment transmission until ACK receipt.
+Since sample can vary, better to average several measurements.
+
+In many TCP implementations, minimum timeout value is 500ms due to clock granularity.
+
+Exponential weighted moving average (EWMA) has influence of past sample decreasing exponentially
+fast:
+$$ \text{EstimatedRTT} = (1 - \alpha) \times \text{EstimatedRTT} + \alpha \times \text{SampleRTT} $$
+typically using \(\alpha = 0.125\).
+
+Timeout interval used is EstimatedRTT plus some safety margin like \(4 \times \text{DevRTT}\),
+where
+$$ \text{DevRTT} = (1 - \beta) \times \text{DevRTT} + \beta \times \left| \text{SampleRTT} - \text{EstimatedRTT} \right| $$
+typically using \(\beta = 0.25\).
+\subsubsection{Sender}
+\label{sec:org05e15f9}
+Sender gets data from application, creates a segment with a sequence number (byte stream number
+of first data byte in segment) and then starts the timer if not already running (timer for oldest
+unACKed segment).
+Sender can have a timeout after some interval after which it retransmits the segment that caused
+the timeout and restarts the timer.
+Sender can receive and ACK, which can acknowledge previously unACKed segments (update what is
+known to be ACKed and start timer if there are still unACKed segments).
+\subsubsection{Receiver}
+\label{sec:org555eff8}
+The receiver can get an in-order data segment with expected sequence number.
+The TCP receiver waits for next segment, and if none, then send ACK.
+
+The receiver can get an in-order segment with the expected sequence number but one other
+segment has an ACK pending.
+The receiver immediately sends a single cumulative ACK, ACKing both in-order segments.
+
+The receiver can get an out-of-order segment with a higher than expected sequence number.
+The receiver immediately sends a duplicate ACK indicating the sequence number of the next
+expected byte.
+
+The receiver can get a segment that partially or completely fills a gap.
+The receiver immediately sends an ACK provided that the segment starts at the lower end
+of the gap.
+\subsubsection{Fast Retransmit}
+\label{sec:org3e1bb3b}
+Timeout period can be relatively long, so long delay before resending lost packet.
+
+Can detect lost segments via duplicate ACKs, where the sender often sends many segments
+back-to-back and so if a segment is lost, there will likely be many duplicate ACKs.
+So always resend unACKed segment with smallest sequence number, since it is likely that
+the unACKed segment is lost.
+\subsection{Flow Control}
+\label{sec:org312c98c}
+Can be issues if network layer delivers data faster than application layer removes data
+from socket buffers.
+
+\textbf{Flow control}: receiver controls sender so sender won't overflow receiver's buffer by transmitting
+too much, too fast
+
+TCP receiver advertises free buffer space in \texttt{rwnd} field in TCP header:
+\begin{itemize}
+\item \texttt{RcvBuffer} size set via socket options (typical default is 4096 bytes), but autoadjusted
+by many OSs
+\end{itemize}
+
+Sender limits amount of unACKed data to received \texttt{rwnd}.
+Under normal conditions, receive buffer will not overflow.
+\subsection{Connection Management}
+\label{sec:org059e12d}
+Before exchanging data, sender and receiver handshake (agree to establish connection and on
+connection params).
+
+Client creates socket and server accepts socket connection (both sides establish connection).
+
+2-way handshake does not always work in network due to :variable delays, retransmitted
+messages due to message loss, message reordering, and lack of visibility of other side.
+
+Can have issue with half-open connection (no client).
+\subsubsection{Startup/Shutdown Solution}
+\label{sec:orgdd1a38f}
+Uses three-message exchange, known as 3-way handshake.
+
+Necessary and sufficient for unambiguous, reliable startup and unambiguous, graceful shutdown.
+\texttt{SYN} for startup and \texttt{FIN} for shutdown.
+
+\begin{enumerate}
+\item client chooses initial sequence number and sends TCP SYN message
+\item server receives this, chooses initial sequence number, and sends TCP SYNACK message to ACK client SYN
+\item client receives SYNACK which indicates server is live, and sends ACK for SYNACK which may contain
+client-to-server data (\uline{connection established on client})
+\item server receives ACK which indicates client is live (\uline{connection established on server})
+\end{enumerate}
+
+\texttt{SYN} has flag set to 1. \texttt{SYNACK} has both \texttt{SYN} and \texttt{ACK} flags set (with sequence number and
+ACK number).
+
+Client and server both each close their side of the connection by sending TCP segment with
+\texttt{FIN} bit of 1.
+On receiving \texttt{FIN}, \texttt{ACK} can be combined with own \texttt{FIN} in response.
+Simultaneous \texttt{FIN} exchanges can be handled.
+\section{Principles of Congestion Control}
+\label{sec:orgbe8b31d}
+Too many sources sending too much data too fast for the network to handle.
+Can manifest in long delays or packet loss.
+
+Long delays can occur when the maximum per-connection throughput is reached and so delay
+increases greatly as arrival rate approaches capacity (infinite buffer).
+
+Packet loss can occur with finite buffers. Sender then retransmits the lost, timed-out packet.
+Application layer input and output will be the same, but transport layer input includes
+retransmissions.
+
+Packet loss can also happen due to the sender timing out prematurely and sending two copies, both
+of which are delivered (unneeded retransmissions).
+
+Retransmissions cause more work for given receiver throughput.
+Unneeded retransmissions mean link carries multiple copies of a packet, decreasing maximum achievable
+throughput.
+
+When a packet is dropped, any upstream transmission capacity and buffering used for that packet
+was wasted.
+
+Congestion insights:
+\begin{itemize}
+\item throughput can never exceed capacity
+\item delay increases as capacity approached
+\item loss/retransmission decreases effective throughput
+\item unneeded duplicates further decrease effective throughput
+\item upstream transmission capacity/buffering wasted for packets lost downstream
+\end{itemize}
+\subsection{Approaches}
+\label{sec:orgb2a71ab}
+\subsubsection{End-to-End}
+\label{sec:org59b5b62}
+No explicit feedback from network.
+Congestion inferred from observed loss and delay.
+
+This is the approach taken by classic TCP.
+\subsubsection{Network-Assisted}
+\label{sec:org1405859}
+Routers provide direct feedback to sending/receiving hosts with flows passing through congested router.
+This may indicate congestion level or explicitly set sending rate.
+
+Used in TCP ECN, ATM, DECbit protocols
+\section{TCP Congestion Control}
+\label{sec:orgd23e6c2}
+TCP uses its window size to perform end-to-end congestion control where \texttt{cwnd} is dynamically
+adjusted in response to observed network congestion (implementing TCP congestion control).
+
+Window size is the number of bytes allowed to be in flight simultaneously:
+$$ \text{LastByteSent} - \text{LastByteAcked} \le \text{cwnd} $$
+
+Basic idea of congestion control is for the sender to control transmission by dynamically
+changing the value of \texttt{cwnd} based on its perception of congestion.
+
+Due to flow control, effective window size is
+$$ \text{EW} = \min( \text{cwnd}, \text{RcvWindow} ) $$
+\subsection{Approach}
+\label{sec:org8daffb3}
+Sender increases transmission rate probing for usable bandwidth until loss event occurs,
+then decrease \texttt{cwnd}.
+By controlling the window size, TCP effectively controls rate.
+
+Transmission rate when using window control is at best equal to one window of bytes every
+round trip time:
+$$ \text{rate} = \approx \frac{\text{cwnd}}{\text{RTT}} \text{bytes/sec} $$
+
+Some schemes include: Tahoe, Reno, Vegas, Cubic, NewReno, Sack, SCTP, TFRC, and BBR.
+
+Phases of congestion control: \uline{slow start} and \uline{congestion avoidance}.
+
+\texttt{ssthresh} defines threshold between a slow start phase and a congestion avoidance phase.
+\subsubsection{Slow Start (SS)}
+\label{sec:org907f2f8}
+TCP starts with \texttt{cwnd} = 1 segment and increases the window size as ACKs are received.
+TCP increases the window fast (one segment for every ACK received).
+
+When \texttt{cwnd} = \texttt{ssthresh}, TCP goes into Congestion Avoidance.
+
+Typically, during slow start, \texttt{cwnd} doubles every RTT (exponential increase).
+
+On loss event, \texttt{ssthresh} is set to \(\frac{1}{2}\) of \texttt{cwnd} just before loss event.
+\subsubsection{Congestion Avoidance}
+\label{sec:org7e8f908}
+In this mode most of the time.
+
+TCP increases \texttt{cwnd} slower (how depends on the version).
+
+In Tahoe and Reno, \texttt{cwnd} is increased by one segment every RTT (linear increase).
+
+TCP continues to increase \texttt{cwnd} until congestion occurs.
+
+To indicate congestion, the types of loss events to check for are:
+\begin{itemize}
+\item 3 duplicate ACKs (temporary congestion)
+\item timeout (significant congestion)
+\end{itemize}
+
+When congestion occurs, decrease the window size \texttt{cwnd}.
+
+In TCP Reno:
+\begin{itemize}
+\item if timeout occurs, \texttt{sshthresh} = \(\frac{1}{2}\) \texttt{cwnd}, \texttt{cwnd} = 1, and go to
+Slow Start
+\item if 3 duplicate ACKs occur, \texttt{cwnd} = \texttt{ssthresh} = \(\frac{1}{2}\) \texttt{cwnd} and stay
+in the phase it is in (\uline{fast recovery})
+\begin{itemize}
+\item in Tahoe, sender goes back to Slow Start
+\end{itemize}
+\end{itemize}
+
+\textbf{Additive Increase}: increase sending rate by 1 maximum segment size every RTT
+until loss detected
+
+\textbf{Multiplicative Decrease}: cut sending rate in half at each loss event
+
+AIMD sawtooth behaviour is probing for bandwidth.
+AIMD optimizes congested flow rates network-wide and has desirable stability
+properties.
+
+With TCP CUBIC, ramp to \(W_{max}\) (sendng rate at which congestion loss was
+detected) faster but approach \(W_{max}\) more slowly.
+This gives higher throughput for longer.
+\begin{itemize}
+\item \(K\) is when TCP window size reaches \(W_{max}\)
+\item goal is to increase \(W\) as a function of the cube of the distance between
+current time and \(K\)
+\item default in Linux, most popular on web
+\end{itemize}
+
+TCP increases sending rate until packet lost occurs at some router's output,
+which is the \textbf{bottleneck link}.
+Best to focus on congested bottleneck link.
+\subsubsection{Delay-Based}
+\label{sec:org3e71d07}
+Keeping sender-to-receiver pipe just full enough, by keeping bottleneck link
+busy transmitting but avoiding high delays or buffering.
+
+Let \(RTT_{min}\) be the minimum observed RTT (uncongested path).
+Uncongested throughput with congestion window \texttt{cwnd} is \(\frac{\text{cwnd}}{RTT_{min}}\).
+\begin{itemize}
+\item if measured throughput is close to congested throughput, increase \texttt{cwnd} linearly
+\item if measured throughput far below uncongested throughput, decrease \texttt{cwnd} linearly
+\end{itemize}
+
+This is congestion control without inducting/forcing loss.
+Maximize throughput while keeping delay low.
+
+Some deployed TCPs take this approach.
+
+TCP deployments often implement network-assisted congestion control:
+\begin{itemize}
+\item two bits in IP header marked by network router to indicate congestion
+\begin{itemize}
+\item policy to determine marking chosen by network operator
+\end{itemize}
+\item congestion indication carried to destination
+\item destination sets the ECE bit on ACK segment to notify sender of congestion (E bit)
+\item involved both IP and TCP
+\end{itemize}
+
+If \(K\) TCP sessions share same bottleneck link of bandwidth \(R\), each should have
+average rate of \(R/K\).
+
+TCP is fair under idealized assumptions:
+\begin{itemize}
+\item same RTT
+\item fixed number of sessions only in congestion avoidance
+\end{itemize}
+\end{document}
