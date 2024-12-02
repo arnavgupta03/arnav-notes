@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-02 Mon 15:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Application Layer</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Application Layer</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7166afe">1. Principles of Network Applications</a></li>
+<li><a href="#org1a46a7d">2. Socket Programming</a>
+<ul>
+<li><a href="#orgac839b9">2.1. UDP</a></li>
+<li><a href="#org84eeda6">2.2. TCP</a></li>
+</ul>
+</li>
+<li><a href="#org2743665">3. Web and HTTP</a>
+<ul>
+<li><a href="#orgc41d901">3.1. QUIC: Quick UDP Internet Connections</a></li>
+</ul>
+</li>
+<li><a href="#orgbc605e8">4. Email, SMTP, IMAP</a>
+<ul>
+<li><a href="#org015ce68">4.1. SMTP</a></li>
+</ul>
+</li>
+<li><a href="#org0f27cad">5. Domain Name System (DNS)</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7166afe" class="outline-2">
+<h2 id="org7166afe"><span class="section-number-2">1.</span> Principles of Network Applications</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Network applications are programs that run on (different) end systems and communicate over the network.
+</p>
+
+<p>
+There is no need to write software for network-core devices since they do not run user applications.
+Also, applications on end systems allow for rapid app development and propagation.
+</p>
+
+<p>
+In client server paradigm:
+</p>
+<ul class="org-ul">
+<li><span class="underline">server</span> is an always-on host with a permanent IP address, often in data centers for scaling</li>
+<li><span class="underline">clients</span> (HTTP, IMAP, FTP)
+<ul class="org-ul">
+<li>contact and communicate with the server</li>
+<li>may be intermittently connected and have dynamic IP addresses</li>
+<li>do not communicate directly with each other</li>
+</ul></li>
+</ul>
+
+<p>
+In peer-peer architecture (like P2P file sharing):
+</p>
+<ul class="org-ul">
+<li>no always on server so end systems directly communicate</li>
+<li>peers request service from and provide service to other peers
+<ul class="org-ul">
+<li><b>self scalability</b>: new peers bring new service capacity as well as new service demands</li>
+</ul></li>
+<li>peers are intermittently connected and change IP addresses (so management is complex)</li>
+</ul>
+
+<p>
+<b>Process</b>: program running with a host
+</p>
+
+<p>
+With the same host, two processes communicate using inter-process (defined by OS).
+In different hosts, processes communicate by exchanging messages.
+</p>
+
+<p>
+<b>Client process</b>: process that initiates communication
+</p>
+
+<p>
+<b>Server process</b>: process that waits to be contacted
+</p>
+
+<p>
+Both are present in P2P architectures.
+</p>
+
+<p>
+Application-layer protocol defines:
+</p>
+<ul class="org-ul">
+<li><span class="underline">types of message exchanged</span></li>
+<li><span class="underline">message syntax</span>: what fields in messages and how fields are delineated</li>
+<li><span class="underline">message semantics</span>: meaning of info in fields</li>
+<li><span class="underline">rules</span> for when and how processes send and respond to messages</li>
+</ul>
+
+<p>
+Protocols can be:
+</p>
+<ul class="org-ul">
+<li><span class="underline">open protocols</span>: defined in RFCs, everyone has access to protocol definition, allows for interoperability</li>
+<li><span class="underline">proprietary protocols</span></li>
+</ul>
+
+<p>
+To choose a transport service, consider:
+</p>
+<ul class="org-ul">
+<li><b>data integrity</b>: can loss be tolerated or is reliability required</li>
+<li><b>timing</b>: some apps require low delay to be effectve</li>
+<li><b>throughput</b>: does the app require some minimum amount of throughput to be effective</li>
+<li><b>security</b>: encryption and data integrity</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1a46a7d" class="outline-2">
+<h2 id="org1a46a7d"><span class="section-number-2">2.</span> Socket Programming</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Socket</b>: door between application process and end-to-end transport protocol
+</p>
+
+<p>
+Sockets can be UDP (unreliable datagram) or TCP (reliable, byte stream-oriented).
+</p>
+</div>
+<div id="outline-container-orgac839b9" class="outline-3">
+<h3 id="orgac839b9"><span class="section-number-3">2.1.</span> UDP</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+No connection between client and server (no handshake).
+</p>
+
+<p>
+Sender explicitly attaches IP destination address and port number to each packet.
+Receiver extracts sender IP address and port number from received packet.
+</p>
+
+<p>
+Transmitted data may be lost or received out-of-order.
+</p>
+</div>
+</div>
+<div id="outline-container-org84eeda6" class="outline-3">
+<h3 id="org84eeda6"><span class="section-number-3">2.2.</span> TCP</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Client must contact running server, which must have created socket to welcome client&rsquo;s contact.
+</p>
+
+<p>
+Client contacts server by creating TCP socket with IP address and port number specified.
+</p>
+
+<p>
+When contacted by client, server TCP creates new socket for server process to communicate with
+that particular client:
+</p>
+<ul class="org-ul">
+<li>allows server to talk with multiple clients</li>
+<li>source port numbers used to distinguish clients</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org2743665" class="outline-2">
+<h2 id="org2743665"><span class="section-number-2">3.</span> Web and HTTP</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Web page consists of objects which can be stored on different web servers,
+like base HTML file which includes referenced objects, each addressable by a URL.
+</p>
+
+<p>
+<b>HTTP: HyperText Transfer Protocol</b> is the web&rsquo;s application layer protocol:
+</p>
+<ul class="org-ul">
+<li><span class="underline">client</span>: browser that requests and receives web objects</li>
+<li><span class="underline">server</span>: web server sends objects in response to requests</li>
+</ul>
+
+<p>
+HTTP uses TCP:
+</p>
+<ul class="org-ul">
+<li>client initiates TCP connection to server at port 80</li>
+<li>server accepts TCP connection from client</li>
+<li>HTTP messages exchanged between client and server</li>
+<li>TCP connection closed</li>
+</ul>
+
+<p>
+Server maintains no information about past client requests.
+(protocols that maintain stat are complex)
+</p>
+
+<p>
+<b>Non-persistent HTTP</b>:
+</p>
+<ol class="org-ol">
+<li>TCP connection opened</li>
+<li>at most 1 object sent over TCP connection</li>
+<li>TCP connection closed</li>
+</ol>
+
+<p>
+For non-persistent HTTP,
+\[ \text{Response Time} = 2 \text{RTT} + \text{File transmission time} \]
+This requires 2 RTTs per object and OS overhead for each TCP connection.
+Browsers often open multiple parallel TCP connections to fetch referenced objects in parallel.
+</p>
+
+<p>
+<b>Persistent HTTP</b>:
+</p>
+<ol class="org-ol">
+<li>TCP connection opened to a server</li>
+<li>multiple objects can be sent over a single TCP connection between client and that server</li>
+<li>TCP connection closed</li>
+</ol>
+
+<p>
+For persistent HTTP, as little as 1 RTT for all referenced objects (cutting response time in half).
+</p>
+
+<p>
+HTTP request message is ASCII (human readable format), with request line (GET, POST, HEAD, etc),
+header lines, carriage return and line feed at start of line to indicate end of header lines, and
+body.
+</p>
+
+<p>
+HTTP request messages can be POST (often form input), GET (query for user data),
+HEAD (headers only returned), and PUT (upload new file or replace existing file).
+</p>
+
+<p>
+HTTP response message is also ASCII with status line (protocol, status code, status phrase),
+header lines, and data (after <code>\r\n</code>).
+</p>
+
+<p>
+HTTP response status codes include 200 OK, 301 Moved Permanently, 400 Bad Request, 404 Not Found, and
+505 HTTP Version Not Supported.
+</p>
+</div>
+<div id="outline-container-orgc41d901" class="outline-3">
+<h3 id="orgc41d901"><span class="section-number-3">3.1.</span> QUIC: Quick UDP Internet Connections</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Application-layer protocol on top of UDP that increases the performance of HTTP.
+</p>
+
+<p>
+Adopts TCP approaches for connection establishment, error control, and congestion control.
+</p>
+
+<p>
+Uses multiple application-level streams multiplexed over single QUIC connection, so separate
+reliable data transfer and security, as well as common congestion control.
+</p>
+
+<p>
+QUIC does a single handshake for TCP and TLS (security/auth) together in one.
+</p>
+
+<p>
+With parallelism from QUIC stream, there is no head-of-line blocking (no need to wait for earlier
+requests to go through since parallel).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbc605e8" class="outline-2">
+<h2 id="orgbc605e8"><span class="section-number-2">4.</span> Email, SMTP, IMAP</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Major components are user agents, mail servers, and Single Mail Transfer Protocol (SMTP).
+</p>
+
+<p>
+<b>User agent</b> is mail reader, for composing, editing, and reading mail messages.
+</p>
+
+<p>
+<b>Mail server</b> has mailbox with incoming messages for user and message queue of outgoing mail
+messages.
+</p>
+
+<p>
+<b>SMTP</b> used between mail servers to send email messages.
+</p>
+</div>
+<div id="outline-container-org015ce68" class="outline-3">
+<h3 id="org015ce68"><span class="section-number-3">4.1.</span> SMTP</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Use TCP to reliably transfer email message from client (mail server) to server with port 25.
+</p>
+
+<p>
+3 phases of transfer:
+</p>
+<ul class="org-ul">
+<li>SMTP handshaking</li>
+<li>SMTP transfer of messages</li>
+<li>SMTP closure</li>
+</ul>
+
+<p>
+Command/response interaction with ASCII text commands and status code/phrase response.
+</p>
+
+<p>
+As opposed to HTTP, which is client pull SMTP is client push.
+In HTTP, each object is encapsulated in its own response message.
+In SMTP, multiple objects are sent in multipart message.
+</p>
+
+<p>
+SMTP uses persistent connections, requires message to be in 7-bit ASCII, and uses
+CRLF.CRLF to determine end of message.
+</p>
+
+<p>
+SMTP email message contains header lines (to, from, subject) and body (message).
+</p>
+
+<p>
+Internet Mail Access Protocol (IMAP) provides retrieval, deletion, and folders of stored messages
+on mail server (retrieval from mail server to user agent).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org0f27cad" class="outline-2">
+<h2 id="org0f27cad"><span class="section-number-2">5.</span> Domain Name System (DNS)</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Distributed database implemented in hierarchy of many name servers.
+An application-layer protocol where hosts and DNS servers communicate to resolve names (translate
+from name to address). This is a core Internet function implemented as an application-layer protocol.
+</p>
+
+<p>
+Hostname-to-IP address translation to assist with host aliasing (canonical alias names) and mail server
+aliasing.
+Also helps with load distribution through replicated web servers (many IP addresses correspond to
+one name).
+</p>
+
+<p>
+Centralizing DNS would cause single point of failure, too high traffic volume, distant centralized DB,
+and difficult maintenance. Overall, wouldn&rsquo;t scale.
+</p>
+
+<p>
+For DNS, billions of simple records and trillions of queries daily with many more reads than writes.
+Must be reliable and secure always, while being organizationally and physically decentralized.
+</p>
+
+<p>
+Hierarchy:
+</p>
+<ul class="org-ul">
+<li>root server for top level domain DNS server
+<ul class="org-ul">
+<li>official, contact of last resort by name servers that cannot resolve name</li>
+<li>managed by ICANN</li>
+<li>DNSSEC &rarr; provides security (auth and message integrity)</li>
+<li>13 globally</li>
+</ul></li>
+<li>top level domain DNS server for authoritative DNS servers
+<ul class="org-ul">
+<li>responsible for TLDs like .com, .org, etc</li>
+</ul></li>
+<li>authoritative DNS servers for IP address
+<ul class="org-ul">
+<li>organization&rsquo;s DNS server providing authoritative hostname to IP mappings for organization&rsquo;s named
+hosts</li>
+<li>can be managed by organization or service provider</li>
+</ul></li>
+</ul>
+
+<p>
+DNS query is sent to local DNS server, which returns reply answering from local cache or forwarding
+request into DNS hierarchy.
+</p>
+
+<p>
+Each ISP has local DNS server (does not strictly belong to hierarchy).
+</p>
+
+<p>
+<b>Iterated query</b>: contacted server replies with name of server to contact
+</p>
+
+<p>
+<b>Recursive query</b>: puts burden of name resolution on contacted name server, can cause heavy load at
+upper levels of hierarchy
+</p>
+
+<p>
+Once any name server learns mapping, this is cached and the cached mapping is returned.
+Improves response time and cache entries timeout after some TTL.
+TLD servers typically cached in local name servers.
+</p>
+
+<p>
+Cached entries can be out of date, so DNS is best effort.
+</p>
+
+<p>
+DNS records have format (<code>name</code>, <code>value</code>, <code>type</code>, <code>ttl</code>) and can have different types:
+</p>
+<ul class="org-ul">
+<li><span class="underline">type A</span>: <code>name</code> is hostname, <code>value</code> is IP address</li>
+<li><span class="underline">type NS</span>: <code>name</code> is domain, <code>value</code> is hostname of authoritative name server for domain</li>
+<li><span class="underline">type CNAME</span>: <code>name</code> is alias name, <code>value</code> is canonical name</li>
+<li><span class="underline">type MX</span>: <code>value</code> is name of SMTP mail server associated with <code>name</code></li>
+</ul>
+
+<p>
+DNS query and reply messages have the same format:
+</p>
+<ul class="org-ul">
+<li><span class="underline">message header</span>: identification (16 bit number for query and reply) and flags (query or reply,
+recursion desired, recursion available, reply is authoritative)</li>
+<li><span class="underline">numbers of questions, answer records, authority records, additional records</span></li>
+<li><span class="underline">questions</span></li>
+<li><span class="underline">answers</span></li>
+<li><span class="underline">authority</span></li>
+<li><span class="underline">additional info</span></li>
+</ul>
+
+<p>
+To get info into DNS, register name at DNS registrar by providing names and IP addresses of authoritative
+name server (primary and secondary).
+Then, create authoritative server locally with IP address.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-02 Mon 15:55</p>
+</div>
+</body>
+</html>

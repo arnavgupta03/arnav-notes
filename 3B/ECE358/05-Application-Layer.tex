@@ -1,0 +1,295 @@
+% Created 2024-12-02 Mon 15:55
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Application Layer}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Application Layer},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Principles of Network Applications}
+\label{sec:orgca531dd}
+Network applications are programs that run on (different) end systems and communicate over the network.
+
+There is no need to write software for network-core devices since they do not run user applications.
+Also, applications on end systems allow for rapid app development and propagation.
+
+In client server paradigm:
+\begin{itemize}
+\item \uline{server} is an always-on host with a permanent IP address, often in data centers for scaling
+\item \uline{clients} (HTTP, IMAP, FTP)
+\begin{itemize}
+\item contact and communicate with the server
+\item may be intermittently connected and have dynamic IP addresses
+\item do not communicate directly with each other
+\end{itemize}
+\end{itemize}
+
+In peer-peer architecture (like P2P file sharing):
+\begin{itemize}
+\item no always on server so end systems directly communicate
+\item peers request service from and provide service to other peers
+\begin{itemize}
+\item \textbf{self scalability}: new peers bring new service capacity as well as new service demands
+\end{itemize}
+\item peers are intermittently connected and change IP addresses (so management is complex)
+\end{itemize}
+
+\textbf{Process}: program running with a host
+
+With the same host, two processes communicate using inter-process (defined by OS).
+In different hosts, processes communicate by exchanging messages.
+
+\textbf{Client process}: process that initiates communication
+
+\textbf{Server process}: process that waits to be contacted
+
+Both are present in P2P architectures.
+
+Application-layer protocol defines:
+\begin{itemize}
+\item \uline{types of message exchanged}
+\item \uline{message syntax}: what fields in messages and how fields are delineated
+\item \uline{message semantics}: meaning of info in fields
+\item \uline{rules} for when and how processes send and respond to messages
+\end{itemize}
+
+Protocols can be:
+\begin{itemize}
+\item \uline{open protocols}: defined in RFCs, everyone has access to protocol definition, allows for interoperability
+\item \uline{proprietary protocols}
+\end{itemize}
+
+To choose a transport service, consider:
+\begin{itemize}
+\item \textbf{data integrity}: can loss be tolerated or is reliability required
+\item \textbf{timing}: some apps require low delay to be effectve
+\item \textbf{throughput}: does the app require some minimum amount of throughput to be effective
+\item \textbf{security}: encryption and data integrity
+\end{itemize}
+\section{Socket Programming}
+\label{sec:orgb1cd792}
+\textbf{Socket}: door between application process and end-to-end transport protocol
+
+Sockets can be UDP (unreliable datagram) or TCP (reliable, byte stream-oriented).
+\subsection{UDP}
+\label{sec:org45c688d}
+No connection between client and server (no handshake).
+
+Sender explicitly attaches IP destination address and port number to each packet.
+Receiver extracts sender IP address and port number from received packet.
+
+Transmitted data may be lost or received out-of-order.
+\subsection{TCP}
+\label{sec:org6489d05}
+Client must contact running server, which must have created socket to welcome client's contact.
+
+Client contacts server by creating TCP socket with IP address and port number specified.
+
+When contacted by client, server TCP creates new socket for server process to communicate with
+that particular client:
+\begin{itemize}
+\item allows server to talk with multiple clients
+\item source port numbers used to distinguish clients
+\end{itemize}
+\section{Web and HTTP}
+\label{sec:orgb5b72df}
+Web page consists of objects which can be stored on different web servers,
+like base HTML file which includes referenced objects, each addressable by a URL.
+
+\textbf{HTTP: HyperText Transfer Protocol} is the web's application layer protocol:
+\begin{itemize}
+\item \uline{client}: browser that requests and receives web objects
+\item \uline{server}: web server sends objects in response to requests
+\end{itemize}
+
+HTTP uses TCP:
+\begin{itemize}
+\item client initiates TCP connection to server at port 80
+\item server accepts TCP connection from client
+\item HTTP messages exchanged between client and server
+\item TCP connection closed
+\end{itemize}
+
+Server maintains no information about past client requests.
+(protocols that maintain stat are complex)
+
+\textbf{Non-persistent HTTP}:
+\begin{enumerate}
+\item TCP connection opened
+\item at most 1 object sent over TCP connection
+\item TCP connection closed
+\end{enumerate}
+
+For non-persistent HTTP,
+$$ \text{Response Time} = 2 \text{RTT} + \text{File transmission time} $$
+This requires 2 RTTs per object and OS overhead for each TCP connection.
+Browsers often open multiple parallel TCP connections to fetch referenced objects in parallel.
+
+\textbf{Persistent HTTP}:
+\begin{enumerate}
+\item TCP connection opened to a server
+\item multiple objects can be sent over a single TCP connection between client and that server
+\item TCP connection closed
+\end{enumerate}
+
+For persistent HTTP, as little as 1 RTT for all referenced objects (cutting response time in half).
+
+HTTP request message is ASCII (human readable format), with request line (GET, POST, HEAD, etc),
+header lines, carriage return and line feed at start of line to indicate end of header lines, and
+body.
+
+HTTP request messages can be POST (often form input), GET (query for user data),
+HEAD (headers only returned), and PUT (upload new file or replace existing file).
+
+HTTP response message is also ASCII with status line (protocol, status code, status phrase),
+header lines, and data (after \texttt{\textbackslash{}r\textbackslash{}n}).
+
+HTTP response status codes include 200 OK, 301 Moved Permanently, 400 Bad Request, 404 Not Found, and
+505 HTTP Version Not Supported.
+\subsection{QUIC: Quick UDP Internet Connections}
+\label{sec:orgdc9e1d3}
+Application-layer protocol on top of UDP that increases the performance of HTTP.
+
+Adopts TCP approaches for connection establishment, error control, and congestion control.
+
+Uses multiple application-level streams multiplexed over single QUIC connection, so separate
+reliable data transfer and security, as well as common congestion control.
+
+QUIC does a single handshake for TCP and TLS (security/auth) together in one.
+
+With parallelism from QUIC stream, there is no head-of-line blocking (no need to wait for earlier
+requests to go through since parallel).
+\section{Email, SMTP, IMAP}
+\label{sec:org8acc33a}
+Major components are user agents, mail servers, and Single Mail Transfer Protocol (SMTP).
+
+\textbf{User agent} is mail reader, for composing, editing, and reading mail messages.
+
+\textbf{Mail server} has mailbox with incoming messages for user and message queue of outgoing mail
+messages.
+
+\textbf{SMTP} used between mail servers to send email messages.
+\subsection{SMTP}
+\label{sec:org96d4860}
+Use TCP to reliably transfer email message from client (mail server) to server with port 25.
+
+3 phases of transfer:
+\begin{itemize}
+\item SMTP handshaking
+\item SMTP transfer of messages
+\item SMTP closure
+\end{itemize}
+
+Command/response interaction with ASCII text commands and status code/phrase response.
+
+As opposed to HTTP, which is client pull SMTP is client push.
+In HTTP, each object is encapsulated in its own response message.
+In SMTP, multiple objects are sent in multipart message.
+
+SMTP uses persistent connections, requires message to be in 7-bit ASCII, and uses
+CRLF.CRLF to determine end of message.
+
+SMTP email message contains header lines (to, from, subject) and body (message).
+
+Internet Mail Access Protocol (IMAP) provides retrieval, deletion, and folders of stored messages
+on mail server (retrieval from mail server to user agent).
+\section{Domain Name System (DNS)}
+\label{sec:org1376803}
+Distributed database implemented in hierarchy of many name servers.
+An application-layer protocol where hosts and DNS servers communicate to resolve names (translate
+from name to address). This is a core Internet function implemented as an application-layer protocol.
+
+Hostname-to-IP address translation to assist with host aliasing (canonical alias names) and mail server
+aliasing.
+Also helps with load distribution through replicated web servers (many IP addresses correspond to
+one name).
+
+Centralizing DNS would cause single point of failure, too high traffic volume, distant centralized DB,
+and difficult maintenance. Overall, wouldn't scale.
+
+For DNS, billions of simple records and trillions of queries daily with many more reads than writes.
+Must be reliable and secure always, while being organizationally and physically decentralized.
+
+Hierarchy:
+\begin{itemize}
+\item root server for top level domain DNS server
+\begin{itemize}
+\item official, contact of last resort by name servers that cannot resolve name
+\item managed by ICANN
+\item DNSSEC \(\to\) provides security (auth and message integrity)
+\item 13 globally
+\end{itemize}
+\item top level domain DNS server for authoritative DNS servers
+\begin{itemize}
+\item responsible for TLDs like .com, .org, etc
+\end{itemize}
+\item authoritative DNS servers for IP address
+\begin{itemize}
+\item organization's DNS server providing authoritative hostname to IP mappings for organization's named
+hosts
+\item can be managed by organization or service provider
+\end{itemize}
+\end{itemize}
+
+DNS query is sent to local DNS server, which returns reply answering from local cache or forwarding
+request into DNS hierarchy.
+
+Each ISP has local DNS server (does not strictly belong to hierarchy).
+
+\textbf{Iterated query}: contacted server replies with name of server to contact
+
+\textbf{Recursive query}: puts burden of name resolution on contacted name server, can cause heavy load at
+upper levels of hierarchy
+
+Once any name server learns mapping, this is cached and the cached mapping is returned.
+Improves response time and cache entries timeout after some TTL.
+TLD servers typically cached in local name servers.
+
+Cached entries can be out of date, so DNS is best effort.
+
+DNS records have format (\texttt{name}, \texttt{value}, \texttt{type}, \texttt{ttl}) and can have different types:
+\begin{itemize}
+\item \uline{type A}: \texttt{name} is hostname, \texttt{value} is IP address
+\item \uline{type NS}: \texttt{name} is domain, \texttt{value} is hostname of authoritative name server for domain
+\item \uline{type CNAME}: \texttt{name} is alias name, \texttt{value} is canonical name
+\item \uline{type MX}: \texttt{value} is name of SMTP mail server associated with \texttt{name}
+\end{itemize}
+
+DNS query and reply messages have the same format:
+\begin{itemize}
+\item \uline{message header}: identification (16 bit number for query and reply) and flags (query or reply,
+recursion desired, recursion available, reply is authoritative)
+\item \uline{numbers of questions, answer records, authority records, additional records}
+\item \uline{questions}
+\item \uline{answers}
+\item \uline{authority}
+\item \uline{additional info}
+\end{itemize}
+
+To get info into DNS, register name at DNS registrar by providing names and IP addresses of authoritative
+name server (primary and secondary).
+Then, create authoritative server locally with IP address.
+\end{document}
