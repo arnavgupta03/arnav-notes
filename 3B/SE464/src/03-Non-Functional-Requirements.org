@@ -1,0 +1,69 @@
+#+title: Non Functional Requirements
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Requirements Analysis
+Architecture analysis involves requirement engineering.
+
+Requirements come from users and stakeholders who have demands/needs.
+
+A requirement engineer gathers raw requirements, analysis for consistency,
+feasibility, and completeness, writes a specification, and validates that
+gathered requirements reflect stakeholder needs.
+
+Considerations during requirement gathering:
+- business need vs requirement
+- nice-to-have vs must-have
+- system goal vs contractual requirement
+
+Types of Requirements
+- *Functional Requirements*
+  - specify function of system
+  - record, compute, transform, transmit
+- *Non-Functional Requirements*
+  - _Quality Requirements_
+    - Specify how well system performs intended functions
+    - performance, usability, maintenance, reliability, portability
+  - _Managerial Requirements_
+    - when to deliver
+    - verification
+    - legal responsibilities if things go wrong
+  - _Context/Environment Requirements_
+    - range of conditions in which system should operate
+
+Also data requirements handle system state and IO.
+
+*Software Specification*: bridge between real-world environment (demands
+and needs of stakeholders) and software system
+
+*System Perspective*: block diagram that describes system boundaries, users,
+and other interfaces
+
+A good requirement spec is:
+- _correct_: requirement reflects need
+- _complete_: necessary requirements included
+- _unambiguous_: all parties agree on meaning
+- _consistent_: all parties match
+- _ranked for importance and stability_: priority and expected changes per
+  requirement
+- _modifiable_: easy to change, maintaining consistency
+- _verifiable_: possible to see whether requirements met
+- _traceable_: to goals/purposes and to design/code
+- _necessary and feasible_
+
+* Non-Functional Requirements
+Often called quality attributes, specify how well system performs functions like
+speed, ease of use, security, and maintainability.
+
+Non-functional requirements can be mandatory or not mandatory.
+Become more mandatory as market matures.
+
+NFRs should be clear, concise, and measurable.
+NFR design requires customers and developers.
+
+NFRs affect many high level subsystems, so must be considered during software
+architecture design.
+
+Difficult to modify NFR once architecture complete.

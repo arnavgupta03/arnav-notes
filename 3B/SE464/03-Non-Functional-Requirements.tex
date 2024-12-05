@@ -1,0 +1,112 @@
+% Created 2024-12-05 Thu 09:29
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Non Functional Requirements}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Non Functional Requirements},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Requirements Analysis}
+\label{sec:orgd181184}
+Architecture analysis involves requirement engineering.
+
+Requirements come from users and stakeholders who have demands/needs.
+
+A requirement engineer gathers raw requirements, analysis for consistency,
+feasibility, and completeness, writes a specification, and validates that
+gathered requirements reflect stakeholder needs.
+
+Considerations during requirement gathering:
+\begin{itemize}
+\item business need vs requirement
+\item nice-to-have vs must-have
+\item system goal vs contractual requirement
+\end{itemize}
+
+Types of Requirements
+\begin{itemize}
+\item \textbf{Functional Requirements}
+\begin{itemize}
+\item specify function of system
+\item record, compute, transform, transmit
+\end{itemize}
+\item \textbf{Non-Functional Requirements}
+\begin{itemize}
+\item \uline{Quality Requirements}
+\begin{itemize}
+\item Specify how well system performs intended functions
+\item performance, usability, maintenance, reliability, portability
+\end{itemize}
+\item \uline{Managerial Requirements}
+\begin{itemize}
+\item when to deliver
+\item verification
+\item legal responsibilities if things go wrong
+\end{itemize}
+\item \uline{Context/Environment Requirements}
+\begin{itemize}
+\item range of conditions in which system should operate
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+Also data requirements handle system state and IO.
+
+\textbf{Software Specification}: bridge between real-world environment (demands
+and needs of stakeholders) and software system
+
+\textbf{System Perspective}: block diagram that describes system boundaries, users,
+and other interfaces
+
+A good requirement spec is:
+\begin{itemize}
+\item \uline{correct}: requirement reflects need
+\item \uline{complete}: necessary requirements included
+\item \uline{unambiguous}: all parties agree on meaning
+\item \uline{consistent}: all parties match
+\item \uline{ranked for importance and stability}: priority and expected changes per
+requirement
+\item \uline{modifiable}: easy to change, maintaining consistency
+\item \uline{verifiable}: possible to see whether requirements met
+\item \uline{traceable}: to goals/purposes and to design/code
+\item \uline{necessary and feasible}
+\end{itemize}
+\section{Non-Functional Requirements}
+\label{sec:org925df67}
+Often called quality attributes, specify how well system performs functions like
+speed, ease of use, security, and maintainability.
+
+Non-functional requirements can be mandatory or not mandatory.
+Become more mandatory as market matures.
+
+NFRs should be clear, concise, and measurable.
+NFR design requires customers and developers.
+
+NFRs affect many high level subsystems, so must be considered during software
+architecture design.
+
+Difficult to modify NFR once architecture complete.
+\end{document}
