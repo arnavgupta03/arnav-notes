@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-05 Thu 15:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wireless</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Wireless</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7d2e931">1. Wireless Networks</a>
+<ul>
+<li><a href="#org28f0661">1.1. 802.11</a>
+<ul>
+<li><a href="#org0ca7501">1.1.1. Architecture</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7d2e931" class="outline-2">
+<h2 id="org7d2e931"><span class="section-number-2">1.</span> Wireless Networks</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Many more wireless phone subscribers than wired, and same for devices.
+</p>
+
+<p>
+Challenges arise from wireless (communication over wireless link) and mobility (handling mobile user
+who changes point of attachment to network).
+Wireless &ne; mobile.
+</p>
+
+<p>
+<b>Base station</b> is typically connected to wired network and relays packets between wired network and
+wireless hosts in its area.
+</p>
+
+<p>
+<b>Wireless link</b> connects mobiles to base station and can be used as a backbone link. Multiple access
+protocol coordinates link access, and can have various data rates and transmission distance.
+</p>
+
+<p>
+<b>Infrastructure mode</b> is how base station connects mobiles into wired network.
+</p>
+
+<p>
+With <b>ad hoc mode</b>, no base stations and so nodes can only transmit to other nodes within link
+coverage. With this, nodes organize themselves into a network (route among themselves).
+</p>
+
+<p>
+<b>Wireless network taxonomy</b>
+</p>
+<ul class="org-ul">
+<li><span class="underline">infrastructure, single hop</span>: host connects to base station which connects to larger internet</li>
+<li><span class="underline">infrastructure, multiple hops</span>: host may have to relay through several wireless nodes to connect
+to larger Internet: <i>mesh net</i></li>
+<li><span class="underline">no infrastructure, single hop</span>: no base station, no connection to larger internet (Bluetooth,
+ad hoc nets)</li>
+<li><span class="underline">no infrastructure, multiple hops</span>: no base station, no connection to larger internet, may have to
+replay to reach a given wireless node</li>
+</ul>
+
+<p>
+Long waves mean big antennas and small bandwidth.
+Best bands are lower ones, since better propagation characteristics and larger antennas.
+Issue is, more bandwidth on higher frequencies than lower ones, so lower ones are oversubscribed.
+</p>
+
+<p>
+Spectrum not always used well and re-allocation often necessary.
+Spectrum is a scarce resource and hence is heavily reused.
+This can create <b>interference</b>.
+</p>
+
+<p>
+Interference management and spectrum reuse are critical problems in wireless.
+</p>
+
+<p>
+2 types of bands:
+</p>
+<ul class="org-ul">
+<li><span class="underline">licensed</span>: used by cellular networks</li>
+<li><span class="underline">unlicensed</span>: used by WiFi (and recently cellular)</li>
+</ul>
+
+<p>
+Industrial, Scientific, Medical (ISM) wireless bands and is region of EM spectrum available for use
+without license:
+</p>
+<ul class="org-ul">
+<li>used for wireless LANs and PANs</li>
+<li>four separate bands</li>
+</ul>
+
+<p>
+Key words are <b>rate</b>, <b>range</b>, and <b>power consumption</b>.
+</p>
+
+<p>
+Lower frequency has longer range.
+</p>
+
+<p>
+<b>Half-duplex</b>: a node cannot and receive at the same time
+</p>
+
+<p>
+<b>Decreased signal strength</b>: radio signal attenuates as it propagates through matter (path loss), and
+some cannot cross walls at all
+</p>
+
+<p>
+<b>Interference from other sources</b>: ISM bands shared by other devices and so devices can interfere with
+interference occurring in licensed bands due to reuse
+</p>
+
+<p>
+<b>Multipath propagation</b>: radio signals reflects off objects ground, arriving at destination at slightly
+different times
+</p>
+
+<p>
+All these make communication across wireless link difficult, but characteristics depend on the band and
+are time-varying.
+</p>
+
+<p>
+<b>Signal-to-Noise Ratio (SNR)</b>: larger means easier to extract signal from noise
+</p>
+
+<p>
+Given physical layer, increasing power means increasing SNR and therefore decreasing BER.
+</p>
+
+<p>
+Given SNR, choosing modulation and coding scheme that meets BER requirement means giving highest
+throughput.
+</p>
+
+<p>
+SNR may change with mobility, by dynamically adapting physical layer (modulation technique and rate).
+</p>
+
+<p>
+By increasing power, interference increases as well.
+</p>
+
+<p>
+With multiple wireless senders and receivers, there are additional problems:
+</p>
+<ul class="org-ul">
+<li><span class="underline">hidden terminal problem</span>: two nodes can talk to some intermediate node but cannot hear each other</li>
+<li><span class="underline">signal attenuation</span>: two nodes have their signal attenuated by some intermediate node</li>
+</ul>
+
+<p>
+Cellular has:
+</p>
+<ul class="org-ul">
+<li>wide area coverage, proprietary networks, and more coordination between base stations</li>
+<li>licensed (expensive) spectrum</li>
+<li>high mobility</li>
+</ul>
+
+<p>
+Wi-Fi has:
+</p>
+<ul class="org-ul">
+<li>local area coverage, last link for Internet, and little coordination between access points</li>
+<li>unlicensed (free) spectrum (2.4 GHz and 5.3 GHz)</li>
+<li>low/no mobility</li>
+</ul>
+
+<p>
+In <span class="underline">IEEE standards</span>, Ethernet is 802.3, Wi-Fi is 802.11, and Wireless PAN (Bluetooth) is 802.15.
+</p>
+</div>
+<div id="outline-container-org28f0661" class="outline-3">
+<h3 id="org28f0661"><span class="section-number-3">1.1.</span> 802.11</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+802.11 Wireless LAN details:
+</p>
+<ul class="org-ul">
+<li><span class="underline">802.11b</span>: 1999, 11 Mbps, 30 m, 2.4 GHz</li>
+<li><span class="underline">802.11g</span>: 2003, 54 Mbps, 30 m, 2.4 GHz</li>
+<li><span class="underline">802.11n</span> (WiFi 4): 2009, 600 Mbps, 70 m, 2.4/5 GHz</li>
+<li><span class="underline">802.11ac</span> (WiFi 5): 2013, 3.47 Gbps, 70 m, 5 GHz</li>
+<li><span class="underline">802.11ax</span> (WiFi 6): 2020, 14 Gbps, 70 m, 2.4/5 GHz</li>
+<li><span class="underline">802.11af</span>: 2014, 35-560 Mbps, 1 km, unused TV bands</li>
+<li><span class="underline">802.11ah</span>: 2017, 347 Mbps, 1 km, 900 MHz</li>
+</ul>
+
+<p>
+All WiFi use CSMA/CA for multiple access, have access point and ad-hoc network versions, and have
+a random access mode (DCF: distributed coordinated function) and polling mode (PCF: point coordination
+function).
+</p>
+
+<p>
+802.11b&rsquo;s 2.4GHz-2.485 GHz spectrum is divided into 14 channels at different frequencies.
+The access point admin chooses a channel for the access point.
+Interference is possible since the channel chosen can be the same as the neighbouring access point.
+</p>
+
+<p>
+Since channels are at 22MHz bandwidth, channels overlap.
+Channels 1, 6, and 11 can operate simultaneously with no interference.
+</p>
+
+<p>
+At 5GHz, there are 24 non-overlapping channels.
+</p>
+</div>
+<div id="outline-container-org0ca7501" class="outline-4">
+<h4 id="org0ca7501"><span class="section-number-4">1.1.1.</span> Architecture</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Wireless host communicates with access point.
+</p>
+
+<p>
+Basic Service Set (BSS) in infrastructure mode contains wireless hosts and access point.
+</p>
+
+<p>
+There is an adhoc mode with no access point, but much less used.
+</p>
+
+<p>
+A network administrator allocates a name (SSID) to each access point.
+</p>
+
+<p>
+Arriving host must associate with an access point:
+</p>
+<ol class="org-ol">
+<li>scans channels, listening for beacon frames containing SSID and access point&rsquo;s MAC address</li>
+<li>selects access point to associate with</li>
+<li>may perform authentication</li>
+<li>typically run DHCP to get IP address in access point&rsquo;s subnet</li>
+</ol>
+
+<p>
+<b>Passive Scanning</b>
+</p>
+<ol class="org-ol">
+<li>Beacon frames sent from APs (on different channels)</li>
+<li>Association Request frame sent: host to selected AP</li>
+<li>Association Response frame sent: selected AP to host</li>
+</ol>
+
+<p>
+<b>Active Scanning</b>
+</p>
+<ol class="org-ol">
+<li>Probe Request frame broadcast from host (on all channels)</li>
+<li>Probe Response frames sent from APs</li>
+<li>Association Request frame sent: host to selected AP</li>
+<li>Association Response frame sent: selected AP to host</li>
+</ol>
+
+<p>
+Passive scan generally takes more time, uses less energy, and if client does not wait long enough
+on a channel, it may miss an AP beacon.
+</p>
+
+<p>
+802.11 uses CSMA for multiple access (sense before transmitting, but don&rsquo;t collide with ongoing
+transmission by other nodes) and no collision detection since difficult to receive when transmitting
+due to weak received signals:
+</p>
+<ul class="org-ul">
+<li>cannot sense all collisions in any case due to hidden terminal and fading</li>
+<li><span class="underline">goal</span>: avoid collisions with two CA mechanisms</li>
+</ul>
+
+<p>
+For CSMA/CA:
+</p>
+<ul class="org-ul">
+<li>802.11 sender:
+<ol class="org-ol">
+<li>if sense channel idle for DIFS, then transmit entire frame (no CD)</li>
+<li>if sense channel busy, then start random backoff time, timer counts down while channel idle,
+then go to 1 when timer expires</li>
+</ol></li>
+<li>802.11 receiver
+<ol class="org-ol">
+<li>if frame received OK, return ACK after SIFS&lt;DIFS (ACK needed due to hidden terminal problem and
+bad channel conditions)</li>
+<li>if no ACK, after timeout, increase random backoff interval, try again to transmit starting at
+the beginning of the process (max 7 trials)</li>
+</ol></li>
+</ul>
+
+<p>
+To avoid collisions when hidden terminals, sender reserves channel use for data frames using
+small reservation packets:
+</p>
+<ul class="org-ul">
+<li>sender first transmits small request-to-send (RTS) packet to AP using CSMA
+<ul class="org-ul">
+<li>RTSs may still collide with each other (but short)</li>
+</ul></li>
+<li>AP broadcast clear-to-send CTS (after SIFS) in response to RTS with NAV</li>
+<li>CTS heard by all nodes (since AP can be heard by everyone)
+<ul class="org-ul">
+<li>sender transmits data frame</li>
+<li>other stations defer transmissions</li>
+</ul></li>
+</ul>
+
+<p>
+This approach avoids data frame collisions completely using small reservations packets.
+</p>
+
+<p>
+802.11 frame has:
+</p>
+<ul class="org-ul">
+<li><span class="underline">frame control</span>: 2 bytes
+<ul class="org-ul">
+<li>protocol version &rarr; 2 bits</li>
+<li>type &rarr; 2 bits, RTS, CTS, ACK, data</li>
+<li>subtype &rarr; 4 bits</li>
+<li>to AP &rarr; 1 bit</li>
+<li>from AP &rarr; 1 bit</li>
+<li>more frag &rarr; 1 bit</li>
+<li>retry &rarr; 1 bit</li>
+<li>power management &rarr; 1 bit</li>
+<li>more data AP &rarr; 1 bit</li>
+<li>WEP &rarr; 1 bit</li>
+<li>rsvd &rarr; 1 bit</li>
+</ul></li>
+<li><span class="underline">duration</span>: 2 bytes, duration of reserved transmission time (NAV in RTS/CTS)</li>
+<li><span class="underline">address 1</span>: 6 bytes, MAC address of wireless host to receive this frame</li>
+<li><span class="underline">address 2</span>: 6 bytes, MAC address of wireless host or AP transmitting this frame</li>
+<li><span class="underline">address 3</span>: 6 bytes, MAC address of router interface to which AP is attached</li>
+<li><span class="underline">sequence control</span>: 2 bytes, frame sequence number for reliable data transfer</li>
+<li><span class="underline">address 4</span>: 6 bytes, used only in ad hoc mode</li>
+<li><span class="underline">payload</span>: 0 to 2312 bytes, datagram or ARP packet, rarely greater than 1500 bytes</li>
+<li><span class="underline">CRC</span>: 4 bytes</li>
+</ul>
+
+<p>
+Issues with mobility are handover and keeping TCP alive (is learning fast enough).
+</p>
+
+<p>
+802.11 also has <b>power management</b>:
+</p>
+<ul class="org-ul">
+<li><span class="underline">node-to-AP</span>: AP knows not to transmit frames to this node, so node wakes up before next beacon
+frame (one beacon frame every 100 ms)</li>
+<li><span class="underline">beacon frame</span>: contains list of mobiles with AP-to-mobile frames waiting to be sent
+<ul class="org-ul">
+<li>node will stay awake if AP-to-mobile frames to be sent, otherwise sleep again until next
+beacon frame (wakeup is 250 ms)</li>
+</ul></li>
+</ul>
+
+<p>
+<b>Personal Area Network (PAN)</b>: less than 10 m diameter (short range), low power, low rate, 2.4 GHz,
+up to 2 Mbps
+</p>
+<ul class="org-ul">
+<li>evolved from Bluetooth specification</li>
+<li>replacement for cables</li>
+<li>ad hoc: no infrastructure, 8 active devices at a time, 255 parked</li>
+<li>master/slaves: a node becomes master
+<ul class="org-ul">
+<li>master rules, its clock determine time, transmit in odd-numbered slot (625 &mu;s)</li>
+<li>slaves only transmit to master on even-numbered slot after being talked to</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-05 Thu 15:58</p>
+</div>
+</body>
+</html>

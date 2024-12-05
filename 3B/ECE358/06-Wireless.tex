@@ -1,0 +1,290 @@
+% Created 2024-12-05 Thu 15:58
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Wireless}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Wireless},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Wireless Networks}
+\label{sec:org6b5e385}
+Many more wireless phone subscribers than wired, and same for devices.
+
+Challenges arise from wireless (communication over wireless link) and mobility (handling mobile user
+who changes point of attachment to network).
+Wireless \(\ne\) mobile.
+
+\textbf{Base station} is typically connected to wired network and relays packets between wired network and
+wireless hosts in its area.
+
+\textbf{Wireless link} connects mobiles to base station and can be used as a backbone link. Multiple access
+protocol coordinates link access, and can have various data rates and transmission distance.
+
+\textbf{Infrastructure mode} is how base station connects mobiles into wired network.
+
+With \textbf{ad hoc mode}, no base stations and so nodes can only transmit to other nodes within link
+coverage. With this, nodes organize themselves into a network (route among themselves).
+
+\textbf{Wireless network taxonomy}
+\begin{itemize}
+\item \uline{infrastructure, single hop}: host connects to base station which connects to larger internet
+\item \uline{infrastructure, multiple hops}: host may have to relay through several wireless nodes to connect
+to larger Internet: \emph{mesh net}
+\item \uline{no infrastructure, single hop}: no base station, no connection to larger internet (Bluetooth,
+ad hoc nets)
+\item \uline{no infrastructure, multiple hops}: no base station, no connection to larger internet, may have to
+replay to reach a given wireless node
+\end{itemize}
+
+Long waves mean big antennas and small bandwidth.
+Best bands are lower ones, since better propagation characteristics and larger antennas.
+Issue is, more bandwidth on higher frequencies than lower ones, so lower ones are oversubscribed.
+
+Spectrum not always used well and re-allocation often necessary.
+Spectrum is a scarce resource and hence is heavily reused.
+This can create \textbf{interference}.
+
+Interference management and spectrum reuse are critical problems in wireless.
+
+2 types of bands:
+\begin{itemize}
+\item \uline{licensed}: used by cellular networks
+\item \uline{unlicensed}: used by WiFi (and recently cellular)
+\end{itemize}
+
+Industrial, Scientific, Medical (ISM) wireless bands and is region of EM spectrum available for use
+without license:
+\begin{itemize}
+\item used for wireless LANs and PANs
+\item four separate bands
+\end{itemize}
+
+Key words are \textbf{rate}, \textbf{range}, and \textbf{power consumption}.
+
+Lower frequency has longer range.
+
+\textbf{Half-duplex}: a node cannot and receive at the same time
+
+\textbf{Decreased signal strength}: radio signal attenuates as it propagates through matter (path loss), and
+some cannot cross walls at all
+
+\textbf{Interference from other sources}: ISM bands shared by other devices and so devices can interfere with
+interference occurring in licensed bands due to reuse
+
+\textbf{Multipath propagation}: radio signals reflects off objects ground, arriving at destination at slightly
+different times
+
+All these make communication across wireless link difficult, but characteristics depend on the band and
+are time-varying.
+
+\textbf{Signal-to-Noise Ratio (SNR)}: larger means easier to extract signal from noise
+
+Given physical layer, increasing power means increasing SNR and therefore decreasing BER.
+
+Given SNR, choosing modulation and coding scheme that meets BER requirement means giving highest
+throughput.
+
+SNR may change with mobility, by dynamically adapting physical layer (modulation technique and rate).
+
+By increasing power, interference increases as well.
+
+With multiple wireless senders and receivers, there are additional problems:
+\begin{itemize}
+\item \uline{hidden terminal problem}: two nodes can talk to some intermediate node but cannot hear each other
+\item \uline{signal attenuation}: two nodes have their signal attenuated by some intermediate node
+\end{itemize}
+
+Cellular has:
+\begin{itemize}
+\item wide area coverage, proprietary networks, and more coordination between base stations
+\item licensed (expensive) spectrum
+\item high mobility
+\end{itemize}
+
+Wi-Fi has:
+\begin{itemize}
+\item local area coverage, last link for Internet, and little coordination between access points
+\item unlicensed (free) spectrum (2.4 GHz and 5.3 GHz)
+\item low/no mobility
+\end{itemize}
+
+In \uline{IEEE standards}, Ethernet is 802.3, Wi-Fi is 802.11, and Wireless PAN (Bluetooth) is 802.15.
+\subsection{802.11}
+\label{sec:orgf62fbd0}
+
+802.11 Wireless LAN details:
+\begin{itemize}
+\item \uline{802.11b}: 1999, 11 Mbps, 30 m, 2.4 GHz
+\item \uline{802.11g}: 2003, 54 Mbps, 30 m, 2.4 GHz
+\item \uline{802.11n} (WiFi 4): 2009, 600 Mbps, 70 m, 2.4/5 GHz
+\item \uline{802.11ac} (WiFi 5): 2013, 3.47 Gbps, 70 m, 5 GHz
+\item \uline{802.11ax} (WiFi 6): 2020, 14 Gbps, 70 m, 2.4/5 GHz
+\item \uline{802.11af}: 2014, 35-560 Mbps, 1 km, unused TV bands
+\item \uline{802.11ah}: 2017, 347 Mbps, 1 km, 900 MHz
+\end{itemize}
+
+All WiFi use CSMA/CA for multiple access, have access point and ad-hoc network versions, and have
+a random access mode (DCF: distributed coordinated function) and polling mode (PCF: point coordination
+function).
+
+802.11b's 2.4GHz-2.485 GHz spectrum is divided into 14 channels at different frequencies.
+The access point admin chooses a channel for the access point.
+Interference is possible since the channel chosen can be the same as the neighbouring access point.
+
+Since channels are at 22MHz bandwidth, channels overlap.
+Channels 1, 6, and 11 can operate simultaneously with no interference.
+
+At 5GHz, there are 24 non-overlapping channels.
+\subsubsection{Architecture}
+\label{sec:org8cc3d4e}
+Wireless host communicates with access point.
+
+Basic Service Set (BSS) in infrastructure mode contains wireless hosts and access point.
+
+There is an adhoc mode with no access point, but much less used.
+
+A network administrator allocates a name (SSID) to each access point.
+
+Arriving host must associate with an access point:
+\begin{enumerate}
+\item scans channels, listening for beacon frames containing SSID and access point's MAC address
+\item selects access point to associate with
+\item may perform authentication
+\item typically run DHCP to get IP address in access point's subnet
+\end{enumerate}
+
+\textbf{Passive Scanning}
+\begin{enumerate}
+\item Beacon frames sent from APs (on different channels)
+\item Association Request frame sent: host to selected AP
+\item Association Response frame sent: selected AP to host
+\end{enumerate}
+
+\textbf{Active Scanning}
+\begin{enumerate}
+\item Probe Request frame broadcast from host (on all channels)
+\item Probe Response frames sent from APs
+\item Association Request frame sent: host to selected AP
+\item Association Response frame sent: selected AP to host
+\end{enumerate}
+
+Passive scan generally takes more time, uses less energy, and if client does not wait long enough
+on a channel, it may miss an AP beacon.
+
+802.11 uses CSMA for multiple access (sense before transmitting, but don't collide with ongoing
+transmission by other nodes) and no collision detection since difficult to receive when transmitting
+due to weak received signals:
+\begin{itemize}
+\item cannot sense all collisions in any case due to hidden terminal and fading
+\item \uline{goal}: avoid collisions with two CA mechanisms
+\end{itemize}
+
+For CSMA/CA:
+\begin{itemize}
+\item 802.11 sender:
+\begin{enumerate}
+\item if sense channel idle for DIFS, then transmit entire frame (no CD)
+\item if sense channel busy, then start random backoff time, timer counts down while channel idle,
+then go to 1 when timer expires
+\end{enumerate}
+\item 802.11 receiver
+\begin{enumerate}
+\item if frame received OK, return ACK after SIFS<DIFS (ACK needed due to hidden terminal problem and
+bad channel conditions)
+\item if no ACK, after timeout, increase random backoff interval, try again to transmit starting at
+the beginning of the process (max 7 trials)
+\end{enumerate}
+\end{itemize}
+
+To avoid collisions when hidden terminals, sender reserves channel use for data frames using
+small reservation packets:
+\begin{itemize}
+\item sender first transmits small request-to-send (RTS) packet to AP using CSMA
+\begin{itemize}
+\item RTSs may still collide with each other (but short)
+\end{itemize}
+\item AP broadcast clear-to-send CTS (after SIFS) in response to RTS with NAV
+\item CTS heard by all nodes (since AP can be heard by everyone)
+\begin{itemize}
+\item sender transmits data frame
+\item other stations defer transmissions
+\end{itemize}
+\end{itemize}
+
+This approach avoids data frame collisions completely using small reservations packets.
+
+802.11 frame has:
+\begin{itemize}
+\item \uline{frame control}: 2 bytes
+\begin{itemize}
+\item protocol version \(\to\) 2 bits
+\item type \(\to\) 2 bits, RTS, CTS, ACK, data
+\item subtype \(\to\) 4 bits
+\item to AP \(\to\) 1 bit
+\item from AP \(\to\) 1 bit
+\item more frag \(\to\) 1 bit
+\item retry \(\to\) 1 bit
+\item power management \(\to\) 1 bit
+\item more data AP \(\to\) 1 bit
+\item WEP \(\to\) 1 bit
+\item rsvd \(\to\) 1 bit
+\end{itemize}
+\item \uline{duration}: 2 bytes, duration of reserved transmission time (NAV in RTS/CTS)
+\item \uline{address 1}: 6 bytes, MAC address of wireless host to receive this frame
+\item \uline{address 2}: 6 bytes, MAC address of wireless host or AP transmitting this frame
+\item \uline{address 3}: 6 bytes, MAC address of router interface to which AP is attached
+\item \uline{sequence control}: 2 bytes, frame sequence number for reliable data transfer
+\item \uline{address 4}: 6 bytes, used only in ad hoc mode
+\item \uline{payload}: 0 to 2312 bytes, datagram or ARP packet, rarely greater than 1500 bytes
+\item \uline{CRC}: 4 bytes
+\end{itemize}
+
+Issues with mobility are handover and keeping TCP alive (is learning fast enough).
+
+802.11 also has \textbf{power management}:
+\begin{itemize}
+\item \uline{node-to-AP}: AP knows not to transmit frames to this node, so node wakes up before next beacon
+frame (one beacon frame every 100 ms)
+\item \uline{beacon frame}: contains list of mobiles with AP-to-mobile frames waiting to be sent
+\begin{itemize}
+\item node will stay awake if AP-to-mobile frames to be sent, otherwise sleep again until next
+beacon frame (wakeup is 250 ms)
+\end{itemize}
+\end{itemize}
+
+\textbf{Personal Area Network (PAN)}: less than 10 m diameter (short range), low power, low rate, 2.4 GHz,
+up to 2 Mbps
+\begin{itemize}
+\item evolved from Bluetooth specification
+\item replacement for cables
+\item ad hoc: no infrastructure, 8 active devices at a time, 255 parked
+\item master/slaves: a node becomes master
+\begin{itemize}
+\item master rules, its clock determine time, transmit in odd-numbered slot (625 \(\mu\)s)
+\item slaves only transmit to master on even-numbered slot after being talked to
+\end{itemize}
+\end{itemize}
+\end{document}
