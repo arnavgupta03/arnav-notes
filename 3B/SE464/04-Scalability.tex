@@ -1,0 +1,114 @@
+% Created 2024-12-05 Thu 09:49
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Scalability}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Scalability},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Scalability}
+\label{sec:orgcdbeadf}
+\textbf{Service}: different from simple program since it listens for requests from
+clients/users and may handle multiple requests concurrently
+
+Requests usually delivered as messages that arrive over a network.
+Service runs constantly, waiting for requests and processing them.
+
+A service is scalable if it can easily handle growth in the number of
+concurrent users/requests.
+
+Measured through \textbf{work throughput}:
+\begin{itemize}
+\item requests/queries per second
+\item concurrent users
+\item monthly active users
+\end{itemize}
+
+Ignore cost, just consider scale achieved.
+
+Scaling challenges:
+\begin{itemize}
+\item limited speed from one machine
+\item coordinating multiple machines
+\item sharing data among machines
+\item failure probability
+\item high latency from worldwide users
+\item authentication of service components
+\item software updates without downtime
+\end{itemize}
+
+\textbf{Vertical scaling}: make machine bigger and stronger
+
+\textbf{Horizontal scaling}: add more machines
+
+Computer performance affected by number/speed of CPU cores, RAM, disk type,
+number of disks, type of network connectivity, GPUs, TPUs, etc.
+
+\textbf{Shared Memory Parallelism}: a single process can have multiple threads which execute
+concurrently while sharing the same memory
+
+Cloud computing resources are elastic since size and quantity of resources
+and can be quickly changed.
+
+Vertical scaling is not scalable:
+\begin{itemize}
+\item easy to write programs since most OSs have multithreading
+\item less communication required with other machines
+\item cannot handle big loads
+\item cannot be scaled easily (must replace entire machine)
+\item single point of failure
+\item bad price/performance ratio
+\end{itemize}
+\section{HTTP and Web Servers}
+\label{sec:org51da123}
+To convert a program to a service:
+\begin{enumerate}
+\item listen to requests on the network
+\item run many copies of program concurrently
+\item use queues to store unhandled requests and unsent responses
+\begin{enumerate}
+\item allows competing threads to share single network socket
+\end{enumerate}
+\end{enumerate}
+
+With parallel threads, even if only a single CPU core, multiple threads can run
+since the app may block to request data from disk or network (IO), and in the
+same time, another thread can run.
+
+\textbf{HTTP}: client-server data exchange protocol
+
+\textbf{Request} specifies:
+\begin{itemize}
+\item human readable header with URL, method, and more
+\item optional body with raw data
+\end{itemize}
+
+\textbf{Response} includes:
+\begin{itemize}
+\item human readable header with response code and more
+\item optional body
+\end{itemize}
+\end{document}
