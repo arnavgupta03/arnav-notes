@@ -390,3 +390,258 @@ For traceroute (provides delay measurement from source to router):
 The stopping criteria for traceroute is that the UDP segment eventually arrives
 at destination host.
 The destination returns ICMP "port unreachable" message and so the source stops.
+
+** Routing
+_Goal_: determine good paths/routes from sending host to receiving hosts, through network of
+routers
+
+*Path*: sequence of routers packets traverse from given initial source host to final destination
+host
+
+A good path can have least cost, fastest, least congested, or other criteria.
+
+*Broadcast routing*: route packet from a source to all nodes in the network
+
+*Flooding*: each node sends packet on all outgoing links and discard packets received a second time
+
+*Spanning Tree routing*: send packet along a tree that includes all nodes in the network
+
+Internet too big for flat routing:
+- can't store all destinations in routing tables
+- each network within the Internet may want to control routing in its own network
+
+_Approach_: aggregate routers into regions known as autonomous systems (AS) aka domains
+
+*Intra-AS*: routing within same AS
+- all routers in AS must run same intra-domain protocol
+- routers in different AS can run different intra-domain routing protocols
+- *gateway router*: at edge of AS, has link to routers in other ASs
+
+*Inter-AS*: routing among ASs
+- gateways perform inter-domain routing (and intra-domain routing)
+
+Forwarding table configured by intra-AS and inter-AS routing algorithms:
+- intra-AS routing determine entries for destinations within AS
+- inter-AS and intra-AS determine entries for external destinations
+
+Intra-AS routing protocols are *Interior Gateway Protocols (IGP)*:
+- _RIP_: Routing Information Protocol
+- _OSPF_: Open Shortest Path First
+- _IGRP_: Interior Gateway Routing Protocol (Cisco proprietary)
+
+Only Inter-AS routing protocol is BGP (Border Gateway Protocol).
+
+*Routing algorithm*: algorithm that finds least-cost path, used to fill routing tables
+
+Routing algorithms can be classified by information and static/dynamic.
+
+Some global info vs more local info:
+- _global_
+  - all routers flood the network with info about link state so a complete map can be created
+  - routes then computed
+  - link state algorithms
+    - nodes send info about their distances from their neighbours to all other nodes
+- _local_
+  - each router initially knows physically connected neighbours, exchanges part of its routing table
+    with its neighbours
+  - iterative process of computation
+  - distance vector algorithms
+    - nodes send info about their distances from all other nodes to their neighbours
+
+Static vs dynamic:
+- _static_: routes change slowly over time
+- _dynamic_: routes change more quickly, periodic update in response to link cost changes
+
+*** Intra-AS Routing
+All routers identical, network considered flat.
+
+Cost between links defined by network operator, and costs should be additive.
+
+Most routing algorithms use a shortest path algorithm, such as Bellman-Form and Dijkstra's.
+
+Can define cost as:
+- _fixed quantity_ based on link rate, propagation delay, or some combination
+- _time-varying quantity_ based on average traffic on a link, buffer occupancy, delay, and error
+  conditions
+  - dangerous since oscillations possible
+
+Dijkstra's link-state routing algorithm is
+- _centralized_: network topology, reachability, link costs known to all nodes
+  - accomplished via link state broadcast
+  - all nodes have same info
+- each router uses Dijkstra's algorithm to compute least cost paths from source to all other
+  nodes
+  - gives forward table for that node
+- $D(v)$ is current estimate of cost of least-cost path from source to destination $v$
+- $p(v)$ is predecessor node along path from source to $v$
+- $N'$ is set of nodes whose least-cost path definitively known
+
+Open Shortest Path First (OSPF) routing:
+- open means publicly available
+- state of a link is a description of interface on router and its relationship to its neighbouring
+  routers
+- description of interface would include IP address of interface, mask, subnet, type of network it
+  is connected to, routers connected to that network, and more
+- collection of link-states forms link-state DB
+- each router floors OSPF link-state advertisements (over IP) to all other routers in entire AS
+- multiple link costs metrics possible link bandwidth and delay
+- each router has full topology (subnets) and uses Dijkstra's algorithm to compute forwarding
+  table
+- _security_: all OSPF messages authenticated (to prevent malicious intrusion)
+- link state packet (LSP) contains
+  - id of node that created LSP
+  - cost of link to each directly connected neighbour (typically link rate)
+  - sequence number
+  - TTL for this packet
+- advertisements disseminated to entire AS (via flooding, at least once every 30 min or when
+  changes)
+- send new LSP with infinite cost to signal a link down
+- reliable flooding
+  - generate new LSP periodically, increment sequence number
+  - store most recent LSP from each node, forward LSP to all nodes but one that sent it, throw all
+    new copies of same LSP (do not forward)
+  - decrement TTL of each stored LSP regularly, discard when TTL=0
+
+*Two-level hierarchy*: local area and backbone
+- link-state advertisements flooded only in area, or backbone
+- each node has detailed area topology, only knows direction to reach other destinations
+
+*Area border routers*: summarize distances to destinations in own area, advertise in backbone
+
+*Boundary router*: connects to other ASs
+
+*Local router*: flood LS in area only, compute routing within area, forward packets to outside via
+area border router
+
+*Backbone router*: runs OSPF limited to backbone
+
+With distance-vector algorithm, a router never builds a complete map of the network, just
+neighbours.
+- a node computes distance vector whenever it receives something from one of its neighbours
+- a node sends distance to neighbours whenever it changes
+
+Distributed Bellman Ford used in Distance Vector algorithm:
+- from time-to-time, each node sends distance vector estimate to neighbours
+- asynchronous and iterative
+  - each local iteration caused by local link cost change or distance vector update message from
+    neighbours
+- whenever a node receives a new distance vector estimate from a neighbour, it updates its own
+  distance vector using the Bellman Ford equation
+- under minor, natural conditions, estimate converges to actual least cost
+- each node notifies neighbours only when distance vector changes
+  - neighbours notify neighbours only if necessary
+
+With distance vector algorithm, iterative communication, so computation steps diffuse information
+through network.
+Good news travels fast, bad news travels slow.
+
+*Poisoned reverse*: if $z$ routes through $y$ to get to $x$, $z$ tells $y$ its distance to $x$ is
+infinite (so $y$ won't route to $x$ via $z$)
+
+*Routing Information Protocol*:
+- included in BSD-UNIX distribution in 1982
+- distance vector algorithm
+  - distance metric is number of hops (max 15), each link has cost 1
+  - distance vectors exchanged with neighbours every 30 secs in response message (aka
+    advertisement)
+  - each advertisement is a list of up to 25 destination subnets as well as sender's distance
+    to each subnet
+- if no advertisement heard after 180 secs, neighbour/link declared dead
+  - routes via neighbour invalidated
+  - new advertisements sent to neighbours
+  - neighbours in turn send out new advertisements (if tables changed)
+  - link failure info quickly propagates to entire net
+  - poison reverse used to prevent ping-pong loops
+
+Problems with distance vector routing:
+- convergence is slow
+- loops can be formed, due to routing table inconsistency: packets being forwarded from router to
+  router and never reach destination
+- loops might last until convergence or count to infinity problem
+
+OSPF is better than RIP in stability (robustness to network changes) since distance vector converges
+slowly compared to link state.
+But, OSPF creates more routing traffic (flooding).
+
+*** Inter-AS Routing: BGP
+De factor inter-domain routing protocol.
+Allows subnet to advertise existence and the destinations it can reach, to rest of Internet.
+
+BGP provides each AS a means to:
+- _eBGP_: obtain subnet reachability info from neighbouring ASs
+- _iBGP_: propagate reachability info to all AS-internal routers
+- determine good routes to other networks based on reachability info and policy
+
+*BGP session*: two BGP routers exchange BGP messages over semi-permanent TCP connection
+- advertising paths to different destination network prefixes (BGP is a path vector protocol)
+  - advertised route has prefix (destination being advertised) and AS-PATH (list of ASs through
+    which prefix advertisement has passed) and NEXT-HOP (indicates specific internal-AS router
+    to next-hop AS)
+
+*Policy-based routing*:
+- gateway receiving route advertisement uses import policy to accept/decline path
+- AS policy also determines whether to advertise path to other neighbouring ASs
+
+Gateway router may learn about multiple paths to destination, selects route based on:
+- local preference value attribute: policy decision
+- shortest AS-PATH
+- additional criteria
+
+*BGP messages* are exchanged between peers over TCP connection:
+- _OPEN_: opens TCP connection to remote BGP peer and authenticates sending BGP peer
+- _UPDATE_: advertises new path (or withdraws old)
+- _KEEPALIVE_: keeps connection alive in absence of UPDATEs, also ACKs OPEN request
+- _NOTIFICATION_: reports errors in previous message, also used to close connection
+
+Policy:
+- _inter-AS_: admin wants control over how its traffic is routed, who routes through its network
+- _intra-AS_: single admin, so policy less of an issue
+
+Scale:
+- hierarchical routing saves table size, reduced update traffic
+
+Performance:
+- _inter-AS_: policy dominates over performances
+- _intra-AS_: can focus on performance
+
+*Hot Potato Routing*: choose local gateway that has least intra-domain cost
+
+ISP only wants to route traffic to/from its customer networks (not carry traffic between other ISPs).
+
+** Software Defined Networking
+Internet network layer: historically implemented via distributed, per-router control approach:
+- monolithic router contain switching hardware, runs proprietary implementation of Internet standard
+  protocols (IP, RIP, IS-IS, OSPF, BGP) in proprietary router OS
+- different middleboxes for different network layer functions: firewalls, load balancers, NAT boxes
+
+In per-router control plane, individual routing algorithm components in each and every router interact
+in the control plane to computer forwarding tables.
+
+In SDN control plane, remote controller computes and installs forwarding tables in routers.
+
+SDN is _logically centralized_ since easier network management (avoid router misconfigurations and
+greater flexibility of traffic flows), table-based forwarding allows programming routers (centralized
+programming easier than distributed programming), and open (non-proprietary) implementation of
+control plane (foster innovation).
+
+With traditional routing:
+- link weights are control knobs, so not much control.
+- load balancing not possible
+- can't route along different paths from same node
+
+Each router contains a forwarding table: /match plus action/ abstraction, so match bits in arriving
+packet then take action
+- _destination-based forwarding_: forward based on destination IP address
+- _generalized forwarding_: many header fields can determine action and many actions possible
+
+*Flow*: defined by header field values (in link, network, and transport-layer fields)
+
+*Generalized forwarding*: simple packet-handling rules
+- _match_: pattern values in packet header fields
+- _actions_: for matched packet \to drop, forward, modify matched packet or send matched packet to
+  controller
+
+Orchestrated tables can create network-wide behaviour.
+
+Intelligence for 20th century phone net was at network switches, for early Internet at edge computing,
+and for modern Internet at programmable network devices and application-level infrastructure at edge.

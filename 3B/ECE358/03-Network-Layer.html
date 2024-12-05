@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-28 Thu 00:09 -->
+<!-- 2024-12-05 Thu 14:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Network Layer</title>
@@ -234,53 +234,60 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd54c3a2">1. Overview</a>
+<li><a href="#org71a2a40">1. Overview</a>
 <ul>
-<li><a href="#orgd591f0c">1.1. Best Effort Service</a></li>
+<li><a href="#orge20cc81">1.1. Best Effort Service</a></li>
 </ul>
 </li>
-<li><a href="#org647eb6f">2. Data Plane: The Internet Protocol</a>
+<li><a href="#orgf3926cb">2. Data Plane: The Internet Protocol</a>
 <ul>
-<li><a href="#org1facf58">2.1. Fragmentation and Assembly</a></li>
-<li><a href="#orge50f136">2.2. IPv4 Addressing</a>
+<li><a href="#orgcc2779c">2.1. Fragmentation and Assembly</a></li>
+<li><a href="#org051ecee">2.2. IPv4 Addressing</a>
 <ul>
-<li><a href="#org4120858">2.2.1. Subnets</a></li>
-<li><a href="#org8abb803">2.2.2. DHCP</a></li>
-<li><a href="#org069ec4f">2.2.3. Hierarchical Addressing</a></li>
-<li><a href="#orgf0c57a1">2.2.4. Network Address Translation (NAT)</a></li>
-<li><a href="#org89d818a">2.2.5. Middleboxes</a></li>
+<li><a href="#org9960a41">2.2.1. Subnets</a></li>
+<li><a href="#org713ce74">2.2.2. DHCP</a></li>
+<li><a href="#orgdce87b2">2.2.3. Hierarchical Addressing</a></li>
+<li><a href="#org4de358e">2.2.4. Network Address Translation (NAT)</a></li>
+<li><a href="#org5f0000b">2.2.5. Middleboxes</a></li>
 </ul>
 </li>
-<li><a href="#org97dbcb5">2.3. IPv6 Addressing</a></li>
+<li><a href="#org7075dbf">2.3. IPv6 Addressing</a></li>
 </ul>
 </li>
-<li><a href="#orgaf266e5">3. What&rsquo;s Inside a Router</a>
+<li><a href="#org9eab27a">3. What&rsquo;s Inside a Router</a>
 <ul>
-<li><a href="#orgfa5e0b9">3.1. Switching Fabrics</a>
+<li><a href="#org2821e5f">3.1. Switching Fabrics</a>
 <ul>
-<li><a href="#org76d2376">3.1.1. Switching via Memory</a></li>
-<li><a href="#orgadff30a">3.1.2. Switching via Bus</a></li>
-<li><a href="#orgec98047">3.1.3. Interconnection Network</a></li>
+<li><a href="#org80570cb">3.1.1. Switching via Memory</a></li>
+<li><a href="#orgc6575cf">3.1.2. Switching via Bus</a></li>
+<li><a href="#org3799d91">3.1.3. Interconnection Network</a></li>
 </ul>
 </li>
-<li><a href="#orgdb9cdad">3.2. Port Queuing</a>
+<li><a href="#orgbfb80d6">3.2. Port Queuing</a>
 <ul>
-<li><a href="#org347f636">3.2.1. Input Port Queuing</a></li>
-<li><a href="#orge49d4a8">3.2.2. Output Port Queuing</a></li>
+<li><a href="#org1e65c3e">3.2.1. Input Port Queuing</a></li>
+<li><a href="#org4de3e57">3.2.2. Output Port Queuing</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga5233db">4. Control Plane: ICMP, Routing</a>
+<li><a href="#org56d4402">4. Control Plane: ICMP, Routing</a>
 <ul>
-<li><a href="#org82b15d5">4.1. ICMP</a></li>
+<li><a href="#orga040fa3">4.1. ICMP</a></li>
+<li><a href="#orgfb3423d">4.2. Routing</a>
+<ul>
+<li><a href="#orge3cde02">4.2.1. Intra-AS Routing</a></li>
+<li><a href="#org1515128">4.2.2. Inter-AS Routing: BGP</a></li>
+</ul>
+</li>
+<li><a href="#org4c9d277">4.3. Software Defined Networking</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd54c3a2" class="outline-2">
-<h2 id="orgd54c3a2"><span class="section-number-2">1.</span> Overview</h2>
+<div id="outline-container-org71a2a40" class="outline-2">
+<h2 id="org71a2a40"><span class="section-number-2">1.</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Network layer protocols transport segments from sending to receiving hosts.
@@ -336,8 +343,8 @@ the control plane as a service in remote servers
 </ul></li>
 </ul>
 </div>
-<div id="outline-container-orgd591f0c" class="outline-3">
-<h3 id="orgd591f0c"><span class="section-number-3">1.1.</span> Best Effort Service</h3>
+<div id="outline-container-orge20cc81" class="outline-3">
+<h3 id="orge20cc81"><span class="section-number-3">1.1.</span> Best Effort Service</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The Internet runs on a &ldquo;best effort&rdquo; service model, so there are no guarantees on:
@@ -361,8 +368,8 @@ which allows services to be provided from multiple locations.
 </div>
 </div>
 </div>
-<div id="outline-container-org647eb6f" class="outline-2">
-<h2 id="org647eb6f"><span class="section-number-2">2.</span> Data Plane: The Internet Protocol</h2>
+<div id="outline-container-orgf3926cb" class="outline-2">
+<h2 id="orgf3926cb"><span class="section-number-2">2.</span> Data Plane: The Internet Protocol</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Data plane is:
@@ -416,8 +423,8 @@ If header checksum detects an error, datagram is dropped.
 Must be recomputed at every hop because of TTL and options.
 </p>
 </div>
-<div id="outline-container-org1facf58" class="outline-3">
-<h3 id="org1facf58"><span class="section-number-3">2.1.</span> Fragmentation and Assembly</h3>
+<div id="outline-container-orgcc2779c" class="outline-3">
+<h3 id="orgcc2779c"><span class="section-number-3">2.1.</span> Fragmentation and Assembly</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Link layer protocols have maximum transfer unit size, which is the largest
@@ -443,8 +450,8 @@ Fragmentation complicated routers and end-systems, which is used by attackers.
 </p>
 </div>
 </div>
-<div id="outline-container-orge50f136" class="outline-3">
-<h3 id="orge50f136"><span class="section-number-3">2.2.</span> IPv4 Addressing</h3>
+<div id="outline-container-org051ecee" class="outline-3">
+<h3 id="org051ecee"><span class="section-number-3">2.2.</span> IPv4 Addressing</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <b>IP address</b>: 32-bit identifier associated with each host or router interface
@@ -459,8 +466,8 @@ Fragmentation complicated routers and end-systems, which is used by attackers.
 <li>hosts typically have 1 or 2 interfaces</li>
 </ul>
 </div>
-<div id="outline-container-org4120858" class="outline-4">
-<h4 id="org4120858"><span class="section-number-4">2.2.1.</span> Subnets</h4>
+<div id="outline-container-org9960a41" class="outline-4">
+<h4 id="org9960a41"><span class="section-number-4">2.2.1.</span> Subnets</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 The addressing scheme is <b>Classless InterDomain Routing (CIDR)</b>:
@@ -486,8 +493,8 @@ destination and for a different subnet, send the datagram to the router.
 </p>
 </div>
 </div>
-<div id="outline-container-org8abb803" class="outline-4">
-<h4 id="org8abb803"><span class="section-number-4">2.2.2.</span> DHCP</h4>
+<div id="outline-container-org713ce74" class="outline-4">
+<h4 id="org713ce74"><span class="section-number-4">2.2.2.</span> DHCP</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 An IP address can be hard-coded by sysadmin in the config file or using
@@ -539,8 +546,8 @@ allocated a portion of its provider ISP&rsquo;s address space.
 </p>
 </div>
 </div>
-<div id="outline-container-org069ec4f" class="outline-4">
-<h4 id="org069ec4f"><span class="section-number-4">2.2.3.</span> Hierarchical Addressing</h4>
+<div id="outline-container-orgdce87b2" class="outline-4">
+<h4 id="orgdce87b2"><span class="section-number-4">2.2.3.</span> Hierarchical Addressing</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 Allows efficient advertisement of routing info.
@@ -577,8 +584,8 @@ IPv6 has 128-bit address space.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf0c57a1" class="outline-4">
-<h4 id="orgf0c57a1"><span class="section-number-4">2.2.4.</span> Network Address Translation (NAT)</h4>
+<div id="outline-container-org4de358e" class="outline-4">
+<h4 id="org4de358e"><span class="section-number-4">2.2.4.</span> Network Address Translation (NAT)</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
 Limiting the number of addresses and re-using IP addresses in a smart way.
@@ -668,8 +675,8 @@ network-layer device</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org89d818a" class="outline-4">
-<h4 id="org89d818a"><span class="section-number-4">2.2.5.</span> Middleboxes</h4>
+<div id="outline-container-org5f0000b" class="outline-4">
+<h4 id="org5f0000b"><span class="section-number-4">2.2.5.</span> Middleboxes</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <p>
 Any intermediate box performing functions apart from normal, standard functions
@@ -693,8 +700,8 @@ Middleboxes give love handles that operate inside the network.
 </div>
 </div>
 </div>
-<div id="outline-container-org97dbcb5" class="outline-3">
-<h3 id="org97dbcb5"><span class="section-number-3">2.3.</span> IPv6 Addressing</h3>
+<div id="outline-container-org7075dbf" class="outline-3">
+<h3 id="org7075dbf"><span class="section-number-3">2.3.</span> IPv6 Addressing</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Possibly not enough 32-bit IPv4 addresses. Also, IPv4 is slow (variable length header).
@@ -736,8 +743,8 @@ routers (packet within a packet)
 </div>
 </div>
 </div>
-<div id="outline-container-orgaf266e5" class="outline-2">
-<h2 id="orgaf266e5"><span class="section-number-2">3.</span> What&rsquo;s Inside a Router</h2>
+<div id="outline-container-org9eab27a" class="outline-2">
+<h2 id="org9eab27a"><span class="section-number-2">3.</span> What&rsquo;s Inside a Router</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 High-level view of generic router architecture has <b>routing processor</b> (control plane) and
@@ -757,8 +764,8 @@ field values, lookup output port using forwarding table in input port memory).
 <b>Generalized forwarding</b>: forward based on any set of header field values
 </p>
 </div>
-<div id="outline-container-orgfa5e0b9" class="outline-3">
-<h3 id="orgfa5e0b9"><span class="section-number-3">3.1.</span> Switching Fabrics</h3>
+<div id="outline-container-org2821e5f" class="outline-3">
+<h3 id="org2821e5f"><span class="section-number-3">3.1.</span> Switching Fabrics</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Transfer packets from input link to appropriate output link.
@@ -782,8 +789,8 @@ Major types of switching fabrics are:
 <li>interconnection network</li>
 </ul>
 </div>
-<div id="outline-container-org76d2376" class="outline-4">
-<h4 id="org76d2376"><span class="section-number-4">3.1.1.</span> Switching via Memory</h4>
+<div id="outline-container-org80570cb" class="outline-4">
+<h4 id="org80570cb"><span class="section-number-4">3.1.1.</span> Switching via Memory</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Used traditionally, with switching under direct control of CPU.
@@ -795,8 +802,8 @@ The packet is copied into system memory and speed is limited by memory bandwidth
 </p>
 </div>
 </div>
-<div id="outline-container-orgadff30a" class="outline-4">
-<h4 id="orgadff30a"><span class="section-number-4">3.1.2.</span> Switching via Bus</h4>
+<div id="outline-container-orgc6575cf" class="outline-4">
+<h4 id="orgc6575cf"><span class="section-number-4">3.1.2.</span> Switching via Bus</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Datagram from input port memory to output port memory via shared bus.
@@ -807,8 +814,8 @@ Datagram from input port memory to output port memory via shared bus.
 </p>
 </div>
 </div>
-<div id="outline-container-orgec98047" class="outline-4">
-<h4 id="orgec98047"><span class="section-number-4">3.1.3.</span> Interconnection Network</h4>
+<div id="outline-container-org3799d91" class="outline-4">
+<h4 id="org3799d91"><span class="section-number-4">3.1.3.</span> Interconnection Network</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 Initially developed to connect processors in multiprocessor.
@@ -841,12 +848,12 @@ Cisco CRS router:
 </div>
 </div>
 </div>
-<div id="outline-container-orgdb9cdad" class="outline-3">
-<h3 id="orgdb9cdad"><span class="section-number-3">3.2.</span> Port Queuing</h3>
+<div id="outline-container-orgbfb80d6" class="outline-3">
+<h3 id="orgbfb80d6"><span class="section-number-3">3.2.</span> Port Queuing</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org347f636" class="outline-4">
-<h4 id="org347f636"><span class="section-number-4">3.2.1.</span> Input Port Queuing</h4>
+<div id="outline-container-org1e65c3e" class="outline-4">
+<h4 id="org1e65c3e"><span class="section-number-4">3.2.1.</span> Input Port Queuing</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 If switch fabric slower than input ports combined, queuing may occur at input queues.
@@ -859,8 +866,8 @@ in queue from moving forward
 </p>
 </div>
 </div>
-<div id="outline-container-orge49d4a8" class="outline-4">
-<h4 id="orge49d4a8"><span class="section-number-4">3.2.2.</span> Output Port Queuing</h4>
+<div id="outline-container-org4de3e57" class="outline-4">
+<h4 id="org4de3e57"><span class="section-number-4">3.2.2.</span> Output Port Queuing</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 Buffering occurs when arrival rate via switch exceeds output line speed.
@@ -884,8 +891,8 @@ With priority scheduling, this decides who gets best performance.
 </div>
 </div>
 </div>
-<div id="outline-container-orga5233db" class="outline-2">
-<h2 id="orga5233db"><span class="section-number-2">4.</span> Control Plane: ICMP, Routing</h2>
+<div id="outline-container-org56d4402" class="outline-2">
+<h2 id="org56d4402"><span class="section-number-2">4.</span> Control Plane: ICMP, Routing</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Even though best effort, IP attempts to avoid errors and report problems when they
@@ -906,8 +913,8 @@ Errors detected can be:
 <li>fragment loss: timeout</li>
 </ul>
 </div>
-<div id="outline-container-org82b15d5" class="outline-3">
-<h3 id="org82b15d5"><span class="section-number-3">4.1.</span> ICMP</h3>
+<div id="outline-container-orga040fa3" class="outline-3">
+<h3 id="orga040fa3"><span class="section-number-3">4.1.</span> ICMP</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Internet Control Message Protocol is a separate protocol for errors reporting and
@@ -961,11 +968,472 @@ The destination returns ICMP &ldquo;port unreachable&rdquo; message and so the s
 </p>
 </div>
 </div>
+<div id="outline-container-orgfb3423d" class="outline-3">
+<h3 id="orgfb3423d"><span class="section-number-3">4.2.</span> Routing</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+<span class="underline">Goal</span>: determine good paths/routes from sending host to receiving hosts, through network of
+routers
+</p>
+
+<p>
+<b>Path</b>: sequence of routers packets traverse from given initial source host to final destination
+host
+</p>
+
+<p>
+A good path can have least cost, fastest, least congested, or other criteria.
+</p>
+
+<p>
+<b>Broadcast routing</b>: route packet from a source to all nodes in the network
+</p>
+
+<p>
+<b>Flooding</b>: each node sends packet on all outgoing links and discard packets received a second time
+</p>
+
+<p>
+<b>Spanning Tree routing</b>: send packet along a tree that includes all nodes in the network
+</p>
+
+<p>
+Internet too big for flat routing:
+</p>
+<ul class="org-ul">
+<li>can&rsquo;t store all destinations in routing tables</li>
+<li>each network within the Internet may want to control routing in its own network</li>
+</ul>
+
+<p>
+<span class="underline">Approach</span>: aggregate routers into regions known as autonomous systems (AS) aka domains
+</p>
+
+<p>
+<b>Intra-AS</b>: routing within same AS
+</p>
+<ul class="org-ul">
+<li>all routers in AS must run same intra-domain protocol</li>
+<li>routers in different AS can run different intra-domain routing protocols</li>
+<li><b>gateway router</b>: at edge of AS, has link to routers in other ASs</li>
+</ul>
+
+<p>
+<b>Inter-AS</b>: routing among ASs
+</p>
+<ul class="org-ul">
+<li>gateways perform inter-domain routing (and intra-domain routing)</li>
+</ul>
+
+<p>
+Forwarding table configured by intra-AS and inter-AS routing algorithms:
+</p>
+<ul class="org-ul">
+<li>intra-AS routing determine entries for destinations within AS</li>
+<li>inter-AS and intra-AS determine entries for external destinations</li>
+</ul>
+
+<p>
+Intra-AS routing protocols are <b>Interior Gateway Protocols (IGP)</b>:
+</p>
+<ul class="org-ul">
+<li><span class="underline">RIP</span>: Routing Information Protocol</li>
+<li><span class="underline">OSPF</span>: Open Shortest Path First</li>
+<li><span class="underline">IGRP</span>: Interior Gateway Routing Protocol (Cisco proprietary)</li>
+</ul>
+
+<p>
+Only Inter-AS routing protocol is BGP (Border Gateway Protocol).
+</p>
+
+<p>
+<b>Routing algorithm</b>: algorithm that finds least-cost path, used to fill routing tables
+</p>
+
+<p>
+Routing algorithms can be classified by information and static/dynamic.
+</p>
+
+<p>
+Some global info vs more local info:
+</p>
+<ul class="org-ul">
+<li><span class="underline">global</span>
+<ul class="org-ul">
+<li>all routers flood the network with info about link state so a complete map can be created</li>
+<li>routes then computed</li>
+<li>link state algorithms
+<ul class="org-ul">
+<li>nodes send info about their distances from their neighbours to all other nodes</li>
+</ul></li>
+</ul></li>
+<li><span class="underline">local</span>
+<ul class="org-ul">
+<li>each router initially knows physically connected neighbours, exchanges part of its routing table
+with its neighbours</li>
+<li>iterative process of computation</li>
+<li>distance vector algorithms
+<ul class="org-ul">
+<li>nodes send info about their distances from all other nodes to their neighbours</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>
+Static vs dynamic:
+</p>
+<ul class="org-ul">
+<li><span class="underline">static</span>: routes change slowly over time</li>
+<li><span class="underline">dynamic</span>: routes change more quickly, periodic update in response to link cost changes</li>
+</ul>
+</div>
+<div id="outline-container-orge3cde02" class="outline-4">
+<h4 id="orge3cde02"><span class="section-number-4">4.2.1.</span> Intra-AS Routing</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+All routers identical, network considered flat.
+</p>
+
+<p>
+Cost between links defined by network operator, and costs should be additive.
+</p>
+
+<p>
+Most routing algorithms use a shortest path algorithm, such as Bellman-Form and Dijkstra&rsquo;s.
+</p>
+
+<p>
+Can define cost as:
+</p>
+<ul class="org-ul">
+<li><span class="underline">fixed quantity</span> based on link rate, propagation delay, or some combination</li>
+<li><span class="underline">time-varying quantity</span> based on average traffic on a link, buffer occupancy, delay, and error
+conditions
+<ul class="org-ul">
+<li>dangerous since oscillations possible</li>
+</ul></li>
+</ul>
+
+<p>
+Dijkstra&rsquo;s link-state routing algorithm is
+</p>
+<ul class="org-ul">
+<li><span class="underline">centralized</span>: network topology, reachability, link costs known to all nodes
+<ul class="org-ul">
+<li>accomplished via link state broadcast</li>
+<li>all nodes have same info</li>
+</ul></li>
+<li>each router uses Dijkstra&rsquo;s algorithm to compute least cost paths from source to all other
+nodes
+<ul class="org-ul">
+<li>gives forward table for that node</li>
+</ul></li>
+<li>\(D(v)\) is current estimate of cost of least-cost path from source to destination \(v\)</li>
+<li>\(p(v)\) is predecessor node along path from source to \(v\)</li>
+<li>\(N'\) is set of nodes whose least-cost path definitively known</li>
+</ul>
+
+<p>
+Open Shortest Path First (OSPF) routing:
+</p>
+<ul class="org-ul">
+<li>open means publicly available</li>
+<li>state of a link is a description of interface on router and its relationship to its neighbouring
+routers</li>
+<li>description of interface would include IP address of interface, mask, subnet, type of network it
+is connected to, routers connected to that network, and more</li>
+<li>collection of link-states forms link-state DB</li>
+<li>each router floors OSPF link-state advertisements (over IP) to all other routers in entire AS</li>
+<li>multiple link costs metrics possible link bandwidth and delay</li>
+<li>each router has full topology (subnets) and uses Dijkstra&rsquo;s algorithm to compute forwarding
+table</li>
+<li><span class="underline">security</span>: all OSPF messages authenticated (to prevent malicious intrusion)</li>
+<li>link state packet (LSP) contains
+<ul class="org-ul">
+<li>id of node that created LSP</li>
+<li>cost of link to each directly connected neighbour (typically link rate)</li>
+<li>sequence number</li>
+<li>TTL for this packet</li>
+</ul></li>
+<li>advertisements disseminated to entire AS (via flooding, at least once every 30 min or when
+changes)</li>
+<li>send new LSP with infinite cost to signal a link down</li>
+<li>reliable flooding
+<ul class="org-ul">
+<li>generate new LSP periodically, increment sequence number</li>
+<li>store most recent LSP from each node, forward LSP to all nodes but one that sent it, throw all
+new copies of same LSP (do not forward)</li>
+<li>decrement TTL of each stored LSP regularly, discard when TTL=0</li>
+</ul></li>
+</ul>
+
+<p>
+<b>Two-level hierarchy</b>: local area and backbone
+</p>
+<ul class="org-ul">
+<li>link-state advertisements flooded only in area, or backbone</li>
+<li>each node has detailed area topology, only knows direction to reach other destinations</li>
+</ul>
+
+<p>
+<b>Area border routers</b>: summarize distances to destinations in own area, advertise in backbone
+</p>
+
+<p>
+<b>Boundary router</b>: connects to other ASs
+</p>
+
+<p>
+<b>Local router</b>: flood LS in area only, compute routing within area, forward packets to outside via
+area border router
+</p>
+
+<p>
+<b>Backbone router</b>: runs OSPF limited to backbone
+</p>
+
+<p>
+With distance-vector algorithm, a router never builds a complete map of the network, just
+neighbours.
+</p>
+<ul class="org-ul">
+<li>a node computes distance vector whenever it receives something from one of its neighbours</li>
+<li>a node sends distance to neighbours whenever it changes</li>
+</ul>
+
+<p>
+Distributed Bellman Ford used in Distance Vector algorithm:
+</p>
+<ul class="org-ul">
+<li>from time-to-time, each node sends distance vector estimate to neighbours</li>
+<li>asynchronous and iterative
+<ul class="org-ul">
+<li>each local iteration caused by local link cost change or distance vector update message from
+neighbours</li>
+</ul></li>
+<li>whenever a node receives a new distance vector estimate from a neighbour, it updates its own
+distance vector using the Bellman Ford equation</li>
+<li>under minor, natural conditions, estimate converges to actual least cost</li>
+<li>each node notifies neighbours only when distance vector changes
+<ul class="org-ul">
+<li>neighbours notify neighbours only if necessary</li>
+</ul></li>
+</ul>
+
+<p>
+With distance vector algorithm, iterative communication, so computation steps diffuse information
+through network.
+Good news travels fast, bad news travels slow.
+</p>
+
+<p>
+<b>Poisoned reverse</b>: if \(z\) routes through \(y\) to get to \(x\), \(z\) tells \(y\) its distance to \(x\) is
+infinite (so \(y\) won&rsquo;t route to \(x\) via \(z\))
+</p>
+
+<p>
+<b>Routing Information Protocol</b>:
+</p>
+<ul class="org-ul">
+<li>included in BSD-UNIX distribution in 1982</li>
+<li>distance vector algorithm
+<ul class="org-ul">
+<li>distance metric is number of hops (max 15), each link has cost 1</li>
+<li>distance vectors exchanged with neighbours every 30 secs in response message (aka
+advertisement)</li>
+<li>each advertisement is a list of up to 25 destination subnets as well as sender&rsquo;s distance
+to each subnet</li>
+</ul></li>
+<li>if no advertisement heard after 180 secs, neighbour/link declared dead
+<ul class="org-ul">
+<li>routes via neighbour invalidated</li>
+<li>new advertisements sent to neighbours</li>
+<li>neighbours in turn send out new advertisements (if tables changed)</li>
+<li>link failure info quickly propagates to entire net</li>
+<li>poison reverse used to prevent ping-pong loops</li>
+</ul></li>
+</ul>
+
+<p>
+Problems with distance vector routing:
+</p>
+<ul class="org-ul">
+<li>convergence is slow</li>
+<li>loops can be formed, due to routing table inconsistency: packets being forwarded from router to
+router and never reach destination</li>
+<li>loops might last until convergence or count to infinity problem</li>
+</ul>
+
+<p>
+OSPF is better than RIP in stability (robustness to network changes) since distance vector converges
+slowly compared to link state.
+But, OSPF creates more routing traffic (flooding).
+</p>
+</div>
+</div>
+<div id="outline-container-org1515128" class="outline-4">
+<h4 id="org1515128"><span class="section-number-4">4.2.2.</span> Inter-AS Routing: BGP</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+De factor inter-domain routing protocol.
+Allows subnet to advertise existence and the destinations it can reach, to rest of Internet.
+</p>
+
+<p>
+BGP provides each AS a means to:
+</p>
+<ul class="org-ul">
+<li><span class="underline">eBGP</span>: obtain subnet reachability info from neighbouring ASs</li>
+<li><span class="underline">iBGP</span>: propagate reachability info to all AS-internal routers</li>
+<li>determine good routes to other networks based on reachability info and policy</li>
+</ul>
+
+<p>
+<b>BGP session</b>: two BGP routers exchange BGP messages over semi-permanent TCP connection
+</p>
+<ul class="org-ul">
+<li>advertising paths to different destination network prefixes (BGP is a path vector protocol)
+<ul class="org-ul">
+<li>advertised route has prefix (destination being advertised) and AS-PATH (list of ASs through
+which prefix advertisement has passed) and NEXT-HOP (indicates specific internal-AS router
+to next-hop AS)</li>
+</ul></li>
+</ul>
+
+<p>
+<b>Policy-based routing</b>:
+</p>
+<ul class="org-ul">
+<li>gateway receiving route advertisement uses import policy to accept/decline path</li>
+<li>AS policy also determines whether to advertise path to other neighbouring ASs</li>
+</ul>
+
+<p>
+Gateway router may learn about multiple paths to destination, selects route based on:
+</p>
+<ul class="org-ul">
+<li>local preference value attribute: policy decision</li>
+<li>shortest AS-PATH</li>
+<li>additional criteria</li>
+</ul>
+
+<p>
+<b>BGP messages</b> are exchanged between peers over TCP connection:
+</p>
+<ul class="org-ul">
+<li><span class="underline">OPEN</span>: opens TCP connection to remote BGP peer and authenticates sending BGP peer</li>
+<li><span class="underline">UPDATE</span>: advertises new path (or withdraws old)</li>
+<li><span class="underline">KEEPALIVE</span>: keeps connection alive in absence of UPDATEs, also ACKs OPEN request</li>
+<li><span class="underline">NOTIFICATION</span>: reports errors in previous message, also used to close connection</li>
+</ul>
+
+<p>
+Policy:
+</p>
+<ul class="org-ul">
+<li><span class="underline">inter-AS</span>: admin wants control over how its traffic is routed, who routes through its network</li>
+<li><span class="underline">intra-AS</span>: single admin, so policy less of an issue</li>
+</ul>
+
+<p>
+Scale:
+</p>
+<ul class="org-ul">
+<li>hierarchical routing saves table size, reduced update traffic</li>
+</ul>
+
+<p>
+Performance:
+</p>
+<ul class="org-ul">
+<li><span class="underline">inter-AS</span>: policy dominates over performances</li>
+<li><span class="underline">intra-AS</span>: can focus on performance</li>
+</ul>
+
+<p>
+<b>Hot Potato Routing</b>: choose local gateway that has least intra-domain cost
+</p>
+
+<p>
+ISP only wants to route traffic to/from its customer networks (not carry traffic between other ISPs).
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org4c9d277" class="outline-3">
+<h3 id="org4c9d277"><span class="section-number-3">4.3.</span> Software Defined Networking</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Internet network layer: historically implemented via distributed, per-router control approach:
+</p>
+<ul class="org-ul">
+<li>monolithic router contain switching hardware, runs proprietary implementation of Internet standard
+protocols (IP, RIP, IS-IS, OSPF, BGP) in proprietary router OS</li>
+<li>different middleboxes for different network layer functions: firewalls, load balancers, NAT boxes</li>
+</ul>
+
+<p>
+In per-router control plane, individual routing algorithm components in each and every router interact
+in the control plane to computer forwarding tables.
+</p>
+
+<p>
+In SDN control plane, remote controller computes and installs forwarding tables in routers.
+</p>
+
+<p>
+SDN is <span class="underline">logically centralized</span> since easier network management (avoid router misconfigurations and
+greater flexibility of traffic flows), table-based forwarding allows programming routers (centralized
+programming easier than distributed programming), and open (non-proprietary) implementation of
+control plane (foster innovation).
+</p>
+
+<p>
+With traditional routing:
+</p>
+<ul class="org-ul">
+<li>link weights are control knobs, so not much control.</li>
+<li>load balancing not possible</li>
+<li>can&rsquo;t route along different paths from same node</li>
+</ul>
+
+<p>
+Each router contains a forwarding table: <i>match plus action</i> abstraction, so match bits in arriving
+packet then take action
+</p>
+<ul class="org-ul">
+<li><span class="underline">destination-based forwarding</span>: forward based on destination IP address</li>
+<li><span class="underline">generalized forwarding</span>: many header fields can determine action and many actions possible</li>
+</ul>
+
+<p>
+<b>Flow</b>: defined by header field values (in link, network, and transport-layer fields)
+</p>
+
+<p>
+<b>Generalized forwarding</b>: simple packet-handling rules
+</p>
+<ul class="org-ul">
+<li><span class="underline">match</span>: pattern values in packet header fields</li>
+<li><span class="underline">actions</span>: for matched packet &rarr; drop, forward, modify matched packet or send matched packet to
+controller</li>
+</ul>
+
+<p>
+Orchestrated tables can create network-wide behaviour.
+</p>
+
+<p>
+Intelligence for 20th century phone net was at network switches, for early Internet at edge computing,
+and for modern Internet at programmable network devices and application-level infrastructure at edge.
+</p>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-11-28 Thu 00:09</p>
+<p class="date">Created: 2024-12-05 Thu 14:43</p>
 </div>
 </body>
 </html>
