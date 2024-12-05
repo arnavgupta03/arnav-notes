@@ -19,7 +19,6 @@
 
 *Stakeholder*: individual, team, or organization with interests/concerns relative to a system
 
-
 *Software architecture*: conceptual fabric that defines a system, is a type of design, related to parts of a system that would be difficult to change once a system is built
 
 Architectures capture structure, communication, and nonfunctional requirements.
