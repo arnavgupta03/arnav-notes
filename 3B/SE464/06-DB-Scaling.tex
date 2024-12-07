@@ -1,0 +1,536 @@
+% Created 2024-12-07 Sat 16:59
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{DB Scaling}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={DB Scaling},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{DB Recap}
+\label{sec:orgeeb01e7}
+DBs provide persistent storage and coordination in a large-scale system (also biggest scalability
+challenges).
+
+Disk 10 billion times larger than registers but 10 million times larger delay.
+
+Goal is to work with registers, caches, and RAM, rather than SSD and disk.
+
+All computer storage is limited to reads/writes.
+
+\textbf{Magnetic disks}: read/write head can read charges on a tiny portion of the magnetic disk
+
+\textbf{RAM (memory)}: memory and flash chips store lots of data, but only few bytes can be transferred at once
+since only couple hundred electrical connections at the edge
+
+\textbf{SSD (flash)} similar to RAM but with fewer electrical connection
+\subsection{RAID: Redundant Array of Independent Disks}
+\label{sec:orgd352b4a}
+Disks have limits on capacity (12 TB), throughput (150 MB/s), and likelihood of failure.
+
+\textbf{RAID} uses multiple disks:
+\begin{itemize}
+\item increase \uline{capacity} through multiple disks
+\item increase \uline{throughput} by accessing data in parallel on multiple disks
+\item reduce impact of \uline{failure} by storing data redundantly on multiple disks
+\end{itemize}
+
+Disk interface is just array of sectors, so easy to crease \textbf{logical/virtual disk} made of sectors
+from multiple physical disks.
+
+Unlimited capacity but computer has:
+\begin{itemize}
+\item limited compute power
+\item limited IO bandwidth
+\end{itemize}
+
+Single machine design scales well, so used by relational DBs.
+
+Programming languages deal with storage directly (except SQL):
+\begin{itemize}
+\item programmer writes code to move data from memory to disk
+\item disk use must be purposeful
+\end{itemize}
+
+Normal way of accessing persistent storage is to pass data in and out of files using open/read/write
+functions.
+DBs let programmer use persistent storage without considering files and with advanced performance
+optimizations, using some query language.
+\section{Relational DB}
+\label{sec:orgc5113f4}
+Store data in multiple tables with predefined schema (set of columns).
+Rows are added over time and can refer to other rows through foreign keys.
+
+Many tables allows:
+\begin{itemize}
+\item many users to refer to shared region data without repetition or inconsistency
+\item a user to have an arbitrary number of positions
+\end{itemize}
+
+A relational DB allows many-to-one and many-to-many relationships while keeping columns finite and
+clearly defined.
+
+DB \textbf{schema} defined tables, columns, primary and foreign keys.
+
+Relational DB benefits:
+\begin{itemize}
+\item \uline{scalability}: work with data larger than RAM
+\item \uline{persistence}: keep data after program finishes
+\item \uline{indexing}: efficiently sort and search along various dimensions
+\item \uline{concurrency}: multiple users/applications can read/write
+\item \uline{analysis}: SQL query language is concise yet powerful
+\item \uline{integrity}: restrict data type, duplicate entries, and transactions
+\item \uline{deduplication}: save space, keep common data consistent
+\item \uline{security}: different users can access specific data
+\end{itemize}
+
+Using file system does not give analysis, integrity, and deduplication, and is not as good for
+indexing (just filename/path) or concurrency (no transactions).
+\section{DB Indexes}
+\label{sec:orga14b900}
+Sorting data can be helpful for search (binary search).
+
+Sorting is not a complete fix since:
+\begin{itemize}
+\item can't sort in multiple dimensions
+\item insert new data without shifting (requires rewrites)
+\item does not take advantage of storage hierarchy (access disk in every step since index spread over
+full data set)
+\end{itemize}
+
+DB indexes use tree or hashtable, giving logarithmic speed, while allowing quick insert/delete.
+
+Indexes are defined when table is created (primary key unique for each row).
+Must be able to quickly check that new value does not already exist, so index on primary key.
+
+Certain queries are too slow.
+Without proper indexes, DBMS examines every row, so adding 1+ indexes dramatically speeds up query.
+
+\begin{verbatim}
+CREATE INDEX index_name ON table_name ( column_name );
+\end{verbatim}
+
+Multiple indexes allows finding rows based on multiple criteria.
+
+DBMS must translate query into table lookups, trying the most efficient choices (indexes help).
+Can analyze query execution plan with \texttt{EXPLAIN} keyword.
+
+Index columns if used in \texttt{WHERE} conditions, \texttt{JOIN} conditions, in \texttt{MIN} or \texttt{MAX} aggregation
+function, or a foreign key refers to it.
+
+Indexes consume storage space and must be updated when data modified, so don't add unless necessary.
+\section{DB Scaling}
+\label{sec:orgd1f21cb}
+Load balancer does much less work per request than DB.
+
+DB clones are hard due to coordination.
+
+\textbf{Query planners} optimize order of table accesses and index use.
+RAM used to store more important data and indexes.
+Responses can be cached and replayed if data unchanged.
+
+To avoid DB bottleneck:
+\begin{itemize}
+\item avoid unnecessary queries (cache data in frontend)
+\item buy fast machine with RAM for caching
+\item use fastest possible disks (SSDs, RAID)
+\item use \textbf{read replicas} or \textbf{sharding}
+\end{itemize}
+\subsection{Read Replicas}
+\label{sec:orgda49051}
+Most DB traffic is reads.
+\textbf{Replicas} have full copy of all data and can handle reads.
+
+All writes must go to \textbf{primary} server, with data changes pushed to read replicas.
+
+Replicas can be behind primary, so sensitive reads should use primary.
+
+Too many replicas would make data push process a bottleneck in the primary.
+
+Read replicas not infinitely scalable, primary is central bottleneck.
+Primary must send each replica copies of each write.
+
+Optimal number of replicas directly proportional to the ratio of reads and writes, \(\approx\)10 in
+typical app.
+
+Multi-level replication can extend read-scalability, with reads going to bottom level replicas
+and middle-level replicas pushing to children.
+
+Adding more replication levels gives width but adds more delay between write at primary and
+data availability at read replicas.
+
+Use read-replicas through load balancer in front of read-replicas.
+
+With read-replicas, writes are not scalable, capacity is not scalable, and primary is a single
+point of failure.
+
+5tandby primary can help to take over if main primary fail (app switches if main primary stops
+responding).
+
+Using multiple primaries gives same performance bottleneck and could introduce data inconsistency
+for concurrent operations.
+\subsection{Sharding}
+\label{sec:orgc4ac836}
+For horizontal scaling of writes and capacity:
+\begin{itemize}
+\item \textbf{functional partitioning}: create DBs to store different categories/types of data
+\begin{itemize}
+\item limits queries joining rows in tables in different DB
+\item only few functional partitions possible (not scalable)
+\end{itemize}
+\item \textbf{data partitioning}
+\end{itemize}
+
+With \textbf{sharding}, divide data universe into disjoint subsets called \textbf{shards}.
+
+\textbf{Sharding key} determines assignment of rows to shards.
+
+Relational DBs don't support sharding natively, so must be done at application level.
+
+Sharding benefits:
+\begin{itemize}
+\item capacity scales
+\item data consistent
+\item if sharding key chosen carefully
+\begin{itemize}
+\item balanced data
+\item many queries involve only 1 or
+few shards, so no central
+bottleneck
+\end{itemize}
+\end{itemize}
+
+Sharding downsides
+\begin{itemize}
+\item cannot use plain SQL
+\item queries must be adapted for sharding
+\item if key chosen poorly, shard load is imbalanced,
+by capacity or traffic
+\item some queries involve all shards, so capacity
+is limited by single machine's speed
+\end{itemize}
+
+For \(N\) nodes, total request rate \(R\), node capacity \(C\):
+\begin{itemize}
+\item if each request send to one node: \(R_{max} = NC\)
+\item if each request sent to constant \(k\) nodes: \(R_{max} = NC/k = \mathcal{O}(NC)\)
+\item if each request sent to all nodes: \(R_{max} = C\)
+\end{itemize}
+\section{NoSQL}
+\label{sec:org87c03ca}
+Sharding does not work well if all nodes involved (scaling limited).
+NoSQL databases solve problem by \textbf{denormalizing} data, so duplicated data isolates queries to one node.
+
+\textbf{Normalized} relational DB has no duplication of data.
+Foreign keys point to shared data.
+To optimally partition rows into shards, can solve balanced graph partitioning problem.
+
+\textbf{Balanced Graph Partitioning} model for DB sharding:
+\begin{itemize}
+\item nodes represent DB rows, edges represent FKs
+\item partition nodes, such that
+\begin{itemize}
+\item total edges between partitions is minimized (need to fetch data from another shard is minimized)
+\item nodes per partition is roughly balanced (balanced shards)
+\end{itemize}
+\end{itemize}
+
+Solving graph problem is NP-complete.
+Model's cost is too simplistic (does not account for frequency).
+
+Even with optimal partitioning, still have FKs between partitions.
+
+Data affects solution quality since:
+\begin{itemize}
+\item random interconnections hurt
+\item nodes with high degree (many edges) hurt
+\item structured, independent relations are easy
+\item nodes with single edge are easy
+\end{itemize}
+
+By removing FKs and JOINs with NoSQL, no more references, so \textbf{denormalized} data allows for easy
+partitioning, since there are just copies of references data.
+
+NoSQL DBs are key-value stores using a single column and a single table (usually).
+
+A single column is required since no references (unknown schema) and unknown positions.
+Some NoSQL DBs allow multiple columns, but each row can have different columns.
+
+Some NoSQL DBs allow multiple tables, but since rows can have any format, no need to.
+\subsection{Hash Table}
+\label{sec:org1225cc8}
+\textbf{Hash}: algorithm that takes value and returns pseudo-random value derived from it (constant but
+unpredictable)
+
+Same input always gives same output. Input length can vary but output has fixed length.
+
+\textbf{Hash Table}: stores key-value pairs
+
+Hash the key to determine address where value is stored. If address already full (collision), use next open
+slot.
+
+Hash table is alternative to search tree (find data in single step), but bad with ranges.
+
+In a \textbf{distributed hash table}:
+\begin{itemize}
+\item each cluster node responsible for a range of hash values
+\item each client gets list of nodes and range assigned to each
+\item when querying for key's value, client computes key hash to determine which node to query
+for data
+\end{itemize}
+
+NoSQL DBs use distributed hash table.
+Interface is \emph{get} a value for a key or \emph{put} a value for a key.
+
+Each operation only affects the node storing that key, so very scalable.
+
+For distributed, shared-nothing architecture:
+\begin{enumerate}
+\item create \textbf{cluster} of computers connected to each other
+\item each node in the cluster stores a fraction of the data set
+\end{enumerate}
+
+NoSQL Downsides:
+\begin{itemize}
+\item just one indexed column (key) since index built with hash-based partitioning
+\item denormalized data is duplicated (wastes space and must be edited everywhere)
+\item references possible but following reference requires another query, probably to another node
+(no constraint checking)
+\end{itemize}
+
+Normalized data would not perform well in a NoSQL DB.
+References not enforced by schema, so can become broken.
+\section{Distributed DB Consistency}
+\label{sec:orgaf4d2c5}
+To find data, client must have list of all nodes, and \textbf{hash ranges} assigned to each node.
+Sharing the node/range info is a \textbf{distributed consensus} problem.
+\subsection{Shared-Nothing Architecture}
+\label{sec:org245f90f}
+Each request handled by one node (no bottlenecks).
+Both \uline{throughput} and \uline{capacity} directly proportional to number of nodes.
+
+Distributed Hash Tables can scale to 1000s of nodes.
+
+Many nodes means high chance of node failure, so must replicate data to avoid loss.
+Can create overlap in hash ranges covered by nodes.
+
+Replicating data introduces possibility of inconsistency.
+\subsection{Consistency}
+\label{sec:orgc6a3ea4}
+\textbf{CAP Theorem}: a distributed system cannot achieve all 3 of the following:
+\begin{itemize}
+\item \textbf{Consistency}: reads always get the most recent write
+\item \textbf{Availability}: every request received a non-error response
+\item \textbf{Partition Tolerance}: arbitrary number of messages between nodes can be dropped (or delayed)
+\end{itemize}
+
+When distributed DB nodes are out-of-sync, must either accept consistent responses or wait for nodes
+to resynchronize.
+
+To build distributed DB where every request immediately gets a globally correct response, need a network
+that is 100\% reliable and has no delay.
+
+CAP theorem gives tradeoff between consistency and delay.
+Inconsistency more important than delay (only centralized DB can give both).
+
+Distributed NoSQL DB designs give different options for handling consistency/delay tradeoff.
+
+Client-centric consistency properties:
+\begin{itemize}
+\item \textbf{monotonic reads}: if client reads the value of \(x\), later reads of \(x\) by the same client will
+return the same value or a more recently written value
+\begin{itemize}
+\item can fail from reads from different nodes during incomplete write
+\item prevent problem by making client connect to same node for every request or delay second request
+\end{itemize}
+\item \textbf{read your writes}: if client writes value to \(x\), later reads of \(x\) by the same client always returns
+same value or a more recently written value
+\begin{itemize}
+\item can fail if system allows write on one node and read from another
+\item prevent problem by making client connect to same node for every request or delay second request
+\end{itemize}
+\item \textbf{monotonic writes}: if client writes twice to \(x\), first write must happen before second
+\begin{itemize}
+\item second write can occur on a node before first write arrives
+\item does not matter unless writes are cumulative
+\item prevent problem by making client connect to same node for every request or delay second request
+\end{itemize}
+\end{itemize}
+
+To achieve consistency:
+\begin{enumerate}
+\item make client send all requests to one replica node
+\begin{enumerate}
+\item simple solution, but consistency problems arise when node fails
+\end{enumerate}
+\item make client wait until read or write is synchronized across whole system
+\begin{enumerate}
+\item simplest approach is for client to send request to all nodes and wait
+\end{enumerate}
+\end{enumerate}
+
+For \uline{monotonic read}, wait for all nodes to return same value.
+For \uline{read your writes}, wait for all nodes to acknowledge write.
+
+\textbf{Quorum}: min percentage of committee needed to act
+
+Wait for quorum of acknowledgment of consistent data before considering read/write completed
+Prevent progress until replicas have certain degree of consistency.
+
+Read/write quorum of majority gives balanced read/write performance.
+
+Send request to all nodes but wait for quorum of responses.
+
+In practice, there can be many nodes, but a constant number of replicas for each data key.
+Quorum only applies to replica nodes.
+
+A distributed system is \textbf{linearizable} if the partial ordering of distributed actions is preserved:
+\begin{itemize}
+\item distributed actors each know the order of their own actions
+\item certain knowledge must never be contradicted by the distributed system
+\item creates a partial ordering of all events in the distributed system
+\end{itemize}
+
+Every observed serialization of the parallel activity must be agreeable to individual actors.
+Observations will vary across the system.
+
+In addition to NoSQL DBs, distributed file systems can use DHTs.
+Path is key, value is file contents.
+\section{Choosing a DB}
+\label{sec:orgb47a85f}
+\subsection{Relational DB}
+\label{sec:org2af33b0}
+Relational DB is most common, traditional solution.
+Use transactions for steps to be completed atomically together.
+\subsection{NoSQL DB}
+\label{sec:org16ea52f}
+Transactions less common on NoSQL DBs, since slow.
+Transactions less necessary since a single key stores a lot of related data that can be modified at once.
+
+Transaction can be implemented by locking the keys involved:
+\begin{enumerate}
+\item lock keys involved (lock prevents reads/writes)
+\begin{enumerate}
+\item replicas must agree to lock
+\item multiple competing lock requests may occur in parallel, but once must
+be chosen, so multiple rounds of communication may be needed to agree
+\end{enumerate}
+\item execute transaction on all replaces, and wait for all to confirm
+\item unlock key involved (let reads/writes proceed)
+\end{enumerate}
+
+To implement distributed lock:
+\begin{itemize}
+\item requires atomic conditional write operation
+\begin{itemize}
+\item many NoSQL DBs support something like this
+\end{itemize}
+\item if scalability not a concern
+\begin{itemize}
+\item store transactional data in a SQL DB
+\item use a SQL DB to implement lock used to control access in NoSQL
+\end{itemize}
+\end{itemize}
+\subsection{Column-Oriented Relational DB}
+\label{sec:org24cee10}
+Read-replicas and sharding help for online transaction processing.
+
+\textbf{Online Analytics Processing} (OLAP) involves few large queries:
+\begin{itemize}
+\item analytics queries with scanning tables, not using indexes
+\item must be parallelized over many nodes
+\item workload is mostly reads, with occasional importing of new data
+\end{itemize}
+
+Column-oriented DBs optimized for SQL analytics workloads.
+\subsection{Semi-Structured Stores}
+\label{sec:org4f9c01f}
+MongoDB stores JSON objects.
+Best for changing and keeping history of JSON documents.
+
+MongoDB details:
+\begin{itemize}
+\item built-in sharding
+\item master/slave replication
+\item JS expressions as queries
+\item runs arbitrary JS functions
+\item performance over features
+\item best for dynamic queries, preferring indexes over functions, good performance on big DB, and if
+documents change frequently and keeping history
+\end{itemize}
+
+ElasticSearch also stores JSON documents, but indexes every word in the document and to handle
+advanced queries.
+Uses inverted index with DHT.
+ElasticSearch is advanced search.
+Best for objects with flexible fields (plain text) and need search by all words in the document
+or need to construct complex search queries.
+
+Cassandra rows have key mapped to value, which is group of columns mapped to values.
+Column names are indexed within the row.
+Row key is the hashing key that determines on which nodes the row is stored.
+Cassandra stores huge datasets.
+Best for when requirement is to store data so huge that it doesn't fit on the server, but still want a
+familiar interface to it.
+
+DynamoDB is 2D key-value store, with \textbf{partition key} (hashed to find partition), \textbf{sort key} (allows
+efficient range queries withing partition key), \textbf{primary key} (from partition and sort keys together),
+and \textbf{attributes} (key-value pairs stored under primary key).
+\subsection{Distributed Cache}
+\label{sec:orge6f217b}
+All data stored in RAM for high performance.
+Redis understands many types of data values.
+
+Originally developed to reduce load on relational DBs through caching.
+
+Same basic key-value abstraction as NoSQL distributed DBs.
+Store data across many nodes.
+
+Have same data consistency issues as NoSQL DBs.
+
+Optimized to do everything in memory (except storage on disk).
+
+In cache, items expire, speed is primary goal, and capacity is limited.
+
+As opposed to CDN, distributed cache caches commonly used data that contributes to responses.
+
+Redis is blazing fast storage.
+Best used for rapidly changing data with a foreseeable DB size and for caching data that can be rebuilt
+from another data store.
+\subsection{Networked File Systems and Cloud}
+\label{sec:org2ff7690}
+\textbf{Networked file system} provides regular filesystem interface to applications by mounting remote drive.
+Not too useful today, but may be necessary if app is built to work directly with local file system.
+Modern apps should instead interact with cloud-based storage services.
+
+\textbf{Cloud object store (S3)} is a flexible general-purpose file store for cloud apps, managed by a cloud
+provider (unlimited capacity).
+Provides a network API for accessing files (like REST), so app accesses files like remote DB.
+
+\textbf{Hadoop File System} is good for using Hadoop/Spark for distributed processing, where data too big
+to move for analytics.
+Allows data to reside on same machines where computation happens, making processing efficient.
+Designed to work well with Hadoop distributed processing tools.
+\end{document}

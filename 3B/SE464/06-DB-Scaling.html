@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-07 Sat 16:59 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DB Scaling</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">DB Scaling</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org5bbee5a">1. DB Recap</a>
+<ul>
+<li><a href="#org0bd44fb">1.1. RAID: Redundant Array of Independent Disks</a></li>
+</ul>
+</li>
+<li><a href="#orga5eb0ae">2. Relational DB</a></li>
+<li><a href="#org9d102ca">3. DB Indexes</a></li>
+<li><a href="#org7b96be2">4. DB Scaling</a>
+<ul>
+<li><a href="#org49d25c0">4.1. Read Replicas</a></li>
+<li><a href="#orgd8ad9e8">4.2. Sharding</a></li>
+</ul>
+</li>
+<li><a href="#orga1177e4">5. NoSQL</a>
+<ul>
+<li><a href="#org90bcee9">5.1. Hash Table</a></li>
+</ul>
+</li>
+<li><a href="#orgd1e9ddc">6. Distributed DB Consistency</a>
+<ul>
+<li><a href="#orgf33a17b">6.1. Shared-Nothing Architecture</a></li>
+<li><a href="#org6fb2787">6.2. Consistency</a></li>
+</ul>
+</li>
+<li><a href="#org9d59223">7. Choosing a DB</a>
+<ul>
+<li><a href="#orgd3cd27f">7.1. Relational DB</a></li>
+<li><a href="#org112e5e2">7.2. NoSQL DB</a></li>
+<li><a href="#orgde41482">7.3. Column-Oriented Relational DB</a></li>
+<li><a href="#orgafd134f">7.4. Semi-Structured Stores</a></li>
+<li><a href="#orgd456908">7.5. Distributed Cache</a></li>
+<li><a href="#orgff128ae">7.6. Networked File Systems and Cloud</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5bbee5a" class="outline-2">
+<h2 id="org5bbee5a"><span class="section-number-2">1.</span> DB Recap</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+DBs provide persistent storage and coordination in a large-scale system (also biggest scalability
+challenges).
+</p>
+
+<p>
+Disk 10 billion times larger than registers but 10 million times larger delay.
+</p>
+
+<p>
+Goal is to work with registers, caches, and RAM, rather than SSD and disk.
+</p>
+
+<p>
+All computer storage is limited to reads/writes.
+</p>
+
+<p>
+<b>Magnetic disks</b>: read/write head can read charges on a tiny portion of the magnetic disk
+</p>
+
+<p>
+<b>RAM (memory)</b>: memory and flash chips store lots of data, but only few bytes can be transferred at once
+since only couple hundred electrical connections at the edge
+</p>
+
+<p>
+<b>SSD (flash)</b> similar to RAM but with fewer electrical connection
+</p>
+</div>
+<div id="outline-container-org0bd44fb" class="outline-3">
+<h3 id="org0bd44fb"><span class="section-number-3">1.1.</span> RAID: Redundant Array of Independent Disks</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Disks have limits on capacity (12 TB), throughput (150 MB/s), and likelihood of failure.
+</p>
+
+<p>
+<b>RAID</b> uses multiple disks:
+</p>
+<ul class="org-ul">
+<li>increase <span class="underline">capacity</span> through multiple disks</li>
+<li>increase <span class="underline">throughput</span> by accessing data in parallel on multiple disks</li>
+<li>reduce impact of <span class="underline">failure</span> by storing data redundantly on multiple disks</li>
+</ul>
+
+<p>
+Disk interface is just array of sectors, so easy to crease <b>logical/virtual disk</b> made of sectors
+from multiple physical disks.
+</p>
+
+<p>
+Unlimited capacity but computer has:
+</p>
+<ul class="org-ul">
+<li>limited compute power</li>
+<li>limited IO bandwidth</li>
+</ul>
+
+<p>
+Single machine design scales well, so used by relational DBs.
+</p>
+
+<p>
+Programming languages deal with storage directly (except SQL):
+</p>
+<ul class="org-ul">
+<li>programmer writes code to move data from memory to disk</li>
+<li>disk use must be purposeful</li>
+</ul>
+
+<p>
+Normal way of accessing persistent storage is to pass data in and out of files using open/read/write
+functions.
+DBs let programmer use persistent storage without considering files and with advanced performance
+optimizations, using some query language.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga5eb0ae" class="outline-2">
+<h2 id="orga5eb0ae"><span class="section-number-2">2.</span> Relational DB</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Store data in multiple tables with predefined schema (set of columns).
+Rows are added over time and can refer to other rows through foreign keys.
+</p>
+
+<p>
+Many tables allows:
+</p>
+<ul class="org-ul">
+<li>many users to refer to shared region data without repetition or inconsistency</li>
+<li>a user to have an arbitrary number of positions</li>
+</ul>
+
+<p>
+A relational DB allows many-to-one and many-to-many relationships while keeping columns finite and
+clearly defined.
+</p>
+
+<p>
+DB <b>schema</b> defined tables, columns, primary and foreign keys.
+</p>
+
+<p>
+Relational DB benefits:
+</p>
+<ul class="org-ul">
+<li><span class="underline">scalability</span>: work with data larger than RAM</li>
+<li><span class="underline">persistence</span>: keep data after program finishes</li>
+<li><span class="underline">indexing</span>: efficiently sort and search along various dimensions</li>
+<li><span class="underline">concurrency</span>: multiple users/applications can read/write</li>
+<li><span class="underline">analysis</span>: SQL query language is concise yet powerful</li>
+<li><span class="underline">integrity</span>: restrict data type, duplicate entries, and transactions</li>
+<li><span class="underline">deduplication</span>: save space, keep common data consistent</li>
+<li><span class="underline">security</span>: different users can access specific data</li>
+</ul>
+
+<p>
+Using file system does not give analysis, integrity, and deduplication, and is not as good for
+indexing (just filename/path) or concurrency (no transactions).
+</p>
+</div>
+</div>
+<div id="outline-container-org9d102ca" class="outline-2">
+<h2 id="org9d102ca"><span class="section-number-2">3.</span> DB Indexes</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Sorting data can be helpful for search (binary search).
+</p>
+
+<p>
+Sorting is not a complete fix since:
+</p>
+<ul class="org-ul">
+<li>can&rsquo;t sort in multiple dimensions</li>
+<li>insert new data without shifting (requires rewrites)</li>
+<li>does not take advantage of storage hierarchy (access disk in every step since index spread over
+full data set)</li>
+</ul>
+
+<p>
+DB indexes use tree or hashtable, giving logarithmic speed, while allowing quick insert/delete.
+</p>
+
+<p>
+Indexes are defined when table is created (primary key unique for each row).
+Must be able to quickly check that new value does not already exist, so index on primary key.
+</p>
+
+<p>
+Certain queries are too slow.
+Without proper indexes, DBMS examines every row, so adding 1+ indexes dramatically speeds up query.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql"><span style="color: #51afef;">CREATE</span> INDEX index_name <span style="color: #51afef;">ON</span> <span style="color: #51afef;">table_name</span> ( <span style="color: #51afef;">column_name</span> );
+</pre>
+</div>
+
+<p>
+Multiple indexes allows finding rows based on multiple criteria.
+</p>
+
+<p>
+DBMS must translate query into table lookups, trying the most efficient choices (indexes help).
+Can analyze query execution plan with <code>EXPLAIN</code> keyword.
+</p>
+
+<p>
+Index columns if used in <code>WHERE</code> conditions, <code>JOIN</code> conditions, in <code>MIN</code> or <code>MAX</code> aggregation
+function, or a foreign key refers to it.
+</p>
+
+<p>
+Indexes consume storage space and must be updated when data modified, so don&rsquo;t add unless necessary.
+</p>
+</div>
+</div>
+<div id="outline-container-org7b96be2" class="outline-2">
+<h2 id="org7b96be2"><span class="section-number-2">4.</span> DB Scaling</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Load balancer does much less work per request than DB.
+</p>
+
+<p>
+DB clones are hard due to coordination.
+</p>
+
+<p>
+<b>Query planners</b> optimize order of table accesses and index use.
+RAM used to store more important data and indexes.
+Responses can be cached and replayed if data unchanged.
+</p>
+
+<p>
+To avoid DB bottleneck:
+</p>
+<ul class="org-ul">
+<li>avoid unnecessary queries (cache data in frontend)</li>
+<li>buy fast machine with RAM for caching</li>
+<li>use fastest possible disks (SSDs, RAID)</li>
+<li>use <b>read replicas</b> or <b>sharding</b></li>
+</ul>
+</div>
+<div id="outline-container-org49d25c0" class="outline-3">
+<h3 id="org49d25c0"><span class="section-number-3">4.1.</span> Read Replicas</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Most DB traffic is reads.
+<b>Replicas</b> have full copy of all data and can handle reads.
+</p>
+
+<p>
+All writes must go to <b>primary</b> server, with data changes pushed to read replicas.
+</p>
+
+<p>
+Replicas can be behind primary, so sensitive reads should use primary.
+</p>
+
+<p>
+Too many replicas would make data push process a bottleneck in the primary.
+</p>
+
+<p>
+Read replicas not infinitely scalable, primary is central bottleneck.
+Primary must send each replica copies of each write.
+</p>
+
+<p>
+Optimal number of replicas directly proportional to the ratio of reads and writes, &asymp;10 in
+typical app.
+</p>
+
+<p>
+Multi-level replication can extend read-scalability, with reads going to bottom level replicas
+and middle-level replicas pushing to children.
+</p>
+
+<p>
+Adding more replication levels gives width but adds more delay between write at primary and
+data availability at read replicas.
+</p>
+
+<p>
+Use read-replicas through load balancer in front of read-replicas.
+</p>
+
+<p>
+With read-replicas, writes are not scalable, capacity is not scalable, and primary is a single
+point of failure.
+</p>
+
+<p>
+5tandby primary can help to take over if main primary fail (app switches if main primary stops
+responding).
+</p>
+
+<p>
+Using multiple primaries gives same performance bottleneck and could introduce data inconsistency
+for concurrent operations.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd8ad9e8" class="outline-3">
+<h3 id="orgd8ad9e8"><span class="section-number-3">4.2.</span> Sharding</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+For horizontal scaling of writes and capacity:
+</p>
+<ul class="org-ul">
+<li><b>functional partitioning</b>: create DBs to store different categories/types of data
+<ul class="org-ul">
+<li>limits queries joining rows in tables in different DB</li>
+<li>only few functional partitions possible (not scalable)</li>
+</ul></li>
+<li><b>data partitioning</b></li>
+</ul>
+
+<p>
+With <b>sharding</b>, divide data universe into disjoint subsets called <b>shards</b>.
+</p>
+
+<p>
+<b>Sharding key</b> determines assignment of rows to shards.
+</p>
+
+<p>
+Relational DBs don&rsquo;t support sharding natively, so must be done at application level.
+</p>
+
+<p>
+Sharding benefits:
+</p>
+<ul class="org-ul">
+<li>capacity scales</li>
+<li>data consistent</li>
+<li>if sharding key chosen carefully
+<ul class="org-ul">
+<li>balanced data</li>
+<li>many queries involve only 1 or
+few shards, so no central
+bottleneck</li>
+</ul></li>
+</ul>
+
+<p>
+Sharding downsides
+</p>
+<ul class="org-ul">
+<li>cannot use plain SQL</li>
+<li>queries must be adapted for sharding</li>
+<li>if key chosen poorly, shard load is imbalanced,
+by capacity or traffic</li>
+<li>some queries involve all shards, so capacity
+is limited by single machine&rsquo;s speed</li>
+</ul>
+
+<p>
+For \(N\) nodes, total request rate \(R\), node capacity \(C\):
+</p>
+<ul class="org-ul">
+<li>if each request send to one node: \(R_{max} = NC\)</li>
+<li>if each request sent to constant \(k\) nodes: \(R_{max} = NC/k = \mathcal{O}(NC)\)</li>
+<li>if each request sent to all nodes: \(R_{max} = C\)</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orga1177e4" class="outline-2">
+<h2 id="orga1177e4"><span class="section-number-2">5.</span> NoSQL</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Sharding does not work well if all nodes involved (scaling limited).
+NoSQL databases solve problem by <b>denormalizing</b> data, so duplicated data isolates queries to one node.
+</p>
+
+<p>
+<b>Normalized</b> relational DB has no duplication of data.
+Foreign keys point to shared data.
+To optimally partition rows into shards, can solve balanced graph partitioning problem.
+</p>
+
+<p>
+<b>Balanced Graph Partitioning</b> model for DB sharding:
+</p>
+<ul class="org-ul">
+<li>nodes represent DB rows, edges represent FKs</li>
+<li>partition nodes, such that
+<ul class="org-ul">
+<li>total edges between partitions is minimized (need to fetch data from another shard is minimized)</li>
+<li>nodes per partition is roughly balanced (balanced shards)</li>
+</ul></li>
+</ul>
+
+<p>
+Solving graph problem is NP-complete.
+Model&rsquo;s cost is too simplistic (does not account for frequency).
+</p>
+
+<p>
+Even with optimal partitioning, still have FKs between partitions.
+</p>
+
+<p>
+Data affects solution quality since:
+</p>
+<ul class="org-ul">
+<li>random interconnections hurt</li>
+<li>nodes with high degree (many edges) hurt</li>
+<li>structured, independent relations are easy</li>
+<li>nodes with single edge are easy</li>
+</ul>
+
+<p>
+By removing FKs and JOINs with NoSQL, no more references, so <b>denormalized</b> data allows for easy
+partitioning, since there are just copies of references data.
+</p>
+
+<p>
+NoSQL DBs are key-value stores using a single column and a single table (usually).
+</p>
+
+<p>
+A single column is required since no references (unknown schema) and unknown positions.
+Some NoSQL DBs allow multiple columns, but each row can have different columns.
+</p>
+
+<p>
+Some NoSQL DBs allow multiple tables, but since rows can have any format, no need to.
+</p>
+</div>
+<div id="outline-container-org90bcee9" class="outline-3">
+<h3 id="org90bcee9"><span class="section-number-3">5.1.</span> Hash Table</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+<b>Hash</b>: algorithm that takes value and returns pseudo-random value derived from it (constant but
+unpredictable)
+</p>
+
+<p>
+Same input always gives same output. Input length can vary but output has fixed length.
+</p>
+
+<p>
+<b>Hash Table</b>: stores key-value pairs
+</p>
+
+<p>
+Hash the key to determine address where value is stored. If address already full (collision), use next open
+slot.
+</p>
+
+<p>
+Hash table is alternative to search tree (find data in single step), but bad with ranges.
+</p>
+
+<p>
+In a <b>distributed hash table</b>:
+</p>
+<ul class="org-ul">
+<li>each cluster node responsible for a range of hash values</li>
+<li>each client gets list of nodes and range assigned to each</li>
+<li>when querying for key&rsquo;s value, client computes key hash to determine which node to query
+for data</li>
+</ul>
+
+<p>
+NoSQL DBs use distributed hash table.
+Interface is <i>get</i> a value for a key or <i>put</i> a value for a key.
+</p>
+
+<p>
+Each operation only affects the node storing that key, so very scalable.
+</p>
+
+<p>
+For distributed, shared-nothing architecture:
+</p>
+<ol class="org-ol">
+<li>create <b>cluster</b> of computers connected to each other</li>
+<li>each node in the cluster stores a fraction of the data set</li>
+</ol>
+
+<p>
+NoSQL Downsides:
+</p>
+<ul class="org-ul">
+<li>just one indexed column (key) since index built with hash-based partitioning</li>
+<li>denormalized data is duplicated (wastes space and must be edited everywhere)</li>
+<li>references possible but following reference requires another query, probably to another node
+(no constraint checking)</li>
+</ul>
+
+<p>
+Normalized data would not perform well in a NoSQL DB.
+References not enforced by schema, so can become broken.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd1e9ddc" class="outline-2">
+<h2 id="orgd1e9ddc"><span class="section-number-2">6.</span> Distributed DB Consistency</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+To find data, client must have list of all nodes, and <b>hash ranges</b> assigned to each node.
+Sharing the node/range info is a <b>distributed consensus</b> problem.
+</p>
+</div>
+<div id="outline-container-orgf33a17b" class="outline-3">
+<h3 id="orgf33a17b"><span class="section-number-3">6.1.</span> Shared-Nothing Architecture</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Each request handled by one node (no bottlenecks).
+Both <span class="underline">throughput</span> and <span class="underline">capacity</span> directly proportional to number of nodes.
+</p>
+
+<p>
+Distributed Hash Tables can scale to 1000s of nodes.
+</p>
+
+<p>
+Many nodes means high chance of node failure, so must replicate data to avoid loss.
+Can create overlap in hash ranges covered by nodes.
+</p>
+
+<p>
+Replicating data introduces possibility of inconsistency.
+</p>
+</div>
+</div>
+<div id="outline-container-org6fb2787" class="outline-3">
+<h3 id="org6fb2787"><span class="section-number-3">6.2.</span> Consistency</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+<b>CAP Theorem</b>: a distributed system cannot achieve all 3 of the following:
+</p>
+<ul class="org-ul">
+<li><b>Consistency</b>: reads always get the most recent write</li>
+<li><b>Availability</b>: every request received a non-error response</li>
+<li><b>Partition Tolerance</b>: arbitrary number of messages between nodes can be dropped (or delayed)</li>
+</ul>
+
+<p>
+When distributed DB nodes are out-of-sync, must either accept consistent responses or wait for nodes
+to resynchronize.
+</p>
+
+<p>
+To build distributed DB where every request immediately gets a globally correct response, need a network
+that is 100% reliable and has no delay.
+</p>
+
+<p>
+CAP theorem gives tradeoff between consistency and delay.
+Inconsistency more important than delay (only centralized DB can give both).
+</p>
+
+<p>
+Distributed NoSQL DB designs give different options for handling consistency/delay tradeoff.
+</p>
+
+<p>
+Client-centric consistency properties:
+</p>
+<ul class="org-ul">
+<li><b>monotonic reads</b>: if client reads the value of \(x\), later reads of \(x\) by the same client will
+return the same value or a more recently written value
+<ul class="org-ul">
+<li>can fail from reads from different nodes during incomplete write</li>
+<li>prevent problem by making client connect to same node for every request or delay second request</li>
+</ul></li>
+<li><b>read your writes</b>: if client writes value to \(x\), later reads of \(x\) by the same client always returns
+same value or a more recently written value
+<ul class="org-ul">
+<li>can fail if system allows write on one node and read from another</li>
+<li>prevent problem by making client connect to same node for every request or delay second request</li>
+</ul></li>
+<li><b>monotonic writes</b>: if client writes twice to \(x\), first write must happen before second
+<ul class="org-ul">
+<li>second write can occur on a node before first write arrives</li>
+<li>does not matter unless writes are cumulative</li>
+<li>prevent problem by making client connect to same node for every request or delay second request</li>
+</ul></li>
+</ul>
+
+<p>
+To achieve consistency:
+</p>
+<ol class="org-ol">
+<li>make client send all requests to one replica node
+<ol class="org-ol">
+<li>simple solution, but consistency problems arise when node fails</li>
+</ol></li>
+<li>make client wait until read or write is synchronized across whole system
+<ol class="org-ol">
+<li>simplest approach is for client to send request to all nodes and wait</li>
+</ol></li>
+</ol>
+
+<p>
+For <span class="underline">monotonic read</span>, wait for all nodes to return same value.
+For <span class="underline">read your writes</span>, wait for all nodes to acknowledge write.
+</p>
+
+<p>
+<b>Quorum</b>: min percentage of committee needed to act
+</p>
+
+<p>
+Wait for quorum of acknowledgment of consistent data before considering read/write completed
+Prevent progress until replicas have certain degree of consistency.
+</p>
+
+<p>
+Read/write quorum of majority gives balanced read/write performance.
+</p>
+
+<p>
+Send request to all nodes but wait for quorum of responses.
+</p>
+
+<p>
+In practice, there can be many nodes, but a constant number of replicas for each data key.
+Quorum only applies to replica nodes.
+</p>
+
+<p>
+A distributed system is <b>linearizable</b> if the partial ordering of distributed actions is preserved:
+</p>
+<ul class="org-ul">
+<li>distributed actors each know the order of their own actions</li>
+<li>certain knowledge must never be contradicted by the distributed system</li>
+<li>creates a partial ordering of all events in the distributed system</li>
+</ul>
+
+<p>
+Every observed serialization of the parallel activity must be agreeable to individual actors.
+Observations will vary across the system.
+</p>
+
+<p>
+In addition to NoSQL DBs, distributed file systems can use DHTs.
+Path is key, value is file contents.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9d59223" class="outline-2">
+<h2 id="org9d59223"><span class="section-number-2">7.</span> Choosing a DB</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-orgd3cd27f" class="outline-3">
+<h3 id="orgd3cd27f"><span class="section-number-3">7.1.</span> Relational DB</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+Relational DB is most common, traditional solution.
+Use transactions for steps to be completed atomically together.
+</p>
+</div>
+</div>
+<div id="outline-container-org112e5e2" class="outline-3">
+<h3 id="org112e5e2"><span class="section-number-3">7.2.</span> NoSQL DB</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+Transactions less common on NoSQL DBs, since slow.
+Transactions less necessary since a single key stores a lot of related data that can be modified at once.
+</p>
+
+<p>
+Transaction can be implemented by locking the keys involved:
+</p>
+<ol class="org-ol">
+<li>lock keys involved (lock prevents reads/writes)
+<ol class="org-ol">
+<li>replicas must agree to lock</li>
+<li>multiple competing lock requests may occur in parallel, but once must
+be chosen, so multiple rounds of communication may be needed to agree</li>
+</ol></li>
+<li>execute transaction on all replaces, and wait for all to confirm</li>
+<li>unlock key involved (let reads/writes proceed)</li>
+</ol>
+
+<p>
+To implement distributed lock:
+</p>
+<ul class="org-ul">
+<li>requires atomic conditional write operation
+<ul class="org-ul">
+<li>many NoSQL DBs support something like this</li>
+</ul></li>
+<li>if scalability not a concern
+<ul class="org-ul">
+<li>store transactional data in a SQL DB</li>
+<li>use a SQL DB to implement lock used to control access in NoSQL</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgde41482" class="outline-3">
+<h3 id="orgde41482"><span class="section-number-3">7.3.</span> Column-Oriented Relational DB</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+Read-replicas and sharding help for online transaction processing.
+</p>
+
+<p>
+<b>Online Analytics Processing</b> (OLAP) involves few large queries:
+</p>
+<ul class="org-ul">
+<li>analytics queries with scanning tables, not using indexes</li>
+<li>must be parallelized over many nodes</li>
+<li>workload is mostly reads, with occasional importing of new data</li>
+</ul>
+
+<p>
+Column-oriented DBs optimized for SQL analytics workloads.
+</p>
+</div>
+</div>
+<div id="outline-container-orgafd134f" class="outline-3">
+<h3 id="orgafd134f"><span class="section-number-3">7.4.</span> Semi-Structured Stores</h3>
+<div class="outline-text-3" id="text-7-4">
+<p>
+MongoDB stores JSON objects.
+Best for changing and keeping history of JSON documents.
+</p>
+
+<p>
+MongoDB details:
+</p>
+<ul class="org-ul">
+<li>built-in sharding</li>
+<li>master/slave replication</li>
+<li>JS expressions as queries</li>
+<li>runs arbitrary JS functions</li>
+<li>performance over features</li>
+<li>best for dynamic queries, preferring indexes over functions, good performance on big DB, and if
+documents change frequently and keeping history</li>
+</ul>
+
+<p>
+ElasticSearch also stores JSON documents, but indexes every word in the document and to handle
+advanced queries.
+Uses inverted index with DHT.
+ElasticSearch is advanced search.
+Best for objects with flexible fields (plain text) and need search by all words in the document
+or need to construct complex search queries.
+</p>
+
+<p>
+Cassandra rows have key mapped to value, which is group of columns mapped to values.
+Column names are indexed within the row.
+Row key is the hashing key that determines on which nodes the row is stored.
+Cassandra stores huge datasets.
+Best for when requirement is to store data so huge that it doesn&rsquo;t fit on the server, but still want a
+familiar interface to it.
+</p>
+
+<p>
+DynamoDB is 2D key-value store, with <b>partition key</b> (hashed to find partition), <b>sort key</b> (allows
+efficient range queries withing partition key), <b>primary key</b> (from partition and sort keys together),
+and <b>attributes</b> (key-value pairs stored under primary key).
+</p>
+</div>
+</div>
+<div id="outline-container-orgd456908" class="outline-3">
+<h3 id="orgd456908"><span class="section-number-3">7.5.</span> Distributed Cache</h3>
+<div class="outline-text-3" id="text-7-5">
+<p>
+All data stored in RAM for high performance.
+Redis understands many types of data values.
+</p>
+
+<p>
+Originally developed to reduce load on relational DBs through caching.
+</p>
+
+<p>
+Same basic key-value abstraction as NoSQL distributed DBs.
+Store data across many nodes.
+</p>
+
+<p>
+Have same data consistency issues as NoSQL DBs.
+</p>
+
+<p>
+Optimized to do everything in memory (except storage on disk).
+</p>
+
+<p>
+In cache, items expire, speed is primary goal, and capacity is limited.
+</p>
+
+<p>
+As opposed to CDN, distributed cache caches commonly used data that contributes to responses.
+</p>
+
+<p>
+Redis is blazing fast storage.
+Best used for rapidly changing data with a foreseeable DB size and for caching data that can be rebuilt
+from another data store.
+</p>
+</div>
+</div>
+<div id="outline-container-orgff128ae" class="outline-3">
+<h3 id="orgff128ae"><span class="section-number-3">7.6.</span> Networked File Systems and Cloud</h3>
+<div class="outline-text-3" id="text-7-6">
+<p>
+<b>Networked file system</b> provides regular filesystem interface to applications by mounting remote drive.
+Not too useful today, but may be necessary if app is built to work directly with local file system.
+Modern apps should instead interact with cloud-based storage services.
+</p>
+
+<p>
+<b>Cloud object store (S3)</b> is a flexible general-purpose file store for cloud apps, managed by a cloud
+provider (unlimited capacity).
+Provides a network API for accessing files (like REST), so app accesses files like remote DB.
+</p>
+
+<p>
+<b>Hadoop File System</b> is good for using Hadoop/Spark for distributed processing, where data too big
+to move for analytics.
+Allows data to reside on same machines where computation happens, making processing efficient.
+Designed to work well with Hadoop distributed processing tools.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-07 Sat 16:59</p>
+</div>
+</body>
+</html>
