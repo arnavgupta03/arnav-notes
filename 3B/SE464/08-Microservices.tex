@@ -1,0 +1,95 @@
+% Created 2024-12-07 Sat 18:34
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Microservices}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Microservices},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Monolithic Design}
+\label{sec:org62f80eb}
+One big application.
+Each instance can handle any request on its own (other than help from DB).
+
+When developer is testing new code, they can run one instance locally.
+
+Monolithic design is easy to build, deploy, test, coordinate, and share data.
+
+Monolithic disadvantages:
+\begin{itemize}
+\item creates bottlenecks during development
+\begin{itemize}
+\item many devs working on one codebase
+\end{itemize}
+\item big codebase can lead to messy, fragile code
+\item whole app must be redeployed for small new functionality
+\item must choose one programming language, build system, runtime env
+\end{itemize}
+\section{Microservices}
+\label{sec:orgb39c896}
+In \textbf{Service Oriented Architecture}, many smaller services work together.
+
+Responsibilities split among specialized services.
+
+To outside world, looks like one application.
+
+Each \textbf{microservice} is a black box to the rest of the system, and handles requests from the network
+(implementation hidden).
+Language-independent network-level API needed to specify format of requests and responses.
+
+Microservice disadvantages:
+\begin{itemize}
+\item more difficult to trace request handling code for debugging, since it spans many apps
+\begin{itemize}
+\item but easier to test smaller services
+\end{itemize}
+\item ACID transactions more difficult to support
+\begin{itemize}
+\item monolithic design can manage a single DB connection with a transaction that can be rolled back
+\end{itemize}
+\item devs get isolated in sub-projects, blocking collaboration and innovation
+\end{itemize}
+
+Microservices isolate codebases with clear network API boundares, allowing parallel work.
+
+When starting a new project:
+\begin{itemize}
+\item organize system into services and DBs
+\item agree on network-level API for each service
+\item assign engineers to each service and build independently
+\end{itemize}
+
+If application interacts with service under construction, can build \textbf{mock} of service (returns
+hard-coded data for testing).
+
+Traditional web-app generates HTML on server.
+For JS single-page app, JS app runs in browser and makes REST requests and generates HTML.
+
+Service API (REST, GraphQL) essential for supporting mobile and desktop apps with cloud-based data
+and services.
+
+Single API can handle all client types.
+\end{document}

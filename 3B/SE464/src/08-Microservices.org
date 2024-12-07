@@ -1,0 +1,56 @@
+#+title: Microservices
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Monolithic Design
+One big application.
+Each instance can handle any request on its own (other than help from DB).
+
+When developer is testing new code, they can run one instance locally.
+
+Monolithic design is easy to build, deploy, test, coordinate, and share data.
+
+Monolithic disadvantages:
+- creates bottlenecks during development
+  - many devs working on one codebase
+- big codebase can lead to messy, fragile code
+- whole app must be redeployed for small new functionality
+- must choose one programming language, build system, runtime env
+
+* Microservices
+In *Service Oriented Architecture*, many smaller services work together.
+
+Responsibilities split among specialized services.
+
+To outside world, looks like one application.
+
+Each *microservice* is a black box to the rest of the system, and handles requests from the network
+(implementation hidden).
+Language-independent network-level API needed to specify format of requests and responses.
+
+Microservice disadvantages:
+- more difficult to trace request handling code for debugging, since it spans many apps
+  - but easier to test smaller services
+- ACID transactions more difficult to support
+  - monolithic design can manage a single DB connection with a transaction that can be rolled back
+- devs get isolated in sub-projects, blocking collaboration and innovation
+
+Microservices isolate codebases with clear network API boundares, allowing parallel work.
+
+When starting a new project:
+- organize system into services and DBs
+- agree on network-level API for each service
+- assign engineers to each service and build independently
+
+If application interacts with service under construction, can build *mock* of service (returns
+hard-coded data for testing).
+
+Traditional web-app generates HTML on server.
+For JS single-page app, JS app runs in browser and makes REST requests and generates HTML.
+
+Service API (REST, GraphQL) essential for supporting mobile and desktop apps with cloud-based data
+and services.
+
+Single API can handle all client types.
