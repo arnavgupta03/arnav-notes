@@ -1,0 +1,94 @@
+#+title: Stateless, Proxies, and Caching
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Stateless
+The worker that is chosen to handle request can depend on application code.
+
+A *stateless* thread/process/service remembers nothing from past requests:
+- behaviour determined entirely by input request and request handling code
+- different copies of service are running same code, so they give exact same
+  response for a given request
+- has no _local_ state
+- no long term memory (pure function)
+- not affected by previous inputs
+
+A *stateful* thread/process/service changes over time as side effect of
+handling requests:
+- persistent, global variables are modified by the request processing code
+
+OOP purposes:
+- _inheritance_: allows strong typing without losing abstraction, creates
+  generic, abstract interfaces, enabling abstraction
+- _modeling_: real world concepts
+- _grouping_ sets of related state (memory/variable)
+- well-defined, _limited side effects_
+  - a class defines a set of member functions whose side-effects are limited
+    to a small set of variables (object's data members)
+
+Parallelism is easy with stateless code, but difficult with stateful code (
+related request from the same client must go to the same handler).
+
+DB and cookies can help make stateless applications keep some state.
+
+With cookies, a server returns a cookie (for example, after login), the browser
+includes the cookie in all future HTTP requests, and the server uses the cookie
+to determine which user it came from.
+
+Statelessness allows for load balancing, since coordination only happens from
+shared DBs.
+
+Push state _up_ to client or _down_ to DB.
+
+* Proxies and Caching
+*Proxy server*: intermediate router for requests
+
+Proxy does not know how to answer requests but knows who to ask.
+Request relayed to another server and response relayed back.
+
+Proxies can be transparently added to any stateless service.
+
+*Load balancer*: type of proxy that creates a single point of contact
+for a large cluster of app servers
+
+*Caching proxy*: stores recently retrieved items for reuse
+
+*Cache*: small data storage structure designed to improve performance when
+accessing a large data store
+- stores _most recently_ or _most frequently_ accessed data
+
+When reading data:
+1. check cache, if it has data, _cache hit_
+   a. record in cache that entry was accessed
+2. if data not in cache, _cache miss_
+   a. get data from main data store
+   b. make room by evicting another data element
+   c. store data in cache and repeat step 1
+
+Most common eviction policy is LRU.
+
+*Managed cache*:
+- client has direct access to small and large data store
+- client responsible for implementing caching logic
+
+*Transparent cache*:
+- client connects to one data store
+- caching implemented inside storage black box
+
+Data writes cause cache to be out of date.
+Solutions to this are:
+- expire cache entries after some TTL (time to live)
+- after writes, send new data or invalidation message to all caches,
+  creating _coherent cache_ (adds performance overhead)
+- use _versioned data_: create new filename every time new data
+  added
+
+HTTP is stateless, so same response can be saved and reused for
+repeat requests:
+- GET requests easy to cache (no modification)
+- Cache-Control header for both client and server to enable/disable
+  caching and control expiration time
+- HTTP caching proxy is compatible with any web server and can be
+  transparently added

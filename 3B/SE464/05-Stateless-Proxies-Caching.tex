@@ -1,0 +1,145 @@
+% Created 2024-12-07 Sat 01:42
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Stateless, Proxies, and Caching}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Stateless, Proxies, and Caching},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Stateless}
+\label{sec:orge27eae5}
+The worker that is chosen to handle request can depend on application code.
+
+A \textbf{stateless} thread/process/service remembers nothing from past requests:
+\begin{itemize}
+\item behaviour determined entirely by input request and request handling code
+\item different copies of service are running same code, so they give exact same
+response for a given request
+\item has no \uline{local} state
+\item no long term memory (pure function)
+\item not affected by previous inputs
+\end{itemize}
+
+A \textbf{stateful} thread/process/service changes over time as side effect of
+handling requests:
+\begin{itemize}
+\item persistent, global variables are modified by the request processing code
+\end{itemize}
+
+OOP purposes:
+\begin{itemize}
+\item \uline{inheritance}: allows strong typing without losing abstraction, creates
+generic, abstract interfaces, enabling abstraction
+\item \uline{modeling}: real world concepts
+\item \uline{grouping} sets of related state (memory/variable)
+\item well-defined, \uline{limited side effects}
+\begin{itemize}
+\item a class defines a set of member functions whose side-effects are limited
+to a small set of variables (object's data members)
+\end{itemize}
+\end{itemize}
+
+Parallelism is easy with stateless code, but difficult with stateful code (
+related request from the same client must go to the same handler).
+
+DB and cookies can help make stateless applications keep some state.
+
+With cookies, a server returns a cookie (for example, after login), the browser
+includes the cookie in all future HTTP requests, and the server uses the cookie
+to determine which user it came from.
+
+Statelessness allows for load balancing, since coordination only happens from
+shared DBs.
+
+Push state \uline{up} to client or \uline{down} to DB.
+\section{Proxies and Caching}
+\label{sec:orgc859192}
+\textbf{Proxy server}: intermediate router for requests
+
+Proxy does not know how to answer requests but knows who to ask.
+Request relayed to another server and response relayed back.
+
+Proxies can be transparently added to any stateless service.
+
+\textbf{Load balancer}: type of proxy that creates a single point of contact
+for a large cluster of app servers
+
+\textbf{Caching proxy}: stores recently retrieved items for reuse
+
+\textbf{Cache}: small data storage structure designed to improve performance when
+accessing a large data store
+\begin{itemize}
+\item stores \uline{most recently} or \uline{most frequently} accessed data
+\end{itemize}
+
+When reading data:
+\begin{enumerate}
+\item check cache, if it has data, \uline{cache hit}
+\begin{enumerate}
+\item record in cache that entry was accessed
+\end{enumerate}
+\item if data not in cache, \uline{cache miss}
+\begin{enumerate}
+\item get data from main data store
+\item make room by evicting another data element
+\item store data in cache and repeat step 1
+\end{enumerate}
+\end{enumerate}
+
+Most common eviction policy is LRU.
+
+\textbf{Managed cache}:
+\begin{itemize}
+\item client has direct access to small and large data store
+\item client responsible for implementing caching logic
+\end{itemize}
+
+\textbf{Transparent cache}:
+\begin{itemize}
+\item client connects to one data store
+\item caching implemented inside storage black box
+\end{itemize}
+
+Data writes cause cache to be out of date.
+Solutions to this are:
+\begin{itemize}
+\item expire cache entries after some TTL (time to live)
+\item after writes, send new data or invalidation message to all caches,
+creating \uline{coherent cache} (adds performance overhead)
+\item use \uline{versioned data}: create new filename every time new data
+added
+\end{itemize}
+
+HTTP is stateless, so same response can be saved and reused for
+repeat requests:
+\begin{itemize}
+\item GET requests easy to cache (no modification)
+\item Cache-Control header for both client and server to enable/disable
+caching and control expiration time
+\item HTTP caching proxy is compatible with any web server and can be
+transparently added
+\end{itemize}
+\end{document}
