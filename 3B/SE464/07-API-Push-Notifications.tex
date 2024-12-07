@@ -1,0 +1,116 @@
+% Created 2024-12-07 Sat 18:11
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{API and Push Notifications}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={API and Push Notifications},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{REST API}
+\label{sec:org8a2af3a}
+API defines how software can be used by other software.
+
+API for a library is functions/classes it provides.
+For software services, API is from network remote procedure calls.
+
+\textbf{Network-level APIs} can be REST, SOAP, Thrift, Protobufs, or GraphQL.
+These usually require some form of auth.
+
+\uline{HTTP methods}: GET (request data), POST (post data), PUT (create or replace document), DELETE (delete
+document), HEAD (just return headers)
+
+\uline{Response codes}: 200 OK, 301 Moved Permanently, 403 Forbidden, 404 Not Found, 500 Internal Server Error
+
+\textbf{Idempotent} request can be repeated without changing the result.
+
+In HTTP, every method except POST should be idempotent.
+
+Repeating PUT should just replace with the same and repeating DELETE should only do one deletion.
+
+REST API has inputs:
+\begin{itemize}
+\item method
+\item path
+\item query params
+\item headers
+\item body
+\end{itemize}
+
+REST API has response
+\begin{itemize}
+\item status code
+\item headers
+\item body
+\end{itemize}
+
+Custom HTTP headers are undesired (better to build on top of HTTP rather than alter).
+
+APIs require API key or access token for authentication.
+
+Paths represent resources (data or system objects).
+
+JSON is data format returned by most REST APIs.
+It allows arbitrary nesting and spaces are ignored, except withing quotes.
+
+XML is older than JSON and less common (more complex).
+HTML is XML that defines a web page.
+Components are \uline{text}, \uline{tags}, and \uline{attributes}.
+
+Data files are byte arrays and messages sent over the network are serial streams of bytes.
+
+\textbf{Serialization}: convert data object into sequence of bytes
+
+References (pointers) make serialization non-trivial, like deciding how to repeat referenced
+objects and circular references.
+
+Using references requires more than 1 pass through the data:
+\begin{itemize}
+\item \textbf{producer} must find and store all referenced objects before printing
+\item \textbf{consumer} may need to read more before finding the data being referred to
+\end{itemize}
+
+Using HTTP is helpful since it is already so used:
+\begin{itemize}
+\item encryption
+\item compression
+\item every programming language has HTTP client libraries
+\item many server frameworks to choose from that handle encryption, queuing, DB connection pooling
+\item web proxies and caches can be reused
+\item HTTP response codes are generic enough to be adapted to other services
+\end{itemize}
+
+HTTP has some unneeded complexities and human-readable headers have some overhead.
+
+Thrift and Protobufs are alternatives for network APIs, with more space-efficient (less human-readable
+messages).
+Without HTTP overhead, less processing on both sides.
+Less processing on both sides.
+
+To use these, specify a list of functions for the API, tools generate libraries to easily use the API
+in the language of choice.
+
+Message complexity is usually not a concern, so REST remains the most popular network API format.
+\end{document}
