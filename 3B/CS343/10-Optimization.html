@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-08 Sun 14:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Optimization</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Optimization</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org310288c">1. Optimization</a></li>
+<li><a href="#org84a3b3d">2. Sequential Optimizations</a></li>
+<li><a href="#org230a8d2">3. Memory Hierarchy</a>
+<ul>
+<li><a href="#org6e84892">3.1. Cache</a></li>
+<li><a href="#org39ce7da">3.2. Cache Coherence</a></li>
+</ul>
+</li>
+<li><a href="#org88ac49d">4. Concurrent optimizations</a>
+<ul>
+<li><a href="#org82837ba">4.1. Disjoint Reordering</a></li>
+<li><a href="#org331e9f5">4.2. Eliding</a></li>
+<li><a href="#orge32045c">4.3. Replication</a></li>
+</ul>
+</li>
+<li><a href="#orga5e89e9">5. Memory Model</a></li>
+<li><a href="#org464f61c">6. Preventing Optimization Problems</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org310288c" class="outline-2">
+<h2 id="org310288c"><span class="section-number-2">1.</span> Optimization</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Computer with infinite memory and speed requires no optimizations to use less memory or run faster
+(space and time).
+</p>
+
+<p>
+With finite resources, optimization is useful/necessary to conserve resources and for good performance.
+Most programs not written in optimal order or in minimal form.
+</p>
+
+<p>
+General forms of optimizations:
+</p>
+<ul class="org-ul">
+<li><b>reordering</b>: data and code are reordered to increase performance in certain contexts</li>
+<li><b>eliding</b>: removal of unnecessary data, data accesses, and computation</li>
+<li><b>replication</b>: processors, memory, data, and code are duplicated because of limitations in
+processing and communication speed (speed of light)</li>
+</ul>
+
+<p>
+Optimized program must be isomorphic to original (same result for fixed input).
+</p>
+
+<p>
+Kinds of optimizations are restricted by execution environment.
+</p>
+</div>
+</div>
+<div id="outline-container-org84a3b3d" class="outline-2">
+<h2 id="org84a3b3d"><span class="section-number-2">2.</span> Sequential Optimizations</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Most programs are sequential, even concurrent programs are:
+</p>
+<ul class="org-ul">
+<li>large, sections of sequential code per thread connected by
+<ul class="org-ul">
+<li>small sections of concurrent code where threads interact (protected by synchronization and mutual exclusion &#x2014; SME)</li>
+</ul></li>
+</ul>
+
+<p>
+Sequential execution presents simple semantics for optimization, where operations occur in program
+order (sequentially).
+</p>
+
+<p>
+Dependencies result in partial ordering among a set of statements (precedence graph):
+</p>
+<ul class="org-ul">
+<li><b>data dependency</b>: reordering reads and writes</li>
+<li><b>control dependency</b>: statements cannot be reordered if the earlier line determines if the later
+line is executed</li>
+</ul>
+
+<p>
+To achieve better performance, compiler/hardware make changes:
+</p>
+<ol class="org-ol">
+<li>reorder disjoint (independent) operations (variables have different addresses)</li>
+<li>elide unnecesary operations (transformation/dead code)
+<ol class="org-ol">
+<li>remove immediate change, no loop body, tail recursion, etc</li>
+</ol></li>
+<li>execute in parallel if multiple functional units (adders, floating units, pipelines, cache)</li>
+</ol>
+
+<p>
+Very complex reordering, reducing, and overlapping of operations allowed.
+</p>
+
+<p>
+Overlapping implies micro-parallelism, but limited capacity in sequential execution.
+</p>
+</div>
+</div>
+<div id="outline-container-org230a8d2" class="outline-2">
+<h2 id="org230a8d2"><span class="section-number-2">3.</span> Memory Hierarchy</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Memory hierarchy includes registers (on CPU), memory, and possibly cache, where replication
+must occur across all layers.
+</p>
+
+<p>
+Optimizing data flow along hierarchy defines a computer&rsquo;s speed.
+</p>
+
+<p>
+Hardware aggressively optimizes data flow for sequential execution.
+</p>
+
+<p>
+Having basic understanding of cache is essential to understanding performance of both sequential
+and concurrent programs.
+</p>
+</div>
+<div id="outline-container-org6e84892" class="outline-3">
+<h3 id="org6e84892"><span class="section-number-3">3.1.</span> Cache</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Since CPU faster than memory, copy data from memory into registers.
+But not many registers, so move highly accessed data within a program from memory to registers
+for as long as possible and then back to memory.
+</p>
+
+<p>
+Can quickly run out of registers as more data accessed, so must rotate data from memory through
+registers dynamically (compiler attempts ot keep highly used variables in regsters).
+</p>
+
+<p>
+This does not handle highly accessed data <span class="underline">among</span> programs (threads), since each context switch
+saves and restores most registers to memory (registers are private and cannot be shared).
+Solution is to use hardware cache (automatic registers) to stage data without pushing to memory
+and allow sharing of data among programs.
+</p>
+
+<p>
+Caching transparently hides latency of accessing main memory.
+Cache loads in 64/128/256 bytes, called <b>cache line</b>, with addresses multiple of line size.
+</p>
+
+<p>
+When cache full, data evicted (remove old cache lines to bring in new based on LRU).
+When program ends, addresses are flushed from memory hierarchy.
+</p>
+</div>
+</div>
+<div id="outline-container-org39ce7da" class="outline-3">
+<h3 id="org39ce7da"><span class="section-number-3">3.2.</span> Cache Coherence</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Multi-level caches used, each larger but with diminishing speed and cost.
+</p>
+
+<p>
+Data reads logically percolate variables from memory up memory hierarchy, making cache copies to registers.
+</p>
+
+<p>
+Necessary to eagerly move reads up memory hierarchy to take advantage of temporal locality.
+</p>
+
+<p>
+Data writes from registers to variables logically percolate down memory hierarchy though
+cache copies to memory.
+</p>
+
+<p>
+Advantageous to lazily move writes down memory hierarchy since that way later reads see this.
+</p>
+
+<p>
+If OS moves program to another process, all caching info is invalid and the program&rsquo;s data
+hierarchy reforms.
+</p>
+
+<p>
+Unlike registers, all cache values are shared across the computer.
+Hence, a variable can be replicated in a large number of locations.
+</p>
+
+<p>
+Without cache coherence for shared variable, there is madness.
+With cache coherence for shared variable (snooping or directory-based), variables are updated
+everywhere.
+</p>
+
+<p>
+<b>Cache coherence</b>: hardware protocol ensuring update of duplicate data
+</p>
+
+<p>
+<b>Cache consistency</b>: addresses when processor sees update (bidirectional synchronization)
+</p>
+
+<p>
+Prevent flickering and scrambling during simultaneous R/W or W/W with update and acknowledge.
+</p>
+
+<p>
+<span class="underline">Eager</span> cache-consistency means data changes appear instantaneous by waiting for acknowledge from
+all cores (complex/expensive).
+</p>
+
+<p>
+<span class="underline">Lazy</span> cache-consistency allows reader to see own write before acknowledgment (concurrent programs
+read stale data):
+</p>
+<ul class="org-ul">
+<li>writes eventually appear in (largely) same order as written</li>
+<li>critical section works as writes to shared variable appear before write to lock release (so
+other threads see write to lock after write to shared variable)</li>
+<li>otherwise, spin (lock) until write appears</li>
+</ul>
+
+<p>
+<b>Cache thrashing</b>: if threads continually read/write same memory locations, they invalidate
+duplicate cache lines, resulting in excessive cache updates (updated value bounces from one
+cache to the next)
+</p>
+
+<p>
+<b>False sharing</b>: since cache lines contain multiple variables, cache thrashing can occur inadvertently
+</p>
+
+<p>
+Fix false sharing by separating variables on same line with sufficient storage (padding) to be
+in next cache line.
+Difficult for dynamically allocated variables as memory allocator positions storage.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org88ac49d" class="outline-2">
+<h2 id="org88ac49d"><span class="section-number-2">4.</span> Concurrent optimizations</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+In sequential execution, <b>strong memory ordering</b>: reading always returns last value written
+</p>
+
+<p>
+In concurrent execution, <b>weak memory ordering</b>: reading can return previously written value or
+value written in future:
+</p>
+<ul class="org-ul">
+<li>happens on multi-processor because of scheduling and buffering</li>
+<li>notion of current value becomes blurred for shared variables unless everyone can see values
+assigned simultaneously</li>
+</ul>
+
+<p>
+SME control order and speed of execution, otherwise non-determinism causes random results or failure.
+</p>
+
+<p>
+Sequential sections accessing private variables can be optimized normally, but not across concurrent
+boundaries.
+</p>
+
+<p>
+Concurrent sections accessing shared variables can be corrupted by sequential optimizations, so restrict
+optimizations to ensure correctness.
+</p>
+
+<p>
+For correctness and performance, identify concurrent code and only restrict its optimization.
+How to restrict depends on what sequential assumptions are implicitly applied by hardware and compiler.
+</p>
+</div>
+<div id="outline-container-org82837ba" class="outline-3">
+<h3 id="org82837ba"><span class="section-number-3">4.1.</span> Disjoint Reordering</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+\(R_{x} \to R_{y}\) allows \(R_{y} \to R_{x}\), so reordering disjoint reads does not cause problems.
+</p>
+
+<p>
+\(W_{x} \to R_{y}\) allows \(R_{y} \to W_{x}\) can cause problems.
+</p>
+
+<p>
+\(R_{x} \to W_{y}\) allows \(W_{y} \to R_{x}\) can cause problems.
+</p>
+
+<p>
+\(W_{x} \to W_{y}\) allows \(W_{y} \to W_{x}\) can cause problems.
+</p>
+
+<p>
+Compiler uses all these reorderings to break mutual exclusion:
+</p>
+<ul class="org-ul">
+<li>moves lock entry/exit after/before critical section because entry/exit variables not used
+in critical section</li>
+<li>double-check locking for singleton-pattern can help
+<ul class="org-ul">
+<li>both checks check for change in storage at different parts of code (inside and outside lock)</li>
+</ul></li>
+<li>can fail if writes and reads related to malloc are reordered</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org331e9f5" class="outline-3">
+<h3 id="org331e9f5"><span class="section-number-3">4.2.</span> Eliding</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+For high-level language, compiler decides when/which variables are loaded into registers and for how
+long.
+</p>
+
+<p>
+Elide reads (loads) by copying (replicating) value into a register.
+So, variable logically disappears for duration in register (can cause livelock).
+</p>
+
+<p>
+Elide meaningless sequential code: can cause task to miss signal by not delaying.
+</p>
+</div>
+</div>
+<div id="outline-container-orge32045c" class="outline-3">
+<h3 id="orge32045c"><span class="section-number-3">4.3.</span> Replication</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Benefit to reorder R/W since faster instructions can then happen at once.
+</p>
+
+<p>
+Modern processors increase performance by executing multiple instructions in parallel (data flow,
+precedence graph) on replicated hardware:
+</p>
+<ul class="org-ul">
+<li>internal pool of instructions taken from program order</li>
+<li>begin simultaneous execution of instructions with inputs</li>
+<li>collect results from finished instructions</li>
+<li>feed results back into instruction pool as inputs</li>
+<li>so, instructions with independent inputs execute out-of-order</li>
+</ul>
+
+<p>
+From sequential perspective, disjoint reordering is unimportant, so hardware starts many instructions
+simultaneously.
+</p>
+
+<p>
+From concurrent perspective, disjoint reordering is important.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga5e89e9" class="outline-2">
+<h2 id="orga5e89e9"><span class="section-number-2">5.</span> Memory Model</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Manufacturers define set of optimizations performed implicitly by processor.
+</p>
+
+<p>
+<b>Memory model</b> is defined by set of optimizations.
+</p>
+
+<p>
+Atomic consistent (AT) has events occur instantaneously, so slow or impossible to optimize.
+</p>
+
+<p>
+Sequential consistency (SC) accepts all events cannot occur instantaneously, so may read old values.
+Still strong enough for software mutual exclusion (often considered minimum model for concurrency).
+</p>
+
+<p>
+No hardware supports just AT/SC.
+</p>
+</div>
+</div>
+<div id="outline-container-org464f61c" class="outline-2">
+<h2 id="org464f61c"><span class="section-number-2">6.</span> Preventing Optimization Problems</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+All optimization problems result from races on shared variables.
+</p>
+
+<p>
+If shared data is protected by locks (implicit or explicit):
+</p>
+<ul class="org-ul">
+<li>locks define sequential/concurrent boundaries</li>
+<li>boundaries must preclude optimizations that affect concurrency</li>
+</ul>
+
+<p>
+<b>Race free</b>: synchronization and mutual exclusion preclude races
+</p>
+
+<p>
+Race free does have races, since races are internal to locks, which lock programmer must deal with.
+</p>
+
+<p>
+Two approaches:
+</p>
+<ul class="org-ul">
+<li><span class="underline">ad hoc</span>: programmer manually augments all data races with pragmas to restrict compiler/hardware
+optimizations (not portable but often optimal)</li>
+<li><span class="underline">formal</span>: language has memory model and mechanisms to abstractly define races in program
+(portable but often baroque and suboptimal)</li>
+</ul>
+
+<p>
+Data access/compiler: <code>volatile</code> qualifier
+</p>
+<ul class="org-ul">
+<li>force variable loads and stores to/from registers (at sequence points)</li>
+<li>created for <code>longjmp</code> or force access for memory-mapped devices</li>
+<li>for architectures with few registers, all variables are pretty much implicitly volatile</li>
+<li>Java <code>volatile</code> and C++11 <code>atomic</code> are stronger, since they prevent eliding and disjoint reordering
+<ul class="org-ul">
+<li>C++11 <code>atomic</code> automatically fences shared variables, but can be suboptimal</li>
+</ul></li>
+</ul>
+
+
+<p>
+Program order/compiler (static): disable inlining or use <code>asm("" ::: "memory");</code>
+</p>
+
+<p>
+Memory order/runtime (dynamic): <code>sfence</code>, <code>lfence</code>, <code>mfence</code>, which guarantee previous stores
+and/or leads are completed before continuing.
+</p>
+
+<p>
+Atomic operations test-and-set often imply fencing.
+</p>
+
+<p>
+Cache is normally invisible and does not cause issues (except for dynamic memory allocation).
+</p>
+
+<p>
+Mechanisms to fix issues are specific to compiler or platform: difficult, low-level, diverse semantics,
+and not portable.
+</p>
+
+<p>
+Locks built with these features ensure SC for protected shared variables: no user races and strong
+locks, so SC memory model.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-08 Sun 14:49</p>
+</div>
+</body>
+</html>
