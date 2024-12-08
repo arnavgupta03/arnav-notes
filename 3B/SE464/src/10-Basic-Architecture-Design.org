@@ -1,0 +1,31 @@
+#+title: Basic Architecture Design
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* File Store
+For S3 file store, use randomized UUID to prevent public scan, with different sizes.
+
+CDN is highest cost.
+
+* Scaling
+For DB scaling, add read-replicas (horizontal) and use bigger instances (vertical).
+
+For app scaling, add lots of app servers and load balancing.
+
+For frontend caching, add CDN in front of web app to cache HTML and CDN for all media files,
+even on detail pages.
+
+Can estimate how much more load system can handle using performance modeling.
+
+Some system could be easy to scale if:
+- traffic mostly reads
+- no login for visitors
+- effects of visitors actions need not be immediately visible to other visitors
+  (caching possible)
+- users don't interact directly with each other
+- no user notifications
+- pages independent of each other
+- data size does not scale with traffic
+- writes don't involve transactions

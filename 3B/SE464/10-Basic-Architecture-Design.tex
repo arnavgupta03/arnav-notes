@@ -1,0 +1,60 @@
+% Created 2024-12-07 Sat 20:14
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Basic Architecture Design}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Basic Architecture Design},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{File Store}
+\label{sec:org9a67e29}
+For S3 file store, use randomized UUID to prevent public scan, with different sizes.
+
+CDN is highest cost.
+\section{Scaling}
+\label{sec:orgcc7e57e}
+For DB scaling, add read-replicas (horizontal) and use bigger instances (vertical).
+
+For app scaling, add lots of app servers and load balancing.
+
+For frontend caching, add CDN in front of web app to cache HTML and CDN for all media files,
+even on detail pages.
+
+Can estimate how much more load system can handle using performance modeling.
+
+Some system could be easy to scale if:
+\begin{itemize}
+\item traffic mostly reads
+\item no login for visitors
+\item effects of visitors actions need not be immediately visible to other visitors
+(caching possible)
+\item users don't interact directly with each other
+\item no user notifications
+\item pages independent of each other
+\item data size does not scale with traffic
+\item writes don't involve transactions
+\end{itemize}
+\end{document}
