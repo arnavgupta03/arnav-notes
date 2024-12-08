@@ -1,0 +1,349 @@
+% Created 2024-12-08 Sun 00:10
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Software Architecture Modeling}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Software Architecture Modeling},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Architectural Modeling}
+\label{sec:orgd8495da}
+\textbf{Architectural Model}: artifact that captures some or all design decisions that
+comprise a system's architecture
+
+\textbf{Architectural Modeling}: reification and documentation of design decisions
+
+\textbf{Architectural Modeling Notation}: language or means of capturing design decisions
+
+Architects and other stakeholders must make critical modeling decisions (what, how
+detailed, formality), weighing cost and benefit.
+
+Model basic architectural elements like components, connectors, interfaces,
+configurations, and rationale (reasoning behind decisions).
+Also model constraints on interactions, behaviour, and concurrency.
+
+Aspects:
+\begin{itemize}
+\item \textbf{static}: do not change as system runs
+\item \textbf{dynamic}: change as system runs
+\item \textbf{functional}: something the system does directly
+\item \textbf{non-functional}: something about the qualities of the system
+\end{itemize}
+\section{Software Performance Models}
+\label{sec:org2919fd1}
+Includes \uline{Execution Graphs}, \uline{Queueing Networks}, and
+\uline{Machine learning-based performance needs}.
+
+\textbf{Formal representations}: capture aspects of software performance,
+help understand non-functional requirements
+
+Software Performance Models allow:
+\begin{itemize}
+\item estimating \uline{performance} of software
+\item estimating \uline{resource needs}
+\item identify \uline{performance issues} as early as possible
+\item \uline{simulate} execution of software under certain conditions (number of users
+and size of infrastructure)
+\item establish performance for average, best, and worst-case scenarios
+\end{itemize}
+
+Design models of system capture static aspects, performance models capture
+dynamic aspects.
+\section{Software Execution Models}
+\label{sec:org3ce5478}
+Constructed early in development process to ensure that chosen software
+architecture can achieve required performance objectives.
+
+Provides static analysis of mean, best, and worst case response times.
+
+Generally sufficient for identifying serious performance problems at
+architectural and early design phases.
+
+Absence of problems in software model does not mean there are none.
+\subsection{Execution Graphs}
+\label{sec:orgc6c15d1}
+Execution graphs represent sequence of operations of system, and are constructed
+for each performance scenario.
+
+Not sufficient for a complete analysis of software performance but work well
+for understanding software and non-functional requirements.
+Special annotation can give idea of performance.
+Combine graphs with other models to complement analysis.
+\subsubsection{Graph Notation}
+\label{sec:orgfb1c861}
+\uline{Basic nodes}: represent processing steps at lowest level of detail
+that is appropriate for current development stage
+
+\uline{Expanded nodes}: represent processing steps elaborated in another subgraph
+
+\uline{Repetition nodes}: subsequent nodes repeated \(n\) times, last node has an edge
+to the repeat node
+
+\uline{Case node}: represent conditional execution of processing steps, each
+attached node has a probability of execution
+
+\uline{Pardo node}: attached nodes run in parallel: all nodes must complete (join)
+before proceeding
+
+\uline{Division node}: attached nodes represent new processing threads, need not all
+complete before proceeding
+\subsection{Execution Model Analysis}
+\label{sec:orgd8f9ef1}
+Software execution model analysis helps:
+\begin{itemize}
+\item make quick check of best-case response time to ensure architecture
+and design will lead to satisfactory performance
+\item assess performance impact of alternatives
+\item identify critical parts of system for performance management
+\item derive params for system execution model
+\end{itemize}
+
+Algorithms are formulated for evaluating graphs.
+
+Basic solution algorithms are easy to understand by examining graphs,
+identifying basic structure, computing time of basic structure and
+reducing basic structure to a computed node, and continuing until only
+one node left.
+
+Basic structures are sequences, loops, and cases.
+
+Computation for case nodes differs for:
+\begin{itemize}
+\item \uline{shortest path}: time for case node is minimum of times for
+conditionally executed nodes
+\item \uline{longest path}: time for case node is maximum of times for
+conditionally executed nodes
+\item \uline{average analysis}: time is multiplying each node's time by
+execution probability
+\end{itemize}
+\subsection{Software Resource Requirements}
+\label{sec:org5fb967a}
+Each basic node has specified software resource requirements \(A_{j}\)
+for each service unit \(j\).
+
+\textbf{Processing Overhead Matrix}: chart of computer (hardware) resource requirements for each
+of the software resource requirements
+
+To compute total execution time:
+\begin{enumerate}
+\item use processing overhead matrix to calculate total computer resources required per
+software resource for each node in the graph
+\item compute total computer resource requirements for the graph
+\item compute best-case elapsed time
+\end{enumerate}
+\section{Queuing Network Models}
+\label{sec:orgb6a1a22}
+Software execution models provide a static analysis of the mean, best, and worst case
+response times for software and characterize resource requirements of proposed software alone.
+
+\textbf{Queuing Network Models} characterize software's performance in the presence of
+dynamic factors (like other workloads or multiple users) and aims to solve resource
+contention.
+
+If software execution model indicates no problems, ready to construct and solve
+queuing networks to account for contention efforts.
+
+Benefits of QNM:
+\begin{itemize}
+\item more precise metrics that account for \uline{resource contention}
+\item sensitivity of performance metrics to \uline{variations in workload} composition
+\item \uline{scalability} of hardware and software to meet future demands
+\item effect of new software on \uline{service level objectives} of other systems
+\item identification of \uline{bottleneck} resources
+\item comparative data on \uline{performance improvement options}
+\end{itemize}
+
+Resource contention can come from:
+\begin{itemize}
+\item multiple users of an application or transaction executing at once
+\item multiple applications or systems executing on the same hardware at once
+\item concurrent processes
+\item multi-threaded application
+\end{itemize}
+
+Key computer system resources in QNM are server and queue:
+\begin{itemize}
+\item \textbf{server}: component of the environment that provides some service
+to the software
+\item \textbf{queue}: jobs waiting for service, consists of waiting line and server
+\end{itemize}
+
+Kendall notation for queues is A/S/m/B/K/SD:
+\begin{itemize}
+\item \(A\) is interarrival time distribution
+\item \(S\) is service time distribution
+\item \(m\) is number of servers
+\item \(B\) is number of buffers (service capacity)
+\item \(K\) is population size
+\item \(SD\) is service discipline
+\end{itemize}
+
+Distributions can be:
+\begin{itemize}
+\item M: exponential
+\item E: Erlang with param \(k\)
+\item H: hyperexponential with param \(k\)
+\item D: deterministic
+\item G: general
+\end{itemize}
+
+Performance metrics of interest:
+\begin{itemize}
+\item \textbf{residence time (RT)}: average time jobs spend in server, in service
+and waiting
+\item \textbf{utilization (U)}: average percentage of time server is busy
+\item \textbf{throughput (X)}: average rate at which jobs complete service
+\item \textbf{queue length (N)}: average numbers of jobs at the server (receiving
+service and waiting)
+\end{itemize}
+
+Value of metrics depends on:
+\begin{itemize}
+\item number of jobs
+\item amount of service they need
+\item time required for server to process individual jobs
+\item policy used to select next job from queue
+\end{itemize}
+
+Can know performance from Kendall notation values.
+
+For busy time \(B\), completed jobs \(C\), and total period \(T\) (and the
+above performance metrics):
+\begin{itemize}
+\item utilization: \(U = B/T\)
+\item throughput: \(X = C/T\)
+\item mean service time: \(S = B/C\)
+\item area under graph: \(W = \sum_{time}(\text{number of jobs})\)
+\item residence time: \(RT = W/C\)
+\item queue length: \(N = W/T\)
+\end{itemize}
+
+In early phases of development, can't make measurement of software
+to derive execution profile.
+
+\textbf{Workload intensity}: measure of number of requests made by a workload in given
+time interval
+
+\textbf{Service requirement}: amount of time that workload requires from each device in
+processing facility
+
+\textbf{Jobs-flow balance}: assume that system is fast enough to handle arrivals and thus
+completion rate or throughput equals arrival rate
+
+Let \(\lambda\) be arrival rate (workload intensity) and \(S\) be mean service time (service
+requirements).
+Then:
+\begin{itemize}
+\item throughput: \(X = \lambda\)
+\item utilization law: \(U = XS\)
+\item residence time: \(RT = \frac{S}{1 - U}\)
+\item queue length: \(N = X * RT\) (Little's Law)
+\end{itemize}
+
+To find \textbf{steady-state probabilities} of birth-death process, define the rate
+at which events occur (birth rate and death rate):
+\begin{itemize}
+\item let \(\lambda_{n}\) be the birth rate when the system is in state \(n\)
+\item let \(\mu_{n}\) be the death rate when the system is in state \(n\)
+\item let \(\rho_{n}\) be the steady-state probability of being in state \(n\)
+\item then rate of flow into state \(n\) is rate of flow out of state \(n\) (since
+steady-state)
+\$\$\(\rho\)\textsubscript{n} \(\lambda\)\textsubscript{n} = \(\rho\)\textsubscript{n+1} \(\mu\)\textsubscript{n+1}\$
+\end{itemize}
+
+For general \(\rho_{n}\):
+$$ \rho_{n} = \frac{\prod_{i=0}^{n-1} \lambda_{i}}{\prod_{i=1}^{n}} \rho_{0} $$
+
+Probability of having \(n\) jobs in the system for M/M/1 queue:
+$$ \rho_{n} = \left( \frac{\lambda}{\mu} \right)^{n} \rho_{0} $$
+where \(\frac{\lambda}{\mu}\) is the traffic intensity, average number of customers
+arriving compared to the number being served.
+
+Probability of having \(n\) or more jobs in the system for M/M/1 queue:
+$$ \left( \frac{\lambda}{\mu} \right)^{n} $$
+
+Mean number of jobs in the system:
+$$ \frac{\frac{\lambda}{\mu}}{1 - \frac{\lambda}{\mu}} $$
+
+For M/M/m queue, birth rate is arrival rate which is \(\lambda\) and
+death rate is service rate which is
+\(\mu_{n} = n \mu\) for \(n = 1, \dots, m-1\) and \(\mu_{n} = m \mu\) for \(n \ge m\):
+\begin{itemize}
+\item utility is \(\rho = \lambda / m \mu\)
+\item probability of having \(n\) jobs in the system is
+$$ \frac{(m \rho)^{n}}{n!} p_{0} $$ for \(n = 1, \dots, m-1\)
+and $$ \frac{\rho^{n} m^{m}}{m!} p_{0} $$ for \(n \ge m\)
+\item probability that an arrivign job has to wait in the queue is
+$$ p_{0} \frac{(m \rho)^{m}}{m!} \sum_{n=m}^{\infty} \rho^{n-m} $$
+\end{itemize}
+
+\textbf{Queuing network} consists of 2+ queues connected together and serve requests
+sent by clients.
+
+Request routing in queuing network is specified by \textbf{probability matrix}.
+
+Types of QNM:
+\begin{itemize}
+\item \textbf{open models}: requests come from a source external of queuing network and leave
+network after service completion
+\begin{itemize}
+\item appropriate for systems with external arrivals and departures
+\item specify workload intensity and service requirements
+\begin{itemize}
+\item workload is arrival rate
+\item service requirements are number of visits for each device and average
+service time per visit (or total demand for that device)
+\end{itemize}
+\end{itemize}
+\item \textbf{closed models}: no external source of requests and no departing requests (population
+of requests in queuing network remains constant)
+\begin{itemize}
+\item needs number of users and think time (average delay between receipt of response
+and submission of next)
+\end{itemize}
+\item \textbf{mixed models}: open for some workload classes and closed for others
+\end{itemize}
+
+To derive system model params from software model results:
+\begin{enumerate}
+\item use queue-servers to represent key computer resources or devices specified in
+the software execution model and add connections between queues to complete model
+topology
+\item decide whether system is best modeled as an open or closed QNM
+\item determine workload intensities for each scenario
+\item specify service requirements
+\end{enumerate}
+
+Modeling hints:
+\begin{itemize}
+\item multiple users and workload
+\item average vs peak performance (basic QNMs calculate average values)
+\item sensitivity: if small change in one param causes large change in
+computed metrics, model is sensitive to that quantity
+\item scalability: improves response times for anticipated future loads
+\item bottlenecks: bottleneck device is one with highest utilization
+\end{itemize}
+\end{document}

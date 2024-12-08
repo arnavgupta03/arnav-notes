@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-08 Sun 00:10 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Software Architecture Modeling</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Software Architecture Modeling</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2a6d760">1. Architectural Modeling</a></li>
+<li><a href="#org79e8c67">2. Software Performance Models</a></li>
+<li><a href="#orgeb1fe1c">3. Software Execution Models</a>
+<ul>
+<li><a href="#orgede8ba6">3.1. Execution Graphs</a>
+<ul>
+<li><a href="#orgd8dbf4a">3.1.1. Graph Notation</a></li>
+</ul>
+</li>
+<li><a href="#org799b214">3.2. Execution Model Analysis</a></li>
+<li><a href="#orgb7c2d0d">3.3. Software Resource Requirements</a></li>
+</ul>
+</li>
+<li><a href="#org58be6d1">4. Queuing Network Models</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2a6d760" class="outline-2">
+<h2 id="org2a6d760"><span class="section-number-2">1.</span> Architectural Modeling</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Architectural Model</b>: artifact that captures some or all design decisions that
+comprise a system&rsquo;s architecture
+</p>
+
+<p>
+<b>Architectural Modeling</b>: reification and documentation of design decisions
+</p>
+
+<p>
+<b>Architectural Modeling Notation</b>: language or means of capturing design decisions
+</p>
+
+<p>
+Architects and other stakeholders must make critical modeling decisions (what, how
+detailed, formality), weighing cost and benefit.
+</p>
+
+<p>
+Model basic architectural elements like components, connectors, interfaces,
+configurations, and rationale (reasoning behind decisions).
+Also model constraints on interactions, behaviour, and concurrency.
+</p>
+
+<p>
+Aspects:
+</p>
+<ul class="org-ul">
+<li><b>static</b>: do not change as system runs</li>
+<li><b>dynamic</b>: change as system runs</li>
+<li><b>functional</b>: something the system does directly</li>
+<li><b>non-functional</b>: something about the qualities of the system</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org79e8c67" class="outline-2">
+<h2 id="org79e8c67"><span class="section-number-2">2.</span> Software Performance Models</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Includes <span class="underline">Execution Graphs</span>, <span class="underline">Queueing Networks</span>, and
+<span class="underline">Machine learning-based performance needs</span>.
+</p>
+
+<p>
+<b>Formal representations</b>: capture aspects of software performance,
+help understand non-functional requirements
+</p>
+
+<p>
+Software Performance Models allow:
+</p>
+<ul class="org-ul">
+<li>estimating <span class="underline">performance</span> of software</li>
+<li>estimating <span class="underline">resource needs</span></li>
+<li>identify <span class="underline">performance issues</span> as early as possible</li>
+<li><span class="underline">simulate</span> execution of software under certain conditions (number of users
+and size of infrastructure)</li>
+<li>establish performance for average, best, and worst-case scenarios</li>
+</ul>
+
+<p>
+Design models of system capture static aspects, performance models capture
+dynamic aspects.
+</p>
+</div>
+</div>
+<div id="outline-container-orgeb1fe1c" class="outline-2">
+<h2 id="orgeb1fe1c"><span class="section-number-2">3.</span> Software Execution Models</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Constructed early in development process to ensure that chosen software
+architecture can achieve required performance objectives.
+</p>
+
+<p>
+Provides static analysis of mean, best, and worst case response times.
+</p>
+
+<p>
+Generally sufficient for identifying serious performance problems at
+architectural and early design phases.
+</p>
+
+<p>
+Absence of problems in software model does not mean there are none.
+</p>
+</div>
+<div id="outline-container-orgede8ba6" class="outline-3">
+<h3 id="orgede8ba6"><span class="section-number-3">3.1.</span> Execution Graphs</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Execution graphs represent sequence of operations of system, and are constructed
+for each performance scenario.
+</p>
+
+<p>
+Not sufficient for a complete analysis of software performance but work well
+for understanding software and non-functional requirements.
+Special annotation can give idea of performance.
+Combine graphs with other models to complement analysis.
+</p>
+</div>
+<div id="outline-container-orgd8dbf4a" class="outline-4">
+<h4 id="orgd8dbf4a"><span class="section-number-4">3.1.1.</span> Graph Notation</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+<span class="underline">Basic nodes</span>: represent processing steps at lowest level of detail
+that is appropriate for current development stage
+</p>
+
+<p>
+<span class="underline">Expanded nodes</span>: represent processing steps elaborated in another subgraph
+</p>
+
+<p>
+<span class="underline">Repetition nodes</span>: subsequent nodes repeated \(n\) times, last node has an edge
+to the repeat node
+</p>
+
+<p>
+<span class="underline">Case node</span>: represent conditional execution of processing steps, each
+attached node has a probability of execution
+</p>
+
+<p>
+<span class="underline">Pardo node</span>: attached nodes run in parallel: all nodes must complete (join)
+before proceeding
+</p>
+
+<p>
+<span class="underline">Division node</span>: attached nodes represent new processing threads, need not all
+complete before proceeding
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org799b214" class="outline-3">
+<h3 id="org799b214"><span class="section-number-3">3.2.</span> Execution Model Analysis</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Software execution model analysis helps:
+</p>
+<ul class="org-ul">
+<li>make quick check of best-case response time to ensure architecture
+and design will lead to satisfactory performance</li>
+<li>assess performance impact of alternatives</li>
+<li>identify critical parts of system for performance management</li>
+<li>derive params for system execution model</li>
+</ul>
+
+<p>
+Algorithms are formulated for evaluating graphs.
+</p>
+
+<p>
+Basic solution algorithms are easy to understand by examining graphs,
+identifying basic structure, computing time of basic structure and
+reducing basic structure to a computed node, and continuing until only
+one node left.
+</p>
+
+<p>
+Basic structures are sequences, loops, and cases.
+</p>
+
+<p>
+Computation for case nodes differs for:
+</p>
+<ul class="org-ul">
+<li><span class="underline">shortest path</span>: time for case node is minimum of times for
+conditionally executed nodes</li>
+<li><span class="underline">longest path</span>: time for case node is maximum of times for
+conditionally executed nodes</li>
+<li><span class="underline">average analysis</span>: time is multiplying each node&rsquo;s time by
+execution probability</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb7c2d0d" class="outline-3">
+<h3 id="orgb7c2d0d"><span class="section-number-3">3.3.</span> Software Resource Requirements</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Each basic node has specified software resource requirements \(A_{j}\)
+for each service unit \(j\).
+</p>
+
+<p>
+<b>Processing Overhead Matrix</b>: chart of computer (hardware) resource requirements for each
+of the software resource requirements
+</p>
+
+<p>
+To compute total execution time:
+</p>
+<ol class="org-ol">
+<li>use processing overhead matrix to calculate total computer resources required per
+software resource for each node in the graph</li>
+<li>compute total computer resource requirements for the graph</li>
+<li>compute best-case elapsed time</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org58be6d1" class="outline-2">
+<h2 id="org58be6d1"><span class="section-number-2">4.</span> Queuing Network Models</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Software execution models provide a static analysis of the mean, best, and worst case
+response times for software and characterize resource requirements of proposed software alone.
+</p>
+
+<p>
+<b>Queuing Network Models</b> characterize software&rsquo;s performance in the presence of
+dynamic factors (like other workloads or multiple users) and aims to solve resource
+contention.
+</p>
+
+<p>
+If software execution model indicates no problems, ready to construct and solve
+queuing networks to account for contention efforts.
+</p>
+
+<p>
+Benefits of QNM:
+</p>
+<ul class="org-ul">
+<li>more precise metrics that account for <span class="underline">resource contention</span></li>
+<li>sensitivity of performance metrics to <span class="underline">variations in workload</span> composition</li>
+<li><span class="underline">scalability</span> of hardware and software to meet future demands</li>
+<li>effect of new software on <span class="underline">service level objectives</span> of other systems</li>
+<li>identification of <span class="underline">bottleneck</span> resources</li>
+<li>comparative data on <span class="underline">performance improvement options</span></li>
+</ul>
+
+<p>
+Resource contention can come from:
+</p>
+<ul class="org-ul">
+<li>multiple users of an application or transaction executing at once</li>
+<li>multiple applications or systems executing on the same hardware at once</li>
+<li>concurrent processes</li>
+<li>multi-threaded application</li>
+</ul>
+
+<p>
+Key computer system resources in QNM are server and queue:
+</p>
+<ul class="org-ul">
+<li><b>server</b>: component of the environment that provides some service
+to the software</li>
+<li><b>queue</b>: jobs waiting for service, consists of waiting line and server</li>
+</ul>
+
+<p>
+Kendall notation for queues is A/S/m/B/K/SD:
+</p>
+<ul class="org-ul">
+<li>\(A\) is interarrival time distribution</li>
+<li>\(S\) is service time distribution</li>
+<li>\(m\) is number of servers</li>
+<li>\(B\) is number of buffers (service capacity)</li>
+<li>\(K\) is population size</li>
+<li>\(SD\) is service discipline</li>
+</ul>
+
+<p>
+Distributions can be:
+</p>
+<ul class="org-ul">
+<li>M: exponential</li>
+<li>E: Erlang with param \(k\)</li>
+<li>H: hyperexponential with param \(k\)</li>
+<li>D: deterministic</li>
+<li>G: general</li>
+</ul>
+
+<p>
+Performance metrics of interest:
+</p>
+<ul class="org-ul">
+<li><b>residence time (RT)</b>: average time jobs spend in server, in service
+and waiting</li>
+<li><b>utilization (U)</b>: average percentage of time server is busy</li>
+<li><b>throughput (X)</b>: average rate at which jobs complete service</li>
+<li><b>queue length (N)</b>: average numbers of jobs at the server (receiving
+service and waiting)</li>
+</ul>
+
+<p>
+Value of metrics depends on:
+</p>
+<ul class="org-ul">
+<li>number of jobs</li>
+<li>amount of service they need</li>
+<li>time required for server to process individual jobs</li>
+<li>policy used to select next job from queue</li>
+</ul>
+
+<p>
+Can know performance from Kendall notation values.
+</p>
+
+<p>
+For busy time \(B\), completed jobs \(C\), and total period \(T\) (and the
+above performance metrics):
+</p>
+<ul class="org-ul">
+<li>utilization: \(U = B/T\)</li>
+<li>throughput: \(X = C/T\)</li>
+<li>mean service time: \(S = B/C\)</li>
+<li>area under graph: \(W = \sum_{time}(\text{number of jobs})\)</li>
+<li>residence time: \(RT = W/C\)</li>
+<li>queue length: \(N = W/T\)</li>
+</ul>
+
+<p>
+In early phases of development, can&rsquo;t make measurement of software
+to derive execution profile.
+</p>
+
+<p>
+<b>Workload intensity</b>: measure of number of requests made by a workload in given
+time interval
+</p>
+
+<p>
+<b>Service requirement</b>: amount of time that workload requires from each device in
+processing facility
+</p>
+
+<p>
+<b>Jobs-flow balance</b>: assume that system is fast enough to handle arrivals and thus
+completion rate or throughput equals arrival rate
+</p>
+
+<p>
+Let \(\lambda\) be arrival rate (workload intensity) and \(S\) be mean service time (service
+requirements).
+Then:
+</p>
+<ul class="org-ul">
+<li>throughput: \(X = \lambda\)</li>
+<li>utilization law: \(U = XS\)</li>
+<li>residence time: \(RT = \frac{S}{1 - U}\)</li>
+<li>queue length: \(N = X * RT\) (Little&rsquo;s Law)</li>
+</ul>
+
+<p>
+To find <b>steady-state probabilities</b> of birth-death process, define the rate
+at which events occur (birth rate and death rate):
+</p>
+<ul class="org-ul">
+<li>let \(\lambda_{n}\) be the birth rate when the system is in state \(n\)</li>
+<li>let \(\mu_{n}\) be the death rate when the system is in state \(n\)</li>
+<li>let \(\rho_{n}\) be the steady-state probability of being in state \(n\)</li>
+<li>then rate of flow into state \(n\) is rate of flow out of state \(n\) (since
+steady-state)
+$$&rho;<sub>n</sub> &lambda;<sub>n</sub> = &rho;<sub>n+1</sub> &mu;<sub>n+1</sub>$</li>
+</ul>
+
+<p>
+For general \(\rho_{n}\):
+\[ \rho_{n} = \frac{\prod_{i=0}^{n-1} \lambda_{i}}{\prod_{i=1}^{n}} \rho_{0} \]
+</p>
+
+<p>
+Probability of having \(n\) jobs in the system for M/M/1 queue:
+\[ \rho_{n} = \left( \frac{\lambda}{\mu} \right)^{n} \rho_{0} \]
+where \(\frac{\lambda}{\mu}\) is the traffic intensity, average number of customers
+arriving compared to the number being served.
+</p>
+
+<p>
+Probability of having \(n\) or more jobs in the system for M/M/1 queue:
+\[ \left( \frac{\lambda}{\mu} \right)^{n} \]
+</p>
+
+<p>
+Mean number of jobs in the system:
+\[ \frac{\frac{\lambda}{\mu}}{1 - \frac{\lambda}{\mu}} \]
+</p>
+
+<p>
+For M/M/m queue, birth rate is arrival rate which is \(\lambda\) and
+death rate is service rate which is
+\(\mu_{n} = n \mu\) for \(n = 1, \dots, m-1\) and \(\mu_{n} = m \mu\) for \(n \ge m\):
+</p>
+<ul class="org-ul">
+<li>utility is \(\rho = \lambda / m \mu\)</li>
+<li>probability of having \(n\) jobs in the system is
+\[ \frac{(m \rho)^{n}}{n!} p_{0} \] for \(n = 1, \dots, m-1\)
+and \[ \frac{\rho^{n} m^{m}}{m!} p_{0} \] for \(n \ge m\)</li>
+<li>probability that an arrivign job has to wait in the queue is
+\[ p_{0} \frac{(m \rho)^{m}}{m!} \sum_{n=m}^{\infty} \rho^{n-m} \]</li>
+</ul>
+
+<p>
+<b>Queuing network</b> consists of 2+ queues connected together and serve requests
+sent by clients.
+</p>
+
+<p>
+Request routing in queuing network is specified by <b>probability matrix</b>.
+</p>
+
+<p>
+Types of QNM:
+</p>
+<ul class="org-ul">
+<li><b>open models</b>: requests come from a source external of queuing network and leave
+network after service completion
+<ul class="org-ul">
+<li>appropriate for systems with external arrivals and departures</li>
+<li>specify workload intensity and service requirements
+<ul class="org-ul">
+<li>workload is arrival rate</li>
+<li>service requirements are number of visits for each device and average
+service time per visit (or total demand for that device)</li>
+</ul></li>
+</ul></li>
+<li><b>closed models</b>: no external source of requests and no departing requests (population
+of requests in queuing network remains constant)
+<ul class="org-ul">
+<li>needs number of users and think time (average delay between receipt of response
+and submission of next)</li>
+</ul></li>
+<li><b>mixed models</b>: open for some workload classes and closed for others</li>
+</ul>
+
+<p>
+To derive system model params from software model results:
+</p>
+<ol class="org-ol">
+<li>use queue-servers to represent key computer resources or devices specified in
+the software execution model and add connections between queues to complete model
+topology</li>
+<li>decide whether system is best modeled as an open or closed QNM</li>
+<li>determine workload intensities for each scenario</li>
+<li>specify service requirements</li>
+</ol>
+
+<p>
+Modeling hints:
+</p>
+<ul class="org-ul">
+<li>multiple users and workload</li>
+<li>average vs peak performance (basic QNMs calculate average values)</li>
+<li>sensitivity: if small change in one param causes large change in
+computed metrics, model is sensitive to that quantity</li>
+<li>scalability: improves response times for anticipated future loads</li>
+<li>bottlenecks: bottleneck device is one with highest utilization</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-08 Sun 00:10</p>
+</div>
+</body>
+</html>
