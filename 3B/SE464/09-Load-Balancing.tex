@@ -1,0 +1,139 @@
+% Created 2024-12-07 Sat 19:05
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Load Balancing}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Load Balancing},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Load Balancers}
+\label{sec:orgb83b1c3}
+Single point of contact for a service that forwards requests to a cluster of workers and remembers
+request source.
+Load balancer can relay requests for 10s-100s of applications servers.
+
+One IP address appears like a big machine, but is actually a cluster.
+
+Load balancer provides the same interface as a single server.
+
+Individual servers can be replaced without affecting overall service.
+Proxy can monitor health of servers by periodically sending health check, and if
+request fails, server must be crashed (stop relaying requests there).
+
+2 types of local load balancers:
+\begin{itemize}
+\item \textbf{Network Address Translation}
+\begin{itemize}
+\item works at TCP/IP layer (layer 4 load balancer)
+\item forwards packets one-by-one but remembers which server was assigned to each client
+\item changes IP addresses and ports of packets in both directions (maintains mappings)
+\begin{itemize}
+\item more efficient since need not implement TCP, HTTP, or store full requests/responses
+\end{itemize}
+\item compatible with any type of service, not just HTTP
+\item more scalable
+\end{itemize}
+\item \textbf{Reverse Proxy}
+\begin{itemize}
+\item works at HTTP layer (application layer load balancer)
+\item stores full requests/response before forwarding
+\item can also do SSL termination, caching, and compression
+\begin{itemize}
+\item TLS/SSL certificates stored just on proxy (internal communication unencrypted)
+\item proxy might cache responses, but limits scalability
+\end{itemize}
+\item less scalable
+\end{itemize}
+\end{itemize}
+
+Cloud-based load balancers can do either type of load balancing.
+
+Load balancer is single point of failure and has limited throughput.
+\section{Domain Name Service}
+\label{sec:org99e9e3d}
+Distributed directory that maps hostnames to IP addresses.
+Uses hierarchical caching architecture for scalability.
+
+Local DNS resolver has cached copies of recent answers.
+If no answer, ask up the hierarchy (go to nameserver).
+
+DNS allows multiple answers to be given for a query (client chooses or DNS server can give different
+responses to different users).
+Each IP address is a different reverse-proxying load balancer in front of many app servers (scaling
+by DNS).
+
+DNS can also connect user to closes replica of service (geographically) using IP address geolocation
+of requester.
+\section{Content Delivery Network (CDN)}
+\label{sec:orge76361a}
+Globally distributed web servers that cache responses for local clients.
+
+Distributed caching HTTP reverse proxy that uses DNS to geographically load-balance.
+
+\textbf{Origin server}: original, central web server (sets \texttt{Cache Control} HTTP header in response)
+
+Edge servers are \textbf{caching proxies} and ask origin server if no cached response.
+This is where CDNs are.
+
+8.8.8.8 is where Google's DNS is.
+
+IP Anycast load balancing implemented with BGP.
+Traffic destined for 8.8.8.8 is sent to whichever of these Google routers are closest to the customer.
+Violates principle that IP address is a particular destination, but for DNS this doesn't matter since
+UDP and stateless.
+
+DNS vs IP Anycast:
+\begin{itemize}
+\item DNS TTL has slow changes (minutes to hours) but IP Anycast uses BGP convergence
+\item DNS required advanced DNS software/config but IP Anycast requires operating own Autonomous System (ISP)
+\end{itemize}
+
+For global load balancing, DNS is the most common choice.
+
+Tech giants can use IP Anycast.
+
+For local load balancing:
+\begin{itemize}
+\item routing done by NAT or HTTP proxy
+\item scale limited by speed of one machine
+\item changes can be made in milliseconds
+\item simple deployment using off-the-shelf software and hardware
+\end{itemize}
+
+For global load balancing:
+\begin{itemize}
+\item routing done by DNS or BGP
+\item scale limited by Internet itself
+\item changes can be made in minutes to hours
+\item deployment requires advanced DNS software/config
+\end{itemize}
+
+Most large services load balance locally and at DNS:
+\begin{itemize}
+\item local provides continuous operation and scale within a data center (health checks, rolling updates)
+\item DNS for global scalability and low latency
+\end{itemize}
+\end{document}
