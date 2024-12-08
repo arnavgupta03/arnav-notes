@@ -1,0 +1,205 @@
+% Created 2024-12-08 Sun 12:41
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Concurrent Errors}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Concurrent Errors},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Race Condition}
+\label{sec:org1addb70}
+\textbf{Race condition} occurs when missing \uline{synchronization} or \uline{mutual exclusion}.
+
+Happens when 2+ tasks race along assuming synchronization or mutual exclusion has occurred.
+
+Can be very difficult to locate.
+\section{No Progress}
+\label{sec:orgc2e5e05}
+\subsection{Live-Lock}
+\label{sec:org8a3eda5}
+Indefinite postponement, ``You go first'' problem on simultaneous arrival.
+
+Caused by poor scheduling in entry position.
+
+Can always break time on simultaneous arrival by some mechanism that deals effectively with
+live-lock.
+\subsection{Starvation}
+\label{sec:org490fb36}
+Selection algorithm ignores 1+ tasks so they are never executed (lack of long-term fairness).
+
+Long-term (infinite) starvation extremely rare, but short-term starvation can occur and is a problem.
+
+Like live-lock, starving task might be ready any time, switching among active, ready, and possibly
+blocked states (consuming CPU).
+\subsection{Deadlock}
+\label{sec:org8567ccf}
+State when 1+ processes wait for an event that will not occur.
+
+Unlike live-lock/starvation, deadlocked task is blocked so not consuming CPU.
+\subsubsection{Synchronization Deadlock}
+\label{sec:orgb9192fd}
+Failure in cooperation, so blocked task never unblocked (stuck waiting).
+
+\begin{verbatim}
+int main() {
+  uSemaphore s(0);  // closed
+  s.P();            // wait for lock to open
+}
+\end{verbatim}
+\subsubsection{Mutual Exclusion Deadlock}
+\label{sec:org5f187e9}
+Failure to acquire resource protected by mutual exclusion.
+
+5 conditions that must occur for a set of processes to deadlock:
+\begin{enumerate}
+\item \uline{concrete} shared resource requiring mutual exclusion
+\item process holding a resource while waiting for access to a resource held by another process
+(hold and wait)
+\item once a process has gained access to a resource, runtime system cannot get it back (no
+preemption)
+\item exists a circular wait of processes on resources
+\item conditions must occur simultaneously
+\end{enumerate}
+\section{Deadlock Prevention}
+\label{sec:org23cc602}
+Eliminate 1+ conditions required for deadlock from an algorithm so deadlock can never occur.
+\subsection{Synchronization Prevention}
+\label{sec:orgbbb4b85}
+Eliminate all synchronization from a program:
+\begin{itemize}
+\item no communication
+\item impossible in most cases
+\end{itemize}
+\subsection{Mutual Exclusion Prevention}
+\label{sec:org84d36c6}
+Prevent deadlock by eliminating 1 of 5 conditions:
+\begin{enumerate}
+\item no mutual exclusion
+\begin{enumerate}
+\item no shared resources, so impossible in most cases
+\end{enumerate}
+\item no hold and wait: do not given any resource unless all resources can be given
+\begin{enumerate}
+\item poor resource utilization and possible starvation
+\end{enumerate}
+\item allow preemption
+\begin{enumerate}
+\item preemption is dynamic, so cannot apply statically
+\end{enumerate}
+\item no circular wait: by controlling order of resource allocations
+\begin{enumerate}
+\item use an \textbf{ordered resource} policy:
+\begin{enumerate}
+\item divide all resources into classes \(R_{1}, R_{2}, \dots\)
+\item \uline{rule}: can only request a resource from class \(R_{i}\) if holding no resources from any
+class \(R_{j}\) for \(j \ge i\)
+\item unless each class contains only 1 resource, requires requesting several resources
+simultaneously
+\item denote highest class number for which \(T\) holds a resource by \(h(T)\)
+\item if process \(T_{1}\) is requesting a resource of class \(k\) and is blocked because that
+resource is held by process \(T_{2}\), then \(h(T_{1}) < k \le h(T_{2})\)
+\item as preceding inequality is strict, circular wait is impossible
+\item in some cases, there is natural division of resources into classes that makes
+policy work nicely
+\item in other cases, some processes are forced to acquire resources in an unnatural sequence,
+complicating code and producing poor resource utilization
+\end{enumerate}
+\end{enumerate}
+\item prevent simultaneous occurrence
+\begin{enumerate}
+\item show previous 4 rules cannot occur simultaneously
+\end{enumerate}
+\end{enumerate}
+\section{Deadlock Avoidance}
+\label{sec:org2ed5b82}
+Monitor all lock blocking and resource allocation to detect and potential formation of deadlock.
+
+Achieve better resource utilization, but additional overhead to avoid deadlock.
+\subsection{Banker's Algorithm}
+\label{sec:org449f154}
+Demonstrate safe sequence of resource allocations that give no deadlock.
+Requires a process state its maximum resource needs.
+
+Check for safe order of execution that avoids deadlock should each process require maximum
+resource allocation.
+
+If safe order exists, Banker's algorithm allows resource request.
+
+If there is a choice of processes to choose for execution, it does not matter which path is
+taken.
+
+Check for safe order can be performed for every allocation of a resource to a process
+(optimizations possible, like same thread asking for another resource).
+\subsection{Allocation Graphs}
+\label{sec:org589629a}
+One method to check for potential deadlock is to graph processes and resource usage at each
+moment a resource is allocated.
+
+Multiple instances are put into a resource so that a specific resource does not have to be requested.
+Instead, a generic request is made.
+
+If graph contain no cycles, no process in the system is deadlocked.
+
+If any resource has several instances, a cycle does not mean deadlock.
+
+Can also create \textbf{isomorphic graph} without multiple instances (expensive and difficult).
+
+If each resource has one instance, a cycle means a deadlock.
+
+Can use graph reduction to locate deadlocks.
+
+Problems with allocation graphs:
+\begin{itemize}
+\item when choices for tasks, selection is tricky (like isomorphic graph)
+\item for large graphs, detecting cycles is expensive
+\item many graphs to examine over time, one for each particular allocation state of the system
+\end{itemize}
+\section{Detection and Recovery}
+\label{sec:org5a6f8eb}
+Instead of avoiding deadlock, let it happen and recover.
+This requires ability to discover deadlock and preemption.
+
+Discovering deadlock is difficult, since must build and check for cycles in allocation graph.
+Not done on each resource allocation, but every interval of seconds or every time a resource cannot
+be immediately allocated.
+
+Recovery involves preemption of 1+ processes in a cycle:
+\begin{itemize}
+\item decision not easy and must prevent starvation
+\item preemption victim must be restarted, from beginning or from previous checkpoint, if no guarantee that
+all resources have not changed
+\item still might not be enough, since victim may have made changes before preemption
+\end{itemize}
+\section{Method to Choose}
+\label{sec:orge825e17}
+Might be best to ignore the problem:
+\begin{itemize}
+\item if some process is blocked for a long time, assume it is deadlocked and abort it
+\item do this automatically in transaction processing system, manually elsewhere
+\end{itemize}
+
+Of techniques studied, only ordered resource policy has much practical value.
+\end{document}
