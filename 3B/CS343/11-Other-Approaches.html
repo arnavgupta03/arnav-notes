@@ -1,0 +1,1149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-10 Tue 04:25 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Other Approaches</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Other Approaches</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1b13fb2">1. Atomic (Lock-Free) Data Structure</a>
+<ul>
+<li><a href="#org67e6457">1.1. Compare and Set Instruction</a></li>
+<li><a href="#org94c99fc">1.2. Lock-Free Stack</a></li>
+<li><a href="#org28b5c06">1.3. ABA Problem</a></li>
+<li><a href="#orgd768513">1.4. Hardware Fix</a></li>
+<li><a href="#org58383ea">1.5. Hardware/Software Fix</a></li>
+</ul>
+</li>
+<li><a href="#org970b1f7">2. Exotic Atomic Instruction</a></li>
+<li><a href="#org2901524">3. General-Purpose GPU (GPGPU)</a></li>
+<li><a href="#org4938df2">4. Concurrency Languages</a>
+<ul>
+<li><a href="#orgb043d22">4.1. Ada 95</a></li>
+<li><a href="#org639f3b2">4.2. SR/Concurrent C++</a></li>
+<li><a href="#org53f0c3f">4.3. Java</a></li>
+<li><a href="#org3bdcf22">4.4. Go</a></li>
+<li><a href="#org61004d4">4.5. C++11 Concurrency</a></li>
+</ul>
+</li>
+<li><a href="#orgeea14cb">5. Threads and Locks Library</a>
+<ul>
+<li><a href="#orgbdc0041">5.1. java.util.concurrent</a></li>
+<li><a href="#org3e55c10">5.2. Pthreads</a></li>
+</ul>
+</li>
+<li><a href="#org96da762">6. OpenMP</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1b13fb2" class="outline-2">
+<h2 id="org1b13fb2"><span class="section-number-2">1.</span> Atomic (Lock-Free) Data Structure</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Lock free</b> data structure have operations, which are critical sections, but performed without
+<b>ownership</b>.
+</p>
+
+<p>
+For example, add/remove node without any blocking duration (operation takes constant atomic time).
+</p>
+
+<p>
+Lock-free is still locking since it spins for conceptual lock, and so it busy waits (starvation).
+</p>
+
+<p>
+If eventual progress guaranteed, called <b>wait free</b>.
+</p>
+</div>
+<div id="outline-container-org67e6457" class="outline-3">
+<h3 id="org67e6457"><span class="section-number-3">1.1.</span> Compare and Set Instruction</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Compare-and-set (assign) instruction performs atomic compare and conditional assignment (CAS &#x2014;
+compare and swap):
+</p>
+<ul class="org-ul">
+<li>if compare/assign returns true, lock stops and lock is set to closed</li>
+<li>if compare/assign returns false, lock executes until other thread sets lock to open</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">CAS</span>( <span style="color: #ECBE7B;">int</span> &amp; <span style="color: #dcaeea;">val</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">comp</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">nval</span> ) {
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">begin atomic</span>
+  <span style="color: #51afef;">if</span> ( val == comp ) {
+    val = nval;
+    <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">true</span>;
+  }
+  <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">false</span>;
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">end atomic</span>
+}
+</pre>
+</div>
+
+<p>
+Alternative implementation assigns comparison value with value when not equal.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">CAS</span>( <span style="color: #ECBE7B;">int</span> &amp; <span style="color: #dcaeea;">val</span>, <span style="color: #ECBE7B;">int</span> &amp; <span style="color: #dcaeea;">comp</span>, <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">nval</span> ) {
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">begin atomic</span>
+  <span style="color: #51afef;">if</span> ( val == comp ) {
+    val = nval;
+    <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">true</span>;
+  }
+  comp = val;
+  <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">false</span>;
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">end atomic</span>
+}
+</pre>
+</div>
+
+<p>
+Assignment when unequal useful to restart operations with new changed value.
+</p>
+</div>
+</div>
+<div id="outline-container-org94c99fc" class="outline-3">
+<h3 id="org94c99fc"><span class="section-number-3">1.2.</span> Lock-Free Stack</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Build stack with lock-free <code>push</code> and <code>pop</code> operations.
+</p>
+
+<p>
+Use CAS to automatically update <code>top</code> pointer when nodes pushed or popped concurrently.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">void</span> <span style="color: #a9a1e1;">Stack</span>::<span style="color: #c678dd;">push</span>( <span style="color: #ECBE7B;">Node</span> &amp; <span style="color: #dcaeea;">n</span> ) {
+  <span style="color: #51afef;">for</span> ( ;; ) {
+    n.next = top;
+    <span style="color: #51afef;">if</span> ( CAS( top, n.next, &amp;n ) ) {
+      <span style="color: #51afef;">break</span>;
+    }
+  } <span style="color: #5B6268;">// </span><span style="color: #5B6268;">top = &amp;n</span>
+}
+
+<span style="color: #ECBE7B;">Node</span> * <span style="color: #a9a1e1;">Stack</span>::<span style="color: #c678dd;">pop</span>() {
+  <span style="color: #ECBE7B;">Node</span> * <span style="color: #dcaeea;">t</span>;
+  <span style="color: #51afef;">for</span> ( ;; ) {
+    t = top;
+    <span style="color: #51afef;">if</span> ( t == <span style="color: #a9a1e1;">nullptr</span> ) <span style="color: #51afef;">return</span> t; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">empty list</span>
+    <span style="color: #51afef;">if</span> ( CAS( top, t, t-&gt;next ) ) {
+      <span style="color: #51afef;">return</span> t;
+    }
+  } <span style="color: #5B6268;">// </span><span style="color: #5B6268;">top = t-&gt;next</span>
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org28b5c06" class="outline-3">
+<h3 id="org28b5c06"><span class="section-number-3">1.3.</span> ABA Problem</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Pathological failure for series of pops and pushes.
+</p>
+
+<p>
+Issue occurs when time is sliced before CAS but after getting <code>t-&gt;next</code>.
+</p>
+
+<p>
+Causes corrupted stack.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd768513" class="outline-3">
+<h3 id="orgd768513"><span class="section-number-3">1.4.</span> Hardware Fix</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Probabilistic solution for stack exists using double-wide CAVD instruction, which compares and assigns
+64/128-bit values for 32/64-bit architectures.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">CAVD</span>( <span style="color: #ECBE7B;">uintS_t</span> &amp;<span style="color: #dcaeea;">val</span>, <span style="color: #ECBE7B;">uintS_t</span> &amp;<span style="color: #dcaeea;">comp</span>, <span style="color: #ECBE7B;">uintS_t</span> <span style="color: #dcaeea;">nval</span> ) {
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">begin atomic</span>
+  <span style="color: #51afef;">if</span> ( val == comp ) {
+    val = nval;
+    <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">true</span>;
+  }
+  comp = val;
+  <span style="color: #51afef;">return</span> <span style="color: #a9a1e1;">false</span>;
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">end atomic</span>
+}
+</pre>
+</div>
+
+<p>
+Associate counter (ticket) with header node and increment counter in <code>push</code>, so <code>pop</code> can detect
+ABA if node re-pushed.
+</p>
+
+<p>
+Ticket strategy only probabilistic correct since counter is finite, for the case of the counter
+wrapping around.
+</p>
+
+<p>
+No CAS program ensures eventual progress, so rule 5 broken.
+</p>
+</div>
+</div>
+<div id="outline-container-org58383ea" class="outline-3">
+<h3 id="org58383ea"><span class="section-number-3">1.5.</span> Hardware/Software Fix</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Fixing ABA with CAS/V and more code is complex, as well as implementing more complex data structures.
+</p>
+
+<p>
+All solutions require complex determination of when a node has no references (like garbage collection):
+</p>
+<ul class="org-ul">
+<li>each thread maintains a list of accessed nodes, called <b>hazard pointers</b></li>
+<li>thread updates hazard pointers while threads are reading them</li>
+<li>thread removes a node by hiding it on a private list and periodically scans hazard lists of other
+threads for references to that node</li>
+<li>if no pointers found, node can be freed</li>
+</ul>
+
+<p>
+Lock-free has no ownership (hold-and-wait) and so no deadlock.
+</p>
+
+<p>
+Lock-free can only handle limited set of critical sections.
+Lock can protect arbitrarily complex critical section.
+</p>
+
+<p>
+Lock-free is no cure, and performance is unclear.
+</p>
+
+<p>
+Best may be to combine lock and lock-free.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org970b1f7" class="outline-2">
+<h2 id="org970b1f7"><span class="section-number-2">2.</span> Exotic Atomic Instruction</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+VAX computer has instructions to atomically insert and remove a node to/from the head/tail of a circular
+doubly linked list.
+</p>
+
+<p>
+MIPS processor has 2 instructions that generalize atomic read/write cycle: <code>LL</code> (load locked) and
+<code>SC</code> (store conditional)
+</p>
+<ul class="org-ul">
+<li><code>LL</code> loads (reads) a value from memory into a register, and sets a hardware <b>reservation</b> on the
+memory from which the value is fetched
+<ul class="org-ul">
+<li>register value can be modified, even moved to another register</li>
+</ul></li>
+<li><code>SC</code> instruction stores (writes) new value back to original or another memory location
+<ul class="org-ul">
+<li>store is conditional and occurs only if no interrupt, execution, or write has occurred at <code>LL</code>
+reservation</li>
+<li>failure indicated by setting register containing value to be stored to 0</li>
+</ul></li>
+<li>using <code>LL</code> and <code>SC</code> does not suffer from the ABA problem</li>
+</ul>
+
+<p>
+Most architectures support weak LL/SC:
+</p>
+<ul class="org-ul">
+<li>reservation granularity may be cache line or memory block rather than word</li>
+<li>no nesting or interleaving of LL/SC pairs</li>
+<li>prohibit memory access between <code>LL</code> and <code>SC</code></li>
+</ul>
+
+<p>
+Cannot implement atomic swap of 2 memory locations as 2 reservations are necessary (register to
+memory swap is possible)
+</p>
+
+<p>
+Hardware transactional memory allows 4, 6, 8 reservations.
+</p>
+
+<p>
+Like DB <b>transaction</b> that optimistically executed change, and either commits changes or rolls
+back and restarts if interference:
+</p>
+<ul class="org-ul">
+<li><code>SPECULATE</code>: start speculative region and clear zero flag, next instruction checks for abort
+and branches to retry</li>
+<li><code>LOCK</code>: <code>MOV</code> instructions indicate location for atomic access, but moves not visible to other
+CPUs</li>
+<li><code>COMMIT</code>: end speculative region
+<ul class="org-ul">
+<li>if no conflict, make <code>MOV</code> instructions visible to other CPUs</li>
+<li>if conflict to any move locations, set failure, discard reservations, and restore
+registers back to instruction following <code>SPECULATE</code></li>
+</ul></li>
+</ul>
+
+<p>
+Can implement several data structures without ABA problem.
+</p>
+
+<p>
+Software Transactional Memory (STM) allows any number of reservations:
+</p>
+<ul class="org-ul">
+<li>atomic blocks of arbitrary size</li>
+<li>records all memory locations read and written, and all values mutated
+<ul class="org-ul">
+<li>bookkeeping costs and rollbacks typically result in performance degradation</li>
+</ul></li>
+<li>alternative implementation inserts locks to protect shared access
+<ul class="org-ul">
+<li>finding all access is difficult and ordering lock acquisition is complex</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2901524" class="outline-2">
+<h2 id="org2901524"><span class="section-number-2">3.</span> General-Purpose GPU (GPGPU)</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Graphical Processing Unit (GPU) is a <span class="underline">coprocessor</span> to main computer, with separate memory
+and processors.
+</p>
+
+<p>
+GPU is <span class="underline">Single-Instruction Multiple-Data</span> (Thread) (SIMDT) architecture vs usual
+Multiple-Instruction Multiple-Data.
+</p>
+
+<p>
+For branching code, all threads test the condition (create mask of true and false):
+</p>
+<ul class="org-ul">
+<li><code>true</code> threads execute &ldquo;then&rdquo; instructions, false threads execute NOP</li>
+<li><code>false</code> threads execute &ldquo;else&rdquo; instructions, true threads execute NOP</li>
+</ul>
+
+<p>
+Critical path is time to execute both clauses of <code>if</code> (no speedup).
+</p>
+
+<p>
+Complex contortions to eliminate different forms of branching.
+</p>
+
+<p>
+GPU structure:
+</p>
+<ul class="org-ul">
+<li><span class="underline">kernel</span> manages multiple blocks (loaded/controlled by CPU)</li>
+<li><span class="underline">block</span> executes the same code
+<ul class="org-ul">
+<li>may be barrier-synchronized</li>
+<li>synchronization among blocks is finishing kernel and launching new one</li>
+</ul></li>
+<li><span class="underline">warp</span> synchronizes execution (one instruction decoder per warp)</li>
+<li><span class="underline">thread</span> computes value</li>
+</ul>
+
+<p>
+Instead of cache to optimize latency in warp, large register file is used to
+optimize throughput.
+GPUs have enough duplicate registers to store state of several warps.
+</p>
+
+<p>
+Kernel is memory-bound, so data layout extremely important for performance
+consideration
+</p>
+
+<p>
+Warps scheduled to run when required data loaded from memory.
+</p>
+
+<p>
+CPU sets up GPU memory, loads memory, launches code, and retrieves results.
+</p>
+
+<p>
+Most modern multi-core CPUs have similar model using vector-processing.
+Can simulate warps and use concurrency framework to simulate blocks.
+</p>
+</div>
+</div>
+<div id="outline-container-org4938df2" class="outline-2">
+<h2 id="org4938df2"><span class="section-number-2">4.</span> Concurrency Languages</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgb043d22" class="outline-3">
+<h3 id="orgb043d22"><span class="section-number-3">4.1.</span> Ada 95</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Provides restricted implicit (automatic) signal.
+</p>
+
+<p>
+<code>when</code> clause only to be used at start of entry routine, not within.
+</p>
+
+<p>
+<code>when</code> expression can contain only global object variables. Parameter or
+local variables are disallowed (no direct service).
+</p>
+
+<p>
+Direct service is only possible when restrictions are eliminated.
+</p>
+
+<p>
+Provides <code>task</code> type with task main and declarations.
+Allows for Accepts and <code>when</code> guards with mutex members.
+</p>
+
+<p>
+<code>select</code> is external scheduling and only appears in <code>task</code> main.
+Ada has no internal scheduling mechanism (no condition variables).
+</p>
+
+<p>
+<code>requeue</code> statement can be used to make blocking call to another
+(usually non-public) mutex member of the object.
+Original call is re-blocked on that mutex member&rsquo;s entry queue,
+which can be subsequently accepted when it is appropriate to restart
+it.
+</p>
+
+<p>
+All <code>requeue</code> techniques suffer the problem of dealing with
+accumulated temporary results:
+</p>
+<ul class="org-ul">
+<li>if a call must be postponed, its temporary results must be returned
+and bundled with initial parameters before forwarding to the mutex
+member handling the next step</li>
+<li>or temporary results must be re-computed at the next step (if
+possible)</li>
+</ul>
+
+<p>
+In contrast, waiting on a condition variable automatically saves
+execution location and any partially computed state.
+</p>
+</div>
+</div>
+<div id="outline-container-org639f3b2" class="outline-3">
+<h3 id="org639f3b2"><span class="section-number-3">4.2.</span> SR/Concurrent C++</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+SR and concurrent C++ have tasks with external scheduling using an accept
+statement, but no condition variables or requeue statement.
+</p>
+
+<p>
+To ameliorate lack of internal scheduling, add a <code>when</code> and <code>by</code> clauses on
+the <code>accept</code> statement.
+</p>
+
+<p>
+<code>when</code> clause is allowed to reference caller&rsquo;s arguments via parameters of
+mutex members.
+Done by placing <code>when</code> after <code>accept</code> clause so param names are defined.
+</p>
+
+<p>
+<code>when</code> referencing parameter means implicit search of waiting tasks on
+mutex queue, and so locking mutex queue.
+</p>
+
+<p>
+Select longest waiting if multiple true <code>when</code> clauses.
+</p>
+
+<p>
+<code>by</code> clause calculated for each true <code>when</code> clause and the minimum <code>by</code>
+clause is selected.
+</p>
+
+<p>
+Select longest waiting if multiple <code>by</code> clauses with same minimum.
+</p>
+
+<p>
+<code>by</code> clause exacerbates execution cost of computing <code>accept</code> clause
+</p>
+
+<p>
+While <code>when</code> and <code>by</code> remove some internal scheduling and/or requeues,
+constructing expressions can be complex.
+</p>
+
+<p>
+Still exist situations that cannot be handled, like if selection criteria
+involves multiple params:
+</p>
+<ul class="org-ul">
+<li>selection criteria involves information from other mutex queues</li>
+</ul>
+
+<p>
+Often simplest to unconditionally accept a call allowing arbitrary examination,
+and possibly postpone (internal scheduling).
+</p>
+</div>
+</div>
+<div id="outline-container-org53f0c3f" class="outline-3">
+<h3 id="org53f0c3f"><span class="section-number-3">4.3.</span> Java</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Concurrency constructs largely derived from Modula-3.
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Thread</span> <span style="color: #51afef;">implements</span> <span style="color: #ECBE7B;">Runnable</span> {
+    <span style="color: #51afef;">public</span> Thread();
+    <span style="color: #51afef;">public</span> Thread(String name);
+    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">String</span> <span style="color: #c678dd;">getName</span>();
+    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">setName</span>(<span style="color: #ECBE7B;">String</span> <span style="color: #dcaeea;">name</span>);
+    <span style="color: #51afef;">public</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">run</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">uC++ main</span>
+    <span style="color: #51afef;">public</span> <span style="color: #51afef;">synchronized</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">start</span>();
+    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">Thread</span> <span style="color: #c678dd;">currentThread</span>();
+    <span style="color: #51afef;">public</span> <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">yield</span>();
+    <span style="color: #51afef;">public</span> <span style="color: #51afef;">final</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">join</span>();
+}
+</pre>
+</div>
+
+<p>
+<code>Thread</code> is like <code>uBaseTask</code>, and all tasks must explicitly inherit from it.
+Thread starts in member <code>run</code>.
+</p>
+
+<p>
+Java requires explicit starting of a thread by calling <code>start</code> after thread&rsquo;s
+declaration.
+Coding convention is to start thread or inheritance is precluded (can only
+start thread once).
+</p>
+
+<p>
+Termination synchronization accomplished by calling <code>join</code>.
+</p>
+
+<p>
+Returning result on thread termination is accomplished by members returning
+values from the task&rsquo;s global variables.
+</p>
+
+<p>
+Like &mu;C++, when the task&rsquo;s thread terminates, it becomes an object,
+allowing the call to <code>result</code> to retrieve a result.
+</p>
+
+<p>
+While it is possible to have public <code>synchronized</code> members of a task,
+there is no mechanism to manage direct calls (no accept statement).
+So this requires complex emulation of external scheduling with internal scheduling
+for direct communication.
+</p>
+</div>
+</div>
+<div id="outline-container-org3bdcf22" class="outline-3">
+<h3 id="org3bdcf22"><span class="section-number-3">4.4.</span> Go</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Non-object-oriented, light-weight non-preemptive threads (called goroutines).
+</p>
+
+<p>
+Has cooperative scheduling, so implicitly inserts yields at safe points
+(not interrupt based).
+Busy waiting only on multicore.
+</p>
+
+<p>
+<code>go</code> statement (like start/fork) creates new user thread running in routine.
+</p>
+
+<p>
+Arguments may be passed to goroutine, but return value discarded.
+</p>
+
+<p>
+Cannot reference goroutine object since no direct communication.
+</p>
+
+<p>
+All threads terminate silently when program terminates.
+</p>
+
+<p>
+Threads synchronize/communicate via <b>channel</b> (CSP), so different from
+routine call.
+</p>
+
+<p>
+Channel: typed shared buffer with 0 to \(N\) elements:
+</p>
+<div class="org-src-container">
+<pre class="src src-golang">ch1 := make( chan int, 100 ) // integer channel with buffer size 100
+ch2 := make( chan string )  // string chnanle with buffer size 0
+ch3 := make( chan chan string ) // channel of channel of strings
+</pre>
+</div>
+
+<p>
+If buffer size more than 0, up to \(N\) asynchronous calls, otherwise,
+synchronous call.
+</p>
+
+<p>
+Operator <code>&lt;-</code> performs send/receive, so:
+</p>
+<ul class="org-ul">
+<li>send: <code>ch1 &lt;- 1</code></li>
+<li>receiver: <code>s &lt;- ch2</code></li>
+</ul>
+
+<p>
+Channel can be constrained to only send and receive, otherwise bi-directional.
+More like futures and ~<sub>Select</sub>_, and asynchronous call.
+</p>
+
+<p>
+Also has mutual exclusion locks, synchronization locks,
+singleton-pattern locks, readers/writers locks, and countdown locks.
+</p>
+
+<p>
+Also has atomic operations for:
+</p>
+<ul class="org-ul">
+<li>adding signed and unsigned integers and pointers to integers</li>
+<li>compare and swap signed and unsigned integers and pointers to integers</li>
+<li>load and store signed and unsigned integers and pointers to integers</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org61004d4" class="outline-3">
+<h3 id="org61004d4"><span class="section-number-3">4.5.</span> C++11 Concurrency</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+C++11 library can be sound as C++ now has strong memory model (SC).
+</p>
+
+<p>
+Compile with
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">g++ -std=c++11 -pthread ...
+</pre>
+</div>
+
+<p>
+Thread creation uses start/wait (fork/join) approach:
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">thread</span> {
+  <span style="color: #51afef;">public</span>:
+    <span style="color: #51afef;">template</span> &lt;<span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">Fn</span>, <span style="color: #51afef;">class</span> ... <span style="color: #ECBE7B;">Args</span>&gt;
+      <span style="color: #51afef;">explicit</span> <span style="color: #c678dd;">thread</span>( <span style="color: #ECBE7B;">Fn</span> &amp;&amp; <span style="color: #dcaeea;">fn</span>, <span style="color: #ECBE7B;">Args</span> &amp;&amp;... <span style="color: #dcaeea;">args</span> );
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">join</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">termination synchronization</span>
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">joinable</span>() <span style="color: #51afef;">const</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">true =&gt; joined, else false</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">detach</span>();  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">independent lifetime</span>
+    <span style="color: #ECBE7B;">id</span> <span style="color: #dcaeea;">get_id</span> <span style="color: #51afef;">const</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">thread id</span>
+};
+</pre>
+</div>
+
+<p>
+Passing multiple arguments using C++11&rsquo;s variadic template feature to provide
+a type-safe call chain via thread constructor to the callable routine.
+</p>
+
+<p>
+Any entity that is callable (functor) may be started:
+</p>
+
+<p>
+Thread starts implicitly at point of declaration.
+Instead of <code>join</code>, thread can run independently by detaching.
+</p>
+
+<p>
+Beware dangling pointers to local variables.
+Deallocating thread object before join or detach is an error.
+</p>
+
+<p>
+Usable locks include mutual exclusion locks (mutex, recursive, timed,
+recursive-timed) and condition variables.
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">mutex</span> {
+  <span style="color: #51afef;">public</span>:
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">lock</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">acquire</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">unlock</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">release</span>
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #c678dd;">try_lock</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">nonblocking acquire</span>
+};
+
+<span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">condition_variable</span> {
+  <span style="color: #51afef;">public</span>:
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">notify_one</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">unblock one</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">notify_all</span>(); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">unblock all</span>
+    <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">wait</span>( <span style="color: #ECBE7B;">mutex</span> &amp;<span style="color: #dcaeea;">lock</span> ); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">atomic block + release lock</span>
+};
+</pre>
+</div>
+
+<p>
+Scheduling is no-priority nonblocking, so barging.
+This means <code>wait</code> statements must be in while loops to recheck
+conditions.
+</p>
+
+<p>
+Also has futures, with <code>get</code> member to block and get answer and
+<code>async</code> call with function and params.
+</p>
+
+<p>
+Also has atomic types and operations.
+Atomic types include flag, bool, char (signed and unsigned as well),
+short (signed and unsigned as well), int (signed and unsigned as well),
+long/llong (signed and unsigned as well), wchar, address, and template
+atomic type.
+</p>
+
+<p>
+Atomic types allow for most C++ operations to be atomic including
+increment, decrement, increase, decrease, <code>&amp;=</code>, <code>|=</code>, <code>^=</code>,
+store, load, exchange, set, compare/exchange, and fetch
+add/sub/and/or/xor.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgeea14cb" class="outline-2">
+<h2 id="orgeea14cb"><span class="section-number-2">5.</span> Threads and Locks Library</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgbdc0041" class="outline-3">
+<h3 id="orgbdc0041"><span class="section-number-3">5.1.</span> java.util.concurrent</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Java library is sound because of memory model and language is concurrent
+aware.
+</p>
+
+<p>
+Synchronizers include <code>Semaphore</code> (counting), <code>CountDownLatch</code>, <code>CyclicBarrier</code>,
+<code>Exchanger</code>, <code>Condition</code>, <code>Lock</code>, and <code>ReadWriteLock</code>.
+</p>
+
+<p>
+Can use locks to build a monitor with multiple condition variables.
+</p>
+
+<p>
+<code>Condition</code> is nested class within <code>ReentrantLock</code>, so condition
+implicitly knows its associated (monitor) lock.
+</p>
+
+<p>
+Scheduling still no-priority non-blocking (barging), so <code>wait</code> statements
+must be in <code>while</code> loops to recheck condition.
+</p>
+
+<p>
+No connection with implicit condition variable of an object.
+</p>
+
+<p>
+Do not mix implicit and explicit condition variables.
+</p>
+
+<p>
+Executor/Future are both actor-like:
+</p>
+<ul class="org-ul">
+<li>executor is a server with 1+ worker tasks (worker pool)</li>
+<li>future is a closure with work for executor (callable) and place for result</li>
+<li>call to executor <code>submit</code> is asynchronous and returns a future</li>
+<li>result retrieved using <code>get</code> routine, which may block until result inserted
+by executor</li>
+</ul>
+
+<p>
+&mu;C++ also has fixed thread-pool executor (used with actors).
+</p>
+
+<p>
+Also has collections for different types of synchronous and blocking queues,
+maps, sets, and list.
+Can create threads that interact indirectly through atomic data structures.
+</p>
+
+<p>
+Also has atomic types using compare-and-set (lock-free).
+Includes atomic versions of boolean, integer, int array, long, long array,
+reference (templated), and reference array (templated).
+</p>
+</div>
+</div>
+<div id="outline-container-org3e55c10" class="outline-3">
+<h3 id="org3e55c10"><span class="section-number-3">5.2.</span> Pthreads</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+C libraries built around routine abstraction and mutex/condition locks:
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">pthread_create</span>( <span style="color: #ECBE7B;">pthread_t</span> * <span style="color: #dcaeea;">new_thread_ID</span>,
+                    <span style="color: #ECBE7B;">void</span> * (*<span style="color: #c678dd;">start_func</span>)(<span style="color: #ECBE7B;">void</span> *),
+                    <span style="color: #ECBE7B;">void</span> * <span style="color: #dcaeea;">arg</span>);
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">pthread_join</span>( <span style="color: #ECBE7B;">pthread_t</span> <span style="color: #dcaeea;">target_thread</span>,
+                  <span style="color: #ECBE7B;">void</span> ** <span style="color: #dcaeea;">status</span> );
+<span style="color: #ECBE7B;">pthread_t</span> <span style="color: #c678dd;">pthread_self</span>( <span style="color: #ECBE7B;">void</span> );
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">pthread_yield</span>( <span style="color: #ECBE7B;">void</span> );
+
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">mutex lock and cond vars also available</span>
+</pre>
+</div>
+
+<p>
+Thread starts in routine <code>start_func</code> via <code>pthread_create</code>, where
+initialization is single <code>void *</code> value.
+</p>
+
+<p>
+Termination synchronization is performed by calling <code>pthread_join</code>.
+Return a result on thread termination by passing back a single
+<code>void *</code> value from <code>pthread_join</code>.
+</p>
+
+<p>
+All C library approaches have type-unsafe communication with tasks.
+</p>
+
+<p>
+No external scheduling, so complex direct-communication emulation.
+</p>
+
+<p>
+Internal scheduling is no-priority non-blocking (barging), so <code>wait</code>
+statements must be in while loops to recheck conditions.
+</p>
+
+<p>
+Explicit calls are necessary to <code>ctor</code> and <code>dtor</code> before/after use of pthreads
+since no constructors or destructors in C.
+</p>
+
+<p>
+All locks must be initialized and finalized.
+</p>
+
+<p>
+Mutual exclusion must be explicitly defined where needed.
+Condition locks should only be accessed within mutual exclusion.
+</p>
+
+<p>
+<code>pthread_cond_wait</code> atomically blocks thread and releases mutex lock, which is
+necessary to close race condition on baton passing.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org96da762" class="outline-2">
+<h2 id="org96da762"><span class="section-number-2">6.</span> OpenMP</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Shared memory, implicit thread management (programmer hints), 1 to 1 threading model
+(kernel threads), and some explicit locking.
+</p>
+
+<p>
+Communicate with compiler with <code>#pragma</code> directives.
+</p>
+
+<p>
+Uses fork/join model:
+</p>
+<ul class="org-ul">
+<li><span class="underline">fork</span>: initial thread creates a team of parallel threads (including itself)</li>
+<li>each thread executes the statements in the region construct</li>
+<li><span class="underline">join</span>: when team threads complete, synchronize, and terminate, except initial
+thread which continues</li>
+</ul>
+
+<p>
+Can do COBEGIN/COEND where each thread executes a different section using
+<code>#pragma omp section</code> after defining how many threads to use in the following
+parallel sections.
+</p>
+
+<p>
+<code>for</code> directive specifies loop iteration executed by a team of threads (COFOR).
+In this case, sequential code is directly converted to concurrent with the
+pragma.
+</p>
+
+<p>
+Variable outside a section are shared, variables inside are thread private.
+Programmer is responsible for sharing in vector/matrix multiplication.
+</p>
+
+<p>
+Can use barrier with <code>barrier</code> directive after defining threads (no section).
+Without <code>omp</code> section, all threads run same block (like parallel for).
+</p>
+
+<p>
+Barrier&rsquo;s trigger is the number of block threads.
+</p>
+
+<p>
+Also has critical section and atomic directives.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-10 Tue 04:25</p>
+</div>
+</body>
+</html>

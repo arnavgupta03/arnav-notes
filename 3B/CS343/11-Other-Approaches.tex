@@ -1,0 +1,598 @@
+% Created 2024-12-10 Tue 04:25
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Other Approaches}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Other Approaches},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Atomic (Lock-Free) Data Structure}
+\label{sec:org3b61bd4}
+\textbf{Lock free} data structure have operations, which are critical sections, but performed without
+\textbf{ownership}.
+
+For example, add/remove node without any blocking duration (operation takes constant atomic time).
+
+Lock-free is still locking since it spins for conceptual lock, and so it busy waits (starvation).
+
+If eventual progress guaranteed, called \textbf{wait free}.
+\subsection{Compare and Set Instruction}
+\label{sec:org99b2657}
+Compare-and-set (assign) instruction performs atomic compare and conditional assignment (CAS ---
+compare and swap):
+\begin{itemize}
+\item if compare/assign returns true, lock stops and lock is set to closed
+\item if compare/assign returns false, lock executes until other thread sets lock to open
+\end{itemize}
+
+\begin{verbatim}
+bool CAS( int & val, int comp, int nval ) {
+  // begin atomic
+  if ( val == comp ) {
+    val = nval;
+    return true;
+  }
+  return false;
+  // end atomic
+}
+\end{verbatim}
+
+Alternative implementation assigns comparison value with value when not equal.
+\begin{verbatim}
+bool CAS( int & val, int & comp, int nval ) {
+  // begin atomic
+  if ( val == comp ) {
+    val = nval;
+    return true;
+  }
+  comp = val;
+  return false;
+  // end atomic
+}
+\end{verbatim}
+
+Assignment when unequal useful to restart operations with new changed value.
+\subsection{Lock-Free Stack}
+\label{sec:org6be378a}
+Build stack with lock-free \texttt{push} and \texttt{pop} operations.
+
+Use CAS to automatically update \texttt{top} pointer when nodes pushed or popped concurrently.
+\begin{verbatim}
+void Stack::push( Node & n ) {
+  for ( ;; ) {
+    n.next = top;
+    if ( CAS( top, n.next, &n ) ) {
+      break;
+    }
+  } // top = &n
+}
+
+Node * Stack::pop() {
+  Node * t;
+  for ( ;; ) {
+    t = top;
+    if ( t == nullptr ) return t; // empty list
+    if ( CAS( top, t, t->next ) ) {
+      return t;
+    }
+  } // top = t->next
+}
+\end{verbatim}
+\subsection{ABA Problem}
+\label{sec:orgef9190d}
+Pathological failure for series of pops and pushes.
+
+Issue occurs when time is sliced before CAS but after getting \texttt{t->next}.
+
+Causes corrupted stack.
+\subsection{Hardware Fix}
+\label{sec:org6620ee7}
+Probabilistic solution for stack exists using double-wide CAVD instruction, which compares and assigns
+64/128-bit values for 32/64-bit architectures.
+
+\begin{verbatim}
+bool CAVD( uintS_t &val, uintS_t &comp, uintS_t nval ) {
+  // begin atomic
+  if ( val == comp ) {
+    val = nval;
+    return true;
+  }
+  comp = val;
+  return false;
+  // end atomic
+}
+\end{verbatim}
+
+Associate counter (ticket) with header node and increment counter in \texttt{push}, so \texttt{pop} can detect
+ABA if node re-pushed.
+
+Ticket strategy only probabilistic correct since counter is finite, for the case of the counter
+wrapping around.
+
+No CAS program ensures eventual progress, so rule 5 broken.
+\subsection{Hardware/Software Fix}
+\label{sec:orgd7edd2e}
+Fixing ABA with CAS/V and more code is complex, as well as implementing more complex data structures.
+
+All solutions require complex determination of when a node has no references (like garbage collection):
+\begin{itemize}
+\item each thread maintains a list of accessed nodes, called \textbf{hazard pointers}
+\item thread updates hazard pointers while threads are reading them
+\item thread removes a node by hiding it on a private list and periodically scans hazard lists of other
+threads for references to that node
+\item if no pointers found, node can be freed
+\end{itemize}
+
+Lock-free has no ownership (hold-and-wait) and so no deadlock.
+
+Lock-free can only handle limited set of critical sections.
+Lock can protect arbitrarily complex critical section.
+
+Lock-free is no cure, and performance is unclear.
+
+Best may be to combine lock and lock-free.
+\section{Exotic Atomic Instruction}
+\label{sec:orgea1cbb0}
+VAX computer has instructions to atomically insert and remove a node to/from the head/tail of a circular
+doubly linked list.
+
+MIPS processor has 2 instructions that generalize atomic read/write cycle: \texttt{LL} (load locked) and
+\texttt{SC} (store conditional)
+\begin{itemize}
+\item \texttt{LL} loads (reads) a value from memory into a register, and sets a hardware \textbf{reservation} on the
+memory from which the value is fetched
+\begin{itemize}
+\item register value can be modified, even moved to another register
+\end{itemize}
+\item \texttt{SC} instruction stores (writes) new value back to original or another memory location
+\begin{itemize}
+\item store is conditional and occurs only if no interrupt, execution, or write has occurred at \texttt{LL}
+reservation
+\item failure indicated by setting register containing value to be stored to 0
+\end{itemize}
+\item using \texttt{LL} and \texttt{SC} does not suffer from the ABA problem
+\end{itemize}
+
+Most architectures support weak LL/SC:
+\begin{itemize}
+\item reservation granularity may be cache line or memory block rather than word
+\item no nesting or interleaving of LL/SC pairs
+\item prohibit memory access between \texttt{LL} and \texttt{SC}
+\end{itemize}
+
+Cannot implement atomic swap of 2 memory locations as 2 reservations are necessary (register to
+memory swap is possible)
+
+Hardware transactional memory allows 4, 6, 8 reservations.
+
+Like DB \textbf{transaction} that optimistically executed change, and either commits changes or rolls
+back and restarts if interference:
+\begin{itemize}
+\item \texttt{SPECULATE}: start speculative region and clear zero flag, next instruction checks for abort
+and branches to retry
+\item \texttt{LOCK}: \texttt{MOV} instructions indicate location for atomic access, but moves not visible to other
+CPUs
+\item \texttt{COMMIT}: end speculative region
+\begin{itemize}
+\item if no conflict, make \texttt{MOV} instructions visible to other CPUs
+\item if conflict to any move locations, set failure, discard reservations, and restore
+registers back to instruction following \texttt{SPECULATE}
+\end{itemize}
+\end{itemize}
+
+Can implement several data structures without ABA problem.
+
+Software Transactional Memory (STM) allows any number of reservations:
+\begin{itemize}
+\item atomic blocks of arbitrary size
+\item records all memory locations read and written, and all values mutated
+\begin{itemize}
+\item bookkeeping costs and rollbacks typically result in performance degradation
+\end{itemize}
+\item alternative implementation inserts locks to protect shared access
+\begin{itemize}
+\item finding all access is difficult and ordering lock acquisition is complex
+\end{itemize}
+\end{itemize}
+\section{General-Purpose GPU (GPGPU)}
+\label{sec:orgc056397}
+Graphical Processing Unit (GPU) is a \uline{coprocessor} to main computer, with separate memory
+and processors.
+
+GPU is \uline{Single-Instruction Multiple-Data} (Thread) (SIMDT) architecture vs usual
+Multiple-Instruction Multiple-Data.
+
+For branching code, all threads test the condition (create mask of true and false):
+\begin{itemize}
+\item \texttt{true} threads execute ``then'' instructions, false threads execute NOP
+\item \texttt{false} threads execute ``else'' instructions, true threads execute NOP
+\end{itemize}
+
+Critical path is time to execute both clauses of \texttt{if} (no speedup).
+
+Complex contortions to eliminate different forms of branching.
+
+GPU structure:
+\begin{itemize}
+\item \uline{kernel} manages multiple blocks (loaded/controlled by CPU)
+\item \uline{block} executes the same code
+\begin{itemize}
+\item may be barrier-synchronized
+\item synchronization among blocks is finishing kernel and launching new one
+\end{itemize}
+\item \uline{warp} synchronizes execution (one instruction decoder per warp)
+\item \uline{thread} computes value
+\end{itemize}
+
+Instead of cache to optimize latency in warp, large register file is used to
+optimize throughput.
+GPUs have enough duplicate registers to store state of several warps.
+
+Kernel is memory-bound, so data layout extremely important for performance
+consideration
+
+Warps scheduled to run when required data loaded from memory.
+
+CPU sets up GPU memory, loads memory, launches code, and retrieves results.
+
+Most modern multi-core CPUs have similar model using vector-processing.
+Can simulate warps and use concurrency framework to simulate blocks.
+\section{Concurrency Languages}
+\label{sec:org202abae}
+\subsection{Ada 95}
+\label{sec:orgcae3fbd}
+Provides restricted implicit (automatic) signal.
+
+\texttt{when} clause only to be used at start of entry routine, not within.
+
+\texttt{when} expression can contain only global object variables. Parameter or
+local variables are disallowed (no direct service).
+
+Direct service is only possible when restrictions are eliminated.
+
+Provides \texttt{task} type with task main and declarations.
+Allows for Accepts and \texttt{when} guards with mutex members.
+
+\texttt{select} is external scheduling and only appears in \texttt{task} main.
+Ada has no internal scheduling mechanism (no condition variables).
+
+\texttt{requeue} statement can be used to make blocking call to another
+(usually non-public) mutex member of the object.
+Original call is re-blocked on that mutex member's entry queue,
+which can be subsequently accepted when it is appropriate to restart
+it.
+
+All \texttt{requeue} techniques suffer the problem of dealing with
+accumulated temporary results:
+\begin{itemize}
+\item if a call must be postponed, its temporary results must be returned
+and bundled with initial parameters before forwarding to the mutex
+member handling the next step
+\item or temporary results must be re-computed at the next step (if
+possible)
+\end{itemize}
+
+In contrast, waiting on a condition variable automatically saves
+execution location and any partially computed state.
+\subsection{SR/Concurrent C++}
+\label{sec:orgfaaf259}
+SR and concurrent C++ have tasks with external scheduling using an accept
+statement, but no condition variables or requeue statement.
+
+To ameliorate lack of internal scheduling, add a \texttt{when} and \texttt{by} clauses on
+the \texttt{accept} statement.
+
+\texttt{when} clause is allowed to reference caller's arguments via parameters of
+mutex members.
+Done by placing \texttt{when} after \texttt{accept} clause so param names are defined.
+
+\texttt{when} referencing parameter means implicit search of waiting tasks on
+mutex queue, and so locking mutex queue.
+
+Select longest waiting if multiple true \texttt{when} clauses.
+
+\texttt{by} clause calculated for each true \texttt{when} clause and the minimum \texttt{by}
+clause is selected.
+
+Select longest waiting if multiple \texttt{by} clauses with same minimum.
+
+\texttt{by} clause exacerbates execution cost of computing \texttt{accept} clause
+
+While \texttt{when} and \texttt{by} remove some internal scheduling and/or requeues,
+constructing expressions can be complex.
+
+Still exist situations that cannot be handled, like if selection criteria
+involves multiple params:
+\begin{itemize}
+\item selection criteria involves information from other mutex queues
+\end{itemize}
+
+Often simplest to unconditionally accept a call allowing arbitrary examination,
+and possibly postpone (internal scheduling).
+\subsection{Java}
+\label{sec:orgf7ace5e}
+Concurrency constructs largely derived from Modula-3.
+\begin{verbatim}
+class Thread implements Runnable {
+    public Thread();
+    public Thread(String name);
+    public String getName();
+    public void setName(String name);
+    public void run(); // uC++ main
+    public synchronized void start();
+    public static Thread currentThread();
+    public static void yield();
+    public final void join();
+}
+\end{verbatim}
+
+\texttt{Thread} is like \texttt{uBaseTask}, and all tasks must explicitly inherit from it.
+Thread starts in member \texttt{run}.
+
+Java requires explicit starting of a thread by calling \texttt{start} after thread's
+declaration.
+Coding convention is to start thread or inheritance is precluded (can only
+start thread once).
+
+Termination synchronization accomplished by calling \texttt{join}.
+
+Returning result on thread termination is accomplished by members returning
+values from the task's global variables.
+
+Like \(\mu\)C++, when the task's thread terminates, it becomes an object,
+allowing the call to \texttt{result} to retrieve a result.
+
+While it is possible to have public \texttt{synchronized} members of a task,
+there is no mechanism to manage direct calls (no accept statement).
+So this requires complex emulation of external scheduling with internal scheduling
+for direct communication.
+\subsection{Go}
+\label{sec:org74e0409}
+Non-object-oriented, light-weight non-preemptive threads (called goroutines).
+
+Has cooperative scheduling, so implicitly inserts yields at safe points
+(not interrupt based).
+Busy waiting only on multicore.
+
+\texttt{go} statement (like start/fork) creates new user thread running in routine.
+
+Arguments may be passed to goroutine, but return value discarded.
+
+Cannot reference goroutine object since no direct communication.
+
+All threads terminate silently when program terminates.
+
+Threads synchronize/communicate via \textbf{channel} (CSP), so different from
+routine call.
+
+Channel: typed shared buffer with 0 to \(N\) elements:
+\begin{verbatim}
+ch1 := make( chan int, 100 ) // integer channel with buffer size 100
+ch2 := make( chan string )  // string chnanle with buffer size 0
+ch3 := make( chan chan string ) // channel of channel of strings
+\end{verbatim}
+
+If buffer size more than 0, up to \(N\) asynchronous calls, otherwise,
+synchronous call.
+
+Operator \texttt{<-} performs send/receive, so:
+\begin{itemize}
+\item send: \texttt{ch1 <- 1}
+\item receiver: \texttt{s <- ch2}
+\end{itemize}
+
+Channel can be constrained to only send and receive, otherwise bi-directional.
+More like futures and \textasciitilde{}\textsubscript{Select}\_, and asynchronous call.
+
+Also has mutual exclusion locks, synchronization locks,
+singleton-pattern locks, readers/writers locks, and countdown locks.
+
+Also has atomic operations for:
+\begin{itemize}
+\item adding signed and unsigned integers and pointers to integers
+\item compare and swap signed and unsigned integers and pointers to integers
+\item load and store signed and unsigned integers and pointers to integers
+\end{itemize}
+\subsection{C++11 Concurrency}
+\label{sec:orgc495a11}
+C++11 library can be sound as C++ now has strong memory model (SC).
+
+Compile with
+\begin{verbatim}
+g++ -std=c++11 -pthread ...
+\end{verbatim}
+
+Thread creation uses start/wait (fork/join) approach:
+\begin{verbatim}
+class thread {
+  public:
+    template <class Fn, class ... Args>
+      explicit thread( Fn && fn, Args &&... args );
+    void join(); // termination synchronization
+    bool joinable() const; // true => joined, else false
+    void detach();  // independent lifetime
+    id get_id const; // thread id
+};
+\end{verbatim}
+
+Passing multiple arguments using C++11's variadic template feature to provide
+a type-safe call chain via thread constructor to the callable routine.
+
+Any entity that is callable (functor) may be started:
+
+Thread starts implicitly at point of declaration.
+Instead of \texttt{join}, thread can run independently by detaching.
+
+Beware dangling pointers to local variables.
+Deallocating thread object before join or detach is an error.
+
+Usable locks include mutual exclusion locks (mutex, recursive, timed,
+recursive-timed) and condition variables.
+\begin{verbatim}
+class mutex {
+  public:
+    void lock(); // acquire
+    void unlock(); // release
+    bool try_lock(); // nonblocking acquire
+};
+
+class condition_variable {
+  public:
+    void notify_one(); // unblock one
+    void notify_all(); // unblock all
+    void wait( mutex &lock ); // atomic block + release lock
+};
+\end{verbatim}
+
+Scheduling is no-priority nonblocking, so barging.
+This means \texttt{wait} statements must be in while loops to recheck
+conditions.
+
+Also has futures, with \texttt{get} member to block and get answer and
+\texttt{async} call with function and params.
+
+Also has atomic types and operations.
+Atomic types include flag, bool, char (signed and unsigned as well),
+short (signed and unsigned as well), int (signed and unsigned as well),
+long/llong (signed and unsigned as well), wchar, address, and template
+atomic type.
+
+Atomic types allow for most C++ operations to be atomic including
+increment, decrement, increase, decrease, \texttt{\&=}, \texttt{|=}, \texttt{\textasciicircum{}=},
+store, load, exchange, set, compare/exchange, and fetch
+add/sub/and/or/xor.
+\section{Threads and Locks Library}
+\label{sec:orgcc64d8e}
+\subsection{java.util.concurrent}
+\label{sec:org1929717}
+Java library is sound because of memory model and language is concurrent
+aware.
+
+Synchronizers include \texttt{Semaphore} (counting), \texttt{CountDownLatch}, \texttt{CyclicBarrier},
+\texttt{Exchanger}, \texttt{Condition}, \texttt{Lock}, and \texttt{ReadWriteLock}.
+
+Can use locks to build a monitor with multiple condition variables.
+
+\texttt{Condition} is nested class within \texttt{ReentrantLock}, so condition
+implicitly knows its associated (monitor) lock.
+
+Scheduling still no-priority non-blocking (barging), so \texttt{wait} statements
+must be in \texttt{while} loops to recheck condition.
+
+No connection with implicit condition variable of an object.
+
+Do not mix implicit and explicit condition variables.
+
+Executor/Future are both actor-like:
+\begin{itemize}
+\item executor is a server with 1+ worker tasks (worker pool)
+\item future is a closure with work for executor (callable) and place for result
+\item call to executor \texttt{submit} is asynchronous and returns a future
+\item result retrieved using \texttt{get} routine, which may block until result inserted
+by executor
+\end{itemize}
+
+\(\mu\)C++ also has fixed thread-pool executor (used with actors).
+
+Also has collections for different types of synchronous and blocking queues,
+maps, sets, and list.
+Can create threads that interact indirectly through atomic data structures.
+
+Also has atomic types using compare-and-set (lock-free).
+Includes atomic versions of boolean, integer, int array, long, long array,
+reference (templated), and reference array (templated).
+\subsection{Pthreads}
+\label{sec:org7d2339a}
+C libraries built around routine abstraction and mutex/condition locks:
+\begin{verbatim}
+int pthread_create( pthread_t * new_thread_ID,
+                    void * (*start_func)(void *),
+                    void * arg);
+int pthread_join( pthread_t target_thread,
+                  void ** status );
+pthread_t pthread_self( void );
+int pthread_yield( void );
+
+// mutex lock and cond vars also available
+\end{verbatim}
+
+Thread starts in routine \texttt{start\_func} via \texttt{pthread\_create}, where
+initialization is single \texttt{void *} value.
+
+Termination synchronization is performed by calling \texttt{pthread\_join}.
+Return a result on thread termination by passing back a single
+\texttt{void *} value from \texttt{pthread\_join}.
+
+All C library approaches have type-unsafe communication with tasks.
+
+No external scheduling, so complex direct-communication emulation.
+
+Internal scheduling is no-priority non-blocking (barging), so \texttt{wait}
+statements must be in while loops to recheck conditions.
+
+Explicit calls are necessary to \texttt{ctor} and \texttt{dtor} before/after use of pthreads
+since no constructors or destructors in C.
+
+All locks must be initialized and finalized.
+
+Mutual exclusion must be explicitly defined where needed.
+Condition locks should only be accessed within mutual exclusion.
+
+\texttt{pthread\_cond\_wait} atomically blocks thread and releases mutex lock, which is
+necessary to close race condition on baton passing.
+\section{OpenMP}
+\label{sec:org549f45c}
+Shared memory, implicit thread management (programmer hints), 1 to 1 threading model
+(kernel threads), and some explicit locking.
+
+Communicate with compiler with \texttt{\#pragma} directives.
+
+Uses fork/join model:
+\begin{itemize}
+\item \uline{fork}: initial thread creates a team of parallel threads (including itself)
+\item each thread executes the statements in the region construct
+\item \uline{join}: when team threads complete, synchronize, and terminate, except initial
+thread which continues
+\end{itemize}
+
+Can do COBEGIN/COEND where each thread executes a different section using
+\texttt{\#pragma omp section} after defining how many threads to use in the following
+parallel sections.
+
+\texttt{for} directive specifies loop iteration executed by a team of threads (COFOR).
+In this case, sequential code is directly converted to concurrent with the
+pragma.
+
+Variable outside a section are shared, variables inside are thread private.
+Programmer is responsible for sharing in vector/matrix multiplication.
+
+Can use barrier with \texttt{barrier} directive after defining threads (no section).
+Without \texttt{omp} section, all threads run same block (like parallel for).
+
+Barrier's trigger is the number of block threads.
+
+Also has critical section and atomic directives.
+\end{document}
