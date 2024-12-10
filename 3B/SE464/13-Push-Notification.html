@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-10 Tue 15:00 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Push Notification</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Push Notification</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org6eb1ed9">1. Motivation</a></li>
+<li><a href="#org6ceacf7">2. Push Notifications</a>
+<ul>
+<li><a href="#org7434bfe">2.1. Smartphones</a>
+<ul>
+<li><a href="#org8edf70f">2.1.1. Device Registration</a></li>
+</ul>
+</li>
+<li><a href="#orge93ed53">2.2. Web Browsers</a>
+<ul>
+<li><a href="#org1a22bc0">2.2.1. Websockets</a></li>
+<li><a href="#orga517ca5">2.2.2. Long-Polling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7657fbd">3. Challenges</a>
+<ul>
+<li><a href="#org87210f8">3.1. Notification Service</a></li>
+<li><a href="#orgdb4ffc0">3.2. API Gateway</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6eb1ed9" class="outline-2">
+<h2 id="org6eb1ed9"><span class="section-number-2">1.</span> Motivation</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In client-server architecture, client makes request and server sends responses, so client
+must start all interactions.
+</p>
+
+<p>
+Helpful for server to start an interaction when some interaction is caused by another user&rsquo;s action or
+some timed event.
+</p>
+
+<p>
+Possible to notify users by sending emails, but these are limited.
+Can send links o apps, but cannot directly interact with your app.
+</p>
+
+<p>
+Want to be able to send request to a client app.
+</p>
+
+<p>
+Client cannot implement a REST API since it is not easily reachable since:
+</p>
+<ul class="org-ul">
+<li>IP addresses change or can be private</li>
+<li>device/network might have a firewall</li>
+<li>client does not control DNS server</li>
+<li>may be powered off or out of radio contact</li>
+<li>app might not be running</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6ceacf7" class="outline-2">
+<h2 id="org6ceacf7"><span class="section-number-2">2.</span> Push Notifications</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Push notifications</b>: hacks to send messages to clients
+</p>
+
+<p>
+Client&rsquo;s OS makes 1 connection for all apps and services send notifications through 3rd party.
+</p>
+</div>
+<div id="outline-container-org7434bfe" class="outline-3">
+<h3 id="org7434bfe"><span class="section-number-3">2.1.</span> Smartphones</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Location registration used for mobile push notifications.
+Apple and Google run a <b>push notification service</b> (PNS) for apps on their OS.
+</p>
+
+<p>
+Whenever phone gets new IP address, OS opens long-lived connection to the PNS.
+PNS stores user id and IP address.
+</p>
+
+<p>
+Apps cannot contact a user&rsquo;s device directly, so they send user notifications to the PNS, which
+relays the message to the user&rsquo;s current P address.
+</p>
+
+<p>
+OS can show notification even if app is not running.
+</p>
+
+<p>
+On iOS, for privacy, different apps have different user IDs (device tokens).
+</p>
+
+<p>
+To deal with NAT, OS sends keep-alive messages, where just 1 port is needed for all apps.
+</p>
+</div>
+<div id="outline-container-org8edf70f" class="outline-4">
+<h4 id="org8edf70f"><span class="section-number-4">2.1.1.</span> Device Registration</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+Every time devices connect to the network, the OS creates a long-lived connection to the PNS:
+</p>
+<ol class="org-ol">
+<li>app registers for notifications</li>
+<li>PNS returns a unique push ID</li>
+<li>app sends push ID to its backend service, which stores user&rsquo;s push ID in a DB for later use</li>
+<li>wait for the backend to have a notification for the user</li>
+<li>after the backend gets the push ID for that user from its DB, it sends a notification request
+to the PNS with push ID</li>
+<li>PNS uses push ID to identify the long-lives connection to the client and relay the notification</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-orge93ed53" class="outline-3">
+<h3 id="orge93ed53"><span class="section-number-3">2.2.</span> Web Browsers</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Designed to pull data from servers, but modern application desire updates to be pushed from service.
+</p>
+
+<p>
+Client can make repeated requests for new data (polling), but poor solution that requires tradeoff
+between latency and network overhead.
+</p>
+
+<p>
+Websockets preferred modern solution, and long-polling before websockets.
+</p>
+</div>
+<div id="outline-container-org1a22bc0" class="outline-4">
+<h4 id="org1a22bc0"><span class="section-number-4">2.2.1.</span> Websockets</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+<b>Websocket</b>: long-lived, bi-directional network connection, similar to TCP socket but available
+in JS code in browser
+</p>
+
+<p>
+JS app creates websocket connection to server.
+Client can then send API requests through websocket and responses come back through websocket.
+</p>
+
+<p>
+Connection remains open.
+</p>
+
+<p>
+Server can send messages at any time, independent of client requests.
+</p>
+</div>
+</div>
+<div id="outline-container-orga517ca5" class="outline-4">
+<h4 id="orga517ca5"><span class="section-number-4">2.2.2.</span> Long-Polling</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+Client sends HTTP request.
+Server waits, then sends a response only when new data is ready.
+If no data available within 60 seconds, send an empty response.
+Client then makes another long-polling request (infinite loop).
+</p>
+
+<p>
+Client instantiates request and server controls when response is sent.
+</p>
+
+<p>
+Sever always has 1 outstanding request from client available to send data.
+</p>
+
+<p>
+Periodic requests every 60 seconds are wasteful since periodic gap in service.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7657fbd" class="outline-2">
+<h2 id="org7657fbd"><span class="section-number-2">3.</span> Challenges</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Challenge is to find one long-lived connection to the client.
+</p>
+
+<p>
+Network socket (connection) is tied to a single IP address.
+</p>
+
+<p>
+Notifications originating from anywhere in the large, distributed system must be somehow directed to the 1
+appropriate notification server instance that the client is connected to.
+</p>
+</div>
+<div id="outline-container-org87210f8" class="outline-3">
+<h3 id="org87210f8"><span class="section-number-3">3.1.</span> Notification Service</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+To solve the problem, notifications are often a separate microservice.
+</p>
+
+<p>
+Clients connect themselves by either:
+</p>
+<ul class="org-ul">
+<li>opening a websocket</li>
+<li>making an API request providing a push ID usable on APN or GCM</li>
+</ul>
+
+<p>
+In both cases, user&rsquo;s location is stored in a DB.
+</p>
+
+<p>
+Other microservices send notifications through API calls.
+Implementation looks up connection location and relays message.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdb4ffc0" class="outline-3">
+<h3 id="orgdb4ffc0"><span class="section-number-3">3.2.</span> API Gateway</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Clients have long-lived websocket connections to gateway.
+</p>
+
+<p>
+Requests are handled by Serverless Functions (lambdas) and when connection is established, save
+connection ID.
+</p>
+
+<p>
+Later, use connection ID to push data to clients.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-10 Tue 15:00</p>
+</div>
+</body>
+</html>

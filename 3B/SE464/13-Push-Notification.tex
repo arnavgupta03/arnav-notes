@@ -1,0 +1,147 @@
+% Created 2024-12-10 Tue 15:00
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Push Notification}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Push Notification},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Motivation}
+\label{sec:org8a012bc}
+In client-server architecture, client makes request and server sends responses, so client
+must start all interactions.
+
+Helpful for server to start an interaction when some interaction is caused by another user's action or
+some timed event.
+
+Possible to notify users by sending emails, but these are limited.
+Can send links o apps, but cannot directly interact with your app.
+
+Want to be able to send request to a client app.
+
+Client cannot implement a REST API since it is not easily reachable since:
+\begin{itemize}
+\item IP addresses change or can be private
+\item device/network might have a firewall
+\item client does not control DNS server
+\item may be powered off or out of radio contact
+\item app might not be running
+\end{itemize}
+\section{Push Notifications}
+\label{sec:org18c4d21}
+\textbf{Push notifications}: hacks to send messages to clients
+
+Client's OS makes 1 connection for all apps and services send notifications through 3rd party.
+\subsection{Smartphones}
+\label{sec:org12678b5}
+Location registration used for mobile push notifications.
+Apple and Google run a \textbf{push notification service} (PNS) for apps on their OS.
+
+Whenever phone gets new IP address, OS opens long-lived connection to the PNS.
+PNS stores user id and IP address.
+
+Apps cannot contact a user's device directly, so they send user notifications to the PNS, which
+relays the message to the user's current P address.
+
+OS can show notification even if app is not running.
+
+On iOS, for privacy, different apps have different user IDs (device tokens).
+
+To deal with NAT, OS sends keep-alive messages, where just 1 port is needed for all apps.
+\subsubsection{Device Registration}
+\label{sec:org280b7ba}
+Every time devices connect to the network, the OS creates a long-lived connection to the PNS:
+\begin{enumerate}
+\item app registers for notifications
+\item PNS returns a unique push ID
+\item app sends push ID to its backend service, which stores user's push ID in a DB for later use
+\item wait for the backend to have a notification for the user
+\item after the backend gets the push ID for that user from its DB, it sends a notification request
+to the PNS with push ID
+\item PNS uses push ID to identify the long-lives connection to the client and relay the notification
+\end{enumerate}
+\subsection{Web Browsers}
+\label{sec:org882fe09}
+Designed to pull data from servers, but modern application desire updates to be pushed from service.
+
+Client can make repeated requests for new data (polling), but poor solution that requires tradeoff
+between latency and network overhead.
+
+Websockets preferred modern solution, and long-polling before websockets.
+\subsubsection{Websockets}
+\label{sec:org0c07af8}
+\textbf{Websocket}: long-lived, bi-directional network connection, similar to TCP socket but available
+in JS code in browser
+
+JS app creates websocket connection to server.
+Client can then send API requests through websocket and responses come back through websocket.
+
+Connection remains open.
+
+Server can send messages at any time, independent of client requests.
+\subsubsection{Long-Polling}
+\label{sec:org6203f81}
+Client sends HTTP request.
+Server waits, then sends a response only when new data is ready.
+If no data available within 60 seconds, send an empty response.
+Client then makes another long-polling request (infinite loop).
+
+Client instantiates request and server controls when response is sent.
+
+Sever always has 1 outstanding request from client available to send data.
+
+Periodic requests every 60 seconds are wasteful since periodic gap in service.
+\section{Challenges}
+\label{sec:org57d6805}
+Challenge is to find one long-lived connection to the client.
+
+Network socket (connection) is tied to a single IP address.
+
+Notifications originating from anywhere in the large, distributed system must be somehow directed to the 1
+appropriate notification server instance that the client is connected to.
+\subsection{Notification Service}
+\label{sec:org28480f0}
+To solve the problem, notifications are often a separate microservice.
+
+Clients connect themselves by either:
+\begin{itemize}
+\item opening a websocket
+\item making an API request providing a push ID usable on APN or GCM
+\end{itemize}
+
+In both cases, user's location is stored in a DB.
+
+Other microservices send notifications through API calls.
+Implementation looks up connection location and relays message.
+\subsection{API Gateway}
+\label{sec:orgd3d0ff2}
+Clients have long-lived websocket connections to gateway.
+
+Requests are handled by Serverless Functions (lambdas) and when connection is established, save
+connection ID.
+
+Later, use connection ID to push data to clients.
+\end{document}

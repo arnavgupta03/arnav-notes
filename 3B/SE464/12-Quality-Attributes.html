@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-10 Tue 15:00 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quality Attributes</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Quality Attributes</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org667d2e3">1. Quality Attributes</a>
+<ul>
+<li><a href="#orgba63cfc">1.1. Performance</a>
+<ul>
+<li><a href="#org6091d27">1.1.1. Throughput</a></li>
+<li><a href="#org0acf234">1.1.2. Response Time</a></li>
+<li><a href="#orga2297bc">1.1.3. Deadlines</a></li>
+<li><a href="#org37a3187">1.1.4. Issues</a></li>
+</ul>
+</li>
+<li><a href="#org6f700be">1.2. Scalability</a>
+<ul>
+<li><a href="#org96b9c34">1.2.1. Request Load</a></li>
+<li><a href="#org69f57ff">1.2.2. Connections</a></li>
+<li><a href="#org4659abf">1.2.3. Data Size</a></li>
+<li><a href="#org59b6cfb">1.2.4. Deployment</a></li>
+<li><a href="#org03dd91b">1.2.5. ICDE</a></li>
+</ul>
+</li>
+<li><a href="#org682ed7e">1.3. Modifiability</a>
+<ul>
+<li><a href="#org136c4dd">1.3.1. Analysis</a></li>
+<li><a href="#orged66a9a">1.3.2. ICDE</a></li>
+</ul>
+</li>
+<li><a href="#org3d42582">1.4. Security</a>
+<ul>
+<li><a href="#orgeecbb08">1.4.1. ICDE Requirements</a></li>
+</ul>
+</li>
+<li><a href="#orgfec9749">1.5. Availability</a>
+<ul>
+<li><a href="#orgefe784b">1.5.1. ICDE</a></li>
+</ul>
+</li>
+<li><a href="#org35beb6c">1.6. Integration</a>
+<ul>
+<li><a href="#orgae7c35f">1.6.1. Strategies</a></li>
+<li><a href="#org218a6c7">1.6.2. ICDE</a></li>
+</ul>
+</li>
+<li><a href="#org3dfbeb2">1.7. Other Quality Attributes</a>
+<ul>
+<li><a href="#org2c76141">1.7.1. Portability</a></li>
+<li><a href="#org1077861">1.7.2. Testability</a></li>
+<li><a href="#orgcfc82d0">1.7.3. Supportablity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org42e4d88">2. Design Trade-offs</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org667d2e3" class="outline-2">
+<h2 id="org667d2e3"><span class="section-number-2">1.</span> Quality Attributes</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Includes <span class="underline">reliability</span>, <span class="underline">availability</span>, <span class="underline">portability</span>, <span class="underline">scalability</span>,
+and <span class="underline">performance</span>.
+</p>
+
+<p>
+<b>Information Capture and Dissemination Environment (ICDE)</b>: software system for
+providing intelligent assistance to analysts and researchers
+</p>
+
+<p>
+ICDE automatically captures and stores data of actions performed by a user.
+Data can later by used by 3rd parties to offer intelligent help.
+</p>
+
+<p>
+ICDE business goals:
+</p>
+<ul class="org-ul">
+<li>encourage 3rd party tool developers
+<ul class="org-ul">
+<li><span class="underline">integration</span>: simple and reliable programmatic access to data store for
+3rd party tools</li>
+<li><span class="underline">portability</span>: heterogeneous platform support for running 3rd party
+tools</li>
+<li><span class="underline">reliability</span>: allow 3rd party tools to communicate with ICDE users from a
+remote machine</li>
+</ul></li>
+<li>promote ICDE concept to users
+<ul class="org-ul">
+<li><span class="underline">scalability</span>: scale data collection and data store components to support
+up to 150 users at a single site</li>
+<li><span class="underline">scalability</span>: low-cost deployment for each ICDE user workstation</li>
+</ul></li>
+</ul>
+
+<p>
+Quality attributes must be made precise/measurable for a given system design.
+</p>
+</div>
+<div id="outline-container-orgba63cfc" class="outline-3">
+<h3 id="orgba63cfc"><span class="section-number-3">1.1.</span> Performance</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Different ways to measure performance include: throughput, response time,
+deadlines
+</p>
+
+<p>
+Enterprise applications often have strict performance requirements.
+</p>
+</div>
+<div id="outline-container-org6091d27" class="outline-4">
+<h4 id="org6091d27"><span class="section-number-4">1.1.1.</span> Throughput</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Measure of amount of work an application must perform in unit time.
+</p>
+
+<p>
+Required throughput can be average or peak.
+</p>
+
+<p>
+Many systems have low average but high peak throughput requirements.
+</p>
+</div>
+</div>
+<div id="outline-container-org0acf234" class="outline-4">
+<h4 id="org0acf234"><span class="section-number-4">1.1.2.</span> Response Time</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Measure of latency an application exhibits in processing a request.
+</p>
+
+<p>
+Usually measured in milliseconds, and often an important metric for users.
+</p>
+
+<p>
+Required response time can be guaranteed or average.
+</p>
+</div>
+</div>
+<div id="outline-container-orga2297bc" class="outline-4">
+<h4 id="orga2297bc"><span class="section-number-4">1.1.3.</span> Deadlines</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+Something must be completed before some specified time.
+Most often associated with batch jobs in IT systems.
+</p>
+</div>
+</div>
+<div id="outline-container-org37a3187" class="outline-4">
+<h4 id="org37a3187"><span class="section-number-4">1.1.4.</span> Issues</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+Overheads of trapping user events must be imperceptible to ICDE users
+(response time).
+Solution is to decouple user event capture from storage using a queue.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org6f700be" class="outline-3">
+<h3 id="org6f700be"><span class="section-number-3">1.2.</span> Scalability</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Main scalability issues are request load, connections, data size, and deployments
+</p>
+</div>
+<div id="outline-container-org96b9c34" class="outline-4">
+<h4 id="org96b9c34"><span class="section-number-4">1.2.1.</span> Request Load</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+How an application behaves when simultaneous load grows.
+</p>
+
+<p>
+Ideal solution, without additional hardware capacity is: as the load increases, throughput remain
+constant and response time per request increases only linearly.
+</p>
+
+<p>
+Can scale by adding more hardware: scale-out &rarr; horizontal or scale-up &rarr; vertical
+</p>
+
+<p>
+In reality, applications will exhibit a decrease in throughput and a subsequent exponential increase
+in response time:
+</p>
+<ul class="org-ul">
+<li>increased load causes increased <span class="underline">resource contention</span> (CPU, network, memory)</li>
+<li>each request consumes some additional resource (buffer space, locks, etc) in the application,
+and eventually these are exhausted</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org69f57ff" class="outline-4">
+<h4 id="org69f57ff"><span class="section-number-4">1.2.2.</span> Connections</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+When the number of simultaneous connections to an application increases.
+Each connections consumes some resources and this can exceed the maximum number of connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org4659abf" class="outline-4">
+<h4 id="org4659abf"><span class="section-number-4">1.2.3.</span> Data Size</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+How an application behaves as the data it processes increases in size.
+</p>
+</div>
+</div>
+<div id="outline-container-org59b6cfb" class="outline-4">
+<h4 id="org59b6cfb"><span class="section-number-4">1.2.4.</span> Deployment</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+How effort to install/deploy an application increases as installation base grows, by installing new
+users or new servers.
+</p>
+
+<p>
+Solutions typically revolve around automatic download/installation.
+</p>
+</div>
+</div>
+<div id="outline-container-org03dd91b" class="outline-4">
+<h4 id="org03dd91b"><span class="section-number-4">1.2.5.</span> ICDE</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<p>
+Scalability often overlooked but is a major cause of application failure.
+Also hard to predict/test/validate.
+</p>
+
+<p>
+Reliance on proven designs and technologies is essential.
+</p>
+
+<p>
+For ICDE, application should be capable of handling a peak load of 150 concurrent requests from ICDE
+clients.
+Relatively easy to simulate user load to validate this.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org682ed7e" class="outline-3">
+<h3 id="org682ed7e"><span class="section-number-3">1.3.</span> Modifiability</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Modifications to a software system during its lifetime are certain.
+Modifiable systems are easier to change/evolve.
+</p>
+
+<p>
+Assess modifiability in context of how a system is likely to change.
+No need to facilitate changes that are unlikely to occur, so avoid over-engineering.
+</p>
+
+<p>
+Modifiability measures how easy it may be to change an application to cater for new functional
+or non-functional requirements.
+</p>
+
+<p>
+Must estimate cost and effort of modifiability.
+</p>
+
+<p>
+Scenarios could involve new features, replacing components, or porting applications.
+</p>
+</div>
+<div id="outline-container-org136c4dd" class="outline-4">
+<h4 id="org136c4dd"><span class="section-number-4">1.3.1.</span> Analysis</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Impact not easy to quantify.
+</p>
+
+<p>
+Best possible is:
+</p>
+<ul class="org-ul">
+<li>convincing impact analysis of changes needed</li>
+<li>demo of how solution can accommodate modification without change</li>
+</ul>
+
+<p>
+Minimizing dependencies increases modifiablity.
+Changes isolated to single components are likely to be less expensive than those that affect other
+components as well.
+</p>
+</div>
+</div>
+<div id="outline-container-orged66a9a" class="outline-4">
+<h4 id="orged66a9a"><span class="section-number-4">1.3.2.</span> ICDE</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Range of events trapped and stored by ICDE client to be expanded.
+</p>
+
+<p>
+3rd party tools communicate new message types.
+</p>
+
+<p>
+Change DB or server technology user.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3d42582" class="outline-3">
+<h3 id="org3d42582"><span class="section-number-3">1.4.</span> Security</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Difficult and specialized multi-faceted quality attribute.
+</p>
+
+<p>
+Much technology available, but requires deep knowledge of approaches and solution.
+</p>
+
+<p>
+<b>Authentication</b>: applications can verify identity of users and other applications with which
+they communicate
+</p>
+
+<p>
+<b>Authorization</b>: authenticated users and applications have defined access rights to system resources
+</p>
+
+<p>
+<b>Encryption</b>: messages sent to/from application are encrypted
+</p>
+
+<p>
+<b>Integrity</b>: ensures message contents are not altered in transit
+</p>
+
+<p>
+<b>Non-repudiation</b>: message sender has proof of delivery and receiver is assured of sender&rsquo;s identity,
+so neither can subsequently refute participation in message exchange
+</p>
+
+<p>
+Approaches include:
+</p>
+<ul class="org-ul">
+<li>internet application security (SSL, PKI)</li>
+<li>authentication and authorization in Java (JAAS)</li>
+<li>OS security</li>
+<li>DB security</li>
+</ul>
+</div>
+<div id="outline-container-orgeecbb08" class="outline-4">
+<h4 id="orgeecbb08"><span class="section-number-4">1.4.1.</span> ICDE Requirements</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Authentication of ICDE users and 3rd party ICDE tools to ICDE server.
+</p>
+
+<p>
+Encryption of data to ICDE server from 3rd party tools/users executing remotely over
+an insecure network.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfec9749" class="outline-3">
+<h3 id="orgfec9749"><span class="section-number-3">1.5.</span> Availability</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Requirement for most IT applications.
+</p>
+
+<p>
+Measured by the proportion of required time it is usable.
+</p>
+
+<p>
+Related to reliability, unreliable &rArr; poor availability.
+</p>
+
+<p>
+Period of loss of availability determined by:
+</p>
+<ul class="org-ul">
+<li>time to detect failure</li>
+<li>time to correct failure</li>
+<li>time to restart application</li>
+</ul>
+
+<p>
+Strategies for high availability:
+</p>
+<ul class="org-ul">
+<li>eliminate single points of failure</li>
+<li>replication and failover</li>
+<li>automatic detection and restart</li>
+</ul>
+
+<p>
+<b>Recoverability</b>: capability to reestablish performance levels and recover affected data after an
+application or system failure
+</p>
+</div>
+<div id="outline-container-orgefe784b" class="outline-4">
+<h4 id="orgefe784b"><span class="section-number-4">1.5.1.</span> ICDE</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<p>
+Achieve 100% availability during business hours.
+</p>
+
+<p>
+Plenty of scope for downtime for system upgrade, backup, and maintenance.
+</p>
+
+<p>
+Include mechanisms for component replication and failover.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org35beb6c" class="outline-3">
+<h3 id="org35beb6c"><span class="section-number-3">1.6.</span> Integration</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Ease with which application can be incorporated into broader application context.
+</p>
+
+<p>
+Achieved by programmatic APIs and data integration.
+</p>
+</div>
+<div id="outline-container-orgae7c35f" class="outline-4">
+<h4 id="orgae7c35f"><span class="section-number-4">1.6.1.</span> Strategies</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<p>
+Expose application data for access by other components.
+</p>
+
+<p>
+Offer services to read/write application data through an abstracted interface.
+</p>
+</div>
+</div>
+<div id="outline-container-org218a6c7" class="outline-4">
+<h4 id="org218a6c7"><span class="section-number-4">1.6.2.</span> ICDE</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<p>
+Revolve around need to support 3rd party analysis tools.
+</p>
+
+<p>
+Well-defined and understood mechanism for 3rd party tools to access data in the ICDE data store.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3dfbeb2" class="outline-3">
+<h3 id="org3dfbeb2"><span class="section-number-3">1.7.</span> Other Quality Attributes</h3>
+<div class="outline-text-3" id="text-1-7">
+</div>
+<div id="outline-container-org2c76141" class="outline-4">
+<h4 id="org2c76141"><span class="section-number-4">1.7.1.</span> Portability</h4>
+<div class="outline-text-4" id="text-1-7-1">
+<p>
+If an application can be easily executed on a different software/hardware platform to the one
+it has been developed for.
+</p>
+</div>
+</div>
+<div id="outline-container-org1077861" class="outline-4">
+<h4 id="org1077861"><span class="section-number-4">1.7.2.</span> Testability</h4>
+<div class="outline-text-4" id="text-1-7-2">
+<p>
+The ease at which an application can be tested.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcfc82d0" class="outline-4">
+<h4 id="orgcfc82d0"><span class="section-number-4">1.7.3.</span> Supportablity</h4>
+<div class="outline-text-4" id="text-1-7-3">
+<p>
+The ease at which an application can be supported once it is deployed.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org42e4d88" class="outline-2">
+<h2 id="org42e4d88"><span class="section-number-2">2.</span> Design Trade-offs</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Quality attributes interact with and affect each other.
+</p>
+
+<p>
+Architects must create solutions that make sensible compromises since it is not possible to satisfy
+all competing requirements.
+</p>
+
+<p>
+Still, must satisfy all stakeholder needs, which is difficult.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-10 Tue 15:00</p>
+</div>
+</body>
+</html>

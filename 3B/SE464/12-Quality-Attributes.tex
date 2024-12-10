@@ -1,0 +1,265 @@
+% Created 2024-12-10 Tue 15:00
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Quality Attributes}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Quality Attributes},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Quality Attributes}
+\label{sec:org2d61fed}
+Includes \uline{reliability}, \uline{availability}, \uline{portability}, \uline{scalability},
+and \uline{performance}.
+
+\textbf{Information Capture and Dissemination Environment (ICDE)}: software system for
+providing intelligent assistance to analysts and researchers
+
+ICDE automatically captures and stores data of actions performed by a user.
+Data can later by used by 3rd parties to offer intelligent help.
+
+ICDE business goals:
+\begin{itemize}
+\item encourage 3rd party tool developers
+\begin{itemize}
+\item \uline{integration}: simple and reliable programmatic access to data store for
+3rd party tools
+\item \uline{portability}: heterogeneous platform support for running 3rd party
+tools
+\item \uline{reliability}: allow 3rd party tools to communicate with ICDE users from a
+remote machine
+\end{itemize}
+\item promote ICDE concept to users
+\begin{itemize}
+\item \uline{scalability}: scale data collection and data store components to support
+up to 150 users at a single site
+\item \uline{scalability}: low-cost deployment for each ICDE user workstation
+\end{itemize}
+\end{itemize}
+
+Quality attributes must be made precise/measurable for a given system design.
+\subsection{Performance}
+\label{sec:orgb90df7a}
+Different ways to measure performance include: throughput, response time,
+deadlines
+
+Enterprise applications often have strict performance requirements.
+\subsubsection{Throughput}
+\label{sec:orgbe0bbbb}
+Measure of amount of work an application must perform in unit time.
+
+Required throughput can be average or peak.
+
+Many systems have low average but high peak throughput requirements.
+\subsubsection{Response Time}
+\label{sec:org7590cb9}
+Measure of latency an application exhibits in processing a request.
+
+Usually measured in milliseconds, and often an important metric for users.
+
+Required response time can be guaranteed or average.
+\subsubsection{Deadlines}
+\label{sec:org80fb85a}
+Something must be completed before some specified time.
+Most often associated with batch jobs in IT systems.
+\subsubsection{Issues}
+\label{sec:org41bc076}
+Overheads of trapping user events must be imperceptible to ICDE users
+(response time).
+Solution is to decouple user event capture from storage using a queue.
+\subsection{Scalability}
+\label{sec:org4cfdd03}
+Main scalability issues are request load, connections, data size, and deployments
+\subsubsection{Request Load}
+\label{sec:org41de869}
+How an application behaves when simultaneous load grows.
+
+Ideal solution, without additional hardware capacity is: as the load increases, throughput remain
+constant and response time per request increases only linearly.
+
+Can scale by adding more hardware: scale-out \(\to\) horizontal or scale-up \(\to\) vertical
+
+In reality, applications will exhibit a decrease in throughput and a subsequent exponential increase
+in response time:
+\begin{itemize}
+\item increased load causes increased \uline{resource contention} (CPU, network, memory)
+\item each request consumes some additional resource (buffer space, locks, etc) in the application,
+and eventually these are exhausted
+\end{itemize}
+\subsubsection{Connections}
+\label{sec:org9f9df95}
+When the number of simultaneous connections to an application increases.
+Each connections consumes some resources and this can exceed the maximum number of connections.
+\subsubsection{Data Size}
+\label{sec:orgdf516a3}
+How an application behaves as the data it processes increases in size.
+\subsubsection{Deployment}
+\label{sec:orgc47caaa}
+How effort to install/deploy an application increases as installation base grows, by installing new
+users or new servers.
+
+Solutions typically revolve around automatic download/installation.
+\subsubsection{ICDE}
+\label{sec:org4fa01c4}
+Scalability often overlooked but is a major cause of application failure.
+Also hard to predict/test/validate.
+
+Reliance on proven designs and technologies is essential.
+
+For ICDE, application should be capable of handling a peak load of 150 concurrent requests from ICDE
+clients.
+Relatively easy to simulate user load to validate this.
+\subsection{Modifiability}
+\label{sec:org3124182}
+Modifications to a software system during its lifetime are certain.
+Modifiable systems are easier to change/evolve.
+
+Assess modifiability in context of how a system is likely to change.
+No need to facilitate changes that are unlikely to occur, so avoid over-engineering.
+
+Modifiability measures how easy it may be to change an application to cater for new functional
+or non-functional requirements.
+
+Must estimate cost and effort of modifiability.
+
+Scenarios could involve new features, replacing components, or porting applications.
+\subsubsection{Analysis}
+\label{sec:org8b5acd3}
+Impact not easy to quantify.
+
+Best possible is:
+\begin{itemize}
+\item convincing impact analysis of changes needed
+\item demo of how solution can accommodate modification without change
+\end{itemize}
+
+Minimizing dependencies increases modifiablity.
+Changes isolated to single components are likely to be less expensive than those that affect other
+components as well.
+\subsubsection{ICDE}
+\label{sec:org27d4958}
+Range of events trapped and stored by ICDE client to be expanded.
+
+3rd party tools communicate new message types.
+
+Change DB or server technology user.
+\subsection{Security}
+\label{sec:org557f510}
+Difficult and specialized multi-faceted quality attribute.
+
+Much technology available, but requires deep knowledge of approaches and solution.
+
+\textbf{Authentication}: applications can verify identity of users and other applications with which
+they communicate
+
+\textbf{Authorization}: authenticated users and applications have defined access rights to system resources
+
+\textbf{Encryption}: messages sent to/from application are encrypted
+
+\textbf{Integrity}: ensures message contents are not altered in transit
+
+\textbf{Non-repudiation}: message sender has proof of delivery and receiver is assured of sender's identity,
+so neither can subsequently refute participation in message exchange
+
+Approaches include:
+\begin{itemize}
+\item internet application security (SSL, PKI)
+\item authentication and authorization in Java (JAAS)
+\item OS security
+\item DB security
+\end{itemize}
+\subsubsection{ICDE Requirements}
+\label{sec:orga12c1bb}
+Authentication of ICDE users and 3rd party ICDE tools to ICDE server.
+
+Encryption of data to ICDE server from 3rd party tools/users executing remotely over
+an insecure network.
+\subsection{Availability}
+\label{sec:orged32bd6}
+Requirement for most IT applications.
+
+Measured by the proportion of required time it is usable.
+
+Related to reliability, unreliable \(\Rightarrow\) poor availability.
+
+Period of loss of availability determined by:
+\begin{itemize}
+\item time to detect failure
+\item time to correct failure
+\item time to restart application
+\end{itemize}
+
+Strategies for high availability:
+\begin{itemize}
+\item eliminate single points of failure
+\item replication and failover
+\item automatic detection and restart
+\end{itemize}
+
+\textbf{Recoverability}: capability to reestablish performance levels and recover affected data after an
+application or system failure
+\subsubsection{ICDE}
+\label{sec:org25a4109}
+Achieve 100\% availability during business hours.
+
+Plenty of scope for downtime for system upgrade, backup, and maintenance.
+
+Include mechanisms for component replication and failover.
+\subsection{Integration}
+\label{sec:orgc3be8ca}
+Ease with which application can be incorporated into broader application context.
+
+Achieved by programmatic APIs and data integration.
+\subsubsection{Strategies}
+\label{sec:org042e6da}
+Expose application data for access by other components.
+
+Offer services to read/write application data through an abstracted interface.
+\subsubsection{ICDE}
+\label{sec:org55d3646}
+Revolve around need to support 3rd party analysis tools.
+
+Well-defined and understood mechanism for 3rd party tools to access data in the ICDE data store.
+\subsection{Other Quality Attributes}
+\label{sec:org8c5c568}
+\subsubsection{Portability}
+\label{sec:org2973397}
+If an application can be easily executed on a different software/hardware platform to the one
+it has been developed for.
+\subsubsection{Testability}
+\label{sec:org1503e0e}
+The ease at which an application can be tested.
+\subsubsection{Supportablity}
+\label{sec:orgcb7ae82}
+The ease at which an application can be supported once it is deployed.
+\section{Design Trade-offs}
+\label{sec:orga72750b}
+Quality attributes interact with and affect each other.
+
+Architects must create solutions that make sensible compromises since it is not possible to satisfy
+all competing requirements.
+
+Still, must satisfy all stakeholder needs, which is difficult.
+\end{document}
