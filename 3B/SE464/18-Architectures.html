@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-11 Wed 04:26 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Architectures</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Architectures</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc869fed">1. Streaming vs Batch Processing</a>
+<ul>
+<li><a href="#orgba8403d">1.1. Scalability Problems</a>
+<ul>
+<li><a href="#org64a1446">1.1.1. Easy</a></li>
+<li><a href="#orgee17ddb">1.1.2. Hard</a></li>
+</ul>
+</li>
+<li><a href="#orgbbe4c24">1.2. Big Data</a></li>
+<li><a href="#orge3cc65a">1.3. Distributed Computing</a>
+<ul>
+<li><a href="#orgbc494c6">1.3.1. Hadoop</a></li>
+</ul>
+</li>
+<li><a href="#orgd8bcdb0">1.4. Batch Processing</a></li>
+<li><a href="#org242e84d">1.5. Stream Processing</a>
+<ul>
+<li><a href="#orgdc0183e">1.5.1. Apache Storm</a></li>
+</ul>
+</li>
+<li><a href="#org2194e63">1.6. Batch vs Stream</a></li>
+</ul>
+</li>
+<li><a href="#org295751a">2. Leader-Follower Architecture</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc869fed" class="outline-2">
+<h2 id="orgc869fed"><span class="section-number-2">1.</span> Streaming vs Batch Processing</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgba8403d" class="outline-3">
+<h3 id="orgba8403d"><span class="section-number-3">1.1.</span> Scalability Problems</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org64a1446" class="outline-4">
+<h4 id="org64a1446"><span class="section-number-4">1.1.1.</span> Easy</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Handle independent requests from millions of customers.
+</p>
+
+<p>
+Assume data is already available to service requests.
+</p>
+
+<p>
+Trivially parallelizable, use horizontal scaling to divide and conquer.
+</p>
+</div>
+</div>
+<div id="outline-container-orgee17ddb" class="outline-4">
+<h4 id="orgee17ddb"><span class="section-number-4">1.1.2.</span> Hard</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Perform calculation use all data from millions of customers.
+</p>
+
+<p>
+Requires lots of coordination, housing data on compute notes.
+</p>
+
+<p>
+Must use MapReduce, Spark, etc.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbbe4c24" class="outline-3">
+<h3 id="orgbbe4c24"><span class="section-number-3">1.2.</span> Big Data</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Companies have exponential growth of data, so big data critical
+for organizations and driven by technological advancements.
+</p>
+
+<p>
+Big Data processing cycle include collection, preparation, input, processing,
+output/interpretation, and storage.
+</p>
+
+<p>
+Data analytics essential for extracting valuable insights and support
+decision-making and strategy.
+</p>
+
+<p>
+Cloud computing facilitates data storage, processing, and analysis from
+diverse data sources.
+</p>
+
+<p>
+For Big Data problems best to split analysis into subproblems and parallelize
+over machines.
+</p>
+</div>
+</div>
+<div id="outline-container-orge3cc65a" class="outline-3">
+<h3 id="orge3cc65a"><span class="section-number-3">1.3.</span> Distributed Computing</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Data and analysis distributed across machines.
+</p>
+
+<p>
+No machine has access to all data.
+Machines must communicate over network to share data and intermediate results.
+</p>
+
+<p>
+Some calculations like sum, max, min, mean, search/grep can be easy to
+parallelize, with most work done with no coordination and little communication.
+</p>
+
+<p>
+Input data split among nodes.
+Code distributed to many connected nodes.
+Many rounds of communication may be needed for a successful distributed
+algorithm.
+</p>
+
+<p>
+Distributed algorithm can be written from scratch in any language by
+reading/writing memory and files and making network connections to other
+nodes to communicate.
+</p>
+
+<p>
+<b>Distributed coding frameworks</b> manage common tasks required by Big Data
+analyses: MapReduce/Hadoop, Dryad, Spark, MPI, OpenMP.
+</p>
+</div>
+<div id="outline-container-orgbc494c6" class="outline-4">
+<h4 id="orgbc494c6"><span class="section-number-4">1.3.1.</span> Hadoop</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Computing cluster for storing data and running analyses.
+</p>
+
+<p>
+Components are:
+</p>
+<ul class="org-ul">
+<li><span class="underline">HDFS</span> (Hadoop Distributed File System): for storing data to be
+analyzed and for storing intermediate and final results
+<ul class="org-ul">
+<li>data distributed across all nodes (machines) in the cluster</li>
+<li>HDFS closely coupled to analysis engine</li>
+<li>moving/querying data too slow, so run analysis on storage cluster</li>
+</ul></li>
+<li><span class="underline">MapReduce</span>: programming model for defining parallel analysis steps
+<ul class="org-ul">
+<li>usually written in Java</li>
+<li>defined in terms of Map and Reduce
+<ul class="org-ul">
+<li>Map does something, producing intermediate results</li>
+<li>Reduce aggregates intermediate results</li>
+</ul></li>
+<li>framework handles distribution of intermediate results and job
+scheduling</li>
+<li>programmer must define map and reduce functions to complete work
+in parallel
+<ul class="org-ul">
+<li>map must take a key and value and return some list of
+key-value pairs (set of intermediate pairs)</li>
+<li>reduce combines all intermediate values for a particular
+key and produces a set of merged output values (usually
+just one)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>
+Input splitting and shuffling steps are done automatically by the
+Hadoop runtime system.
+</p>
+
+<p>
+Inter-node communication handled entirely by shuffle step
+and distributed file system splitting data across compute nodes.
+Input files stored on each node are assigned to that node&rsquo;s mapper,
+reducing communication overhead.
+</p>
+
+<p>
+HDFS distributes input and output data among many nodes.
+</p>
+
+<p>
+Runtime system manages job scheduling and coordination.
+</p>
+
+<p>
+Hadoop has scalable, distributed sorting algorithm for
+shuffling step.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd8bcdb0" class="outline-3">
+<h3 id="orgd8bcdb0"><span class="section-number-3">1.4.</span> Batch Processing</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Processing large data chunks for data stored over time.
+Have jobs tart and finish, and process in sequential order.
+</p>
+
+<p>
+Advantages include efficiency for large jobs and working offline
+and conserving resources.
+</p>
+
+<p>
+Batch processing is useful for transactions and orders, has
+high latency, so better for non-time-sensitive jobs, and can be
+done with Hadoop.
+</p>
+
+<p>
+Batch processing is crucial for structured, large-volume data.
+</p>
+
+<p>
+Lifecycle:
+</p>
+<ul class="org-ul">
+<li>data collection and preparation</li>
+<li>data storage and analysis</li>
+<li>result generation and interpretation</li>
+</ul>
+
+<p>
+Challenges include:
+</p>
+<ul class="org-ul">
+<li>managing large data volumes</li>
+<li>ensuring data quality and security</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org242e84d" class="outline-3">
+<h3 id="org242e84d"><span class="section-number-3">1.5.</span> Stream Processing</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Real-time data processing, so low-latency and continuous data flow.
+</p>
+
+<p>
+Gives immediate insights for rapid decision making.
+</p>
+
+<p>
+Better for high-velocity data streams, and can be used for fraud detection,
+recommendations, and monitoring systems.
+</p>
+
+<p>
+Challenges include:
+</p>
+<ul class="org-ul">
+<li>data volume and velocity</li>
+<li>real-time analysis requirements
+<ul class="org-ul">
+<li>immediate data processing and analysis</li>
+</ul></li>
+<li>resource management
+<ul class="org-ul">
+<li>efficient use of memory and CPU</li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-orgdc0183e" class="outline-4">
+<h4 id="orgdc0183e"><span class="section-number-4">1.5.1.</span> Apache Storm</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<p>
+Real-time computation system for data stream.
+</p>
+
+<p>
+Components are:
+</p>
+<ul class="org-ul">
+<li><span class="underline">spout</span>: data stream source</li>
+<li><span class="underline">bolt</span>: data processing unit</li>
+</ul>
+
+<p>
+Provides scalability and fault tolerance.
+</p>
+
+<p>
+Used for real-time analytics and remote procedure calls.
+</p>
+
+<p>
+Easy to setup and operate and integrates with various data sources.
+</p>
+
+<p>
+Has complex state management and limited data windowing
+capabilities.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2194e63" class="outline-3">
+<h3 id="org2194e63"><span class="section-number-3">1.6.</span> Batch vs Stream</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Batch for large data volumes,
+stream for real-time analytics (low-latency)..
+</p>
+
+<p>
+Batch processing uses MapReduce for offline analysis, with
+scheduler-based job execution.
+</p>
+
+<p>
+Stream processing uses stream processors that run online, continuous
+analysis, with continuous data processing suited for real-time
+decision making.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org295751a" class="outline-2">
+<h2 id="org295751a"><span class="section-number-2">2.</span> Leader-Follower Architecture</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Concurrency pattern for distributed systems.
+</p>
+
+<p>
+Core concept is dynamic role assignment among threads.
+</p>
+
+<p>
+Leader handles events, followers await their turns.
+</p>
+
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li>thread management
+<ul class="org-ul">
+<li>single active leader thread</li>
+<li>pool of passive follower threads</li>
+</ul></li>
+<li>event handling
+<ul class="org-ul">
+<li>leader demultiplexes and dispatches events</li>
+</ul></li>
+</ul>
+
+<p>
+Used for high-volume transaction systems, resource-constrained
+environments, and complex event processing.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>resource efficiency
+<ul class="org-ul">
+<li>reduced thread count and lowered system overhead</li>
+</ul></li>
+<li>scalability
+<ul class="org-ul">
+<li>handles fluctuating workloads effectively</li>
+</ul></li>
+<li>flexibility
+<ul class="org-ul">
+<li>dynamic role switching enhances adaptability</li>
+</ul></li>
+<li>simplified synchronization
+<ul class="org-ul">
+<li>reduced complexity in thread coordination</li>
+</ul></li>
+<li>improved throughput
+<ul class="org-ul">
+<li>efficient event handling and processing</li>
+</ul></li>
+<li>fault tolerance
+<ul class="org-ul">
+<li>leader failure leads to new leader election</li>
+</ul></li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>complexity in design and maintenance
+<ul class="org-ul">
+<li>careful coordination</li>
+</ul></li>
+<li>bottlenecks
+<ul class="org-ul">
+<li>leader thread</li>
+</ul></li>
+<li>debugging and monitoring
+<ul class="org-ul">
+<li>tracking issues in role assignments</li>
+</ul></li>
+<li>event consistency and ordering
+<ul class="org-ul">
+<li>ensure reliable event handling</li>
+</ul></li>
+<li>failure recovery mechanism
+<ul class="org-ul">
+<li>handle leader thread failure</li>
+</ul></li>
+<li>integration with legacy systems
+<ul class="org-ul">
+<li>adapt pattern to existing infrastructures</li>
+</ul></li>
+</ul>
+
+<p>
+Can have different leader election mechanisms and
+different approaches to thread synchronization.
+</p>
+
+<p>
+Can use tools for coordinating with external systems.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-11 Wed 04:26</p>
+</div>
+</body>
+</html>

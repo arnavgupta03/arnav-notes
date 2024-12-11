@@ -1,0 +1,296 @@
+% Created 2024-12-11 Wed 04:26
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Architectures}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Architectures},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Streaming vs Batch Processing}
+\label{sec:org629aeea}
+\subsection{Scalability Problems}
+\label{sec:orga3c619f}
+\subsubsection{Easy}
+\label{sec:orgc936337}
+Handle independent requests from millions of customers.
+
+Assume data is already available to service requests.
+
+Trivially parallelizable, use horizontal scaling to divide and conquer.
+\subsubsection{Hard}
+\label{sec:org0bf3136}
+Perform calculation use all data from millions of customers.
+
+Requires lots of coordination, housing data on compute notes.
+
+Must use MapReduce, Spark, etc.
+\subsection{Big Data}
+\label{sec:org01f22b5}
+Companies have exponential growth of data, so big data critical
+for organizations and driven by technological advancements.
+
+Big Data processing cycle include collection, preparation, input, processing,
+output/interpretation, and storage.
+
+Data analytics essential for extracting valuable insights and support
+decision-making and strategy.
+
+Cloud computing facilitates data storage, processing, and analysis from
+diverse data sources.
+
+For Big Data problems best to split analysis into subproblems and parallelize
+over machines.
+\subsection{Distributed Computing}
+\label{sec:org5071234}
+Data and analysis distributed across machines.
+
+No machine has access to all data.
+Machines must communicate over network to share data and intermediate results.
+
+Some calculations like sum, max, min, mean, search/grep can be easy to
+parallelize, with most work done with no coordination and little communication.
+
+Input data split among nodes.
+Code distributed to many connected nodes.
+Many rounds of communication may be needed for a successful distributed
+algorithm.
+
+Distributed algorithm can be written from scratch in any language by
+reading/writing memory and files and making network connections to other
+nodes to communicate.
+
+\textbf{Distributed coding frameworks} manage common tasks required by Big Data
+analyses: MapReduce/Hadoop, Dryad, Spark, MPI, OpenMP.
+\subsubsection{Hadoop}
+\label{sec:org1ca03dc}
+Computing cluster for storing data and running analyses.
+
+Components are:
+\begin{itemize}
+\item \uline{HDFS} (Hadoop Distributed File System): for storing data to be
+analyzed and for storing intermediate and final results
+\begin{itemize}
+\item data distributed across all nodes (machines) in the cluster
+\item HDFS closely coupled to analysis engine
+\item moving/querying data too slow, so run analysis on storage cluster
+\end{itemize}
+\item \uline{MapReduce}: programming model for defining parallel analysis steps
+\begin{itemize}
+\item usually written in Java
+\item defined in terms of Map and Reduce
+\begin{itemize}
+\item Map does something, producing intermediate results
+\item Reduce aggregates intermediate results
+\end{itemize}
+\item framework handles distribution of intermediate results and job
+scheduling
+\item programmer must define map and reduce functions to complete work
+in parallel
+\begin{itemize}
+\item map must take a key and value and return some list of
+key-value pairs (set of intermediate pairs)
+\item reduce combines all intermediate values for a particular
+key and produces a set of merged output values (usually
+just one)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+Input splitting and shuffling steps are done automatically by the
+Hadoop runtime system.
+
+Inter-node communication handled entirely by shuffle step
+and distributed file system splitting data across compute nodes.
+Input files stored on each node are assigned to that node's mapper,
+reducing communication overhead.
+
+HDFS distributes input and output data among many nodes.
+
+Runtime system manages job scheduling and coordination.
+
+Hadoop has scalable, distributed sorting algorithm for
+shuffling step.
+\subsection{Batch Processing}
+\label{sec:org1de0fa2}
+Processing large data chunks for data stored over time.
+Have jobs tart and finish, and process in sequential order.
+
+Advantages include efficiency for large jobs and working offline
+and conserving resources.
+
+Batch processing is useful for transactions and orders, has
+high latency, so better for non-time-sensitive jobs, and can be
+done with Hadoop.
+
+Batch processing is crucial for structured, large-volume data.
+
+Lifecycle:
+\begin{itemize}
+\item data collection and preparation
+\item data storage and analysis
+\item result generation and interpretation
+\end{itemize}
+
+Challenges include:
+\begin{itemize}
+\item managing large data volumes
+\item ensuring data quality and security
+\end{itemize}
+\subsection{Stream Processing}
+\label{sec:orgcddecdb}
+Real-time data processing, so low-latency and continuous data flow.
+
+Gives immediate insights for rapid decision making.
+
+Better for high-velocity data streams, and can be used for fraud detection,
+recommendations, and monitoring systems.
+
+Challenges include:
+\begin{itemize}
+\item data volume and velocity
+\item real-time analysis requirements
+\begin{itemize}
+\item immediate data processing and analysis
+\end{itemize}
+\item resource management
+\begin{itemize}
+\item efficient use of memory and CPU
+\end{itemize}
+\end{itemize}
+\subsubsection{Apache Storm}
+\label{sec:orgaa566f9}
+Real-time computation system for data stream.
+
+Components are:
+\begin{itemize}
+\item \uline{spout}: data stream source
+\item \uline{bolt}: data processing unit
+\end{itemize}
+
+Provides scalability and fault tolerance.
+
+Used for real-time analytics and remote procedure calls.
+
+Easy to setup and operate and integrates with various data sources.
+
+Has complex state management and limited data windowing
+capabilities.
+\subsection{Batch vs Stream}
+\label{sec:orgd3f6f94}
+Batch for large data volumes,
+stream for real-time analytics (low-latency)..
+
+Batch processing uses MapReduce for offline analysis, with
+scheduler-based job execution.
+
+Stream processing uses stream processors that run online, continuous
+analysis, with continuous data processing suited for real-time
+decision making.
+\section{Leader-Follower Architecture}
+\label{sec:org9556da7}
+Concurrency pattern for distributed systems.
+
+Core concept is dynamic role assignment among threads.
+
+Leader handles events, followers await their turns.
+
+\uline{Components}:
+\begin{itemize}
+\item thread management
+\begin{itemize}
+\item single active leader thread
+\item pool of passive follower threads
+\end{itemize}
+\item event handling
+\begin{itemize}
+\item leader demultiplexes and dispatches events
+\end{itemize}
+\end{itemize}
+
+Used for high-volume transaction systems, resource-constrained
+environments, and complex event processing.
+
+\uline{Advantages}:
+\begin{itemize}
+\item resource efficiency
+\begin{itemize}
+\item reduced thread count and lowered system overhead
+\end{itemize}
+\item scalability
+\begin{itemize}
+\item handles fluctuating workloads effectively
+\end{itemize}
+\item flexibility
+\begin{itemize}
+\item dynamic role switching enhances adaptability
+\end{itemize}
+\item simplified synchronization
+\begin{itemize}
+\item reduced complexity in thread coordination
+\end{itemize}
+\item improved throughput
+\begin{itemize}
+\item efficient event handling and processing
+\end{itemize}
+\item fault tolerance
+\begin{itemize}
+\item leader failure leads to new leader election
+\end{itemize}
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item complexity in design and maintenance
+\begin{itemize}
+\item careful coordination
+\end{itemize}
+\item bottlenecks
+\begin{itemize}
+\item leader thread
+\end{itemize}
+\item debugging and monitoring
+\begin{itemize}
+\item tracking issues in role assignments
+\end{itemize}
+\item event consistency and ordering
+\begin{itemize}
+\item ensure reliable event handling
+\end{itemize}
+\item failure recovery mechanism
+\begin{itemize}
+\item handle leader thread failure
+\end{itemize}
+\item integration with legacy systems
+\begin{itemize}
+\item adapt pattern to existing infrastructures
+\end{itemize}
+\end{itemize}
+
+Can have different leader election mechanisms and
+different approaches to thread synchronization.
+
+Can use tools for coordinating with external systems.
+\end{document}
