@@ -1,4 +1,5 @@
 #+title: Analysis Of Feedback Control Systems
+#+author: Arnav Gupta
 #+LATEX_HEADER: \usepackage{parskip,darkmode}
 #+LATEX_HEADER: \enabledarkmode
 #+LATEX_HEADER: \usepackage{tikz}

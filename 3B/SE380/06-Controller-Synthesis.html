@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-23 Sat 14:36 -->
+<!-- 2024-12-11 Wed 15:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Controller Synthesis</title>
-<meta name="author" content="DESKTOP-H800RKQ" />
+<meta name="author" content="Arnav Gupta" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -234,23 +234,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4b4e563">1. Loop Shaping</a></li>
-<li><a href="#orgd0cd620">2. Integral Control</a></li>
-<li><a href="#org135658d">3. Lead-Lag Compensators</a>
+<li><a href="#orgfdc08af">1. Loop Shaping</a></li>
+<li><a href="#orgc0d0502">2. Integral Control</a></li>
+<li><a href="#orge49f6a8">3. Lead-Lag Compensators</a>
 <ul>
-<li><a href="#org92ee6e9">3.1. Lead Controller</a></li>
-<li><a href="#orge50820f">3.2. Lag Controller</a></li>
+<li><a href="#org0aae56e">3.1. Lead Controller</a></li>
+<li><a href="#orgd551361">3.2. Lag Controller</a></li>
 </ul>
 </li>
-<li><a href="#org7cb53e2">4. PID Controller</a></li>
-<li><a href="#org431cdb3">5. Root Locus</a></li>
-<li><a href="#org4883f86">6. Pole Placement</a></li>
-<li><a href="#org92dd484">7. State Feedback Control</a></li>
+<li><a href="#org81569f8">4. PID Controller</a></li>
+<li><a href="#org48842d3">5. Root Locus</a></li>
+<li><a href="#orgf3aae74">6. Pole Placement</a></li>
+<li><a href="#org976bccd">7. State Feedback Control</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org4b4e563" class="outline-2">
-<h2 id="org4b4e563"><span class="section-number-2">1.</span> Loop Shaping</h2>
+<div id="outline-container-orgfdc08af" class="outline-2">
+<h2 id="orgfdc08af"><span class="section-number-2">1.</span> Loop Shaping</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Translating control specifications of the closed loop system into constraints of the
@@ -326,8 +326,8 @@ the slope of \(|L(j\omega)|\) should be at most the slope of \(|G(j\omega)|\) as
 </p>
 </div>
 </div>
-<div id="outline-container-orgd0cd620" class="outline-2">
-<h2 id="orgd0cd620"><span class="section-number-2">2.</span> Integral Control</h2>
+<div id="outline-container-orgc0d0502" class="outline-2">
+<h2 id="orgc0d0502"><span class="section-number-2">2.</span> Integral Control</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 For a closed-loop system with open loop transfer function \(L(s) = C(s)G(s)\),
@@ -340,12 +340,12 @@ for \(C(s) = \frac{\mu}{s^{\rho}}\):
 </ul>
 </div>
 </div>
-<div id="outline-container-org135658d" class="outline-2">
-<h2 id="org135658d"><span class="section-number-2">3.</span> Lead-Lag Compensators</h2>
+<div id="outline-container-orge49f6a8" class="outline-2">
+<h2 id="orge49f6a8"><span class="section-number-2">3.</span> Lead-Lag Compensators</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org92ee6e9" class="outline-3">
-<h3 id="org92ee6e9"><span class="section-number-3">3.1.</span> Lead Controller</h3>
+<div id="outline-container-org0aae56e" class="outline-3">
+<h3 id="org0aae56e"><span class="section-number-3">3.1.</span> Lead Controller</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Consider a controller with transfer function
@@ -373,8 +373,8 @@ the frequency of the pole of error.
 </p>
 </div>
 </div>
-<div id="outline-container-orge50820f" class="outline-3">
-<h3 id="orge50820f"><span class="section-number-3">3.2.</span> Lag Controller</h3>
+<div id="outline-container-orgd551361" class="outline-3">
+<h3 id="orgd551361"><span class="section-number-3">3.2.</span> Lag Controller</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Consider a controller with transfer function
@@ -398,8 +398,8 @@ which is a PI controller.
 </div>
 </div>
 </div>
-<div id="outline-container-org7cb53e2" class="outline-2">
-<h2 id="org7cb53e2"><span class="section-number-2">4.</span> PID Controller</h2>
+<div id="outline-container-org81569f8" class="outline-2">
+<h2 id="org81569f8"><span class="section-number-2">4.</span> PID Controller</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Placing the zero and pole of a lead controller \(1/\alpha\) decade away from \(\omega_{c}\) requires
@@ -461,8 +461,8 @@ a lead-lag controller a realizable PID (pole at high frequency on lag).
 </p>
 </div>
 </div>
-<div id="outline-container-org431cdb3" class="outline-2">
-<h2 id="org431cdb3"><span class="section-number-2">5.</span> Root Locus</h2>
+<div id="outline-container-org48842d3" class="outline-2">
+<h2 id="org48842d3"><span class="section-number-2">5.</span> Root Locus</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Root refers to the roots of the denominator of the closed loop \(F(s)\) and the locus is of the
@@ -504,8 +504,8 @@ and have slope
 </ol>
 </div>
 </div>
-<div id="outline-container-org4883f86" class="outline-2">
-<h2 id="org4883f86"><span class="section-number-2">6.</span> Pole Placement</h2>
+<div id="outline-container-orgf3aae74" class="outline-2">
+<h2 id="orgf3aae74"><span class="section-number-2">6.</span> Pole Placement</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The root locus for loop gain shows how the poles of the closed-loop system move on the complex plane as
@@ -550,8 +550,8 @@ performance metrics.
 </p>
 </div>
 </div>
-<div id="outline-container-org92dd484" class="outline-2">
-<h2 id="org92dd484"><span class="section-number-2">7.</span> State Feedback Control</h2>
+<div id="outline-container-org976bccd" class="outline-2">
+<h2 id="org976bccd"><span class="section-number-2">7.</span> State Feedback Control</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Sometimes the static feedback of the output is not sufficient to stabilize a system.
@@ -601,8 +601,8 @@ to result in a closed-loop system with eigenvalues at \(\lambda_{1}^{\*}, \dots,
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-11-23 Sat 14:36</p>
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-11 Wed 15:14</p>
 </div>
 </body>
 </html>

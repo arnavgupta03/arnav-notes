@@ -1,4 +1,4 @@
-% Created 2024-12-11 Wed 05:29
+% Created 2024-12-11 Wed 15:14
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -16,11 +16,11 @@
 \enabledarkmode
 \usepackage{tikz}
 \usepackage{pgfplots}
-\author{DESKTOP-H800RKQ}
+\author{Arnav Gupta}
 \date{\today}
 \title{Analysis Of Feedback Control Systems}
 \hypersetup{
- pdfauthor={DESKTOP-H800RKQ},
+ pdfauthor={Arnav Gupta},
  pdftitle={Analysis Of Feedback Control Systems},
  pdfkeywords={},
  pdfsubject={},
@@ -32,7 +32,7 @@
 \tableofcontents
 
 \section{Block Diagrams}
-\label{sec:orgdb5c011}
+\label{sec:org05f6f5f}
 For series interconnections, multiple transfer functions.
 
 For parallel interconnections, add transfer functions.
@@ -40,14 +40,14 @@ For parallel interconnections, add transfer functions.
 For feedback interconnections, transfer function is
 $$ \frac{G(s)}{1 + G(s)} $$
 \section{Stability of Interconnected Systems}
-\label{sec:orgcaf9961}
+\label{sec:orgfa9694a}
 Series and parallel systems are stable if both original transfer functions are stable
 (assuming no cancellations).
 
 For feedback, stability is unknown simply based off stability of original transfer
 function.
 \section{Routh-Hurwitz Criterion}
-\label{sec:orged4d772}
+\label{sec:org5ff03d6}
 For a closed-loop system, the transfer function tends to be of the form
 $$ F(s) = \frac{L(s)}{1 + L(s)} $$
 To determine if such a system is stable, it must be known whether
@@ -66,7 +66,7 @@ where \(\lambda_{1}, \dots, \lambda_{r}\) are real roots and \(\mu_{1}, \bar{\mu
 
 If \(\pi(s)\) is Hurwitz, \(\pi(s)\) has strictly positive coefficients.
 \subsection{Routh's Algorithm}
-\label{sec:org380be98}
+\label{sec:orga8da312}
 The first step is to build the following table:
 $$ \begin{tabular}{c|c|c|c|c}
 $s^{n}$ & 1 & $a_{n-2}$ & $a_{n-4}$ & $\cdots$ \\
@@ -94,7 +94,7 @@ The next step is the use the \textbf{Routh-Hurwitz Criterion}:
 \end{enumerate}
 \end{enumerate}
 \section{Nyquist Criterion}
-\label{sec:org6f14b8c}
+\label{sec:org97c870b}
 The transfer function \(G(s)\) is a mapping from \(s\) to \(G(s)\), which is \(\mathbb{C} \to \mathbb{C}\).
 
 The \textbf{Nyquist contour} goes along the real axis and then in a circular fashion on the postive real side.
@@ -128,7 +128,7 @@ Further, if:
 \item \(|\angle L(j\omega) < 1 \; \forall \omega \implies\) the closed loop system is stable
 \end{itemize}
 \section{Bode Criterion}
-\label{sec:org114a6aa}
+\label{sec:org3f55c1e}
 Let \(L(s)\) be the open loop transfer function of a closed-loop system.
 Assume \(L(s)\) is stable and the Nyquist plot of \(L(s)\) intersects the negative real axis
 only once.
