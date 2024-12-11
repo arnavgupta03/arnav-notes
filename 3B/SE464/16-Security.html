@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-10 Tue 23:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Security</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Security</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1f77fe5">1. Security</a>
+<ul>
+<li><a href="#org760fd6b">1.1. Guard Model</a></li>
+<li><a href="#org1aee9e0">1.2. Threats</a></li>
+<li><a href="#org28f7627">1.3. Goals and Principles</a>
+<ul>
+<li><a href="#org2f56ea6">1.3.1. Design Principles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfc2a440">2. Authentication</a>
+<ul>
+<li><a href="#org56bed0a">2.1. API Keys</a></li>
+<li><a href="#orge7cc34a">2.2. Phishing</a>
+<ul>
+<li><a href="#org577489c">2.2.1. Two Factor Authentication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org10a08f3">3. Authorization</a>
+<ul>
+<li><a href="#org297e1a0">3.1. Ticket System</a></li>
+<li><a href="#org20151f3">3.2. List System</a></li>
+<li><a href="#org4feb3bd">3.3. Mandatory Access Control</a></li>
+<li><a href="#org42204af">3.4. Known-Key Attacks</a></li>
+<li><a href="#org2bf6c2c">3.5. Replay Attacks</a></li>
+<li><a href="#orgd16a4f5">3.6. Misrepresentation</a></li>
+<li><a href="#org0f5f0b0">3.7. Collusion</a></li>
+<li><a href="#orgfd26a33">3.8. Fraudulent Actions</a></li>
+<li><a href="#orgaf34c9f">3.9. Addition of Unknowns</a></li>
+<li><a href="#org6c3601a">3.10. Trust Management</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1f77fe5" class="outline-2">
+<h2 id="org1f77fe5"><span class="section-number-2">1.</span> Security</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The protection afforded to an automated information system in order to attain applicable
+objectives of preserving integrity, availability, and confidentiality of info
+system resources.
+</p>
+
+<p>
+<b>Confidentiality</b>: preventing unauthorized parties from accessing info or even being
+aware of the existence of info
+</p>
+
+<p>
+<b>Integrity</b>: only authorized parties can manipulate info in authorized ways
+</p>
+
+<p>
+<b>Availability</b>: resources accessible by authorized parties on all appropriate
+occasions
+</p>
+
+<p>
+Must check before performing requested action:
+</p>
+<ul class="org-ul">
+<li><span class="underline">authenticity</span>: is agent&rsquo;s claimed identity authentic or is someone
+masquerading as agent</li>
+<li><span class="underline">integrity</span>: is the request the one the agent made or did someone tamper
+with it</li>
+<li><span class="underline">authorization</span>: has proper authority granted permission to this agent to
+perform this action</li>
+</ul>
+</div>
+<div id="outline-container-org760fd6b" class="outline-3">
+<h3 id="org760fd6b"><span class="section-number-3">1.1.</span> Guard Model</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<b>Complete mediation</b>: every request for the resource goes through the guard
+</p>
+
+<p>
+Guard performs authentication (is principal who they claim to be) and
+authorization (does principal have access to performance request on
+resource).
+</p>
+
+<p>
+Guard model can suffer from adversarial (targeted) attacks, where one
+successful attack can bring down a system.
+</p>
+
+<p>
+Securing a system starts by specifying goals (<span class="underline">policy</span>) and
+assumptions (<span class="underline">threat model</span>).
+</p>
+
+<p>
+Even though things can go wrong, systems that use guard model avoid
+common pitfalls.
+</p>
+</div>
+</div>
+<div id="outline-container-org1aee9e0" class="outline-3">
+<h3 id="org1aee9e0"><span class="section-number-3">1.2.</span> Threats</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Potential security violations caused either by a planned attack by an
+adversary or unintended mistakes by legitimate users.
+</p>
+
+<p>
+3 broad categories of threats:
+</p>
+<ul class="org-ul">
+<li><b>unauthorized info release</b>: unauthorized person can read and take
+advantage of info stored in computer or being transmitted over networks
+<ul class="org-ul">
+<li>extends to traffic analysis, where adversary observes only patterns
+of info use and from those patterns can infer info content</li>
+</ul></li>
+<li><b>unauthorized info modification</b>: unauthorized person can make
+changes in stored info or modify messages that cross a network
+<ul class="org-ul">
+<li>adversary might engage in behaviour to sabotage system or trick
+receiver of message to divulge useful info or take unintended action</li>
+<li>does not require that adversary be able to see info it changes</li>
+</ul></li>
+<li><b>unauthorized denial of use</b>: adversary prevents authorized user
+from reading or modifying info, even though adversary cannot either</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org28f7627" class="outline-3">
+<h3 id="org28f7627"><span class="section-number-3">1.3.</span> Goals and Principles</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Narrow view of security can miss preventing some unauthorized actions.
+</p>
+
+<p>
+A system&rsquo;s security can be insecure, secure, or unknown.
+</p>
+<ul class="org-ul">
+<li>to prove insecure, find security hole</li>
+<li>to prove secure means to show there can be no security hole</li>
+<li>typical outcome is unknown security holes exist</li>
+</ul>
+</div>
+<div id="outline-container-org2f56ea6" class="outline-4">
+<h4 id="org2f56ea6"><span class="section-number-4">1.3.1.</span> Design Principles</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+<b>Least Privilege</b>: give each component only the privileges it
+requires
+</p>
+
+<p>
+<b>Fail-safe Defaults</b>: deny access if explicit permission is absent
+</p>
+
+<p>
+<b>Economy of Mechanism</b>: adopt simple security mechanisms
+</p>
+
+<p>
+<b>Complete Mediation</b>: ensure every access is permitted
+</p>
+
+<p>
+<b>Open Design</b>: do not rely on secrecy for security
+</p>
+
+<p>
+<b>Separation of Privilege</b>: introduce multiple parties to avoid
+exploitation of privileges
+</p>
+
+<p>
+<b>Least Common Mechanism</b>: limit critical resource sharing to
+only a few mechanisms
+</p>
+
+<p>
+<b>Psychological Acceptability</b>: make security mechanisms usable
+</p>
+
+<p>
+<b>Defense in Depth</b>: have multiple layers of countermeasures
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfc2a440" class="outline-2">
+<h2 id="orgfc2a440"><span class="section-number-2">2.</span> Authentication</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Establish the following:
+</p>
+<ul class="org-ul">
+<li>who is the principal making the request?
+<ul class="org-ul">
+<li>guard must establish origin of the message</li>
+</ul></li>
+<li>is the request the one that the principal made
+<ul class="org-ul">
+<li>guard must establish integrity of the message</li>
+</ul></li>
+</ul>
+
+<p>
+Steps to authenticate:
+</p>
+<ol class="org-ol">
+<li>real-world person configures the guard
+<ol class="org-ol">
+<li>agreeing on a method by which the guard can later
+identify the principal identifier for the person</li>
+</ol></li>
+<li>identity verification, occurs at later times using the
+agreed upon method</li>
+</ol>
+
+<p>
+Verification methods:
+</p>
+<ul class="org-ul">
+<li>unique physical property of the user (faces, voices, fingerprints)</li>
+<li>unique thing the user has (ID)</li>
+<li>unique thing the user knows (password)</li>
+</ul>
+
+<p>
+Most apps require users to set a password to reconnect to an account:
+</p>
+<ul class="org-ul">
+<li><span class="underline">salted hash</span> of password is stored in DB</li>
+<li>passwords in future login can be compared to stored hash</li>
+</ul>
+
+<p>
+Email address or phone number can also be used to prove identity.
+</p>
+
+<p>
+Clients make requests to access user data and access must be
+protected.
+</p>
+
+<p>
+HTTP requests should be sent using HTTPS (TLS): encrypts data in
+transit.
+Request/response data cannot be intercepted:
+</p>
+<ul class="org-ul">
+<li>TLS authenticates server using certificates</li>
+<li>TLS does not authenticate client</li>
+</ul>
+
+<p>
+Can send password in each request, but storing the password locally
+is a security risk since all backend apps see the password (potentially
+in logs too).
+Adversary with access to server can see it.
+</p>
+
+<p>
+Hash should be easy to compute, but it should be
+</p>
+<ul class="org-ul">
+<li>difficult to compute unhashed value from hashed value</li>
+<li>difficult to find another input with the same hashed value</li>
+<li>hashed value as short as possible, but long enough for low
+collision probability</li>
+</ul>
+
+<p>
+Risk of <b>dictionary attack</b>: adversary compiles list of passwords
+and computes cryptographic has of these strings and compares result
+to value stored in computer system or uses computer program that
+tries login with these strings.
+</p>
+
+<p>
+Using salt means that adversary would need separate rainbow table
+for every possible salt.
+</p>
+
+<p>
+To avoid transmitting passwords repeatedly, server sends cookie
+which can be used to authenticate for some period of time.
+</p>
+
+<p>
+Adversaries can create their own cookies, even with hash or
+server key.
+</p>
+
+<p>
+Best to use session key:
+</p>
+<ul class="org-ul">
+<li>when user logs in, backend generates random session key, stores
+it in user account DB, and returns it to client</li>
+<li>client includes session key in all future requests, often in a header</li>
+<li>every request handler then checks auth token</li>
+</ul>
+
+<p>
+Client device might send sign in request directly to auth service.
+Other microservices ask auth service to check auth tokens.
+</p>
+</div>
+<div id="outline-container-org56bed0a" class="outline-3">
+<h3 id="org56bed0a"><span class="section-number-3">2.1.</span> API Keys</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Auth token that&rsquo;s valid for a long time.
+Used for 3rd parties to gain programmatic access to system.
+Can also be used for backend microservices to authenticate with each other,
+using local cache to check quickly without reading from DB.
+</p>
+
+<p>
+API Key can be in query params, headers, or body.
+Headers are especially good since they are separate from request-specific
+params.
+</p>
+</div>
+</div>
+<div id="outline-container-orge7cc34a" class="outline-3">
+<h3 id="orge7cc34a"><span class="section-number-3">2.2.</span> Phishing</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+To protect against phishing attacks, must avoid sending password to server
+directly but still allow valid servers to authenticate users.
+</p>
+
+<p>
+<b>Challenge response protocol</b>: password never sent directly, instead it is
+hashed with random number
+</p>
+<ul class="org-ul">
+<li>adversary-owned servers will only ever learn hashed password, which the
+password cannot be recovered from</li>
+</ul>
+</div>
+<div id="outline-container-org577489c" class="outline-4">
+<h4 id="org577489c"><span class="section-number-4">2.2.1.</span> Two Factor Authentication</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+For added security, some services require more than a password, like a
+random challenge code (to email or SMS).
+</p>
+
+<p>
+Passwords can be misused, so some services use email exclusively for
+login.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org10a08f3" class="outline-2">
+<h2 id="org10a08f3"><span class="section-number-2">3.</span> Authorization</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Architecture Access Control Models</b>: decide whether access to a protected resource should be
+granted or denied
+</p>
+
+<p>
+<b>Discretionary access control</b>: based on requestor&rsquo;s identity, resource, and whether
+requestor has permission to access
+</p>
+
+<p>
+Mandatory access control is policy based.
+</p>
+</div>
+<div id="outline-container-org297e1a0" class="outline-3">
+<h3 id="org297e1a0"><span class="section-number-3">3.1.</span> Ticket System</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Each guard holds a separate ticket for each object it is guarding.
+</p>
+
+<p>
+Principal holds a separate ticket for each different object it is authorized to use.
+</p>
+
+<p>
+To authorize principal for access, authority gives principal a matching ticket for object.
+Principal can pass ticket to other principals.
+</p>
+
+<p>
+To revoke principal&rsquo;s permissions, authority must hunt down principal and take ticket back
+or change guard&rsquo;s ticket and reissue tickets to any other authorized principals.
+</p>
+</div>
+</div>
+<div id="outline-container-org20151f3" class="outline-3">
+<h3 id="org20151f3"><span class="section-number-3">3.2.</span> List System</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Principal has token identifying principal and guard holds  list of tokens that correspond
+to set of principals that authority has authorized.
+</p>
+
+<p>
+To revoke access, authority removes principal&rsquo;s token from guard&rsquo;s list.
+</p>
+</div>
+</div>
+<div id="outline-container-org4feb3bd" class="outline-3">
+<h3 id="org4feb3bd"><span class="section-number-3">3.3.</span> Mandatory Access Control</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Every user has some access level and can access info at their level and below.
+</p>
+</div>
+</div>
+<div id="outline-container-org42204af" class="outline-3">
+<h3 id="org42204af"><span class="section-number-3">3.4.</span> Known-Key Attacks</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Adversary steals key to communicate or get info.
+</p>
+</div>
+</div>
+<div id="outline-container-org2bf6c2c" class="outline-3">
+<h3 id="org2bf6c2c"><span class="section-number-3">3.5.</span> Replay Attacks</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Same as known-key but with replaying the same session.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd16a4f5" class="outline-3">
+<h3 id="orgd16a4f5"><span class="section-number-3">3.6.</span> Misrepresentation</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+Make an authorized user seem unreliable.
+</p>
+</div>
+</div>
+<div id="outline-container-org0f5f0b0" class="outline-3">
+<h3 id="org0f5f0b0"><span class="section-number-3">3.7.</span> Collusion</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+Same as misrepresentation, except done by multiple adversaries.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfd26a33" class="outline-3">
+<h3 id="orgfd26a33"><span class="section-number-3">3.8.</span> Fraudulent Actions</h3>
+<div class="outline-text-3" id="text-3-8">
+<p>
+Adversary does not fulfill their part of a contract.
+</p>
+</div>
+</div>
+<div id="outline-container-orgaf34c9f" class="outline-3">
+<h3 id="orgaf34c9f"><span class="section-number-3">3.9.</span> Addition of Unknowns</h3>
+<div class="outline-text-3" id="text-3-9">
+<p>
+Unsure about safety of interacting with new entrants into the system.
+</p>
+</div>
+</div>
+<div id="outline-container-org6c3601a" class="outline-3">
+<h3 id="org6c3601a"><span class="section-number-3">3.10.</span> Trust Management</h3>
+<div class="outline-text-3" id="text-3-10">
+<p>
+<b>Trust</b>: level of subjective probability with which agent assesses
+that another agent will perform a particular action in a context that affects their
+actions
+</p>
+
+<p>
+<b>Reputation</b>: expectation about entity&rsquo;s behaviour based on past behaviour, can be
+used to determine trust
+</p>
+
+<p>
+2 types of trust management systems:
+</p>
+<ul class="org-ul">
+<li>credential and policy-based</li>
+<li>reputation-base</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-10 Tue 23:49</p>
+</div>
+</body>
+</html>

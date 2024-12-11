@@ -1,0 +1,303 @@
+% Created 2024-12-10 Tue 23:49
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Security}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Security},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Security}
+\label{sec:orgb64db43}
+The protection afforded to an automated information system in order to attain applicable
+objectives of preserving integrity, availability, and confidentiality of info
+system resources.
+
+\textbf{Confidentiality}: preventing unauthorized parties from accessing info or even being
+aware of the existence of info
+
+\textbf{Integrity}: only authorized parties can manipulate info in authorized ways
+
+\textbf{Availability}: resources accessible by authorized parties on all appropriate
+occasions
+
+Must check before performing requested action:
+\begin{itemize}
+\item \uline{authenticity}: is agent's claimed identity authentic or is someone
+masquerading as agent
+\item \uline{integrity}: is the request the one the agent made or did someone tamper
+with it
+\item \uline{authorization}: has proper authority granted permission to this agent to
+perform this action
+\end{itemize}
+\subsection{Guard Model}
+\label{sec:org79c668e}
+\textbf{Complete mediation}: every request for the resource goes through the guard
+
+Guard performs authentication (is principal who they claim to be) and
+authorization (does principal have access to performance request on
+resource).
+
+Guard model can suffer from adversarial (targeted) attacks, where one
+successful attack can bring down a system.
+
+Securing a system starts by specifying goals (\uline{policy}) and
+assumptions (\uline{threat model}).
+
+Even though things can go wrong, systems that use guard model avoid
+common pitfalls.
+\subsection{Threats}
+\label{sec:org28d9622}
+Potential security violations caused either by a planned attack by an
+adversary or unintended mistakes by legitimate users.
+
+3 broad categories of threats:
+\begin{itemize}
+\item \textbf{unauthorized info release}: unauthorized person can read and take
+advantage of info stored in computer or being transmitted over networks
+\begin{itemize}
+\item extends to traffic analysis, where adversary observes only patterns
+of info use and from those patterns can infer info content
+\end{itemize}
+\item \textbf{unauthorized info modification}: unauthorized person can make
+changes in stored info or modify messages that cross a network
+\begin{itemize}
+\item adversary might engage in behaviour to sabotage system or trick
+receiver of message to divulge useful info or take unintended action
+\item does not require that adversary be able to see info it changes
+\end{itemize}
+\item \textbf{unauthorized denial of use}: adversary prevents authorized user
+from reading or modifying info, even though adversary cannot either
+\end{itemize}
+\subsection{Goals and Principles}
+\label{sec:org59ac928}
+Narrow view of security can miss preventing some unauthorized actions.
+
+A system's security can be insecure, secure, or unknown.
+\begin{itemize}
+\item to prove insecure, find security hole
+\item to prove secure means to show there can be no security hole
+\item typical outcome is unknown security holes exist
+\end{itemize}
+\subsubsection{Design Principles}
+\label{sec:org37c38a5}
+\textbf{Least Privilege}: give each component only the privileges it
+requires
+
+\textbf{Fail-safe Defaults}: deny access if explicit permission is absent
+
+\textbf{Economy of Mechanism}: adopt simple security mechanisms
+
+\textbf{Complete Mediation}: ensure every access is permitted
+
+\textbf{Open Design}: do not rely on secrecy for security
+
+\textbf{Separation of Privilege}: introduce multiple parties to avoid
+exploitation of privileges
+
+\textbf{Least Common Mechanism}: limit critical resource sharing to
+only a few mechanisms
+
+\textbf{Psychological Acceptability}: make security mechanisms usable
+
+\textbf{Defense in Depth}: have multiple layers of countermeasures
+\section{Authentication}
+\label{sec:org8f305df}
+Establish the following:
+\begin{itemize}
+\item who is the principal making the request?
+\begin{itemize}
+\item guard must establish origin of the message
+\end{itemize}
+\item is the request the one that the principal made
+\begin{itemize}
+\item guard must establish integrity of the message
+\end{itemize}
+\end{itemize}
+
+Steps to authenticate:
+\begin{enumerate}
+\item real-world person configures the guard
+\begin{enumerate}
+\item agreeing on a method by which the guard can later
+identify the principal identifier for the person
+\end{enumerate}
+\item identity verification, occurs at later times using the
+agreed upon method
+\end{enumerate}
+
+Verification methods:
+\begin{itemize}
+\item unique physical property of the user (faces, voices, fingerprints)
+\item unique thing the user has (ID)
+\item unique thing the user knows (password)
+\end{itemize}
+
+Most apps require users to set a password to reconnect to an account:
+\begin{itemize}
+\item \uline{salted hash} of password is stored in DB
+\item passwords in future login can be compared to stored hash
+\end{itemize}
+
+Email address or phone number can also be used to prove identity.
+
+Clients make requests to access user data and access must be
+protected.
+
+HTTP requests should be sent using HTTPS (TLS): encrypts data in
+transit.
+Request/response data cannot be intercepted:
+\begin{itemize}
+\item TLS authenticates server using certificates
+\item TLS does not authenticate client
+\end{itemize}
+
+Can send password in each request, but storing the password locally
+is a security risk since all backend apps see the password (potentially
+in logs too).
+Adversary with access to server can see it.
+
+Hash should be easy to compute, but it should be
+\begin{itemize}
+\item difficult to compute unhashed value from hashed value
+\item difficult to find another input with the same hashed value
+\item hashed value as short as possible, but long enough for low
+collision probability
+\end{itemize}
+
+Risk of \textbf{dictionary attack}: adversary compiles list of passwords
+and computes cryptographic has of these strings and compares result
+to value stored in computer system or uses computer program that
+tries login with these strings.
+
+Using salt means that adversary would need separate rainbow table
+for every possible salt.
+
+To avoid transmitting passwords repeatedly, server sends cookie
+which can be used to authenticate for some period of time.
+
+Adversaries can create their own cookies, even with hash or
+server key.
+
+Best to use session key:
+\begin{itemize}
+\item when user logs in, backend generates random session key, stores
+it in user account DB, and returns it to client
+\item client includes session key in all future requests, often in a header
+\item every request handler then checks auth token
+\end{itemize}
+
+Client device might send sign in request directly to auth service.
+Other microservices ask auth service to check auth tokens.
+\subsection{API Keys}
+\label{sec:orgc0dba23}
+Auth token that's valid for a long time.
+Used for 3rd parties to gain programmatic access to system.
+Can also be used for backend microservices to authenticate with each other,
+using local cache to check quickly without reading from DB.
+
+API Key can be in query params, headers, or body.
+Headers are especially good since they are separate from request-specific
+params.
+\subsection{Phishing}
+\label{sec:org757622b}
+To protect against phishing attacks, must avoid sending password to server
+directly but still allow valid servers to authenticate users.
+
+\textbf{Challenge response protocol}: password never sent directly, instead it is
+hashed with random number
+\begin{itemize}
+\item adversary-owned servers will only ever learn hashed password, which the
+password cannot be recovered from
+\end{itemize}
+\subsubsection{Two Factor Authentication}
+\label{sec:org12fe8fc}
+For added security, some services require more than a password, like a
+random challenge code (to email or SMS).
+
+Passwords can be misused, so some services use email exclusively for
+login.
+\section{Authorization}
+\label{sec:orgde00cf1}
+\textbf{Architecture Access Control Models}: decide whether access to a protected resource should be
+granted or denied
+
+\textbf{Discretionary access control}: based on requestor's identity, resource, and whether
+requestor has permission to access
+
+Mandatory access control is policy based.
+\subsection{Ticket System}
+\label{sec:orgf83a122}
+Each guard holds a separate ticket for each object it is guarding.
+
+Principal holds a separate ticket for each different object it is authorized to use.
+
+To authorize principal for access, authority gives principal a matching ticket for object.
+Principal can pass ticket to other principals.
+
+To revoke principal's permissions, authority must hunt down principal and take ticket back
+or change guard's ticket and reissue tickets to any other authorized principals.
+\subsection{List System}
+\label{sec:org1d99523}
+Principal has token identifying principal and guard holds  list of tokens that correspond
+to set of principals that authority has authorized.
+
+To revoke access, authority removes principal's token from guard's list.
+\subsection{Mandatory Access Control}
+\label{sec:orgadbe78f}
+Every user has some access level and can access info at their level and below.
+\subsection{Known-Key Attacks}
+\label{sec:org2d88ed8}
+Adversary steals key to communicate or get info.
+\subsection{Replay Attacks}
+\label{sec:orgb0cd52c}
+Same as known-key but with replaying the same session.
+\subsection{Misrepresentation}
+\label{sec:org12e78e0}
+Make an authorized user seem unreliable.
+\subsection{Collusion}
+\label{sec:orgdfc9696}
+Same as misrepresentation, except done by multiple adversaries.
+\subsection{Fraudulent Actions}
+\label{sec:orge6d7df7}
+Adversary does not fulfill their part of a contract.
+\subsection{Addition of Unknowns}
+\label{sec:orgbf9a090}
+Unsure about safety of interacting with new entrants into the system.
+\subsection{Trust Management}
+\label{sec:org2d41dc4}
+\textbf{Trust}: level of subjective probability with which agent assesses
+that another agent will perform a particular action in a context that affects their
+actions
+
+\textbf{Reputation}: expectation about entity's behaviour based on past behaviour, can be
+used to determine trust
+
+2 types of trust management systems:
+\begin{itemize}
+\item credential and policy-based
+\item reputation-base
+\end{itemize}
+\end{document}
