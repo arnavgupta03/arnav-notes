@@ -1,0 +1,264 @@
+#+title: Architecture Styles
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Architectures
+No good way to characterize architectural structures, but best to make common use of architectural
+principles when designing software.
+Principles represent rules of thumb or emerging patterns, or industry standards.
+
+* Architecture Styles of Software Systems
+*Architectural Style*: family of systems in terms of a pattern of structural organization
+
+Architectural style determines:
+- *vocabulary* of components and connectors that can be used in instances of that style
+- *constraints* on how they can be combined
+  - constraints of topology of descriptions or execution semantics
+
+To determine an architectural style, determine:
+- _structural pattern_ (components, connectors, constraints)
+- underlying _computational model_
+- essential _invariants_
+- _examples_ of use
+- _advantages and disadvantages_ of use
+- common _specializations_ of style
+
+System architecture is collection of computational components and description of interactions between
+components (connectors).
+
+Software architectures are represented as graphs where _nodes_ represent components: procedures, modules,
+processes, tools, and DBs; and _edges_ represent connectors: procedure calls, event broadcasts.
+DB queries, and pipes.
+
+** Repository Style
+Suitable for applications in which central issue is establishing, augmenting, and maintaining a
+complex _central body of info_.
+
+Typically, info must be manipulated in a variety of ways, so long-term persistence is required.
+
+_Components_:
+- central data structure representing current system state
+- collection of independent components that operate on central data structure
+
+_Connectors_:
+- procedure calls or direct memory access
+
+Changes to data structure trigger computation.
+
+Data structure in memory and on disk.
+
+Concurrent computations and data accesses.
+
+Multiple clients collaborate, accessing data, processing it, and updating it for others to process
+further.
+
+Examples include programming environments, info systems, graphical editors, and AI knowledge
+bases.
+
+_Advantages_:
+- efficient way to store large amounts of data
+- sharing model published as the repository schema
+- centralized management: backup, security, concurrency control
+
+_Disadvantages_:
+- must agree on data model beforehand
+- difficult to distribute data
+- data evolution is expensive
+
+** Pipe and Filter Style
+Suitable for applications that require defined series of independent computations to be performed on
+data.
+
+Component reads _streams_ of data as input and produces streams of data as output.
+
+_Components_:
+- *filters*: apply local transformations to input streams and compute incrementally so output begins
+  before all input consumed
+
+_Connectors_:
+- *pipes*: conduits for streams, transmitting outputs of 1 filter to inputs of another filter
+
+Filters do not share state with other filters.
+Filters do not know identity of their upstream or downstream filters.
+
+_Advantages_:
+- easy to understand overall input/output behaviour of system as composition of behaviours of
+  individual filters
+- support reuse since any 2 filters can be hooked together provided they agree on data transmitted
+  between them
+- easy to maintain and enhance (add new filters and replace old filters easily)
+- permit specialized analysis (throughput and deadlock analysis)
+- support concurrent execution
+
+_Disadvantages_:
+- bad for interactive systems due to transformational character
+- excessive parsing and unparsing leads to loss of performance and increased complexity in
+  writing filters
+
+*** Specializations
+*Pipelines*: restricts topologies to linear sequences of filters
+
+*Batch Sequential*: degenerate case of pipeline architecture where each filter processes all
+input data before producing any output
+
+Compilers started with sequential process and moved towards repository as intermediate
+representation became more important.
+
+** Object-Oriented
+Suitable for applications in which a central issue is identifying and protecting related bodies
+of info (data).
+
+Data representations and associated operations are encapsulated in abstract data types.
+
+_Components_: objects
+
+_Connectors_: function and procedure invocations (methods)
+
+Objects are responsible for preserving integrity (invariants) of data representation.
+
+Data representation is hidden from other objects.
+
+Specializations include distributed objects and objects with multiple interfaces.
+
+_Advantages_:
+- object hides data representation from clients, so possible to change implementation without
+  affecting clients
+- can design systems as collections of autonomous interacting agents
+
+_Disadvantages_:
+- for 1 object to interact with another object (via method invocation), first object must know
+  _identity_ of second object
+  - when identity changes, must modify all objects that invoke it
+- objects cause side effect problems, especially when object used by multiple different objects
+
+** Layered
+Suitable for applications that involve distinct classes of services that can be
+_organized hierarchically_.
+
+Each layer provides service to the layer above and serves as client to layer below.
+
+Only carefully selected procedures from inner layers are made available (exported) to adjacent
+outer layer.
+
+_Components_: collections of procedures
+
+_Connectors_: procedure calls under restricted visibility
+
+Tier is _physical_ partition of system across servers, layer is _logical_ partition of related
+functionality, typically at different layers of abstraction.
+
+_Advantages_:
+- design based on increasing levels of abstraction
+- enhancement easy since changes to one layer affects at most 2 other layers
+- allows reuse since different implementations of same layer can be used interchangeably
+
+_Disadvantages_:
+- not all systems are easily structured in layered fashion
+- performance requirements may force coupling of high-level functions to lower-level implementations
+
+*** Specializations
+Exceptions are made to permit non-adjacent layers to communicate directly, done for
+efficiency reasons.
+
+** Interpreter
+Suitable for applications in which the most appropriate language or machine.
+
+_Components_: include one state machine for the execution engine and 3 memories:
+- current state of the execution engine
+- program being interpreted
+- current state of the program being interpreted
+
+_Connectors_:
+- procedure calls
+- direct memory accesses
+
+_Advantages_:
+- simulation of non-implemented hardware
+- facilitates portability of application or languages across
+  a variety of platforms
+
+_Disadvantages_:
+- defining, implementing, and testing interpreter components
+  is non-trivial
+- extra level of indirection slows down execution:
+
+** Process-Control
+Suitable for applications whose purpose is to maintain
+specified properties of the outputs of the process sufficiently
+near given reference values.
+
+_Components_:
+- process definition includes mechanisms for manipulating process
+  variables
+- control algorithm for deciding how to manipulate process
+  variables
+
+_Connectors_: data flow relations for
+- *process variables*: controlled variables whose value the system
+  is intended to control
+  - input variable that measures process input
+  - manipulated variable whose value can be changed by the controller
+- *set point*: desired value for a controlled variable
+- *sensors*: obtain values of process variables to control
+
+*** Feedback Control System
+Controlled variable is measured and result is used to manipulate
+1+ process variables.
+
+*** Open-Loop Control System
+Given pure input materials, fully defined process, and completely
+repeatable process, process can run without surveillance (no
+feedback).
+
+Info about process variables is not used to adjust system.
+
+** Client-Server
+Suitable for applications that involve _distributed data_ and processing
+across a range of components.
+
+_Components_:
+- *server*: standalone component that provides specific services
+- *client*: component that call on the services provided by servers
+
+_Connector_: network, which allows clients to access remote servers
+
+_Advantages_:
+- straightforward distribution of data
+- transparency of location
+- mix/match heterogeneous platforms
+- easy to add new servers or upgrade existing servers
+
+_Disadvantages_:
+- system performance depends on network performance
+- tricky to design and implement client/server systems
+- hard to find out what services are available
+
+** Peer-to-Peer
+Suitable for applications that partition tasks/workloads between peers
+_without centralized control_.
+
+_Components_:
+- peers: standalone components that provide specific services to each
+  other (act as both client and server)
+
+_Connector_: some kind of network that allows peers to access each other
+directly without a central server
+
+Connections can be transient/ad hoc.
+
+_Advantages_:
+- no single point of failure (since no central server)
+- resilient against network issues or failing peer by establishing
+  new links to other peers
+- scalable (since no central server)
+- more privacy (in theory)
+- easy to add new peers or upgrade existing peers
+
+_Disadvantages_:
+- cliques of peers could be disconnected from each other if no overlapping
+  peer
+- requires continuous exchange of lists of known peers between each peer
+- could require central directory server to be able to locate each peer
+- no guaranteed response from peers (could be down, delayed, hostile)

@@ -1,0 +1,349 @@
+% Created 2024-12-10 Tue 19:32
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Architecture Styles}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Architecture Styles},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Architectures}
+\label{sec:org396ec11}
+No good way to characterize architectural structures, but best to make common use of architectural
+principles when designing software.
+Principles represent rules of thumb or emerging patterns, or industry standards.
+\section{Architecture Styles of Software Systems}
+\label{sec:org7901bfc}
+\textbf{Architectural Style}: family of systems in terms of a pattern of structural organization
+
+Architectural style determines:
+\begin{itemize}
+\item \textbf{vocabulary} of components and connectors that can be used in instances of that style
+\item \textbf{constraints} on how they can be combined
+\begin{itemize}
+\item constraints of topology of descriptions or execution semantics
+\end{itemize}
+\end{itemize}
+
+To determine an architectural style, determine:
+\begin{itemize}
+\item \uline{structural pattern} (components, connectors, constraints)
+\item underlying \uline{computational model}
+\item essential \uline{invariants}
+\item \uline{examples} of use
+\item \uline{advantages and disadvantages} of use
+\item common \uline{specializations} of style
+\end{itemize}
+
+System architecture is collection of computational components and description of interactions between
+components (connectors).
+
+Software architectures are represented as graphs where \uline{nodes} represent components: procedures, modules,
+processes, tools, and DBs; and \uline{edges} represent connectors: procedure calls, event broadcasts.
+DB queries, and pipes.
+\subsection{Repository Style}
+\label{sec:org80b6ca7}
+Suitable for applications in which central issue is establishing, augmenting, and maintaining a
+complex \uline{central body of info}.
+
+Typically, info must be manipulated in a variety of ways, so long-term persistence is required.
+
+\uline{Components}:
+\begin{itemize}
+\item central data structure representing current system state
+\item collection of independent components that operate on central data structure
+\end{itemize}
+
+\uline{Connectors}:
+\begin{itemize}
+\item procedure calls or direct memory access
+\end{itemize}
+
+Changes to data structure trigger computation.
+
+Data structure in memory and on disk.
+
+Concurrent computations and data accesses.
+
+Multiple clients collaborate, accessing data, processing it, and updating it for others to process
+further.
+
+Examples include programming environments, info systems, graphical editors, and AI knowledge
+bases.
+
+\uline{Advantages}:
+\begin{itemize}
+\item efficient way to store large amounts of data
+\item sharing model published as the repository schema
+\item centralized management: backup, security, concurrency control
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item must agree on data model beforehand
+\item difficult to distribute data
+\item data evolution is expensive
+\end{itemize}
+\subsection{Pipe and Filter Style}
+\label{sec:org3b943f8}
+Suitable for applications that require defined series of independent computations to be performed on
+data.
+
+Component reads \uline{streams} of data as input and produces streams of data as output.
+
+\uline{Components}:
+\begin{itemize}
+\item \textbf{filters}: apply local transformations to input streams and compute incrementally so output begins
+before all input consumed
+\end{itemize}
+
+\uline{Connectors}:
+\begin{itemize}
+\item \textbf{pipes}: conduits for streams, transmitting outputs of 1 filter to inputs of another filter
+\end{itemize}
+
+Filters do not share state with other filters.
+Filters do not know identity of their upstream or downstream filters.
+
+\uline{Advantages}:
+\begin{itemize}
+\item easy to understand overall input/output behaviour of system as composition of behaviours of
+individual filters
+\item support reuse since any 2 filters can be hooked together provided they agree on data transmitted
+between them
+\item easy to maintain and enhance (add new filters and replace old filters easily)
+\item permit specialized analysis (throughput and deadlock analysis)
+\item support concurrent execution
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item bad for interactive systems due to transformational character
+\item excessive parsing and unparsing leads to loss of performance and increased complexity in
+writing filters
+\end{itemize}
+\subsubsection{Specializations}
+\label{sec:org6bf1201}
+\textbf{Pipelines}: restricts topologies to linear sequences of filters
+
+\textbf{Batch Sequential}: degenerate case of pipeline architecture where each filter processes all
+input data before producing any output
+
+Compilers started with sequential process and moved towards repository as intermediate
+representation became more important.
+\subsection{Object-Oriented}
+\label{sec:orga86c1dc}
+Suitable for applications in which a central issue is identifying and protecting related bodies
+of info (data).
+
+Data representations and associated operations are encapsulated in abstract data types.
+
+\uline{Components}: objects
+
+\uline{Connectors}: function and procedure invocations (methods)
+
+Objects are responsible for preserving integrity (invariants) of data representation.
+
+Data representation is hidden from other objects.
+
+Specializations include distributed objects and objects with multiple interfaces.
+
+\uline{Advantages}:
+\begin{itemize}
+\item object hides data representation from clients, so possible to change implementation without
+affecting clients
+\item can design systems as collections of autonomous interacting agents
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item for 1 object to interact with another object (via method invocation), first object must know
+\uline{identity} of second object
+\begin{itemize}
+\item when identity changes, must modify all objects that invoke it
+\end{itemize}
+\item objects cause side effect problems, especially when object used by multiple different objects
+\end{itemize}
+\subsection{Layered}
+\label{sec:orgbc1537d}
+Suitable for applications that involve distinct classes of services that can be
+\uline{organized hierarchically}.
+
+Each layer provides service to the layer above and serves as client to layer below.
+
+Only carefully selected procedures from inner layers are made available (exported) to adjacent
+outer layer.
+
+\uline{Components}: collections of procedures
+
+\uline{Connectors}: procedure calls under restricted visibility
+
+Tier is \uline{physical} partition of system across servers, layer is \uline{logical} partition of related
+functionality, typically at different layers of abstraction.
+
+\uline{Advantages}:
+\begin{itemize}
+\item design based on increasing levels of abstraction
+\item enhancement easy since changes to one layer affects at most 2 other layers
+\item allows reuse since different implementations of same layer can be used interchangeably
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item not all systems are easily structured in layered fashion
+\item performance requirements may force coupling of high-level functions to lower-level implementations
+\end{itemize}
+\subsubsection{Specializations}
+\label{sec:org6864d88}
+Exceptions are made to permit non-adjacent layers to communicate directly, done for
+efficiency reasons.
+\subsection{Interpreter}
+\label{sec:orgc180ed1}
+Suitable for applications in which the most appropriate language or machine.
+
+\uline{Components}: include one state machine for the execution engine and 3 memories:
+\begin{itemize}
+\item current state of the execution engine
+\item program being interpreted
+\item current state of the program being interpreted
+\end{itemize}
+
+\uline{Connectors}:
+\begin{itemize}
+\item procedure calls
+\item direct memory accesses
+\end{itemize}
+
+\uline{Advantages}:
+\begin{itemize}
+\item simulation of non-implemented hardware
+\item facilitates portability of application or languages across
+a variety of platforms
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item defining, implementing, and testing interpreter components
+is non-trivial
+\item extra level of indirection slows down execution:
+\end{itemize}
+\subsection{Process-Control}
+\label{sec:orgc7bb5eb}
+Suitable for applications whose purpose is to maintain
+specified properties of the outputs of the process sufficiently
+near given reference values.
+
+\uline{Components}:
+\begin{itemize}
+\item process definition includes mechanisms for manipulating process
+variables
+\item control algorithm for deciding how to manipulate process
+variables
+\end{itemize}
+
+\uline{Connectors}: data flow relations for
+\begin{itemize}
+\item \textbf{process variables}: controlled variables whose value the system
+is intended to control
+\begin{itemize}
+\item input variable that measures process input
+\item manipulated variable whose value can be changed by the controller
+\end{itemize}
+\item \textbf{set point}: desired value for a controlled variable
+\item \textbf{sensors}: obtain values of process variables to control
+\end{itemize}
+\subsubsection{Feedback Control System}
+\label{sec:org37201d0}
+Controlled variable is measured and result is used to manipulate
+1+ process variables.
+\subsubsection{Open-Loop Control System}
+\label{sec:orgeb20d20}
+Given pure input materials, fully defined process, and completely
+repeatable process, process can run without surveillance (no
+feedback).
+
+Info about process variables is not used to adjust system.
+\subsection{Client-Server}
+\label{sec:org7398212}
+Suitable for applications that involve \uline{distributed data} and processing
+across a range of components.
+
+\uline{Components}:
+\begin{itemize}
+\item \textbf{server}: standalone component that provides specific services
+\item \textbf{client}: component that call on the services provided by servers
+\end{itemize}
+
+\uline{Connector}: network, which allows clients to access remote servers
+
+\uline{Advantages}:
+\begin{itemize}
+\item straightforward distribution of data
+\item transparency of location
+\item mix/match heterogeneous platforms
+\item easy to add new servers or upgrade existing servers
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item system performance depends on network performance
+\item tricky to design and implement client/server systems
+\item hard to find out what services are available
+\end{itemize}
+\subsection{Peer-to-Peer}
+\label{sec:org0247f2d}
+Suitable for applications that partition tasks/workloads between peers
+\uline{without centralized control}.
+
+\uline{Components}:
+\begin{itemize}
+\item peers: standalone components that provide specific services to each
+other (act as both client and server)
+\end{itemize}
+
+\uline{Connector}: some kind of network that allows peers to access each other
+directly without a central server
+
+Connections can be transient/ad hoc.
+
+\uline{Advantages}:
+\begin{itemize}
+\item no single point of failure (since no central server)
+\item resilient against network issues or failing peer by establishing
+new links to other peers
+\item scalable (since no central server)
+\item more privacy (in theory)
+\item easy to add new peers or upgrade existing peers
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item cliques of peers could be disconnected from each other if no overlapping
+peer
+\item requires continuous exchange of lists of known peers between each peer
+\item could require central directory server to be able to locate each peer
+\item no guaranteed response from peers (could be down, delayed, hostile)
+\end{itemize}
+\end{document}

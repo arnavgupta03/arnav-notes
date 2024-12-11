@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-12-10 Tue 19:32 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Architecture Styles</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Architecture Styles</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc4223dd">1. Architectures</a></li>
+<li><a href="#org83e1948">2. Architecture Styles of Software Systems</a>
+<ul>
+<li><a href="#org51a76b8">2.1. Repository Style</a></li>
+<li><a href="#org092bd9e">2.2. Pipe and Filter Style</a>
+<ul>
+<li><a href="#orgfafbba3">2.2.1. Specializations</a></li>
+</ul>
+</li>
+<li><a href="#orge3ca4d9">2.3. Object-Oriented</a></li>
+<li><a href="#org7318268">2.4. Layered</a>
+<ul>
+<li><a href="#org0b67d11">2.4.1. Specializations</a></li>
+</ul>
+</li>
+<li><a href="#orgb5c79c9">2.5. Interpreter</a></li>
+<li><a href="#org9af536b">2.6. Process-Control</a>
+<ul>
+<li><a href="#org2d999e4">2.6.1. Feedback Control System</a></li>
+<li><a href="#orga0817ed">2.6.2. Open-Loop Control System</a></li>
+</ul>
+</li>
+<li><a href="#orgb93ebdc">2.7. Client-Server</a></li>
+<li><a href="#org0bfa351">2.8. Peer-to-Peer</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc4223dd" class="outline-2">
+<h2 id="orgc4223dd"><span class="section-number-2">1.</span> Architectures</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+No good way to characterize architectural structures, but best to make common use of architectural
+principles when designing software.
+Principles represent rules of thumb or emerging patterns, or industry standards.
+</p>
+</div>
+</div>
+<div id="outline-container-org83e1948" class="outline-2">
+<h2 id="org83e1948"><span class="section-number-2">2.</span> Architecture Styles of Software Systems</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Architectural Style</b>: family of systems in terms of a pattern of structural organization
+</p>
+
+<p>
+Architectural style determines:
+</p>
+<ul class="org-ul">
+<li><b>vocabulary</b> of components and connectors that can be used in instances of that style</li>
+<li><b>constraints</b> on how they can be combined
+<ul class="org-ul">
+<li>constraints of topology of descriptions or execution semantics</li>
+</ul></li>
+</ul>
+
+<p>
+To determine an architectural style, determine:
+</p>
+<ul class="org-ul">
+<li><span class="underline">structural pattern</span> (components, connectors, constraints)</li>
+<li>underlying <span class="underline">computational model</span></li>
+<li>essential <span class="underline">invariants</span></li>
+<li><span class="underline">examples</span> of use</li>
+<li><span class="underline">advantages and disadvantages</span> of use</li>
+<li>common <span class="underline">specializations</span> of style</li>
+</ul>
+
+<p>
+System architecture is collection of computational components and description of interactions between
+components (connectors).
+</p>
+
+<p>
+Software architectures are represented as graphs where <span class="underline">nodes</span> represent components: procedures, modules,
+processes, tools, and DBs; and <span class="underline">edges</span> represent connectors: procedure calls, event broadcasts.
+DB queries, and pipes.
+</p>
+</div>
+<div id="outline-container-org51a76b8" class="outline-3">
+<h3 id="org51a76b8"><span class="section-number-3">2.1.</span> Repository Style</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Suitable for applications in which central issue is establishing, augmenting, and maintaining a
+complex <span class="underline">central body of info</span>.
+</p>
+
+<p>
+Typically, info must be manipulated in a variety of ways, so long-term persistence is required.
+</p>
+
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li>central data structure representing current system state</li>
+<li>collection of independent components that operate on central data structure</li>
+</ul>
+
+<p>
+<span class="underline">Connectors</span>:
+</p>
+<ul class="org-ul">
+<li>procedure calls or direct memory access</li>
+</ul>
+
+<p>
+Changes to data structure trigger computation.
+</p>
+
+<p>
+Data structure in memory and on disk.
+</p>
+
+<p>
+Concurrent computations and data accesses.
+</p>
+
+<p>
+Multiple clients collaborate, accessing data, processing it, and updating it for others to process
+further.
+</p>
+
+<p>
+Examples include programming environments, info systems, graphical editors, and AI knowledge
+bases.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>efficient way to store large amounts of data</li>
+<li>sharing model published as the repository schema</li>
+<li>centralized management: backup, security, concurrency control</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>must agree on data model beforehand</li>
+<li>difficult to distribute data</li>
+<li>data evolution is expensive</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org092bd9e" class="outline-3">
+<h3 id="org092bd9e"><span class="section-number-3">2.2.</span> Pipe and Filter Style</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Suitable for applications that require defined series of independent computations to be performed on
+data.
+</p>
+
+<p>
+Component reads <span class="underline">streams</span> of data as input and produces streams of data as output.
+</p>
+
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li><b>filters</b>: apply local transformations to input streams and compute incrementally so output begins
+before all input consumed</li>
+</ul>
+
+<p>
+<span class="underline">Connectors</span>:
+</p>
+<ul class="org-ul">
+<li><b>pipes</b>: conduits for streams, transmitting outputs of 1 filter to inputs of another filter</li>
+</ul>
+
+<p>
+Filters do not share state with other filters.
+Filters do not know identity of their upstream or downstream filters.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>easy to understand overall input/output behaviour of system as composition of behaviours of
+individual filters</li>
+<li>support reuse since any 2 filters can be hooked together provided they agree on data transmitted
+between them</li>
+<li>easy to maintain and enhance (add new filters and replace old filters easily)</li>
+<li>permit specialized analysis (throughput and deadlock analysis)</li>
+<li>support concurrent execution</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>bad for interactive systems due to transformational character</li>
+<li>excessive parsing and unparsing leads to loss of performance and increased complexity in
+writing filters</li>
+</ul>
+</div>
+<div id="outline-container-orgfafbba3" class="outline-4">
+<h4 id="orgfafbba3"><span class="section-number-4">2.2.1.</span> Specializations</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+<b>Pipelines</b>: restricts topologies to linear sequences of filters
+</p>
+
+<p>
+<b>Batch Sequential</b>: degenerate case of pipeline architecture where each filter processes all
+input data before producing any output
+</p>
+
+<p>
+Compilers started with sequential process and moved towards repository as intermediate
+representation became more important.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge3ca4d9" class="outline-3">
+<h3 id="orge3ca4d9"><span class="section-number-3">2.3.</span> Object-Oriented</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Suitable for applications in which a central issue is identifying and protecting related bodies
+of info (data).
+</p>
+
+<p>
+Data representations and associated operations are encapsulated in abstract data types.
+</p>
+
+<p>
+<span class="underline">Components</span>: objects
+</p>
+
+<p>
+<span class="underline">Connectors</span>: function and procedure invocations (methods)
+</p>
+
+<p>
+Objects are responsible for preserving integrity (invariants) of data representation.
+</p>
+
+<p>
+Data representation is hidden from other objects.
+</p>
+
+<p>
+Specializations include distributed objects and objects with multiple interfaces.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>object hides data representation from clients, so possible to change implementation without
+affecting clients</li>
+<li>can design systems as collections of autonomous interacting agents</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>for 1 object to interact with another object (via method invocation), first object must know
+<span class="underline">identity</span> of second object
+<ul class="org-ul">
+<li>when identity changes, must modify all objects that invoke it</li>
+</ul></li>
+<li>objects cause side effect problems, especially when object used by multiple different objects</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7318268" class="outline-3">
+<h3 id="org7318268"><span class="section-number-3">2.4.</span> Layered</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Suitable for applications that involve distinct classes of services that can be
+<span class="underline">organized hierarchically</span>.
+</p>
+
+<p>
+Each layer provides service to the layer above and serves as client to layer below.
+</p>
+
+<p>
+Only carefully selected procedures from inner layers are made available (exported) to adjacent
+outer layer.
+</p>
+
+<p>
+<span class="underline">Components</span>: collections of procedures
+</p>
+
+<p>
+<span class="underline">Connectors</span>: procedure calls under restricted visibility
+</p>
+
+<p>
+Tier is <span class="underline">physical</span> partition of system across servers, layer is <span class="underline">logical</span> partition of related
+functionality, typically at different layers of abstraction.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>design based on increasing levels of abstraction</li>
+<li>enhancement easy since changes to one layer affects at most 2 other layers</li>
+<li>allows reuse since different implementations of same layer can be used interchangeably</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>not all systems are easily structured in layered fashion</li>
+<li>performance requirements may force coupling of high-level functions to lower-level implementations</li>
+</ul>
+</div>
+<div id="outline-container-org0b67d11" class="outline-4">
+<h4 id="org0b67d11"><span class="section-number-4">2.4.1.</span> Specializations</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Exceptions are made to permit non-adjacent layers to communicate directly, done for
+efficiency reasons.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb5c79c9" class="outline-3">
+<h3 id="orgb5c79c9"><span class="section-number-3">2.5.</span> Interpreter</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Suitable for applications in which the most appropriate language or machine.
+</p>
+
+<p>
+<span class="underline">Components</span>: include one state machine for the execution engine and 3 memories:
+</p>
+<ul class="org-ul">
+<li>current state of the execution engine</li>
+<li>program being interpreted</li>
+<li>current state of the program being interpreted</li>
+</ul>
+
+<p>
+<span class="underline">Connectors</span>:
+</p>
+<ul class="org-ul">
+<li>procedure calls</li>
+<li>direct memory accesses</li>
+</ul>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>simulation of non-implemented hardware</li>
+<li>facilitates portability of application or languages across
+a variety of platforms</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>defining, implementing, and testing interpreter components
+is non-trivial</li>
+<li>extra level of indirection slows down execution:</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9af536b" class="outline-3">
+<h3 id="org9af536b"><span class="section-number-3">2.6.</span> Process-Control</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Suitable for applications whose purpose is to maintain
+specified properties of the outputs of the process sufficiently
+near given reference values.
+</p>
+
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li>process definition includes mechanisms for manipulating process
+variables</li>
+<li>control algorithm for deciding how to manipulate process
+variables</li>
+</ul>
+
+<p>
+<span class="underline">Connectors</span>: data flow relations for
+</p>
+<ul class="org-ul">
+<li><b>process variables</b>: controlled variables whose value the system
+is intended to control
+<ul class="org-ul">
+<li>input variable that measures process input</li>
+<li>manipulated variable whose value can be changed by the controller</li>
+</ul></li>
+<li><b>set point</b>: desired value for a controlled variable</li>
+<li><b>sensors</b>: obtain values of process variables to control</li>
+</ul>
+</div>
+<div id="outline-container-org2d999e4" class="outline-4">
+<h4 id="org2d999e4"><span class="section-number-4">2.6.1.</span> Feedback Control System</h4>
+<div class="outline-text-4" id="text-2-6-1">
+<p>
+Controlled variable is measured and result is used to manipulate
+1+ process variables.
+</p>
+</div>
+</div>
+<div id="outline-container-orga0817ed" class="outline-4">
+<h4 id="orga0817ed"><span class="section-number-4">2.6.2.</span> Open-Loop Control System</h4>
+<div class="outline-text-4" id="text-2-6-2">
+<p>
+Given pure input materials, fully defined process, and completely
+repeatable process, process can run without surveillance (no
+feedback).
+</p>
+
+<p>
+Info about process variables is not used to adjust system.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb93ebdc" class="outline-3">
+<h3 id="orgb93ebdc"><span class="section-number-3">2.7.</span> Client-Server</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Suitable for applications that involve <span class="underline">distributed data</span> and processing
+across a range of components.
+</p>
+
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li><b>server</b>: standalone component that provides specific services</li>
+<li><b>client</b>: component that call on the services provided by servers</li>
+</ul>
+
+<p>
+<span class="underline">Connector</span>: network, which allows clients to access remote servers
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>straightforward distribution of data</li>
+<li>transparency of location</li>
+<li>mix/match heterogeneous platforms</li>
+<li>easy to add new servers or upgrade existing servers</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>system performance depends on network performance</li>
+<li>tricky to design and implement client/server systems</li>
+<li>hard to find out what services are available</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0bfa351" class="outline-3">
+<h3 id="org0bfa351"><span class="section-number-3">2.8.</span> Peer-to-Peer</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+Suitable for applications that partition tasks/workloads between peers
+<span class="underline">without centralized control</span>.
+</p>
+
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li>peers: standalone components that provide specific services to each
+other (act as both client and server)</li>
+</ul>
+
+<p>
+<span class="underline">Connector</span>: some kind of network that allows peers to access each other
+directly without a central server
+</p>
+
+<p>
+Connections can be transient/ad hoc.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>no single point of failure (since no central server)</li>
+<li>resilient against network issues or failing peer by establishing
+new links to other peers</li>
+<li>scalable (since no central server)</li>
+<li>more privacy (in theory)</li>
+<li>easy to add new peers or upgrade existing peers</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>cliques of peers could be disconnected from each other if no overlapping
+peer</li>
+<li>requires continuous exchange of lists of known peers between each peer</li>
+<li>could require central directory server to be able to locate each peer</li>
+<li>no guaranteed response from peers (could be down, delayed, hostile)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2024-12-10 Tue 19:32</p>
+</div>
+</body>
+</html>
