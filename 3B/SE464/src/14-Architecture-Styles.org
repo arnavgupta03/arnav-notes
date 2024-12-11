@@ -262,3 +262,157 @@ _Disadvantages_:
 - requires continuous exchange of lists of known peers between each peer
 - could require central directory server to be able to locate each peer
 - no guaranteed response from peers (could be down, delayed, hostile)
+
+** Implicit Invocation Style
+Suitable for applications that involve loosely-coupled collection of
+components, each of which carries out some operation and may in the
+process enable other operations.
+
+Useful for applications that must be reconfigured on the fly.
+
+Instead of invoking a procedure directly:
+- a *component* announces/broadcasts 1+ events
+- other components register interest in an event by associating a
+  procedure with the event
+- when an event is announced, broadcasting system (*connector*)
+  itself invokes all procedures that have been registered for the
+  event
+
+Announcers of events do not know which components will be affected
+by those events.
+
+Components cannot make assumptions about the order of processing.
+
+Components cannot make assumptions about what processing will occur
+as a result of their events (perhaps no component responds).
+
+_Advantages_:
+- strong support for reuse since any component can be introduced
+  into a system simply by registering it for the event of
+  that system
+- eases system evolution since components may be replaced without
+  affecting interfaces of other components in the system
+
+_Disadvantages_:
+- when component announces events
+  - unknown what components will respond
+  - unknown order of responses
+  - unknown when responses are finished
+
+*** Specializations
+Often connectors include the traditional procedure call in addition to
+bindings between event announcements and procedure calls.
+
+** Event Driven Architecture
+Architecture style that orchestrates behaviour around events.
+
+Has event producers and consumers.
+Events come as significant state changes.
+
+Focuses on event production, detection, and consumption.
+
+Asynchronous communication (implicit invocation may be sync).
+
+Event producers and consumer are decoupled.
+
+Useful for real-time data processing, distributed systems, and
+complex event processing.
+
+_Advantages_:
+- scalability
+  - handles fluctuating loads
+- flexibility
+  - easy to add/remove components
+- responsiveness
+  - real-time reaction to events
+- resilience
+  - reduces impact of single component failure
+- maintainability
+  - simplifies maintenance and upgrades
+- improves UX
+  - faster and more interactive applications
+
+_Disadvantages_:
+- event consistency
+  - reliability and ordering
+- complexity in event handling
+- integration with legacy systems
+- event granularity
+  - balance event size and information
+- event processing logic
+  - distributing logic between producers and consumers
+- error handling and recovery
+- monitoring and debugging
+  - tracing event flows
+- security concerns
+  - protecting event data in transit and at rest
+
+*** Publisher-Subscriber
+Enables applications to announce events asynchronously.
+Avoids coupling between sender and receivers.
+
+_Disadvantages_:
+- need in distributed systems
+  - components provide info to others as events occur
+- advantages of async
+  - decouple senders from consumers
+  - prevents sender blockage waiting for responses
+- scaling challenges
+  - inefficiency with dedicated message queues
+  - address varying consumer interests in event info
+- how to announce events to interested consumers
+  without knowing identities
+
+*** Asynchronous Messaging Subsystem
+_Components_:
+- input messaging channel for sender (publisher)
+- output messaging channel per consumer (subscriber)
+- intermediary for message distribution (message broker/event bus)
+
+*Message*: packet of data
+
+*Event*: message indicating change or action
+
+_Advantages_:
+- subsystem decoupling
+- enhanced scalability and sender responsiveness
+- reliability improvements
+- deferred or scheduled processing
+- integration across diverse systems
+- workflow facilitation and testing
+- separation of concerns
+
+To implement, consider choice of technology (existing messaging products),
+subscription handling (messaging infrastructure), and security measures
+(policies to restrict channel access).
+
+To handle message subsets, use topics for dedicated output channels with
+content filtering based on message content.
+Allow wildcard subscribers for multiple topics.
+
+Bi-directional communication using request/reply pattern for acknowledgments
+or status communication.
+
+Design for idempotent message processing, since no guarantee of message
+reception order.
+
+Implement priority queue pattern for ordered message processing.
+
+To deal with poison messages, prevent return to queue and store separately
+for analysis.
+Also use dead-letter queue functionality in message brokers, storing
+unsuccessful messages.
+
+Implement duplicate message detection and removal, and ensure
+idempotent processing if infrastructure doesn't de-duplicate.
+
+Implement limited lifetime for messages with expiration time in message data.
+
+Enable embargo on messages until specific date/time, by restricting receiver
+access until specified processing time.
+
+Use for broad info broadcasting, cross-platform communication, and
+non-real-time communication.
+
+Requires support for eventual consistency and varied consumer
+availability (different uptime schedules).

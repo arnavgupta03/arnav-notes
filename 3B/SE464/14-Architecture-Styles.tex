@@ -1,4 +1,4 @@
-% Created 2024-12-10 Tue 19:32
+% Created 2024-12-11 Wed 05:11
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -30,12 +30,12 @@
 \tableofcontents
 
 \section{Architectures}
-\label{sec:org396ec11}
+\label{sec:org43d23dd}
 No good way to characterize architectural structures, but best to make common use of architectural
 principles when designing software.
 Principles represent rules of thumb or emerging patterns, or industry standards.
 \section{Architecture Styles of Software Systems}
-\label{sec:org7901bfc}
+\label{sec:orgc1a829f}
 \textbf{Architectural Style}: family of systems in terms of a pattern of structural organization
 
 Architectural style determines:
@@ -64,7 +64,7 @@ Software architectures are represented as graphs where \uline{nodes} represent c
 processes, tools, and DBs; and \uline{edges} represent connectors: procedure calls, event broadcasts.
 DB queries, and pipes.
 \subsection{Repository Style}
-\label{sec:org80b6ca7}
+\label{sec:org5692686}
 Suitable for applications in which central issue is establishing, augmenting, and maintaining a
 complex \uline{central body of info}.
 
@@ -107,7 +107,7 @@ bases.
 \item data evolution is expensive
 \end{itemize}
 \subsection{Pipe and Filter Style}
-\label{sec:org3b943f8}
+\label{sec:orge4f1e2a}
 Suitable for applications that require defined series of independent computations to be performed on
 data.
 
@@ -145,7 +145,7 @@ between them
 writing filters
 \end{itemize}
 \subsubsection{Specializations}
-\label{sec:org6bf1201}
+\label{sec:orgf9cee6a}
 \textbf{Pipelines}: restricts topologies to linear sequences of filters
 
 \textbf{Batch Sequential}: degenerate case of pipeline architecture where each filter processes all
@@ -154,7 +154,7 @@ input data before producing any output
 Compilers started with sequential process and moved towards repository as intermediate
 representation became more important.
 \subsection{Object-Oriented}
-\label{sec:orga86c1dc}
+\label{sec:orgd4900d5}
 Suitable for applications in which a central issue is identifying and protecting related bodies
 of info (data).
 
@@ -187,7 +187,7 @@ affecting clients
 \item objects cause side effect problems, especially when object used by multiple different objects
 \end{itemize}
 \subsection{Layered}
-\label{sec:orgbc1537d}
+\label{sec:org8f2071a}
 Suitable for applications that involve distinct classes of services that can be
 \uline{organized hierarchically}.
 
@@ -216,11 +216,11 @@ functionality, typically at different layers of abstraction.
 \item performance requirements may force coupling of high-level functions to lower-level implementations
 \end{itemize}
 \subsubsection{Specializations}
-\label{sec:org6864d88}
+\label{sec:org38d91ea}
 Exceptions are made to permit non-adjacent layers to communicate directly, done for
 efficiency reasons.
 \subsection{Interpreter}
-\label{sec:orgc180ed1}
+\label{sec:orgabcf2d0}
 Suitable for applications in which the most appropriate language or machine.
 
 \uline{Components}: include one state machine for the execution engine and 3 memories:
@@ -250,7 +250,7 @@ is non-trivial
 \item extra level of indirection slows down execution:
 \end{itemize}
 \subsection{Process-Control}
-\label{sec:orgc7bb5eb}
+\label{sec:orga12ed3d}
 Suitable for applications whose purpose is to maintain
 specified properties of the outputs of the process sufficiently
 near given reference values.
@@ -275,18 +275,18 @@ is intended to control
 \item \textbf{sensors}: obtain values of process variables to control
 \end{itemize}
 \subsubsection{Feedback Control System}
-\label{sec:org37201d0}
+\label{sec:orgb56781e}
 Controlled variable is measured and result is used to manipulate
 1+ process variables.
 \subsubsection{Open-Loop Control System}
-\label{sec:orgeb20d20}
+\label{sec:orgb789843}
 Given pure input materials, fully defined process, and completely
 repeatable process, process can run without surveillance (no
 feedback).
 
 Info about process variables is not used to adjust system.
 \subsection{Client-Server}
-\label{sec:org7398212}
+\label{sec:org0ce86e7}
 Suitable for applications that involve \uline{distributed data} and processing
 across a range of components.
 
@@ -313,7 +313,7 @@ across a range of components.
 \item hard to find out what services are available
 \end{itemize}
 \subsection{Peer-to-Peer}
-\label{sec:org0247f2d}
+\label{sec:org33b918d}
 Suitable for applications that partition tasks/workloads between peers
 \uline{without centralized control}.
 
@@ -346,4 +346,204 @@ peer
 \item could require central directory server to be able to locate each peer
 \item no guaranteed response from peers (could be down, delayed, hostile)
 \end{itemize}
+\subsection{Implicit Invocation Style}
+\label{sec:org472522a}
+Suitable for applications that involve loosely-coupled collection of
+components, each of which carries out some operation and may in the
+process enable other operations.
+
+Useful for applications that must be reconfigured on the fly.
+
+Instead of invoking a procedure directly:
+\begin{itemize}
+\item a \textbf{component} announces/broadcasts 1+ events
+\item other components register interest in an event by associating a
+procedure with the event
+\item when an event is announced, broadcasting system (\textbf{connector})
+itself invokes all procedures that have been registered for the
+event
+\end{itemize}
+
+Announcers of events do not know which components will be affected
+by those events.
+
+Components cannot make assumptions about the order of processing.
+
+Components cannot make assumptions about what processing will occur
+as a result of their events (perhaps no component responds).
+
+\uline{Advantages}:
+\begin{itemize}
+\item strong support for reuse since any component can be introduced
+into a system simply by registering it for the event of
+that system
+\item eases system evolution since components may be replaced without
+affecting interfaces of other components in the system
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item when component announces events
+\begin{itemize}
+\item unknown what components will respond
+\item unknown order of responses
+\item unknown when responses are finished
+\end{itemize}
+\end{itemize}
+\subsubsection{Specializations}
+\label{sec:org3edc268}
+Often connectors include the traditional procedure call in addition to
+bindings between event announcements and procedure calls.
+\subsection{Event Driven Architecture}
+\label{sec:org50f1076}
+Architecture style that orchestrates behaviour around events.
+
+Has event producers and consumers.
+Events come as significant state changes.
+
+Focuses on event production, detection, and consumption.
+
+Asynchronous communication (implicit invocation may be sync).
+
+Event producers and consumer are decoupled.
+
+Useful for real-time data processing, distributed systems, and
+complex event processing.
+
+\uline{Advantages}:
+\begin{itemize}
+\item scalability
+\begin{itemize}
+\item handles fluctuating loads
+\end{itemize}
+\item flexibility
+\begin{itemize}
+\item easy to add/remove components
+\end{itemize}
+\item responsiveness
+\begin{itemize}
+\item real-time reaction to events
+\end{itemize}
+\item resilience
+\begin{itemize}
+\item reduces impact of single component failure
+\end{itemize}
+\item maintainability
+\begin{itemize}
+\item simplifies maintenance and upgrades
+\end{itemize}
+\item improves UX
+\begin{itemize}
+\item faster and more interactive applications
+\end{itemize}
+\end{itemize}
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item event consistency
+\begin{itemize}
+\item reliability and ordering
+\end{itemize}
+\item complexity in event handling
+\item integration with legacy systems
+\item event granularity
+\begin{itemize}
+\item balance event size and information
+\end{itemize}
+\item event processing logic
+\begin{itemize}
+\item distributing logic between producers and consumers
+\end{itemize}
+\item error handling and recovery
+\item monitoring and debugging
+\begin{itemize}
+\item tracing event flows
+\end{itemize}
+\item security concerns
+\begin{itemize}
+\item protecting event data in transit and at rest
+\end{itemize}
+\end{itemize}
+\subsubsection{Publisher-Subscriber}
+\label{sec:org26ee220}
+Enables applications to announce events asynchronously.
+Avoids coupling between sender and receivers.
+
+\uline{Disadvantages}:
+\begin{itemize}
+\item need in distributed systems
+\begin{itemize}
+\item components provide info to others as events occur
+\end{itemize}
+\item advantages of async
+\begin{itemize}
+\item decouple senders from consumers
+\item prevents sender blockage waiting for responses
+\end{itemize}
+\item scaling challenges
+\begin{itemize}
+\item inefficiency with dedicated message queues
+\item address varying consumer interests in event info
+\end{itemize}
+\item how to announce events to interested consumers
+without knowing identities
+\end{itemize}
+\subsubsection{Asynchronous Messaging Subsystem}
+\label{sec:org1e883a7}
+\uline{Components}:
+\begin{itemize}
+\item input messaging channel for sender (publisher)
+\item output messaging channel per consumer (subscriber)
+\item intermediary for message distribution (message broker/event bus)
+\end{itemize}
+
+\textbf{Message}: packet of data
+
+\textbf{Event}: message indicating change or action
+
+\uline{Advantages}:
+\begin{itemize}
+\item subsystem decoupling
+\item enhanced scalability and sender responsiveness
+\item reliability improvements
+\item deferred or scheduled processing
+\item integration across diverse systems
+\item workflow facilitation and testing
+\item separation of concerns
+\end{itemize}
+
+To implement, consider choice of technology (existing messaging products),
+subscription handling (messaging infrastructure), and security measures
+(policies to restrict channel access).
+
+To handle message subsets, use topics for dedicated output channels with
+content filtering based on message content.
+Allow wildcard subscribers for multiple topics.
+
+Bi-directional communication using request/reply pattern for acknowledgments
+or status communication.
+
+Design for idempotent message processing, since no guarantee of message
+reception order.
+
+Implement priority queue pattern for ordered message processing.
+
+To deal with poison messages, prevent return to queue and store separately
+for analysis.
+Also use dead-letter queue functionality in message brokers, storing
+unsuccessful messages.
+
+Implement duplicate message detection and removal, and ensure
+idempotent processing if infrastructure doesn't de-duplicate.
+
+Implement limited lifetime for messages with expiration time in message data.
+
+Enable embargo on messages until specific date/time, by restricting receiver
+access until specified processing time.
+
+Use for broad info broadcasting, cross-platform communication, and
+non-real-time communication.
+
+Requires support for eventual consistency and varied consumer
+availability (different uptime schedules).
 \end{document}

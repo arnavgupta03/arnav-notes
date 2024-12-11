@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-12-10 Tue 19:32 -->
+<!-- 2024-12-11 Wed 05:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Architecture Styles</title>
@@ -202,37 +202,48 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc4223dd">1. Architectures</a></li>
-<li><a href="#org83e1948">2. Architecture Styles of Software Systems</a>
+<li><a href="#org0692068">1. Architectures</a></li>
+<li><a href="#org5df91a9">2. Architecture Styles of Software Systems</a>
 <ul>
-<li><a href="#org51a76b8">2.1. Repository Style</a></li>
-<li><a href="#org092bd9e">2.2. Pipe and Filter Style</a>
+<li><a href="#orga1369f0">2.1. Repository Style</a></li>
+<li><a href="#org011190f">2.2. Pipe and Filter Style</a>
 <ul>
-<li><a href="#orgfafbba3">2.2.1. Specializations</a></li>
+<li><a href="#org8c7a255">2.2.1. Specializations</a></li>
 </ul>
 </li>
-<li><a href="#orge3ca4d9">2.3. Object-Oriented</a></li>
-<li><a href="#org7318268">2.4. Layered</a>
+<li><a href="#org281e452">2.3. Object-Oriented</a></li>
+<li><a href="#org58e0951">2.4. Layered</a>
 <ul>
-<li><a href="#org0b67d11">2.4.1. Specializations</a></li>
+<li><a href="#org443dbcf">2.4.1. Specializations</a></li>
 </ul>
 </li>
-<li><a href="#orgb5c79c9">2.5. Interpreter</a></li>
-<li><a href="#org9af536b">2.6. Process-Control</a>
+<li><a href="#orgf873652">2.5. Interpreter</a></li>
+<li><a href="#orgedf5407">2.6. Process-Control</a>
 <ul>
-<li><a href="#org2d999e4">2.6.1. Feedback Control System</a></li>
-<li><a href="#orga0817ed">2.6.2. Open-Loop Control System</a></li>
+<li><a href="#orgbfc3325">2.6.1. Feedback Control System</a></li>
+<li><a href="#org8031e41">2.6.2. Open-Loop Control System</a></li>
 </ul>
 </li>
-<li><a href="#orgb93ebdc">2.7. Client-Server</a></li>
-<li><a href="#org0bfa351">2.8. Peer-to-Peer</a></li>
+<li><a href="#orga212bd8">2.7. Client-Server</a></li>
+<li><a href="#orgc264ff6">2.8. Peer-to-Peer</a></li>
+<li><a href="#org1d98ac0">2.9. Implicit Invocation Style</a>
+<ul>
+<li><a href="#orgbcffefd">2.9.1. Specializations</a></li>
+</ul>
+</li>
+<li><a href="#org1b4dbcf">2.10. Event Driven Architecture</a>
+<ul>
+<li><a href="#org8a52e1f">2.10.1. Publisher-Subscriber</a></li>
+<li><a href="#orgee4a316">2.10.2. Asynchronous Messaging Subsystem</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc4223dd" class="outline-2">
-<h2 id="orgc4223dd"><span class="section-number-2">1.</span> Architectures</h2>
+<div id="outline-container-org0692068" class="outline-2">
+<h2 id="org0692068"><span class="section-number-2">1.</span> Architectures</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 No good way to characterize architectural structures, but best to make common use of architectural
@@ -241,8 +252,8 @@ Principles represent rules of thumb or emerging patterns, or industry standards.
 </p>
 </div>
 </div>
-<div id="outline-container-org83e1948" class="outline-2">
-<h2 id="org83e1948"><span class="section-number-2">2.</span> Architecture Styles of Software Systems</h2>
+<div id="outline-container-org5df91a9" class="outline-2">
+<h2 id="org5df91a9"><span class="section-number-2">2.</span> Architecture Styles of Software Systems</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <b>Architectural Style</b>: family of systems in terms of a pattern of structural organization
@@ -282,8 +293,8 @@ processes, tools, and DBs; and <span class="underline">edges</span> represent co
 DB queries, and pipes.
 </p>
 </div>
-<div id="outline-container-org51a76b8" class="outline-3">
-<h3 id="org51a76b8"><span class="section-number-3">2.1.</span> Repository Style</h3>
+<div id="outline-container-orga1369f0" class="outline-3">
+<h3 id="orga1369f0"><span class="section-number-3">2.1.</span> Repository Style</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Suitable for applications in which central issue is establishing, augmenting, and maintaining a
@@ -350,8 +361,8 @@ bases.
 </ul>
 </div>
 </div>
-<div id="outline-container-org092bd9e" class="outline-3">
-<h3 id="org092bd9e"><span class="section-number-3">2.2.</span> Pipe and Filter Style</h3>
+<div id="outline-container-org011190f" class="outline-3">
+<h3 id="org011190f"><span class="section-number-3">2.2.</span> Pipe and Filter Style</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Suitable for applications that require defined series of independent computations to be performed on
@@ -404,8 +415,8 @@ between them</li>
 writing filters</li>
 </ul>
 </div>
-<div id="outline-container-orgfafbba3" class="outline-4">
-<h4 id="orgfafbba3"><span class="section-number-4">2.2.1.</span> Specializations</h4>
+<div id="outline-container-org8c7a255" class="outline-4">
+<h4 id="org8c7a255"><span class="section-number-4">2.2.1.</span> Specializations</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 <b>Pipelines</b>: restricts topologies to linear sequences of filters
@@ -423,8 +434,8 @@ representation became more important.
 </div>
 </div>
 </div>
-<div id="outline-container-orge3ca4d9" class="outline-3">
-<h3 id="orge3ca4d9"><span class="section-number-3">2.3.</span> Object-Oriented</h3>
+<div id="outline-container-org281e452" class="outline-3">
+<h3 id="org281e452"><span class="section-number-3">2.3.</span> Object-Oriented</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Suitable for applications in which a central issue is identifying and protecting related bodies
@@ -477,8 +488,8 @@ affecting clients</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org7318268" class="outline-3">
-<h3 id="org7318268"><span class="section-number-3">2.4.</span> Layered</h3>
+<div id="outline-container-org58e0951" class="outline-3">
+<h3 id="org58e0951"><span class="section-number-3">2.4.</span> Layered</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Suitable for applications that involve distinct classes of services that can be
@@ -524,8 +535,8 @@ functionality, typically at different layers of abstraction.
 <li>performance requirements may force coupling of high-level functions to lower-level implementations</li>
 </ul>
 </div>
-<div id="outline-container-org0b67d11" class="outline-4">
-<h4 id="org0b67d11"><span class="section-number-4">2.4.1.</span> Specializations</h4>
+<div id="outline-container-org443dbcf" class="outline-4">
+<h4 id="org443dbcf"><span class="section-number-4">2.4.1.</span> Specializations</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 Exceptions are made to permit non-adjacent layers to communicate directly, done for
@@ -534,8 +545,8 @@ efficiency reasons.
 </div>
 </div>
 </div>
-<div id="outline-container-orgb5c79c9" class="outline-3">
-<h3 id="orgb5c79c9"><span class="section-number-3">2.5.</span> Interpreter</h3>
+<div id="outline-container-orgf873652" class="outline-3">
+<h3 id="orgf873652"><span class="section-number-3">2.5.</span> Interpreter</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Suitable for applications in which the most appropriate language or machine.
@@ -577,8 +588,8 @@ is non-trivial</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org9af536b" class="outline-3">
-<h3 id="org9af536b"><span class="section-number-3">2.6.</span> Process-Control</h3>
+<div id="outline-container-orgedf5407" class="outline-3">
+<h3 id="orgedf5407"><span class="section-number-3">2.6.</span> Process-Control</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Suitable for applications whose purpose is to maintain
@@ -610,8 +621,8 @@ is intended to control
 <li><b>sensors</b>: obtain values of process variables to control</li>
 </ul>
 </div>
-<div id="outline-container-org2d999e4" class="outline-4">
-<h4 id="org2d999e4"><span class="section-number-4">2.6.1.</span> Feedback Control System</h4>
+<div id="outline-container-orgbfc3325" class="outline-4">
+<h4 id="orgbfc3325"><span class="section-number-4">2.6.1.</span> Feedback Control System</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 Controlled variable is measured and result is used to manipulate
@@ -619,8 +630,8 @@ Controlled variable is measured and result is used to manipulate
 </p>
 </div>
 </div>
-<div id="outline-container-orga0817ed" class="outline-4">
-<h4 id="orga0817ed"><span class="section-number-4">2.6.2.</span> Open-Loop Control System</h4>
+<div id="outline-container-org8031e41" class="outline-4">
+<h4 id="org8031e41"><span class="section-number-4">2.6.2.</span> Open-Loop Control System</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <p>
 Given pure input materials, fully defined process, and completely
@@ -634,8 +645,8 @@ Info about process variables is not used to adjust system.
 </div>
 </div>
 </div>
-<div id="outline-container-orgb93ebdc" class="outline-3">
-<h3 id="orgb93ebdc"><span class="section-number-3">2.7.</span> Client-Server</h3>
+<div id="outline-container-orga212bd8" class="outline-3">
+<h3 id="orga212bd8"><span class="section-number-3">2.7.</span> Client-Server</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Suitable for applications that involve <span class="underline">distributed data</span> and processing
@@ -674,8 +685,8 @@ across a range of components.
 </ul>
 </div>
 </div>
-<div id="outline-container-org0bfa351" class="outline-3">
-<h3 id="org0bfa351"><span class="section-number-3">2.8.</span> Peer-to-Peer</h3>
+<div id="outline-container-orgc264ff6" class="outline-3">
+<h3 id="orgc264ff6"><span class="section-number-3">2.8.</span> Peer-to-Peer</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Suitable for applications that partition tasks/workloads between peers
@@ -723,11 +734,294 @@ peer</li>
 </ul>
 </div>
 </div>
+<div id="outline-container-org1d98ac0" class="outline-3">
+<h3 id="org1d98ac0"><span class="section-number-3">2.9.</span> Implicit Invocation Style</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+Suitable for applications that involve loosely-coupled collection of
+components, each of which carries out some operation and may in the
+process enable other operations.
+</p>
+
+<p>
+Useful for applications that must be reconfigured on the fly.
+</p>
+
+<p>
+Instead of invoking a procedure directly:
+</p>
+<ul class="org-ul">
+<li>a <b>component</b> announces/broadcasts 1+ events</li>
+<li>other components register interest in an event by associating a
+procedure with the event</li>
+<li>when an event is announced, broadcasting system (<b>connector</b>)
+itself invokes all procedures that have been registered for the
+event</li>
+</ul>
+
+<p>
+Announcers of events do not know which components will be affected
+by those events.
+</p>
+
+<p>
+Components cannot make assumptions about the order of processing.
+</p>
+
+<p>
+Components cannot make assumptions about what processing will occur
+as a result of their events (perhaps no component responds).
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>strong support for reuse since any component can be introduced
+into a system simply by registering it for the event of
+that system</li>
+<li>eases system evolution since components may be replaced without
+affecting interfaces of other components in the system</li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>when component announces events
+<ul class="org-ul">
+<li>unknown what components will respond</li>
+<li>unknown order of responses</li>
+<li>unknown when responses are finished</li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-orgbcffefd" class="outline-4">
+<h4 id="orgbcffefd"><span class="section-number-4">2.9.1.</span> Specializations</h4>
+<div class="outline-text-4" id="text-2-9-1">
+<p>
+Often connectors include the traditional procedure call in addition to
+bindings between event announcements and procedure calls.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1b4dbcf" class="outline-3">
+<h3 id="org1b4dbcf"><span class="section-number-3">2.10.</span> Event Driven Architecture</h3>
+<div class="outline-text-3" id="text-2-10">
+<p>
+Architecture style that orchestrates behaviour around events.
+</p>
+
+<p>
+Has event producers and consumers.
+Events come as significant state changes.
+</p>
+
+<p>
+Focuses on event production, detection, and consumption.
+</p>
+
+<p>
+Asynchronous communication (implicit invocation may be sync).
+</p>
+
+<p>
+Event producers and consumer are decoupled.
+</p>
+
+<p>
+Useful for real-time data processing, distributed systems, and
+complex event processing.
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>scalability
+<ul class="org-ul">
+<li>handles fluctuating loads</li>
+</ul></li>
+<li>flexibility
+<ul class="org-ul">
+<li>easy to add/remove components</li>
+</ul></li>
+<li>responsiveness
+<ul class="org-ul">
+<li>real-time reaction to events</li>
+</ul></li>
+<li>resilience
+<ul class="org-ul">
+<li>reduces impact of single component failure</li>
+</ul></li>
+<li>maintainability
+<ul class="org-ul">
+<li>simplifies maintenance and upgrades</li>
+</ul></li>
+<li>improves UX
+<ul class="org-ul">
+<li>faster and more interactive applications</li>
+</ul></li>
+</ul>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>event consistency
+<ul class="org-ul">
+<li>reliability and ordering</li>
+</ul></li>
+<li>complexity in event handling</li>
+<li>integration with legacy systems</li>
+<li>event granularity
+<ul class="org-ul">
+<li>balance event size and information</li>
+</ul></li>
+<li>event processing logic
+<ul class="org-ul">
+<li>distributing logic between producers and consumers</li>
+</ul></li>
+<li>error handling and recovery</li>
+<li>monitoring and debugging
+<ul class="org-ul">
+<li>tracing event flows</li>
+</ul></li>
+<li>security concerns
+<ul class="org-ul">
+<li>protecting event data in transit and at rest</li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-org8a52e1f" class="outline-4">
+<h4 id="org8a52e1f"><span class="section-number-4">2.10.1.</span> Publisher-Subscriber</h4>
+<div class="outline-text-4" id="text-2-10-1">
+<p>
+Enables applications to announce events asynchronously.
+Avoids coupling between sender and receivers.
+</p>
+
+<p>
+<span class="underline">Disadvantages</span>:
+</p>
+<ul class="org-ul">
+<li>need in distributed systems
+<ul class="org-ul">
+<li>components provide info to others as events occur</li>
+</ul></li>
+<li>advantages of async
+<ul class="org-ul">
+<li>decouple senders from consumers</li>
+<li>prevents sender blockage waiting for responses</li>
+</ul></li>
+<li>scaling challenges
+<ul class="org-ul">
+<li>inefficiency with dedicated message queues</li>
+<li>address varying consumer interests in event info</li>
+</ul></li>
+<li>how to announce events to interested consumers
+without knowing identities</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgee4a316" class="outline-4">
+<h4 id="orgee4a316"><span class="section-number-4">2.10.2.</span> Asynchronous Messaging Subsystem</h4>
+<div class="outline-text-4" id="text-2-10-2">
+<p>
+<span class="underline">Components</span>:
+</p>
+<ul class="org-ul">
+<li>input messaging channel for sender (publisher)</li>
+<li>output messaging channel per consumer (subscriber)</li>
+<li>intermediary for message distribution (message broker/event bus)</li>
+</ul>
+
+<p>
+<b>Message</b>: packet of data
+</p>
+
+<p>
+<b>Event</b>: message indicating change or action
+</p>
+
+<p>
+<span class="underline">Advantages</span>:
+</p>
+<ul class="org-ul">
+<li>subsystem decoupling</li>
+<li>enhanced scalability and sender responsiveness</li>
+<li>reliability improvements</li>
+<li>deferred or scheduled processing</li>
+<li>integration across diverse systems</li>
+<li>workflow facilitation and testing</li>
+<li>separation of concerns</li>
+</ul>
+
+<p>
+To implement, consider choice of technology (existing messaging products),
+subscription handling (messaging infrastructure), and security measures
+(policies to restrict channel access).
+</p>
+
+<p>
+To handle message subsets, use topics for dedicated output channels with
+content filtering based on message content.
+Allow wildcard subscribers for multiple topics.
+</p>
+
+<p>
+Bi-directional communication using request/reply pattern for acknowledgments
+or status communication.
+</p>
+
+<p>
+Design for idempotent message processing, since no guarantee of message
+reception order.
+</p>
+
+<p>
+Implement priority queue pattern for ordered message processing.
+</p>
+
+<p>
+To deal with poison messages, prevent return to queue and store separately
+for analysis.
+Also use dead-letter queue functionality in message brokers, storing
+unsuccessful messages.
+</p>
+
+<p>
+Implement duplicate message detection and removal, and ensure
+idempotent processing if infrastructure doesn&rsquo;t de-duplicate.
+</p>
+
+<p>
+Implement limited lifetime for messages with expiration time in message data.
+</p>
+
+<p>
+Enable embargo on messages until specific date/time, by restricting receiver
+access until specified processing time.
+</p>
+
+<p>
+Use for broad info broadcasting, cross-platform communication, and
+non-real-time communication.
+</p>
+
+<p>
+Requires support for eventual consistency and varied consumer
+availability (different uptime schedules).
+</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Arnav Gupta</p>
-<p class="date">Created: 2024-12-10 Tue 19:32</p>
+<p class="date">Created: 2024-12-11 Wed 05:11</p>
 </div>
 </body>
 </html>
