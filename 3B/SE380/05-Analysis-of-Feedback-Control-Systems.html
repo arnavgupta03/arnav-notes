@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-14 Thu 01:25 -->
+<!-- 2024-12-11 Wed 05:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Analysis Of Feedback Control Systems</title>
@@ -234,28 +234,51 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd4e1fc6">1. Block Diagrams</a></li>
-<li><a href="#org27bbbdd">2. Stability of Interconnected Systems</a></li>
-<li><a href="#orgb354b2a">3. Routh-Hurwitz Criterion</a>
+<li><a href="#orgaad085a">1. Block Diagrams</a></li>
+<li><a href="#org7f73158">2. Stability of Interconnected Systems</a></li>
+<li><a href="#org24482b6">3. Routh-Hurwitz Criterion</a>
 <ul>
-<li><a href="#org81243a2">3.1. Routh&rsquo;s Algorithm</a></li>
+<li><a href="#org2c0990e">3.1. Routh&rsquo;s Algorithm</a></li>
 </ul>
 </li>
-<li><a href="#org9684d6e">4. Nyquist Criterion</a></li>
-<li><a href="#org06ec389">5. Bode Criterion</a></li>
+<li><a href="#org7e7de7b">4. Nyquist Criterion</a></li>
+<li><a href="#org86c2cc9">5. Bode Criterion</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd4e1fc6" class="outline-2">
-<h2 id="orgd4e1fc6"><span class="section-number-2">1.</span> Block Diagrams</h2>
-</div>
+<div id="outline-container-orgaad085a" class="outline-2">
+<h2 id="orgaad085a"><span class="section-number-2">1.</span> Block Diagrams</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+For series interconnections, multiple transfer functions.
+</p>
 
-<div id="outline-container-org27bbbdd" class="outline-2">
-<h2 id="org27bbbdd"><span class="section-number-2">2.</span> Stability of Interconnected Systems</h2>
-</div>
+<p>
+For parallel interconnections, add transfer functions.
+</p>
 
-<div id="outline-container-orgb354b2a" class="outline-2">
-<h2 id="orgb354b2a"><span class="section-number-2">3.</span> Routh-Hurwitz Criterion</h2>
+<p>
+For feedback interconnections, transfer function is
+\[ \frac{G(s)}{1 + G(s)} \]
+</p>
+</div>
+</div>
+<div id="outline-container-org7f73158" class="outline-2">
+<h2 id="org7f73158"><span class="section-number-2">2.</span> Stability of Interconnected Systems</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Series and parallel systems are stable if both original transfer functions are stable
+(assuming no cancellations).
+</p>
+
+<p>
+For feedback, stability is unknown simply based off stability of original transfer
+function.
+</p>
+</div>
+</div>
+<div id="outline-container-org24482b6" class="outline-2">
+<h2 id="org24482b6"><span class="section-number-2">3.</span> Routh-Hurwitz Criterion</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For a closed-loop system, the transfer function tends to be of the form
@@ -285,8 +308,8 @@ where \(\lambda_{1}, \dots, \lambda_{r}\) are real roots and \(\mu_{1}, \bar{\mu
 If \(\pi(s)\) is Hurwitz, \(\pi(s)\) has strictly positive coefficients.
 </p>
 </div>
-<div id="outline-container-org81243a2" class="outline-3">
-<h3 id="org81243a2"><span class="section-number-3">3.1.</span> Routh&rsquo;s Algorithm</h3>
+<div id="outline-container-org2c0990e" class="outline-3">
+<h3 id="org2c0990e"><span class="section-number-3">3.1.</span> Routh&rsquo;s Algorithm</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 The first step is to build the following table:
@@ -321,8 +344,8 @@ The next step is the use the <b>Routh-Hurwitz Criterion</b>:
 </div>
 </div>
 </div>
-<div id="outline-container-org9684d6e" class="outline-2">
-<h2 id="org9684d6e"><span class="section-number-2">4.</span> Nyquist Criterion</h2>
+<div id="outline-container-org7e7de7b" class="outline-2">
+<h2 id="org7e7de7b"><span class="section-number-2">4.</span> Nyquist Criterion</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The transfer function \(G(s)\) is a mapping from \(s\) to \(G(s)\), which is \(\mathbb{C} \to \mathbb{C}\).
@@ -380,8 +403,8 @@ Further, if:
 </ul>
 </div>
 </div>
-<div id="outline-container-org06ec389" class="outline-2">
-<h2 id="org06ec389"><span class="section-number-2">5.</span> Bode Criterion</h2>
+<div id="outline-container-org86c2cc9" class="outline-2">
+<h2 id="org86c2cc9"><span class="section-number-2">5.</span> Bode Criterion</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Let \(L(s)\) be the open loop transfer function of a closed-loop system.
@@ -430,7 +453,7 @@ The closed loop system \(F(s)\) is stable for \(K_{m} > 0, \phi_{m} > 0\).
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: DESKTOP-H800RKQ</p>
-<p class="date">Created: 2024-11-14 Thu 01:25</p>
+<p class="date">Created: 2024-12-11 Wed 05:29</p>
 </div>
 </body>
 </html>

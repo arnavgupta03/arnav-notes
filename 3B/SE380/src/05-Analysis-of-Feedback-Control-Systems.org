@@ -6,8 +6,19 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
 
 * Block Diagrams
+For series interconnections, multiple transfer functions.
+
+For parallel interconnections, add transfer functions.
+
+For feedback interconnections, transfer function is
+$$ \frac{G(s)}{1 + G(s)} $$
 
 * Stability of Interconnected Systems
+Series and parallel systems are stable if both original transfer functions are stable
+(assuming no cancellations).
+
+For feedback, stability is unknown simply based off stability of original transfer
+function.
 
 * Routh-Hurwitz Criterion
 For a closed-loop system, the transfer function tends to be of the form
