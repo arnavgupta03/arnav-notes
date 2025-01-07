@@ -1,0 +1,82 @@
+#+title: Reliable, Scalable, and Maintainable Applications
+#+author: Arnav Gupta
+#+LATEX_HEADER: \usepackage{parskip,darkmode}
+#+LATEX_HEADER: \enabledarkmode
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="src/latex.css" />
+
+* Introduction
+*Data-intensive applications* are built from standard building blocks that provide commonly needed
+functionality.
+These building blocks include _databases_, _caches_, _search indexes_, _stream processing_, and
+_batch processing_.
+
+When building an application, its important to figure out which tools and approaches are most appropriate
+for the task at hand.
+
+* Thinking About Data Systems
+In recent years, boundaries between categories of data systems are becoming blurred.
+
+Work is broken down into tasks that can be performed efficiently on a single tool, with different tools
+stitched together using application code.
+
+When combining tools to provide a service, the API hides implementation details from clients.
+
+* Reliability
+*Reliability*: the system should continue to work /correctly/ (perform correct function at desired level
+of performance) even in the face of /adversity/ (hardware or software faults, even human error)
+
+More roughly, reliability means to continue to work correctly, even when things go wrong.
+
+*Fault*: a component of the system deviating from the spec
+
+*Fault-tolerant/resilient*: systems that anticipate faults and can cope with them
+
+*Failure*: when the system as a whole stops providing the required service to the user
+
+Impossible to reduce probability of a fault to zero, so best to prevent faults from causing failures.
+Generally better to tolerate faults than prevent faults, but must also sometimes prevent faults.
+
+One strategy involves deliberately inducing faults.
+
+** Hardware Faults
+Hard disks have a mean time to failure (MTTF), so with many disks, some number of disks will die every day.
+
+Can add redundancy to individual hardware components to reduce the failure rate of the system (like using
+RAID, backup power, etc).
+This cannot completely prevent hardware problems from causing failures, but is well understood and has
+decent success rate.
+
+Redundancy was sufficient in the past since if a backup is restored onto a new machine fairly quickly,
+downtime in case of failure is not catastrophic in most applications.
+
+As data volumes and computing demands increased, more applications use more machines and so hardware
+fault rates have increased.
+Platforms are now designed to prioritize flexibility and elasticity over single-machine reliability.
+
+Systems should tolerate the loss of entire machines using software and hardware techniques.
+
+** Software Faults
+
+** Human Errors
+
+** How Important is Reliability?
+
+* Scalability
+*Scalability*: as the system /grows/ (data volume, traffic volume, complexity), there should be reasonable
+ways of dealing with growth
+
+** Describing Load
+
+** Describing Performance
+
+** Approaches for Coping with Load
+
+* Maintainability
+*Maintainability*: over time, everyone that works on the system (maintaining current behaviour and adapting
+system to new use cases) should be able to work on it productively
+
+** Operability: Making Life Easy for Operations
+
+** Simplicity: Managing Complexity
+
+** Evolvability: Making Change Easy
