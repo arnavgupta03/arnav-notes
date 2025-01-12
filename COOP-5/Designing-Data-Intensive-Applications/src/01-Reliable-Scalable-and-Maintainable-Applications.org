@@ -56,27 +56,142 @@ Platforms are now designed to prioritize flexibility and elasticity over single-
 Systems should tolerate the loss of entire machines using software and hardware techniques.
 
 ** Software Faults
+Hardware faults are generally have no correlation.
+
+Systematic errors within the system are correlated across nodes and cause more system failures.
+This includes software bugs, runaway processes, slowdowns, and cascading failures.
+
+Software faults often lie dormant and are triggered by an unusual set of circumstances.
+
+Solutions include:
+- considering assumptions made
+- thorough testing
+- process isolation
+- monitoring system behaviour
 
 ** Human Errors
+Humans can be unreliable. To mitigate this:
+- design system to minimize opportunities for error
+- decouple places where people make mistakes from places where they can cause failures
+- test thoroughly at all levels
+- allow quick and easy recovery from human errors
+- setup detailed and clear monitoring, called *telemetry*
+- implement good management practices and training
 
 ** How Important is Reliability?
+Bugs can have large cost with respect to lost revenue and
+reputation damage.
+
+Can sacrifice reliability to reduce development cost or
+operation cost, but must be conscious of cost cutting.
 
 * Scalability
 *Scalability*: as the system /grows/ (data volume, traffic volume, complexity), there should be reasonable
-ways of dealing with growth
+ways of dealing with growth (cope with increased load)
 
 ** Describing Load
+Load can be described with *load parameters*.
+
+Choice of load parameters depends on the architecture.
+
+Choice of average vs worst case depends on specific system.
 
 ** Describing Performance
+Can be helpful to examine:
+- how system performance is affected by increase on load parameter and
+  keep system resources unchanged
+- how much resources must be increased with load to keep performance unchanged
+
+This requires a way to describe performance.
+
+*Throughput*: number of records that can be processed per time unit
+
+*Response time*: time between client sending request and receiving a response
+
+*Latency*: duration that a request is waiting to be handled
+
+Response time can be considered as a distribution.
+Within this distribution, good metrics can be average response time or percentiles
+like median, 95th percentile, 99th percentile, etc.
+
+*Tail latencies*: high percentiles of response time, directly affect user
+experience
+
+Reducing response times at very high percentiles is difficult since they are
+affected by random events outside control and benefits are diminishing.
+
+Percentiles are used in service level objectives and agreements to define
+expected performance and availability.
+
+*Head-of-line blocking*: small number of slow requests holding up subsequent
+requests
+
+To simulate queues accurately, generate load independently of response time.
+
+Even if only a small percentage of backend calls are slow, the chance of
+getting a slow call increases if an end-user request requires multiple
+backend calls, so a higher proportion of end-user requests end up being
+slow (*tail latency amplification*).
 
 ** Approaches for Coping with Load
+Must rethink architecture on every order of magnitude load increase.
+
+*Shared-nothing architecture*: distributing load across
+multiple machines
+
+*Elastic system*: can automatically add computing resources when
+they detect a load increase (good for unpredictable load)
+
+Stateless services are easy to horizontally scale, stateful
+services are difficult to.
+
+Distributed data systems are default.
+The way to scale an architecture is specific to the application.
 
 * Maintainability
-*Maintainability*: over time, everyone that works on the system (maintaining current behaviour and adapting
-system to new use cases) should be able to work on it productively
+*Maintainability*: over time, everyone that works on the system (maintaining current behaviour
+and adapting system to new use cases) should be able to work on it productively
+
+Main cost in software is ongoing maintenance.
 
 ** Operability: Making Life Easy for Operations
+*Operability*: make it easy for operations teams to keep system running smoothly
+
+Operations teams:
+- monitor system health
+- track down problem causes
+- keep software up to date
+- keep tabs on system interactions
+- anticipate future problems
+- establish good practices and tools for deployment
+- performance complex maintenance tasks
+- define processes that make operations predictable
+- preserve organization knowledge about the system
+
+Good operability means making routine tasks easy, allowing
+operations team to focus efforts on high-value activities.
 
 ** Simplicity: Managing Complexity
+*Simplicity*: make it easy for new engineers to understand the system by removing
+as much complexity as possible from the system
+
+As projects get larger, they can become complex and difficult to understand.
+
+Reducing complexity greatly improves the maintainability of software.
+
+Making a system simpler does not necessarily mean reducing functionality,
+it can also mean removing accidental complexity (arises only from
+implementation).
+
+*Abstraction* can hide implementation detail behind a clean, simple-to-understand
+facade.
 
 ** Evolvability: Making Change Easy
+*Evolvability*: make it easy for engineers to make changes to the system in the
+future, adapting it for unanticipated use cases as requirements change
+
+Agile working patterns provide a framework for adapting to change.
+These include test-driven development and refactoring.
+
+The ease with which a system can be adapted to changing requirements is
+linked to its simplicity and abstractions.
