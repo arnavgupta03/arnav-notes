@@ -1,0 +1,262 @@
+% Created 2025-01-17 Fri 00:16
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Data Models and Query Languages}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Data Models and Query Languages},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.19)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\label{sec:orgebd648f}
+Most applications are built by layering data models, each layer hiding the
+complexity of the layers below.
+
+Every data model embodies assumptions about how it will be used.
+\section{Relational Model vs Document Model}
+\label{sec:orgcf395ab}
+Data organized into \textbf{relations}, which are unordered collections of \textbf{tuples}.
+
+Hides implementation detail behind a clean interface.
+\subsection{Birth of NoSQL}
+\label{sec:orgb44a15e}
+Refers to \emph{Not Only SQL}.
+
+NoSQL is adopted due to:
+\begin{itemize}
+\item need for greater scalability than relational DBs
+\item preference for FOSS over commercial DBs
+\item specialized query operations not well supported by relational model
+\item frustration with restriction of relational schemas
+\end{itemize}
+\subsection{Object-Relational Mismatch}
+\label{sec:orgff679f1}
+\textbf{Impedance mismatch}: disconnect between object-oriented model of application
+code and relational model of DB
+
+ORM frameworks help hide mismatch.
+
+JSON can reduce impedance mismatch, with better locality (all relevant info
+in one place).
+This is the \textbf{document} model.
+\subsection{Many-to-One and Many-to-Many Relationships}
+\label{sec:orge89bd45}
+Using standardized lists rather than strings can enforce consistent spelling,
+avoid ambiguity, make updates easier, localize support, and allow for better
+search.
+
+Using strings causes duplication.
+Removing duplication is the idea behind DB \textbf{normalization}.
+This is easier to do with the relational model than the document model.
+\subsection{Are Document Databases Repeating History?}
+\label{sec:org023369d}
+\subsubsection{Network Model}
+\label{sec:org69ec1ec}
+Generalization of the hierarchical model where:
+\begin{itemize}
+\item each record can have multiple parents
+\item links between records are not foreign keys but instead
+pointers that can be followed through an \textbf{access path}
+\begin{itemize}
+\item can have multiple paths to the same record
+\end{itemize}
+\end{itemize}
+
+Can change access paths, but then must rewrite code to handle
+new access paths.
+Difficult to change application's data model.
+\subsubsection{Relational Model}
+\label{sec:orgf8d31bb}
+Simpler since no nested structure.
+
+Query optimizer decides which parts of query to execute in which
+order, and which indexes are used.
+\subsubsection{Comparison to Document Databases}
+\label{sec:org802c479}
+Document DBs are similar to hierarchical DBs, except for many-to-one
+and many-to-many relationships where they are like relational DBs.
+\subsection{Relational vs Document Databases Today}
+\label{sec:orged2a7cf}
+Document data model benefits:
+\begin{itemize}
+\item schema flexibility
+\item better performance due to locality
+\item closer to data structures used by the application
+\end{itemize}
+
+Relational data model benefits:
+\begin{itemize}
+\item better support for joins, many-to-one, and many-to-many
+relationships
+\end{itemize}
+\subsubsection{Simpler Application Code}
+\label{sec:org8791fd8}
+If data is a tree of one-to-many relationships, document
+model is better.
+
+If application uses many-to-many relationships, relational mode
+is better.
+\subsubsection{Schema Flexibility}
+\label{sec:org4f1ce9e}
+Document DBs do not enforce any schema on the data in documents.
+
+Document DBs have \textbf{schema-on-read} (structure interpreted when data
+is read).
+
+Relational DBs have \textbf{schema-on-write} (DB ensures all written data
+conforms to schema).
+
+Schema-on-read can be helpful if items in the collection don't all have
+the same structure.
+\subsubsection{Data Locality}
+\label{sec:org749c650}
+Documents are usually stored as a string, providing \textbf{storage locality}.
+
+Locality helps if large parts of document are needed at once.
+
+Writes replace the entire document.
+
+Some relational DBs allow for locality.
+\subsubsection{Convergence of Document and Relational DBs}
+\label{sec:org1e4c5f6}
+Most relational DBs support XML, and some support JSON.
+
+Some document DBs support relational-like joins.
+\section{Query Languages for Data}
+\label{sec:org78c4843}
+\textbf{Imperative} languages specify operations to perform.
+
+\textbf{Declarative} languages specify only the pattern of the data
+you want.
+
+Declarative languages allow any implementations and lend
+themselves to parallel execution.
+\subsection{Declarative Queries on the Web}
+\label{sec:org3a1aa67}
+HTML and CSS are declarative languages used on the web.
+\subsection{MapReduce Querying}
+\label{sec:org996f17e}
+Programming model for processing large amounts of data in
+bulk across machines.
+
+Neither fully declarative or imperative.
+
+Steps in MapReduce:
+\begin{enumerate}
+\item Filter is specified declaratively.
+\item \texttt{map} is called once for every document that matches
+the query, where \texttt{this} is the document object
+\item \texttt{map} emits a key and a value
+\item Key-value pairs emitted by \texttt{map} are grouped by the key,
+and for all key-value pairs with the same key, \texttt{reduce}
+is called once
+\item \texttt{reduce} adds up the number of animals from all observations
+in a particular month
+\item Final output is written to collection specified.
+\end{enumerate}
+
+\texttt{map} and \texttt{reduce} only use the data passed as input, cannot
+perform additional DB queries, and cannot have any side effects.
+\section{Graph-Like Data Models}
+\label{sec:org40e0e5a}
+Graphs can be used as a data model, especially for many-to-many
+relations.
+\subsection{Property Graphs}
+\label{sec:orga1a4e84}
+Each vertex consists of:
+\begin{itemize}
+\item unique identifier
+\item set of outgoing edges
+\item set of incoming edges
+\item collection of properties (key-value pairs)
+\end{itemize}
+
+Each edge consists of:
+\begin{itemize}
+\item unique identifier
+\item \textbf{tail vertex}: vertex at which edge starts
+\item \textbf{head vertex}: vertex at which edge ends
+\item label to describe relationship between two vertices
+\item collection of properties (key-value pairs)
+\end{itemize}
+
+Any vertex can have an edge connecting it with any other
+vertex. No schema restricts which kinds of things can or cannot
+be associated.
+
+Given any vertex, can traverse the graph through incoming and
+outgoing edges.
+
+By using different labels for different kinds of relationships,
+store several kinds of info in a single graph while still
+maintaining a clean data model.
+
+Graphs are good for evolvability: as features are added to an
+application, a graph can easily be extended to accommodate
+changes in the application's data structures.
+\subsection{The Cypher Query Language}
+\label{sec:org38f1fc2}
+Declarative query language for property graphs.
+
+Query optimizer automatically chooses most efficient strategy.
+\subsection{Graph Queries in SQL}
+\label{sec:org3e0cb55}
+Graph data in a relational structure can be queried with SQL,
+though with some difficulty.
+
+Variable-length traversal paths in a query can be expressed
+using \textbf{recursive common table expressions}.
+\subsection{Triple-Stores and SPARQL}
+\label{sec:orge7a13e9}
+In a \textbf{triple-store}, all info is stored in the form of simple
+3-part statements: (subject, predicate, object).
+
+Subject of the triple is a vertex.
+Object can be a value or a vertex.
+Predicate is an edge.
+\subsubsection{Semantic Web}
+\label{sec:orga4d2ab9}
+Idea that websites should publish info as machine-readable
+data for computers to read.
+\subsubsection{RDF Data Model}
+\label{sec:orgf36b584}
+Used for internet-wide data exchange.
+
+Subject, object, and predicate are URIs.
+\subsubsection{SPARQL Query Language}
+\label{sec:org395a957}
+Query language for triple-stores using RDF data model.
+\subsection{The Foundation: Datalog}
+\label{sec:org1e9e96f}
+Older language used in few data systems.
+
+Define rules that tell that DB about new predicates.
+
+Predicates aren't triples stored in the DB, but are
+derived from data or rules.
+
+A rule applies if the system can find a match for all
+predicates on the right hand side of the \texttt{:-} operator.
+\end{document}
