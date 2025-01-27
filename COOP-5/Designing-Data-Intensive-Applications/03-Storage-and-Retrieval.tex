@@ -1,0 +1,321 @@
+% Created 2025-01-27 Mon 00:32
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{parskip,darkmode}
+\enabledarkmode
+\author{Arnav Gupta}
+\date{\today}
+\title{Storage And Retrieval}
+\hypersetup{
+ pdfauthor={Arnav Gupta},
+ pdftitle={Storage And Retrieval},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.19)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\label{sec:orgb5fc854}
+Knowing how a DB handles storage helps when choosing an appropriate
+storage engine.
+\section{Data Structures that Power your Database}
+\label{sec:org95804f7}
+\textbf{Log}: an append-only sequence of records
+
+To efficiently find the value for a particular key, an \textbf{index} can be
+helpful.
+Indexes are derived from the primary data.
+
+Indexes are additional to the primary data, which has overhead.
+Indexes speed up reads but slow down writes.
+
+Application developers should choose indexes manually based on the
+application's typical query patterns.
+\subsection{Hash Indexes}
+\label{sec:org5727b43}
+Key-value stores are similar to dictionaries, which are usually
+implemented as hash maps.
+
+Can index a key-value store using a hash map to store the
+byte offset in the data file where the value can be found.
+
+On writes, write to the hash map as well (based on where data
+was inserted).
+
+On reads, read from the hash map to get the offset where the record is.
+
+To avoid running out of space, break log into segments and close a segment
+file when it reaches a certain size.
+Perform \textbf{compaction} on segments, throwing away duplicate keys in the log
+and merging segments if possible.
+Since segments are never modified after writing, merged segments are
+written to a new file.
+
+Each segment has an in-memory hash table, mapping keys to file offsets.
+Hash maps are checked in order of recency.
+
+Having logs be append-only helps with speed, concurrency, crash recovery,
+and file fragmenting.
+
+Hash table must fit in memory, so cannot have to many keys.
+Also, range queries are not efficient (lookups are independent).
+\subsection{SSTables and LSM-Trees}
+\label{sec:orgbf26492}
+In an \textbf{SSTable}, sort the key-value pairs in each segment by key.
+
+This allows simpler merging, removes the need to keep an index for all
+keys in memory, and allows the use of blocks of key-value pairs for
+compression.
+\subsubsection{Constructing and Maintaining SSTables}
+\label{sec:org0c31725}
+Can use a tree data structure (like red-black tree or AVL tree) so
+maintain sorted order.
+This structure is maintained in memory, in a \textbf{memtable}.
+
+When the memtable reaches some size threshold, it is written to
+disk, becoming the most recent segment.
+
+Only issue is with crashes (since memtable in-memory).
+Can solve with a log on disk to which every write is appended,
+used to restore the memtable after a crash.
+\subsubsection{Making an LSM-Tree out of SSTables}
+\label{sec:orgad03099}
+This indexing structure is called an \textbf{LSM-Tree}.
+\subsubsection{Performance Optimizations}
+\label{sec:orgaaef16d}
+Use \textbf{Bloom filters} to optimize checking if keys do not exist in
+the DB.
+
+Types of compaction include:
+\begin{itemize}
+\item \textbf{size-tiered}: newer SSTables successively merged into older and
+larger SSTables
+\item \textbf{leveled}: key range split up into smaller SSTables and older
+data moved into separate levels
+\end{itemize}
+
+LSM-Tree works well even when data is bigger than available memory.
+Also better at range queries since data is sorted.
+\subsection{B-Trees}
+\label{sec:org0906a2a}
+Most widely used indexing structure.
+
+DB broken down into fixed-size blocks/pages.
+Design corresponds to underlying hardware.
+
+Root of B-Tree is a page and contains keys and references to child pages.
+Keys are a continuous range, indicating where boundaries between ranges lie.
+
+A leaf page contains the values or references to the values.
+
+\textbf{Branching factor}: number of references to child pages in 1 page of the B-tree
+
+If not enough free space in a page to accommodate a new key, it is split
+into two half-full pages.
+This ensures the tree remains \textbf{balanced}.
+
+A B-Tree with \(n\) keys always has depth of \(O(\log(n))\).
+\subsubsection{Making B-Trees Reliable}
+\label{sec:org4e46680}
+B-Tree write overwrites a page on disk with new data,
+but overwrite does not change the location of the page.
+
+To make the DB resilient to crashes, a \textbf{write-ahead log}
+is used, which is an append only file to which
+every B-tree modification must be written before it can be
+applied to the pages of the tree itself.
+
+For concurrency, \textbf{latches} are used to protect the tree's
+data structures.
+\subsubsection{B-Tree Optimizations}
+\label{sec:orgad39b2f}
+Some DBs use a copy-on-write scheme where a modified page is rewritten
+to a different location and pointers are updated.
+
+The key can be abbreviated to save space.
+
+Some B-tree implementations place leaf pages in sequential
+order on disk.
+
+Some B-trees have sibling pointers.
+
+\textbf{Fractal trees} reduce disk seeks.
+\subsection{Comparing B-Trees and LSM-Trees}
+\label{sec:org951d922}
+LSM-trees are faster for writes, B-trees are faster for reads.
+\subsubsection{Advantages of LSM-Trees}
+\label{sec:orgd8d7c6d}
+Less writes required due to \textbf{write amplification}: one write
+to the DB results in multiple writes to the disk.
+
+Sequentially write compact SSTable files rather than overwriting
+several pages in the tree.
+
+Better compression and less fragmentation due to compaction.
+\subsubsection{Downsides of LSM-Trees}
+\label{sec:org118ee98}
+Compaction can interfere with the performance of ongoing reads
+and writes.
+
+Write bandwidth must be shared between the initial write and
+compaction threads running in the background.
+
+It is possible that compaction cannot keep up with the rate of
+incoming writes, so there are too many segment files.
+
+B-trees are better for transactions.
+\subsection{Other Indexing Structures}
+\label{sec:org0263037}
+Key-value relies on \textbf{primary key}.
+\textbf{Secondary indexes} are also possible.
+
+A secondary index can be constructed from a key-value index, but
+keys are not unique.
+\subsubsection{Storing Values within the Index}
+\label{sec:org6763982}
+\textbf{Heap file}: where rows are stored, in no particular order
+and no duplicated data
+
+Indexes just reference a location in the heap file.
+
+Records can be overwritten in place in the heap file.
+
+\textbf{Clustered index}: store indexed row directly within an
+index
+
+\textbf{Covering index}: stores some of a table's columns within the
+index
+
+Clustered and covering indexes speed up reads but add overhead
+on writes.
+\subsubsection{Multi-Column Indexes}
+\label{sec:org07f6351}
+\textbf{Concatenated index}: combine several fields into one key by
+appending one column to another
+
+B-tree and LSM-tree indexes don't answer multi-dimensional queries
+efficiently.
+R-trees are better for these.
+\subsubsection{Full-Text Search and Fuzzy Indexes}
+\label{sec:orge5fc2de}
+\textbf{Fuzzy querying}: searching for similar keys
+
+Can use a SSTable-like structure or use a trie.
+
+\textbf{Levenshtein automaton}: supports efficient search for words
+within a given edit distance
+\subsubsection{Keeping Everything in Memory}
+\label{sec:org3e387f1}
+As RAM gets cheaper, this has led to \textbf{in-memory databases}.
+
+Some used for caching, some more durable.
+
+Writing to disk is still done for durability, but data is loaded
+from memory.
+
+In-memory databases are faster because they avoid overheads
+of encoding in-memory data structures in a form that can be
+written to disk.
+
+\textbf{Anti-caching} allows datasets larger than available memory using a
+scheme similar to virtual memory.
+\section{Transaction Processing vs Analytics}
+\label{sec:orga71622a}
+\textbf{Transaction processing}: low latency reads and writes
+
+Data analytics have different access patterns than transactions.
+
+\textbf{Data warehouse}: separate database to run analytics on
+\subsection{Data Warehousing}
+\label{sec:orgd035722}
+Using a data warehouse does not affect OLTP operations
+since it is read-only and can be processed through ETL
+transformations.
+
+Data warehouse can be optimized for analytic access patterns.
+\subsubsection{Divergence Between OLTP DBs and Data Warehouses}
+\label{sec:orgef5e370}
+OLTP and data warehouse have SQL query interface, but internally
+are optimized for different query patterns.
+\subsection{Stars and Snowflakes: Schemas for Analytics}
+\label{sec:orge6435da}
+\textbf{Star schema}: has fact table that represents events at times and
+dimension tables that describe events
+
+\textbf{Snowflake schema}: variant of star schema where dimensions are
+further broken down into subdimensions (more normalized)
+\section{Column-Oriented Storage}
+\label{sec:org73b76a8}
+Typical data warehouse query only accesses a small fraction of
+columns at a time.
+
+With \textbf{column-oriented storage}, all values from a column are stored
+together rather than all values from a row.
+This can be helpful for fact tables where indexes only exist on a
+small number of columns.
+
+Relies on each column file containing rows in the same order.
+\subsection{Column Compression}
+\label{sec:org1e43554}
+Can compress column representation with \textbf{bitmap encoding}, where each distinct
+value has a bitmap.
+This is well suited for the queries common in data warehouses.
+\subsubsection{Memory Bandwidth and Vectorized Processing}
+\label{sec:org9460418}
+Bottlenecks include getting data from disk into memory, efficiently using
+bandwidth from main memory into CPU cache, avoiding branch mispredictions, and
+making use of SIMD instructions.
+
+With column compression, more rows from a column fit in the same amount of L1
+cache.
+
+\textbf{Vectorized processing}: operators designed to operate on such chunks of
+compressed column data directly
+\subsection{Sort Order in Column Storage}
+\label{sec:orgb35416d}
+Order doesn't necessarily matter.
+
+DB admin can choose the columns by which a table should be sorted.
+
+Sorted order can help with column compression, since compression
+is strongest on first key.
+\subsubsection{Several Different Sort Orders}
+\label{sec:org2f92e19}
+Can store redundant data in different ways to use the version
+best fit to a query.
+\subsection{Writing to Column-Oriented Storage}
+\label{sec:orgb6df48a}
+Writes are more difficult in column-oriented storage.
+
+LSM-trees can be used (with compaction) since update in-place
+will not work.
+
+Queries need to examine column data on disk and recent writes in memory.
+\subsection{Aggregation: Data Cubes and Materialized Views}
+\label{sec:org8e2b263}
+\textbf{Materialized view}: copy of query results, written to disk
+
+When underlying data changes, a materialized view needs to be updated.
+
+\textbf{Data cube}: grid of aggregates grouped by different dimensions
+
+With a materialized data cube, certain queries become very fast since
+they have been precomputed.
+
+Data cube doesn't have the same flexibility as querying raw data.
+\end{document}

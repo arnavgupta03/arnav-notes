@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-01-27 Mon 00:32 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Storage And Retrieval</title>
+<meta name="author" content="Arnav Gupta" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="src/latex.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Storage And Retrieval</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1fe00ec">1. Introduction</a></li>
+<li><a href="#orge850b55">2. Data Structures that Power your Database</a>
+<ul>
+<li><a href="#org24fe0c4">2.1. Hash Indexes</a></li>
+<li><a href="#orgb653cf9">2.2. SSTables and LSM-Trees</a>
+<ul>
+<li><a href="#orgc6357e8">2.2.1. Constructing and Maintaining SSTables</a></li>
+<li><a href="#org03d350d">2.2.2. Making an LSM-Tree out of SSTables</a></li>
+<li><a href="#org6c10d1a">2.2.3. Performance Optimizations</a></li>
+</ul>
+</li>
+<li><a href="#org941313b">2.3. B-Trees</a>
+<ul>
+<li><a href="#orgcfd4000">2.3.1. Making B-Trees Reliable</a></li>
+<li><a href="#org09850a6">2.3.2. B-Tree Optimizations</a></li>
+</ul>
+</li>
+<li><a href="#orgf8cba82">2.4. Comparing B-Trees and LSM-Trees</a>
+<ul>
+<li><a href="#orgeec0766">2.4.1. Advantages of LSM-Trees</a></li>
+<li><a href="#org284e3dd">2.4.2. Downsides of LSM-Trees</a></li>
+</ul>
+</li>
+<li><a href="#org7a34563">2.5. Other Indexing Structures</a>
+<ul>
+<li><a href="#orgaaa7a98">2.5.1. Storing Values within the Index</a></li>
+<li><a href="#org889bf83">2.5.2. Multi-Column Indexes</a></li>
+<li><a href="#org0c18815">2.5.3. Full-Text Search and Fuzzy Indexes</a></li>
+<li><a href="#orgb1aaaaa">2.5.4. Keeping Everything in Memory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf21627b">3. Transaction Processing vs Analytics</a>
+<ul>
+<li><a href="#orgcdcba43">3.1. Data Warehousing</a>
+<ul>
+<li><a href="#orgeecef47">3.1.1. Divergence Between OLTP DBs and Data Warehouses</a></li>
+</ul>
+</li>
+<li><a href="#orgd54ba7f">3.2. Stars and Snowflakes: Schemas for Analytics</a></li>
+</ul>
+</li>
+<li><a href="#orgfdc2a31">4. Column-Oriented Storage</a>
+<ul>
+<li><a href="#orgebf3402">4.1. Column Compression</a>
+<ul>
+<li><a href="#orgb97f63b">4.1.1. Memory Bandwidth and Vectorized Processing</a></li>
+</ul>
+</li>
+<li><a href="#orgb91a7d9">4.2. Sort Order in Column Storage</a>
+<ul>
+<li><a href="#org50cc28a">4.2.1. Several Different Sort Orders</a></li>
+</ul>
+</li>
+<li><a href="#org5d60468">4.3. Writing to Column-Oriented Storage</a></li>
+<li><a href="#orgb31c3ca">4.4. Aggregation: Data Cubes and Materialized Views</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1fe00ec" class="outline-2">
+<h2 id="org1fe00ec"><span class="section-number-2">1.</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Knowing how a DB handles storage helps when choosing an appropriate
+storage engine.
+</p>
+</div>
+</div>
+<div id="outline-container-orge850b55" class="outline-2">
+<h2 id="orge850b55"><span class="section-number-2">2.</span> Data Structures that Power your Database</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Log</b>: an append-only sequence of records
+</p>
+
+<p>
+To efficiently find the value for a particular key, an <b>index</b> can be
+helpful.
+Indexes are derived from the primary data.
+</p>
+
+<p>
+Indexes are additional to the primary data, which has overhead.
+Indexes speed up reads but slow down writes.
+</p>
+
+<p>
+Application developers should choose indexes manually based on the
+application&rsquo;s typical query patterns.
+</p>
+</div>
+<div id="outline-container-org24fe0c4" class="outline-3">
+<h3 id="org24fe0c4"><span class="section-number-3">2.1.</span> Hash Indexes</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Key-value stores are similar to dictionaries, which are usually
+implemented as hash maps.
+</p>
+
+<p>
+Can index a key-value store using a hash map to store the
+byte offset in the data file where the value can be found.
+</p>
+
+<p>
+On writes, write to the hash map as well (based on where data
+was inserted).
+</p>
+
+<p>
+On reads, read from the hash map to get the offset where the record is.
+</p>
+
+<p>
+To avoid running out of space, break log into segments and close a segment
+file when it reaches a certain size.
+Perform <b>compaction</b> on segments, throwing away duplicate keys in the log
+and merging segments if possible.
+Since segments are never modified after writing, merged segments are
+written to a new file.
+</p>
+
+<p>
+Each segment has an in-memory hash table, mapping keys to file offsets.
+Hash maps are checked in order of recency.
+</p>
+
+<p>
+Having logs be append-only helps with speed, concurrency, crash recovery,
+and file fragmenting.
+</p>
+
+<p>
+Hash table must fit in memory, so cannot have to many keys.
+Also, range queries are not efficient (lookups are independent).
+</p>
+</div>
+</div>
+<div id="outline-container-orgb653cf9" class="outline-3">
+<h3 id="orgb653cf9"><span class="section-number-3">2.2.</span> SSTables and LSM-Trees</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+In an <b>SSTable</b>, sort the key-value pairs in each segment by key.
+</p>
+
+<p>
+This allows simpler merging, removes the need to keep an index for all
+keys in memory, and allows the use of blocks of key-value pairs for
+compression.
+</p>
+</div>
+<div id="outline-container-orgc6357e8" class="outline-4">
+<h4 id="orgc6357e8"><span class="section-number-4">2.2.1.</span> Constructing and Maintaining SSTables</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Can use a tree data structure (like red-black tree or AVL tree) so
+maintain sorted order.
+This structure is maintained in memory, in a <b>memtable</b>.
+</p>
+
+<p>
+When the memtable reaches some size threshold, it is written to
+disk, becoming the most recent segment.
+</p>
+
+<p>
+Only issue is with crashes (since memtable in-memory).
+Can solve with a log on disk to which every write is appended,
+used to restore the memtable after a crash.
+</p>
+</div>
+</div>
+<div id="outline-container-org03d350d" class="outline-4">
+<h4 id="org03d350d"><span class="section-number-4">2.2.2.</span> Making an LSM-Tree out of SSTables</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+This indexing structure is called an <b>LSM-Tree</b>.
+</p>
+</div>
+</div>
+<div id="outline-container-org6c10d1a" class="outline-4">
+<h4 id="org6c10d1a"><span class="section-number-4">2.2.3.</span> Performance Optimizations</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+Use <b>Bloom filters</b> to optimize checking if keys do not exist in
+the DB.
+</p>
+
+<p>
+Types of compaction include:
+</p>
+<ul class="org-ul">
+<li><b>size-tiered</b>: newer SSTables successively merged into older and
+larger SSTables</li>
+<li><b>leveled</b>: key range split up into smaller SSTables and older
+data moved into separate levels</li>
+</ul>
+
+<p>
+LSM-Tree works well even when data is bigger than available memory.
+Also better at range queries since data is sorted.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org941313b" class="outline-3">
+<h3 id="org941313b"><span class="section-number-3">2.3.</span> B-Trees</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Most widely used indexing structure.
+</p>
+
+<p>
+DB broken down into fixed-size blocks/pages.
+Design corresponds to underlying hardware.
+</p>
+
+<p>
+Root of B-Tree is a page and contains keys and references to child pages.
+Keys are a continuous range, indicating where boundaries between ranges lie.
+</p>
+
+<p>
+A leaf page contains the values or references to the values.
+</p>
+
+<p>
+<b>Branching factor</b>: number of references to child pages in 1 page of the B-tree
+</p>
+
+<p>
+If not enough free space in a page to accommodate a new key, it is split
+into two half-full pages.
+This ensures the tree remains <b>balanced</b>.
+</p>
+
+<p>
+A B-Tree with \(n\) keys always has depth of \(O(\log(n))\).
+</p>
+</div>
+<div id="outline-container-orgcfd4000" class="outline-4">
+<h4 id="orgcfd4000"><span class="section-number-4">2.3.1.</span> Making B-Trees Reliable</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+B-Tree write overwrites a page on disk with new data,
+but overwrite does not change the location of the page.
+</p>
+
+<p>
+To make the DB resilient to crashes, a <b>write-ahead log</b>
+is used, which is an append only file to which
+every B-tree modification must be written before it can be
+applied to the pages of the tree itself.
+</p>
+
+<p>
+For concurrency, <b>latches</b> are used to protect the tree&rsquo;s
+data structures.
+</p>
+</div>
+</div>
+<div id="outline-container-org09850a6" class="outline-4">
+<h4 id="org09850a6"><span class="section-number-4">2.3.2.</span> B-Tree Optimizations</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+Some DBs use a copy-on-write scheme where a modified page is rewritten
+to a different location and pointers are updated.
+</p>
+
+<p>
+The key can be abbreviated to save space.
+</p>
+
+<p>
+Some B-tree implementations place leaf pages in sequential
+order on disk.
+</p>
+
+<p>
+Some B-trees have sibling pointers.
+</p>
+
+<p>
+<b>Fractal trees</b> reduce disk seeks.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf8cba82" class="outline-3">
+<h3 id="orgf8cba82"><span class="section-number-3">2.4.</span> Comparing B-Trees and LSM-Trees</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+LSM-trees are faster for writes, B-trees are faster for reads.
+</p>
+</div>
+<div id="outline-container-orgeec0766" class="outline-4">
+<h4 id="orgeec0766"><span class="section-number-4">2.4.1.</span> Advantages of LSM-Trees</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Less writes required due to <b>write amplification</b>: one write
+to the DB results in multiple writes to the disk.
+</p>
+
+<p>
+Sequentially write compact SSTable files rather than overwriting
+several pages in the tree.
+</p>
+
+<p>
+Better compression and less fragmentation due to compaction.
+</p>
+</div>
+</div>
+<div id="outline-container-org284e3dd" class="outline-4">
+<h4 id="org284e3dd"><span class="section-number-4">2.4.2.</span> Downsides of LSM-Trees</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+Compaction can interfere with the performance of ongoing reads
+and writes.
+</p>
+
+<p>
+Write bandwidth must be shared between the initial write and
+compaction threads running in the background.
+</p>
+
+<p>
+It is possible that compaction cannot keep up with the rate of
+incoming writes, so there are too many segment files.
+</p>
+
+<p>
+B-trees are better for transactions.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org7a34563" class="outline-3">
+<h3 id="org7a34563"><span class="section-number-3">2.5.</span> Other Indexing Structures</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Key-value relies on <b>primary key</b>.
+<b>Secondary indexes</b> are also possible.
+</p>
+
+<p>
+A secondary index can be constructed from a key-value index, but
+keys are not unique.
+</p>
+</div>
+<div id="outline-container-orgaaa7a98" class="outline-4">
+<h4 id="orgaaa7a98"><span class="section-number-4">2.5.1.</span> Storing Values within the Index</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<p>
+<b>Heap file</b>: where rows are stored, in no particular order
+and no duplicated data
+</p>
+
+<p>
+Indexes just reference a location in the heap file.
+</p>
+
+<p>
+Records can be overwritten in place in the heap file.
+</p>
+
+<p>
+<b>Clustered index</b>: store indexed row directly within an
+index
+</p>
+
+<p>
+<b>Covering index</b>: stores some of a table&rsquo;s columns within the
+index
+</p>
+
+<p>
+Clustered and covering indexes speed up reads but add overhead
+on writes.
+</p>
+</div>
+</div>
+<div id="outline-container-org889bf83" class="outline-4">
+<h4 id="org889bf83"><span class="section-number-4">2.5.2.</span> Multi-Column Indexes</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+<b>Concatenated index</b>: combine several fields into one key by
+appending one column to another
+</p>
+
+<p>
+B-tree and LSM-tree indexes don&rsquo;t answer multi-dimensional queries
+efficiently.
+R-trees are better for these.
+</p>
+</div>
+</div>
+<div id="outline-container-org0c18815" class="outline-4">
+<h4 id="org0c18815"><span class="section-number-4">2.5.3.</span> Full-Text Search and Fuzzy Indexes</h4>
+<div class="outline-text-4" id="text-2-5-3">
+<p>
+<b>Fuzzy querying</b>: searching for similar keys
+</p>
+
+<p>
+Can use a SSTable-like structure or use a trie.
+</p>
+
+<p>
+<b>Levenshtein automaton</b>: supports efficient search for words
+within a given edit distance
+</p>
+</div>
+</div>
+<div id="outline-container-orgb1aaaaa" class="outline-4">
+<h4 id="orgb1aaaaa"><span class="section-number-4">2.5.4.</span> Keeping Everything in Memory</h4>
+<div class="outline-text-4" id="text-2-5-4">
+<p>
+As RAM gets cheaper, this has led to <b>in-memory databases</b>.
+</p>
+
+<p>
+Some used for caching, some more durable.
+</p>
+
+<p>
+Writing to disk is still done for durability, but data is loaded
+from memory.
+</p>
+
+<p>
+In-memory databases are faster because they avoid overheads
+of encoding in-memory data structures in a form that can be
+written to disk.
+</p>
+
+<p>
+<b>Anti-caching</b> allows datasets larger than available memory using a
+scheme similar to virtual memory.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf21627b" class="outline-2">
+<h2 id="orgf21627b"><span class="section-number-2">3.</span> Transaction Processing vs Analytics</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>Transaction processing</b>: low latency reads and writes
+</p>
+
+<p>
+Data analytics have different access patterns than transactions.
+</p>
+
+<p>
+<b>Data warehouse</b>: separate database to run analytics on
+</p>
+</div>
+<div id="outline-container-orgcdcba43" class="outline-3">
+<h3 id="orgcdcba43"><span class="section-number-3">3.1.</span> Data Warehousing</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Using a data warehouse does not affect OLTP operations
+since it is read-only and can be processed through ETL
+transformations.
+</p>
+
+<p>
+Data warehouse can be optimized for analytic access patterns.
+</p>
+</div>
+<div id="outline-container-orgeecef47" class="outline-4">
+<h4 id="orgeecef47"><span class="section-number-4">3.1.1.</span> Divergence Between OLTP DBs and Data Warehouses</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+OLTP and data warehouse have SQL query interface, but internally
+are optimized for different query patterns.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd54ba7f" class="outline-3">
+<h3 id="orgd54ba7f"><span class="section-number-3">3.2.</span> Stars and Snowflakes: Schemas for Analytics</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+<b>Star schema</b>: has fact table that represents events at times and
+dimension tables that describe events
+</p>
+
+<p>
+<b>Snowflake schema</b>: variant of star schema where dimensions are
+further broken down into subdimensions (more normalized)
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfdc2a31" class="outline-2">
+<h2 id="orgfdc2a31"><span class="section-number-2">4.</span> Column-Oriented Storage</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Typical data warehouse query only accesses a small fraction of
+columns at a time.
+</p>
+
+<p>
+With <b>column-oriented storage</b>, all values from a column are stored
+together rather than all values from a row.
+This can be helpful for fact tables where indexes only exist on a
+small number of columns.
+</p>
+
+<p>
+Relies on each column file containing rows in the same order.
+</p>
+</div>
+<div id="outline-container-orgebf3402" class="outline-3">
+<h3 id="orgebf3402"><span class="section-number-3">4.1.</span> Column Compression</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Can compress column representation with <b>bitmap encoding</b>, where each distinct
+value has a bitmap.
+This is well suited for the queries common in data warehouses.
+</p>
+</div>
+<div id="outline-container-orgb97f63b" class="outline-4">
+<h4 id="orgb97f63b"><span class="section-number-4">4.1.1.</span> Memory Bandwidth and Vectorized Processing</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+Bottlenecks include getting data from disk into memory, efficiently using
+bandwidth from main memory into CPU cache, avoiding branch mispredictions, and
+making use of SIMD instructions.
+</p>
+
+<p>
+With column compression, more rows from a column fit in the same amount of L1
+cache.
+</p>
+
+<p>
+<b>Vectorized processing</b>: operators designed to operate on such chunks of
+compressed column data directly
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb91a7d9" class="outline-3">
+<h3 id="orgb91a7d9"><span class="section-number-3">4.2.</span> Sort Order in Column Storage</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Order doesn&rsquo;t necessarily matter.
+</p>
+
+<p>
+DB admin can choose the columns by which a table should be sorted.
+</p>
+
+<p>
+Sorted order can help with column compression, since compression
+is strongest on first key.
+</p>
+</div>
+<div id="outline-container-org50cc28a" class="outline-4">
+<h4 id="org50cc28a"><span class="section-number-4">4.2.1.</span> Several Different Sort Orders</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+Can store redundant data in different ways to use the version
+best fit to a query.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5d60468" class="outline-3">
+<h3 id="org5d60468"><span class="section-number-3">4.3.</span> Writing to Column-Oriented Storage</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Writes are more difficult in column-oriented storage.
+</p>
+
+<p>
+LSM-trees can be used (with compaction) since update in-place
+will not work.
+</p>
+
+<p>
+Queries need to examine column data on disk and recent writes in memory.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb31c3ca" class="outline-3">
+<h3 id="orgb31c3ca"><span class="section-number-3">4.4.</span> Aggregation: Data Cubes and Materialized Views</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+<b>Materialized view</b>: copy of query results, written to disk
+</p>
+
+<p>
+When underlying data changes, a materialized view needs to be updated.
+</p>
+
+<p>
+<b>Data cube</b>: grid of aggregates grouped by different dimensions
+</p>
+
+<p>
+With a materialized data cube, certain queries become very fast since
+they have been precomputed.
+</p>
+
+<p>
+Data cube doesn&rsquo;t have the same flexibility as querying raw data.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Arnav Gupta</p>
+<p class="date">Created: 2025-01-27 Mon 00:32</p>
+</div>
+</body>
+</html>
